@@ -1,37 +1,23 @@
 import pygame, sys, time, random
 from SBS import SBS
+from eMBB_UE import eMBB_UE
+from URLLC_UE import URLLC_UE
 pygame.init()
 
+#Set constant variables
 SCREEN_WIDTH = 1500
 SCREEN_HEIGHT = 900
-cell_tower_sprite_width = 340
-cell_tower_sprite_height = 340
 clock = pygame.time.Clock()
-
-filename1 = 'Resources/cell-tower-spritesheet-1.png'
-filename2 = 'Resources/cell-tower-spritesheet-2.png'
-filename3 = 'Resources/cell-tower-spritesheet-3.png'
-filename4 = 'Resources/cell-tower-spritesheet-4.png'
-
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 run = True
 BLACK = pygame.Color(0,0,0)
-
-def load_cell_tower_sprite(filename,width,height):
-    filename = filename
-    cell_tower_sprite = pygame.image.load(filename).convert()
-    sprite_surface = pygame.Surface((width,height))
-    sprite_surface.set_colorkey((0,0,0))
-    sprite_surface.blit(cell_tower_sprite,(0,0))
-    return sprite_surface
-
-
-
-sprite_surface_1 = load_cell_tower_sprite(filename1,cell_tower_sprite_width,cell_tower_sprite_height)
-sprite_surface_2 = load_cell_tower_sprite(filename2,cell_tower_sprite_width,cell_tower_sprite_height)
-sprite_surface_3 = load_cell_tower_sprite(filename3,cell_tower_sprite_width,cell_tower_sprite_height)
-sprite_surface_4 = load_cell_tower_sprite(filename4,cell_tower_sprite_width,cell_tower_sprite_height)
 frameCount = 0
+
+#Instantiate objects
+SBS1 = SBS(1)
+eMBB_UE_1 = eMBB_UE(1,100,600)
+URLLC_UE_1 = URLLC_UE(1,600,700)
+eMBB_UE_2 = eMBB_UE(1,1100,500)
 
 while run:
 
@@ -40,20 +26,25 @@ while run:
         if event.type == pygame.QUIT:
             run = False
 
+    #Animate the SBS sprite
     if frameCount == 0:
-        screen.blit(sprite_surface_1,(SCREEN_WIDTH/2-cell_tower_sprite_width/2,SCREEN_HEIGHT/2-cell_tower_sprite_height))
+        SBS1.load_cell_tower_sprite(screen,SCREEN_WIDTH,SCREEN_HEIGHT,frameCount)
     elif frameCount == 1:
-        screen.blit(sprite_surface_2,(SCREEN_WIDTH/2-cell_tower_sprite_width/2,SCREEN_HEIGHT/2-cell_tower_sprite_height))
+        SBS1.load_cell_tower_sprite(screen,SCREEN_WIDTH,SCREEN_HEIGHT,frameCount)
     elif frameCount == 2:
-        screen.blit(sprite_surface_3,(SCREEN_WIDTH/2-cell_tower_sprite_width/2,SCREEN_HEIGHT/2-cell_tower_sprite_height))
+        SBS1.load_cell_tower_sprite(screen,SCREEN_WIDTH,SCREEN_HEIGHT,frameCount)
     elif frameCount == 3:
-        screen.blit(sprite_surface_4,(SCREEN_WIDTH/2-cell_tower_sprite_width/2,SCREEN_HEIGHT/2-cell_tower_sprite_height))
+        SBS1.load_cell_tower_sprite(screen,SCREEN_WIDTH,SCREEN_HEIGHT,frameCount)
+
+    #load and display the different users' sprites
+    eMBB_UE_1.load_eMBB_UE_sprite(screen)
+    eMBB_UE_2.load_eMBB_UE_sprite(screen)
+    URLLC_UE_1.load_URLLC_UE_sprite(screen)
 
     pygame.display.update()
     frameCount+=1
     if frameCount == 4:
         frameCount = 0
-    print(frameCount)
     clock.tick(10)
 
 class NetworkEnv():
