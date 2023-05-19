@@ -1,8 +1,10 @@
 import pygame, sys, time, random
 from Spritesheet import SpriteSheet
+import random
+from User_Equipment import User_Equipment
 pygame.init()
 
-class eMBB_UE():
+class eMBB_UE(User_Equipment):
     def __init__(self, eMBB_UE_label,screen_position_x,screen_position_y):
         self.eMBB_UE_label = eMBB_UE_label
         self.eMBB_UE_sprite_width = 87
@@ -10,6 +12,19 @@ class eMBB_UE():
         self.eMBB_UE_screen_position_x = screen_position_x
         self.eMBB_UE_screen_position_y = screen_position_y
         self.filename = 'Resources/eMBB-UE-spritesheet.png'
+
+        #Telecomm Network Properties
+        self.delay_requirement = 9 #9 s
+        self.packet_size = random.randint(50,100) #Kilobytes
+        self.task_arrival_rate = random.randint(5,10) #Packets/s
+        self.offloading_ratio = 0
+        self.local_computation_delay = 0
+        self.achieved_local_energy_consumption = 0
+        self.offload_transmission_energy = 0
+        self.battery_energy_level = 100 # Begin with 100%
+        self.energy_harvested = 0
+        self.achieved_transmission_delay = 0
+
 
         #self.sprite = SpriteSheet(self.spriteSheetFilename,self.spriteSheet_x,self.spriteSheet_y,self.spriteSheet_width,self.spriteSheet_height)
     def load_eMBB_UE_sprite(self,screen):

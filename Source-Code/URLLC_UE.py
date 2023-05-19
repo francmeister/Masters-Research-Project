@@ -11,7 +11,14 @@ class URLLC_UE():
         self.URLLC_UE_screen_position_y = screen_position_y
         self.filename = 'Resources/URLLC-UE-spritesheet.png'
 
-        #self.sprite = SpriteSheet(self.spriteSheetFilename,self.spriteSheet_x,self.spriteSheet_y,self.spriteSheet_width,self.spriteSheet_height)
+        #Telecomm Network Properties
+        self.latency_requirement = 8 # 8 s
+        self.reliability_requirement = 10^-7
+        self.achieved_reliability = 0
+        self.packet_size = 32 #bytes
+        self.task_arrival_rate = 500 #packets/s
+        self.achieved_transmission_delay = 0
+        
     def load_URLLC_UE_sprite(self,screen):
         URLLC_UE_sprite = pygame.image.load(self.filename).convert()
 
