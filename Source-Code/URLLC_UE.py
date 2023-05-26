@@ -12,7 +12,7 @@ class URLLC_UE():
         self.filename = 'Resources/URLLC-UE-spritesheet.png'
 
         #Telecomm Network Properties
-        self.latency_requirement = 8 # 8 s
+        self.latency_requirement = 1 # 1 ms
         self.reliability_requirement = 10^-7
         self.achieved_reliability = 0
         self.packet_size = 32 #bytes

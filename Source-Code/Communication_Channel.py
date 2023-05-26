@@ -13,8 +13,8 @@ class Communication_Channel():
         self.num_subcarriers_per_RB = 12
         self.SBS_label = SBS_label
         self.eMBB_subcarrier_mappings = []
-        self.long_TTI = 1 #1ms
-        self.short_TTI = 0.143 # 0.143ms
+        self.long_TTI = 0.125 #1ms
+        self.short_TTI = 0.018 # 0.143ms
         self.num_minislots_per_timeslot = 7
         self.noise_spectral_density = -174 # -174dBM/Hz
         self.initiate_subcarriers()
