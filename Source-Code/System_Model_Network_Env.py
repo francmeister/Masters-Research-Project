@@ -2,6 +2,7 @@ import pygame, sys, time, random
 from SBS import SBS
 from eMBB_UE import eMBB_UE
 from URLLC_UE import URLLC_UE
+from Communication_Channel import Communication_Channel
 pygame.init()
 
 #Set constant variables
@@ -12,13 +13,23 @@ screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 run = True
 BLACK = pygame.Color(0,0,0)
 frameCount = 0
+eMBB_Users = []
 
 #Instantiate objects
 SBS1 = SBS(1)
 eMBB_UE_1 = eMBB_UE(1,100,600)
 URLLC_UE_1 = URLLC_UE(1,600,700)
-eMBB_UE_2 = eMBB_UE(1,1100,500)
+eMBB_UE_2 = eMBB_UE(2,1100,500)
+Communication_Channel_1 = Communication_Channel(SBS1.SBS_label)
 
+# Group all eMBB users
+eMBB_Users.append(eMBB_UE_1)
+eMBB_Users.append(eMBB_UE_2)
+
+# Allocate subcarriers to eMBB Users
+Communication_Channel_1.allocate_subcarriers_eMBB(eMBB_Users)
+
+print(eMBB_UE_2.allocated_subcarriers)
 while run:
 
     screen.fill(BLACK)

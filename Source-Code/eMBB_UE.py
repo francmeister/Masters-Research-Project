@@ -14,16 +14,17 @@ class eMBB_UE(User_Equipment):
         self.filename = 'Resources/eMBB-UE-spritesheet.png'
 
         #Telecomm Network Properties
-        self.delay_requirement = 9 #9 s
-        self.packet_size = random.randint(50,100) #Kilobytes
-        self.task_arrival_rate = random.randint(5,10) #Packets/s
+        self.delay_requirement_seconds = random.randint(8,9) #[8,9] s
+        self.packet_size_kilobytes = random.randint(50,100) #Kilobytes
+        self.task_arrival_rate_packets_per_second = random.randint(5,10) #Packets/s
         self.offloading_ratio = 0
-        self.local_computation_delay = 0
+        self.local_computation_delay_seconds = 0
         self.achieved_local_energy_consumption = 0
         self.offload_transmission_energy = 0
         self.battery_energy_level = 100 # Begin with 100%
         self.energy_harvested = 0
         self.achieved_transmission_delay = 0
+        self.allocated_subcarriers = []
 
 
         #self.sprite = SpriteSheet(self.spriteSheetFilename,self.spriteSheet_x,self.spriteSheet_y,self.spriteSheet_width,self.spriteSheet_height)
@@ -35,3 +36,4 @@ class eMBB_UE(User_Equipment):
 
         sprite_surface.blit(eMBB_UE_sprite,(0,0))
         screen.blit(sprite_surface,(self.eMBB_UE_screen_position_x,self.eMBB_UE_screen_position_y))
+
