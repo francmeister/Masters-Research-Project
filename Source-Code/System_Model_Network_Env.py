@@ -8,6 +8,9 @@ pygame.init()
 #Set constant variables
 SCREEN_WIDTH = 1500
 SCREEN_HEIGHT = 900
+ENV_WIDTH = 1100
+ENV_HEIGHT = 900
+
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 run = True
@@ -17,9 +20,9 @@ eMBB_Users = []
 
 #Instantiate objects
 SBS1 = SBS(1)
-eMBB_UE_1 = eMBB_UE(1,100,600)
-URLLC_UE_1 = URLLC_UE(1,600,700)
-eMBB_UE_2 = eMBB_UE(2,1100,500)
+eMBB_UE_1 = eMBB_UE(1,1,100,600)
+URLLC_UE_1 = URLLC_UE(1,2,600,700)
+eMBB_UE_2 = eMBB_UE(2,3,1000,500)
 Communication_Channel_1 = Communication_Channel(SBS1.SBS_label)
 
 # Group all eMBB users
@@ -29,7 +32,7 @@ eMBB_Users.append(eMBB_UE_2)
 # Allocate subcarriers to eMBB Users
 Communication_Channel_1.allocate_subcarriers_eMBB(eMBB_Users)
 
-print(eMBB_UE_2.allocated_subcarriers)
+#print(eMBB_UE_2.allocated_subcarriers)
 while run:
 
     screen.fill(BLACK)
@@ -51,6 +54,8 @@ while run:
     eMBB_UE_1.load_eMBB_UE_sprite(screen)
     eMBB_UE_2.load_eMBB_UE_sprite(screen)
     URLLC_UE_1.load_URLLC_UE_sprite(screen)
+
+    pygame.draw.rect(screen, "white", [0, 0, ENV_WIDTH, ENV_HEIGHT], 5)
 
     pygame.display.update()
     frameCount+=1

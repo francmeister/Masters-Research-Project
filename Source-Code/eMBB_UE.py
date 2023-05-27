@@ -3,11 +3,15 @@ import random
 from User_Equipment import User_Equipment
 from QOS_requirement import QOS_requirement
 from Task import Task
+import numpy as np
+import math
+from State_Space import State_Space
 pygame.init()
 
 class eMBB_UE(User_Equipment):
-    def __init__(self, eMBB_UE_label,screen_position_x,screen_position_y):
+    def __init__(self, eMBB_UE_label,UE_label,screen_position_x,screen_position_y):
         self.eMBB_UE_label = eMBB_UE_label
+        self.UE_label = UE_label
         self.eMBB_UE_sprite_width = 87
         self.eMBB_UE_sprite_height = 109
         self.eMBB_UE_screen_position_x = screen_position_x
@@ -20,7 +24,7 @@ class eMBB_UE(User_Equipment):
         self.QOS_requirement = QOS_requirement()
         self.packet_size_kilobytes = random.randint(50,100) #Kilobytes
         self.task_arrival_rate_packets_per_second = 0 #Packets/s
-        self.user_task = Task(self.cpu_cycles_per_byte)
+        self.user_task = Task(330)
         self.offloading_ratio = 0
         self.local_computation_delay_seconds = 0
         self.achieved_local_energy_consumption = 0
@@ -33,17 +37,19 @@ class eMBB_UE(User_Equipment):
         self.local_queue = []
         self.timeslot_counter = 0
         self.minislot_counter = 0
-
+        self.x_position = 0
+        self.y_position = 0
+        self.eMBB_UE_sprite = pygame.image.load(self.filename).convert()
+        self.sprite_surface = pygame.Surface((self.eMBB_UE_sprite_width,self.eMBB_UE_sprite_height))
+        self.sprite_surface.set_colorkey((0,0,0))
+        self.energy_harversted = 0
+        self.user_state_space = State_Space(self.UE_label,self.total_gain,self.user_task,self.energy_harversted)
 
         #self.sprite = SpriteSheet(self.spriteSheetFilename,self.spriteSheet_x,self.spriteSheet_y,self.spriteSheet_width,self.spriteSheet_height)
     def load_eMBB_UE_sprite(self,screen):
-        eMBB_UE_sprite = pygame.image.load(self.filename).convert()
 
-        sprite_surface = pygame.Surface((self.eMBB_UE_sprite_width,self.eMBB_UE_sprite_height))
-        sprite_surface.set_colorkey((0,0,0))
-
-        sprite_surface.blit(eMBB_UE_sprite,(0,0))
-        screen.blit(sprite_surface,(self.eMBB_UE_screen_position_x,self.eMBB_UE_screen_position_y))
+        self.sprite_surface.blit(self.eMBB_UE_sprite,(0,0))
+        screen.blit(self.sprite_surface,(self.eMBB_UE_screen_position_x,self.eMBB_UE_screen_position_y))
 
     def generate_task(self,short_TTI,long_TTI):
         self.timeslot_counter+=1
@@ -60,6 +66,28 @@ class eMBB_UE(User_Equipment):
             self.packet_size = (random.randint(50,100))*8000 # [50,100]Kilobytes. 8000 bits in a KB
             self.QOS_requirement.set_requirements(self.max_allowable_latency,self.max_allowable_reliability)
             self.user_task.create_task(self.task_arrival_rate_packets_per_second,self.packet_size,self.QOS_requirement)
+            self.communication_queue.append(self.user_task)
+
+    def calculate_distance_from_SBS(self, SBS_x_pos, SBS_y_pos, Env_width_pixels, Env_width_metres):
+        self.x_position = self.eMBB_UE_sprite.get_rect().centerx
+        self.y_position = self.eMBB_UE_sprite.get_rect().centery
+
+        x_diff_pixels = abs(SBS_x_pos-self.x_position)
+        y_diff_pixels = abs(SBS_y_pos-self.y_position)
+
+        x_diff_metres = (x_diff_pixels/Env_width_pixels)*Env_width_metres
+        y_diff_pixels = (y_diff_pixels/Env_width_pixels)*Env_width_metres
+
+        self.distance_from_SBS = math.sqrt(x_diff_metres^2+y_diff_pixels^2)
+
+    def collect_state(self):
+        self.user_state_space.collect(self.total_gain,self.user_task,self.energy_harversted)
+        return self.user_state_space
+
+  
+
+
+
             
 
 
