@@ -9,6 +9,7 @@ pygame.init()
 
 class URLLC_UE(User_Equipment):
     def __init__(self, URLLC_UE_label,UE_label ,screen_position_x,screen_position_y):
+        User_Equipment.__init__(self)
         self.URLLC_UE_label = URLLC_UE_label
         self.UE_label = UE_label
         self.URLLC_UE_sprite_width = 87

@@ -10,6 +10,7 @@ pygame.init()
 
 class eMBB_UE(User_Equipment):
     def __init__(self, eMBB_UE_label,UE_label,screen_position_x,screen_position_y):
+        User_Equipment.__init__(self)
         self.eMBB_UE_label = eMBB_UE_label
         self.UE_label = UE_label
         self.eMBB_UE_sprite_width = 87
@@ -33,6 +34,7 @@ class eMBB_UE(User_Equipment):
         self.energy_harvested = 0
         self.achieved_transmission_delay = 0
         self.allocated_subcarriers = []
+        self.number_of_allocated_subcarriers = 0
         self.communication_queue = []
         self.local_queue = []
         self.timeslot_counter = 0

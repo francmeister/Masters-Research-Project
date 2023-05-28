@@ -35,8 +35,6 @@ class SBS():
         self.system_state_space = []
         
     def load_cell_tower_sprite(self,screen,SCREEN_WIDTH,SCREEN_HEIGHT,frameCount):
-
-
         if frameCount == 0:
             self.sprite_surface.blit(self.cell_tower_sprite1,(0,0))
             #screen.blit(sprite_surface,(SCREEN_WIDTH/2-self.cell_tower_sprite_width/2,SCREEN_HEIGHT/2-self.cell_tower_sprite_height))
@@ -57,6 +55,10 @@ class SBS():
             self.sprite_surface.blit(self.cell_tower_sprite4,(0,0))
             #screen.blit(sprite_surface,(SCREEN_WIDTH/2-self.cell_tower_sprite_width/2,SCREEN_HEIGHT/2-self.cell_tower_sprite_height))
             screen.blit(self.sprite_surface,(400,0))
+
+    def associate_users(self, eMBB_Users, URLLC_Users):
+        self.associated_eMBB_users = eMBB_Users
+        self.associated_URLLC_users = URLLC_Users
 
     def get_SBS_center_pos(self):
         self.x_position = self.cell_tower_sprite1.get_rect().centerx
