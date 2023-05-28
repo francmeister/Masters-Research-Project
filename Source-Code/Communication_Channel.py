@@ -38,9 +38,10 @@ class Communication_Channel():
         self.SBS_label = SBS.SBS_label
         self.eMBB_Users = SBS.associated_eMBB_users
         self.URLLC_Users = SBS.associated_URLLC_users
-        self.num_subcarriers_per_RB = int(self.max_num_of_subcarriers/len(self.eMBB_Users))
+        self.num_subcarriers_per_RB_eMBB = int(self.max_num_of_subcarriers/len(self.eMBB_Users))
         self.num_allocate_subcarriers_lower_bound = self.num_subcarriers_per_RB_eMBB - self.single_side_standard_deviation
         self.num_allocate_subcarriers_upper_bound = self.num_subcarriers_per_RB_eMBB + self.single_side_standard_deviation
+        print("num_subcarriers_per_RB_eMBB: ", self.num_subcarriers_per_RB_eMBB)
 
     def initiate_subcarriers(self):
         for i in range(1,self.max_num_of_subcarriers + 1):
@@ -74,6 +75,8 @@ class Communication_Channel():
                 for subcarrier in eMBB_User.allocated_subcarriers:
                     index = self.eMBB_subcarrier_mappings.index([subcarrier,0])
                     self.eMBB_subcarrier_mappings[index] = [subcarrier,eMBB_User.eMBB_UE_label]       
+
+        print("eMBB_subcarrier_mappings: ", self.eMBB_subcarrier_mappings)
 
     def create_resource_blocks_URLLC(self):
         self.number_of_resource_blocks_URLLC = int(len(self.URLLC_Users)/self.number_URLLC_Users_per_RB)

@@ -21,16 +21,28 @@ URLLC_UE_1 = URLLC_UE(1,2,600,700)
 URLLC_UE_2 = URLLC_UE(2,3,600,700)
 URLLC_UE_3 = URLLC_UE(3,4,600,700)
 URLLC_UE_4 = URLLC_UE(4,5,600,700)
-URLLC_UE_5 = URLLC_UE(5,4,600,700)
-URLLC_UE_6 = URLLC_UE(6,5,600,700)
-URLLC_UE_7 = URLLC_UE(7,5,600,700)
-eMBB_UE_2 = eMBB_UE(2,6,1000,500)
+URLLC_UE_5 = URLLC_UE(5,6,600,700)
+URLLC_UE_6 = URLLC_UE(6,7,600,700)
+URLLC_UE_7 = URLLC_UE(7,8,600,700)
+eMBB_UE_2 = eMBB_UE(2,9,1000,500)
+eMBB_UE_3 = eMBB_UE(3,10,1000,500)
+eMBB_UE_4 = eMBB_UE(4,11,1000,500)
+eMBB_UE_5 = eMBB_UE(5,12,1000,500)
+eMBB_UE_6 = eMBB_UE(6,13,1000,500)
+eMBB_UE_7 = eMBB_UE(7,14,1000,500)
+
 Communication_Channel_1 = Communication_Channel()
 
 # Group all eMBB users
 eMBB_Users = []
 eMBB_Users.append(eMBB_UE_1)
 eMBB_Users.append(eMBB_UE_2)
+eMBB_Users.append(eMBB_UE_3)
+eMBB_Users.append(eMBB_UE_4)
+eMBB_Users.append(eMBB_UE_5)
+eMBB_Users.append(eMBB_UE_6)
+eMBB_Users.append(eMBB_UE_7)
+
 
 #Group all URLLC users
 URLLC_Users = []
