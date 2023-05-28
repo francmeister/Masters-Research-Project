@@ -35,6 +35,7 @@ class URLLC_UE(User_Equipment):
         self.sprite_surface.set_colorkey((0,0,0))
         self.energy_harversted = 0
         self.user_state_space = State_Space(self.UE_label,self.total_gain,self.user_task,self.energy_harversted)
+        self.allocated_RB = []
         
     def load_URLLC_UE_sprite(self,screen):
         self.sprite_surface.blit(self.URLLC_UE_sprite,(0,0))

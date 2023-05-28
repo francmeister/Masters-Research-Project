@@ -13,7 +13,7 @@ class Communication_Channel():
         self.subcarrier_bandwidth_kHz = 120 # 120kHz
         self.num_subcarriers_per_RB_eMBB = 0
         self.num_subcarriers_per_RB_URLLC = 0
-        self.number_URLLC_Users_per_RB = 3
+        self.number_URLLC_Users_per_RB = 2
         self.number_of_resource_blocks_URLLC = 0
         self.SBS_label = 0
         self.eMBB_subcarrier_mappings = []
@@ -37,7 +37,7 @@ class Communication_Channel():
     def get_SBS_and_Users(self,SBS):
         self.SBS_label = SBS.SBS_label
         self.eMBB_Users = SBS.associated_eMBB_users
-        self.URLLC_Users = SBS.associated_eMBB_users
+        self.URLLC_Users = SBS.associated_URLLC_users
         self.num_subcarriers_per_RB = int(self.max_num_of_subcarriers/len(self.eMBB_Users))
         self.num_allocate_subcarriers_lower_bound = self.num_subcarriers_per_RB_eMBB - self.single_side_standard_deviation
         self.num_allocate_subcarriers_upper_bound = self.num_subcarriers_per_RB_eMBB + self.single_side_standard_deviation
@@ -73,22 +73,101 @@ class Communication_Channel():
             if eMBB_User.number_of_allocated_subcarriers > 0:
                 for subcarrier in eMBB_User.allocated_subcarriers:
                     index = self.eMBB_subcarrier_mappings.index([subcarrier,0])
-                    self.eMBB_subcarrier_mappings[index] = [subcarrier,eMBB_User.eMBB_UE_label]
+                    self.eMBB_subcarrier_mappings[index] = [subcarrier,eMBB_User.eMBB_UE_label]       
 
-    def allocate_resource_blocks_URLLC(self,URLLC_Users):
+    def create_resource_blocks_URLLC(self):
+        self.number_of_resource_blocks_URLLC = int(len(self.URLLC_Users)/self.number_URLLC_Users_per_RB)
+        float_value = len(self.URLLC_Users)/self.number_URLLC_Users_per_RB
 
-    def create_resource_blocks(self):
-        self.number_of_resource_blocks_URLLC = len(self.URLLC_Users)/self.number_URLLC_Users_per_RB
-        self.num_subcarriers_per_RB_URLLC = self.max_num_of_subcarriers/self.number_of_resource_blocks_URLLC
+        if float_value > self.number_of_resource_blocks_URLLC:
+            self.number_of_resource_blocks_URLLC += 1
+
+        self.num_subcarriers_per_RB_URLLC = int(self.max_num_of_subcarriers/self.number_of_resource_blocks_URLLC)
         
-        self.resource_blocks_URLLC.append(np.arange(1,self.number_of_resource_blocks_URLLC))
+        #self.resource_blocks_URLLC = np.arange(1,self.number_of_resource_blocks_URLLC + 1)
+        for i in range(1,self.number_of_resource_blocks_URLLC  + 1):
+            self.resource_blocks_URLLC.append(i)
 
         #Map subcarriers to URLLC Resource Block
         start_index = 0
-        end_index = self.num_subcarriers_per_RB_eMBB
+        end_index = self.num_subcarriers_per_RB_URLLC
+        subcarriers = []
+        for i in range(1,self.max_num_of_subcarriers  + 1):
+            subcarriers.append(i)
 
         for RB in self.resource_blocks_URLLC:
-            self.reso
+            self.resource_blocks_subcarrier_mappings_URLLC.append(subcarriers[start_index:end_index])
+            start_index += self.num_subcarriers_per_RB_URLLC
+            end_index += self.num_subcarriers_per_RB_URLLC
+
+        for RB in range(1,self.number_of_resource_blocks_URLLC + 1):
+            if self.number_URLLC_Users_per_RB == 1:
+                self.resource_blocks_URLLC_mappings.append([RB,0])
+            elif self.number_URLLC_Users_per_RB == 2:
+                self.resource_blocks_URLLC_mappings.append([RB,0,0])
+            elif self.number_URLLC_Users_per_RB == 3:
+                self.resource_blocks_URLLC_mappings.append([RB,0,0,0])
+
+        print("number_of_resource_blocks_URLLC: ", self.number_of_resource_blocks_URLLC) 
+        print("num_subcarriers_per_RB_URLLC: ", self.num_subcarriers_per_RB_URLLC)     
+        print("resource_blocks_URLLC: ", self.resource_blocks_URLLC)
+        print("resource_blocks_subcarrier_mappings_URLLC: ", self.resource_blocks_subcarrier_mappings_URLLC)
+
+    def allocate_resource_blocks_URLLC(self,URLLC_Users):
+        count1 = 1
+        count2 = 0
+        for URLLC_User in URLLC_Users:
+            URLLC_User.allocated_RB.append(count1)
+            count2+=1
+            if count2 == self.number_URLLC_Users_per_RB:
+                count2 = 0
+                count1 += 1
+
+        count1 = 0
+        count2 = 0
+        prev1 = 0
+        prev2 = 0
+
+        for URLLC_User in URLLC_Users:
+            if len(URLLC_User.allocated_RB) > 0:
+                if self.number_URLLC_Users_per_RB == 1:
+                    self.resource_blocks_URLLC_mappings[count1] = [URLLC_User.allocated_RB[0],URLLC_User.URLLC_UE_label]
+                    count1 += 1
+
+                if self.number_URLLC_Users_per_RB == 2:
+                    if count2 == 0:
+                        self.resource_blocks_URLLC_mappings[count1] = [URLLC_User.allocated_RB[0],URLLC_User.URLLC_UE_label,0]
+                        count2 += 1
+                        prev1 = URLLC_User.URLLC_UE_label
+                    elif count2 == 1:
+                        self.resource_blocks_URLLC_mappings[count1] = [URLLC_User.allocated_RB[0],prev1,URLLC_User.URLLC_UE_label]
+                        count2 += 1
+                    if count2 == 2:
+                        count2 = 0
+                        count1 += 1
+
+                if self.number_URLLC_Users_per_RB == 3:
+                    if count2 == 0:
+                        self.resource_blocks_URLLC_mappings[count1] = [URLLC_User.allocated_RB[0],URLLC_User.URLLC_UE_label,0,0]
+                        count2 += 1
+                        prev1 = URLLC_User.URLLC_UE_label
+                    elif count2 == 1:
+                        self.resource_blocks_URLLC_mappings[count1] = [URLLC_User.allocated_RB[0],prev1,URLLC_User.URLLC_UE_label,0]
+                        count2 += 1
+                        prev2 = URLLC_User.URLLC_UE_label
+                    elif count2 == 2:
+                        self.resource_blocks_URLLC_mappings[count1] = [URLLC_User.allocated_RB[0],prev1,prev2,URLLC_User.URLLC_UE_label]
+                        count2 += 1
+                    if count2 == 3:
+                        count2 = 0
+                        count1 += 1
+
+        print("resource_blocks_URLLC_mappings: ", self.resource_blocks_URLLC_mappings)
+            
+
+
+
+        
 
 
         
