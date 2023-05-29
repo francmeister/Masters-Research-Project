@@ -31,7 +31,7 @@ eMBB_UE_5 = eMBB_UE(5,12,1000,500)
 eMBB_UE_6 = eMBB_UE(6,13,1000,500)
 eMBB_UE_7 = eMBB_UE(7,14,1000,500)
 
-Communication_Channel_1 = Communication_Channel()
+Communication_Channel_1 = Communication_Channel(SBS1.SBS_label)
 
 # Group all eMBB users
 eMBB_Users = []
@@ -64,6 +64,10 @@ Communication_Channel_1.initiate_subcarriers()
 Communication_Channel_1.allocate_subcarriers_eMBB(eMBB_Users)
 Communication_Channel_1.create_resource_blocks_URLLC()
 Communication_Channel_1.allocate_resource_blocks_URLLC(URLLC_Users)
+Communication_Channel_1.subcarrier_URLLC_User_mapping()
+eMBB_UE_1.transmit_to_SBS(Communication_Channel_1.subcarrier_URLLC_User_mapping_)
 #Communication_Channel_1.allocate_resource_blocks_URLLC()
+
+
 
 

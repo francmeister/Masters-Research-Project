@@ -6,7 +6,7 @@ import numpy as np
 pygame.init()
 
 class Communication_Channel():
-    def __init__(self):
+    def __init__(self,SBS_label):
         #Telecomm Network Properties
         self.transmission_queue = []
         self.max_num_of_subcarriers = 144
@@ -15,7 +15,7 @@ class Communication_Channel():
         self.num_subcarriers_per_RB_URLLC = 0
         self.number_URLLC_Users_per_RB = 2
         self.number_of_resource_blocks_URLLC = 0
-        self.SBS_label = 0
+        self.SBS_label = SBS_label
         self.eMBB_subcarrier_mappings = []
         self.URLLC_RB_mappings = []
         self.long_TTI = 0.125 #1ms
@@ -33,6 +33,7 @@ class Communication_Channel():
         self.resource_blocks_URLLC = []
         self.resource_blocks_subcarrier_mappings_URLLC = []
         self.resource_blocks_URLLC_mappings = []
+        self.subcarrier_URLLC_User_mapping_ = []
 
     def get_SBS_and_Users(self,SBS):
         self.SBS_label = SBS.SBS_label
@@ -41,7 +42,7 @@ class Communication_Channel():
         self.num_subcarriers_per_RB_eMBB = int(self.max_num_of_subcarriers/len(self.eMBB_Users))
         self.num_allocate_subcarriers_lower_bound = self.num_subcarriers_per_RB_eMBB - self.single_side_standard_deviation
         self.num_allocate_subcarriers_upper_bound = self.num_subcarriers_per_RB_eMBB + self.single_side_standard_deviation
-        print("num_subcarriers_per_RB_eMBB: ", self.num_subcarriers_per_RB_eMBB)
+        #print("num_subcarriers_per_RB_eMBB: ", self.num_subcarriers_per_RB_eMBB)
 
     def initiate_subcarriers(self):
         for i in range(1,self.max_num_of_subcarriers + 1):
@@ -76,7 +77,7 @@ class Communication_Channel():
                     index = self.eMBB_subcarrier_mappings.index([subcarrier,0])
                     self.eMBB_subcarrier_mappings[index] = [subcarrier,eMBB_User.eMBB_UE_label]       
 
-        print("eMBB_subcarrier_mappings: ", self.eMBB_subcarrier_mappings)
+        #print("eMBB_subcarrier_mappings: ", self.eMBB_subcarrier_mappings)
 
     def create_resource_blocks_URLLC(self):
         self.number_of_resource_blocks_URLLC = int(len(self.URLLC_Users)/self.number_URLLC_Users_per_RB)
@@ -111,10 +112,10 @@ class Communication_Channel():
             elif self.number_URLLC_Users_per_RB == 3:
                 self.resource_blocks_URLLC_mappings.append([RB,0,0,0])
 
-        print("number_of_resource_blocks_URLLC: ", self.number_of_resource_blocks_URLLC) 
-        print("num_subcarriers_per_RB_URLLC: ", self.num_subcarriers_per_RB_URLLC)     
-        print("resource_blocks_URLLC: ", self.resource_blocks_URLLC)
-        print("resource_blocks_subcarrier_mappings_URLLC: ", self.resource_blocks_subcarrier_mappings_URLLC)
+        #print("number_of_resource_blocks_URLLC: ", self.number_of_resource_blocks_URLLC) 
+        #print("num_subcarriers_per_RB_URLLC: ", self.num_subcarriers_per_RB_URLLC)     
+        #print("resource_blocks_URLLC: ", self.resource_blocks_URLLC)
+        #print("resource_blocks_subcarrier_mappings_URLLC: ", self.resource_blocks_subcarrier_mappings_URLLC)
 
     def allocate_resource_blocks_URLLC(self,URLLC_Users):
         count1 = 1
@@ -165,7 +166,27 @@ class Communication_Channel():
                         count2 = 0
                         count1 += 1
 
-        print("resource_blocks_URLLC_mappings: ", self.resource_blocks_URLLC_mappings)
+       # print("resource_blocks_URLLC_mappings: ", self.resource_blocks_URLLC_mappings)
+
+    def subcarrier_URLLC_User_mapping(self):
+        for RB in self.resource_blocks_URLLC_mappings:
+            resource_block = RB[0]
+           
+            users_on_this_RB = RB[1:]
+            
+            for user in users_on_this_RB:
+                if user == 0:
+                    zero_index = users_on_this_RB.index(user)
+                    users_on_this_RB.pop(zero_index)
+
+            subcarriers_on_this_RB = self.resource_blocks_subcarrier_mappings_URLLC[resource_block-1]
+            for subcarrier in subcarriers_on_this_RB:
+                self.subcarrier_URLLC_User_mapping_.append([subcarrier,users_on_this_RB])
+
+        print("subcarrier_URLLC_User_mapping: ",self.subcarrier_URLLC_User_mapping_)
+
+
+
             
 
 

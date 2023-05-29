@@ -46,6 +46,10 @@ class eMBB_UE(User_Equipment):
         self.sprite_surface.set_colorkey((0,0,0))
         self.energy_harversted = 0
         self.user_state_space = State_Space(self.UE_label,self.total_gain,self.user_task,self.energy_harversted)
+        self.allocated_offloading_ratio = 0
+        self.packet_offload_size_bits = 0
+        self.packet_local_size_bits = 0
+        self.intefering_URLLC_Users = []
 
         #self.sprite = SpriteSheet(self.spriteSheetFilename,self.spriteSheet_x,self.spriteSheet_y,self.spriteSheet_width,self.spriteSheet_height)
     def load_eMBB_UE_sprite(self,screen):
@@ -85,6 +89,36 @@ class eMBB_UE(User_Equipment):
     def collect_state(self):
         self.user_state_space.collect(self.total_gain,self.user_task,self.energy_harversted)
         return self.user_state_space
+    
+    def dequeue_packet(self):
+        if len(self.communication_queue) > 0:
+            if len(self.communication_queue[0].packet_queue) > 0:
+                self.communication_queue[0].packet_queue.pop(0)
+
+            elif len(self.communication_queue[0].packet_queue) == 0:
+                self.dequeue_task()
+
+    def dequeue_task(self):
+        self.communication_queue.pop(0)
+
+    def split_packet(self):
+        packet_dec = self.communication_queue[0].packet_queue[0]
+        packet_bin = bin(packet_dec)[2:]
+        packet_size = len(packet_bin)
+        self.packet_offload_size_bits = int(self.allocated_offloading_ratio*packet_size)
+        self.packet_local_size_bits = int((1-self.allocated_offloading_ratio)*packet_size)
+        self.local_queue.append(random.getrandbits(self.packet_local_size_bits))
+        self.dequeue_packet()
+
+    def transmit_to_SBS(self, subcarrier_URLLC_User_mapping):
+        for subcarrier in self.allocated_subcarriers:
+            self.intefering_URLLC_Users.append(subcarrier_URLLC_User_mapping[subcarrier - 1])
+
+        print("allocated_subcarriers", self.allocated_subcarriers)
+        print("intefering_URLLC_Users: ", self.intefering_URLLC_Users)
+
+
+
 
   
 

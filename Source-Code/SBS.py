@@ -70,3 +70,13 @@ class SBS():
         self.system_state_space.clear()
         for user in system_users:
             self.system_state_space.append(user.collect_state())
+
+    def allocate_transmit_powers(self,eMBB_Users):
+        for eMBB_User in eMBB_Users:
+            eMBB_User.assigned_transmit_power_dBm = random.randint(1,eMBB_User.max_transmission_power_dBm)
+            eMBB_User.calculate_assigned_transmit_power_W()
+
+    def allocate_offlaoding_ratios(self,eMBB_Users):
+        for eMBB_User in eMBB_Users:
+            eMBB_User.allocated_offloading_ratio = random.random()
+
