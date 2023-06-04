@@ -3,6 +3,7 @@ from Spritesheet import SpriteSheet
 import random
 from eMBB_UE import eMBB_UE
 import numpy as np
+import math
 pygame.init()
 
 class Communication_Channel():
@@ -21,7 +22,8 @@ class Communication_Channel():
         self.long_TTI = 0.125 #1ms
         self.short_TTI = 0.018 # 0.143ms
         self.num_minislots_per_timeslot = 7
-        self.noise_spectral_density = -174 # -174dBM/Hz
+        self.noise_spectral_density_dbm = -174 # -174dBM/Hz
+        self.noise_spectral_density_W = (math.pow(10,(self.noise_spectral_density_dbm/10)))/1000
         self.resource_block_subcarrier_mapping_eMBB = []
         self.subcarriers = []
         self.num_of_available_subcarriers = self.max_num_of_subcarriers

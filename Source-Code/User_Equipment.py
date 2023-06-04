@@ -13,7 +13,7 @@ class User_Equipment():
         self.assigned_transmit_power_dBm = 0
         self.assigned_transmit_power_W = 0
         self.cpu_cycles_per_byte = 330
-        self.cpu_clock_frequency = random.randrange(1,2,1)
+        self.cpu_clock_frequency = random.randrange(100,1000) #100 Hz to 1000 Hz
         self.associated_SBS_label = 0
         self.small_scale_channel_gain = 0
         self.large_scale_channel_gain = 0
@@ -23,6 +23,9 @@ class User_Equipment():
         self.task_profile = []
         self.distance_from_SBS = 0
         self.total_gain = 0
+        self.has_transmitted_this_time_slot = False
+        self.communication_queue = []
+        self.energy_consumption_coefficient = 10^-15
 
     def calculate_channel_gain(self):
         #Pathloss gain
@@ -33,3 +36,16 @@ class User_Equipment():
 
     def calculate_assigned_transmit_power_W(self):
         self.assigned_transmit_power_W = (math.pow(10,(self.assigned_transmit_power_dBm/10)))/1000
+
+    def dequeue_packet(self):
+        if len(self.communication_queue) > 0:
+            if len(self.communication_queue[0].packet_queue) > 0:
+                self.communication_queue[0].packet_queue.pop(0)
+
+            elif len(self.communication_queue[0].packet_queue) == 0:
+                self.dequeue_task()
+
+    def dequeue_task(self):
+        self.communication_queue.pop(0)
+
+    

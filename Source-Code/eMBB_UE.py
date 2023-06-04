@@ -35,7 +35,6 @@ class eMBB_UE(User_Equipment):
         self.achieved_transmission_delay = 0
         self.allocated_subcarriers = []
         self.number_of_allocated_subcarriers = 0
-        self.communication_queue = []
         self.local_queue = []
         self.timeslot_counter = 0
         self.minislot_counter = 0
@@ -50,6 +49,7 @@ class eMBB_UE(User_Equipment):
         self.packet_offload_size_bits = 0
         self.packet_local_size_bits = 0
         self.intefering_URLLC_Users = []
+        self.offloaded_packet = []
 
         #self.sprite = SpriteSheet(self.spriteSheetFilename,self.spriteSheet_x,self.spriteSheet_y,self.spriteSheet_width,self.spriteSheet_height)
     def load_eMBB_UE_sprite(self,screen):
@@ -87,19 +87,8 @@ class eMBB_UE(User_Equipment):
         self.distance_from_SBS = math.sqrt(x_diff_metres^2+y_diff_pixels^2)
 
     def collect_state(self):
-        self.user_state_space.collect(self.total_gain,self.user_task,self.energy_harversted)
+        self.user_state_space.collect(self.total_gain,self.communication_queue,self.energy_harversted)
         return self.user_state_space
-    
-    def dequeue_packet(self):
-        if len(self.communication_queue) > 0:
-            if len(self.communication_queue[0].packet_queue) > 0:
-                self.communication_queue[0].packet_queue.pop(0)
-
-            elif len(self.communication_queue[0].packet_queue) == 0:
-                self.dequeue_task()
-
-    def dequeue_task(self):
-        self.communication_queue.pop(0)
 
     def split_packet(self):
         packet_dec = self.communication_queue[0].packet_queue[0]
@@ -108,14 +97,47 @@ class eMBB_UE(User_Equipment):
         self.packet_offload_size_bits = int(self.allocated_offloading_ratio*packet_size)
         self.packet_local_size_bits = int((1-self.allocated_offloading_ratio)*packet_size)
         self.local_queue.append(random.getrandbits(self.packet_local_size_bits))
+        self.offloaded_packet = random.getrandbits(self.packet_offload_size_bits)
         self.dequeue_packet()
 
-    def transmit_to_SBS(self, subcarrier_URLLC_User_mapping):
+    def transmit_to_SBS(self, communication_channel, URLLC_Users):
+        #Find URLLC users transmitting on this eMBB user's subcarriers
+        subcarrier_URLLC_User_mapping = communication_channel.subcarrier_URLLC_User_mapping_
         for subcarrier in self.allocated_subcarriers:
             self.intefering_URLLC_Users.append(subcarrier_URLLC_User_mapping[subcarrier - 1])
 
+        #Calculate the bandwidth achieved on each subcarrier, each subcarrier receives interference from mapped URLLC users
+        achieved_subcarriers_channel_rates = []
+        for subcarrier in self.allocated_subcarriers:
+            URLLC_users_on_this_subcarrier = self.intefering_URLLC_Users[subcarrier - 1][1]
+            URLLC_Users_transmit_powers = []
+            URLLC_Users_channel_gains = []
+            for URLLC_User in URLLC_users_on_this_subcarrier:
+                if URLLC_Users[URLLC_User - 1].has_transmitted_this_time_slot == True:
+                    URLLC_Users_transmit_powers.append(URLLC_Users[URLLC_User - 1].assigned_transmit_power_W)
+                    URLLC_Users_channel_gains.append(URLLC_Users[URLLC_User - 1].total_gain)
+            achieved_subcarrier_channel_rate = self.calculate_channel_gain(URLLC_Users_channel_gains,communication_channel)
+            achieved_subcarriers_channel_rates.append(achieved_subcarrier_channel_rate)
+
+        self.achieved_channel_rate = sum(achieved_subcarriers_channel_rates)
+
         print("allocated_subcarriers", self.allocated_subcarriers)
         print("intefering_URLLC_Users: ", self.intefering_URLLC_Users)
+        print(self.intefering_URLLC_Users[0][1])
+
+    def calculate_channel_rate(self,transmitting_URLLC_Users, communication_channel):
+        channel_rate = communication_channel.subcarrier_bandwidth_kHz*(1-(len(transmitting_URLLC_Users)/communication_channel.num_minislots_per_timeslot))*math.log2(1+((self.assigned_transmit_power_W*self.total_gain)/(communication_channel.noise_spectral_density_W*communication_channel.subcarrier_bandwidth_kHz*1000)))
+        return channel_rate
+    
+    def local_processing(self):
+        cycles_per_packet = self.cpu_cycles_per_byte*(self.packet_size*0.125)
+        self.achieved_local_energy_consumption = self.energy_consumption_coefficient*math.pow(self.cpu_clock_frequency,2)*(1-self.allocated_offloading_ratio)*cycles_per_packet
+        self.local_queue.pop(0) 
+
+    def offloading(self):
+        
+
+
 
 
 

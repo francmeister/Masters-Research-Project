@@ -33,6 +33,9 @@ class SBS():
         self.associated_URLLC_users = []
         self.associated_eMBB_users = []
         self.system_state_space = []
+        self.num_arriving_URLLC_packets = 0
+        self.eMBB_Users_packet_queue = []
+        self.URLLC_Users_packet_queue = []
         
     def load_cell_tower_sprite(self,screen,SCREEN_WIDTH,SCREEN_HEIGHT,frameCount):
         if frameCount == 0:
@@ -79,4 +82,21 @@ class SBS():
     def allocate_offlaoding_ratios(self,eMBB_Users):
         for eMBB_User in eMBB_Users:
             eMBB_User.allocated_offloading_ratio = random.random()
+
+    def count_num_arriving_URLLC_packet(self,URLLC_Users):
+        self.num_arriving_URLLC_packets = 0
+
+        for URLLC_User in URLLC_Users:
+            if URLLC_User.has_transmitted_this_time_slot == True:
+                self.num_arriving_URLLC_packets += 1
+
+    def receive_offload_packets(self, eMBB_Users, URLLC_Users):
+        for eMBB_User in eMBB_Users:
+            if eMBB_User.has_transmitted_this_time_slot == True:
+                self.eMBB_Users_packet_queue.append(eMBB_User.offloaded_packet)
+
+        for URLLC_User in URLLC_Users:
+            if URLLC_User.has_transmitted_this_time_slot == True:
+                self.eMBB_Users_packet_queue.append(eMBB_User.offloaded_packet)
+
 

@@ -65,7 +65,8 @@ Communication_Channel_1.allocate_subcarriers_eMBB(eMBB_Users)
 Communication_Channel_1.create_resource_blocks_URLLC()
 Communication_Channel_1.allocate_resource_blocks_URLLC(URLLC_Users)
 Communication_Channel_1.subcarrier_URLLC_User_mapping()
-eMBB_UE_1.transmit_to_SBS(Communication_Channel_1.subcarrier_URLLC_User_mapping_)
+#eMBB_UE_1.transmit_to_SBS(Communication_Channel_1, URLLC_Users)
+URLLC_UE_1.transmit_to_SBS(eMBB_Users,Communication_Channel_1)
 #Communication_Channel_1.allocate_resource_blocks_URLLC()
 
 
