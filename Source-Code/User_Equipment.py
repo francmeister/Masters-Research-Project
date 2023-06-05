@@ -26,6 +26,10 @@ class User_Equipment():
         self.has_transmitted_this_time_slot = False
         self.communication_queue = []
         self.energy_consumption_coefficient = 10^-15
+        self.achieved_transmission_energy_consumption = 0
+        self.achieved_local_processing_delay = 0
+        self.achieved_total_energy_consumption = 0
+        self.achieved_total_processing_delay = 0
 
     def calculate_channel_gain(self):
         #Pathloss gain

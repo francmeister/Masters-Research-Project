@@ -23,7 +23,8 @@ class URLLC_UE(User_Equipment):
         self.max_allowable_reliability = 0
         self.QOS_requirement = QOS_requirement()
         self.achieved_reliability = 0
-        self.packet_size = 32 #bytes
+        self.packet_size_bytes = 32 #bytes
+        self.packet_size_bits = self.packet_size_bytes*8
         self.task_arrival_rate = 500 #packets/s
         self.achieved_transmission_delay = 0
         self.timeslot_counter = 0
@@ -61,7 +62,7 @@ class URLLC_UE(User_Equipment):
                 self.task_arrival_rate_packets_per_second = 500 #Packets/s
                 self.max_allowable_latency = 1 #1 ms
                 self.max_allowable_reliability = 10^-7
-                self.packet_size = 32*8 # 32 bytes. 8 bits in a byte
+                self.packet_size_bits = 32*8 # 32 bytes. 8 bits in a byte
                 self.QOS_requirement.set_requirements(self.max_allowable_latency,self.max_allowable_reliability)
                 self.user_task.create_task(self.task_arrival_rate_packets_per_second,self.packet_size,self.QOS_requirement)
                 self.communication_queue.append(self.user_task)

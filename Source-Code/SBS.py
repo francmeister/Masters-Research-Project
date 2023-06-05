@@ -36,6 +36,13 @@ class SBS():
         self.num_arriving_URLLC_packets = 0
         self.eMBB_Users_packet_queue = []
         self.URLLC_Users_packet_queue = []
+        self.achieved_total_system_energy_consumption = 0
+        self.achieved_total_system_processing_delay = 0
+        self.achieved_URLLC_reliability = 0
+        self.achieved_total_rate_URLLC_users = 0
+        self.achieved_total_rate_eMBB_users = 0
+        self.achieved_system_energy_efficiency = 0
+        self.achieved_system_reward = 0
         
     def load_cell_tower_sprite(self,screen,SCREEN_WIDTH,SCREEN_HEIGHT,frameCount):
         if frameCount == 0:
@@ -98,5 +105,40 @@ class SBS():
         for URLLC_User in URLLC_Users:
             if URLLC_User.has_transmitted_this_time_slot == True:
                 self.eMBB_Users_packet_queue.append(eMBB_User.offloaded_packet)
+
+    def calculate_achieved_total_system_energy_consumption(self, eMBB_Users):
+        self.total_system_energy_consumption = 0
+        for eMBB_User in eMBB_Users:
+            self.achieved_total_system_energy_consumption += eMBB_User.achieved_total_energy_consumption
+
+    def calculate_achieved_total_system_processing_delay(self, eMBB_Users):
+        self.achieved_total_system_processing_delay = 0
+        for eMBB_User in eMBB_Users:
+            self.achieved_total_system_processing_delay += eMBB_User.achieved_total_processing_delay
+
+    def calculate_achieved_total_rate_URLLC_users(self, URLLC_Users):
+        self.achieved_total_rate_URLLC_users = 0
+        for URLLC_User in URLLC_Users:
+            if URLLC_User.has_transmitted_this_time_slot == True:
+                self.achieved_total_rate_URLLC_users += URLLC_User.achieved_channel_rate
+
+    def calculate_achieved_total_rate_eMBB_users(self, eMBB_Users):
+        self.achieved_total_rate_eMBB_users = 0
+        for eMBB_User in eMBB_Users:
+            if eMBB_User.has_transmitted_this_time_slot == True:
+                self.achieved_total_rate_eMBB_users += eMBB_User.achieved_channel_rate
+
+    def calculate_achieved_URLLC_reliability(self, URLLC_User):
+        self.achieved_URLLC_reliability = URLLC_User.packet_size_bits*self.num_arriving_URLLC_packets
+
+    def calculate_achieved_system_energy_efficiency(self):
+        self.achieved_system_energy_efficiency = self.achieved_total_rate_eMBB_users/self.achieved_total_system_energy_consumption
+
+    def calculate_achieved_system_reward(self, eMBB_Users, URLLC_Users):
+        self.achieved_system_reward = 0
+        eMBB_Users_energy_consumption = 0
+        eMBB_Users_channel_rate = 0
+        eMBB_Users_QOS_requirement = 0
+
 
 
