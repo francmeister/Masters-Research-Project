@@ -22,6 +22,7 @@ class URLLC_UE(User_Equipment):
         self.max_allowable_latency = 0
         self.max_allowable_reliability = 0
         self.QOS_requirement = QOS_requirement()
+        self.QOS_requirement_for_transmission = QOS_requirement()
         self.achieved_reliability = 0
         self.packet_size_bytes = 32 #bytes
         self.packet_size_bits = self.packet_size_bytes*8
@@ -114,6 +115,7 @@ class URLLC_UE(User_Equipment):
         if len(self.communication_queue) > 0:
             if len(self.communication_queue[0].packet_queue) > 0:
                 packet_dec = self.communication_queue[0].packet_queue[0]
+                self.QOS_requirement_for_transmission = self.communication_queue[0].QOS_requirement
                 packet_bin = bin(packet_dec)[2:]
                 self.packet_offload_size_bits = len(packet_bin)
                 self.offloaded_packet = random.getrandbits(self.packet_offload_size_bits)

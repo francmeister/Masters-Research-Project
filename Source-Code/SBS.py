@@ -43,6 +43,9 @@ class SBS():
         self.achieved_total_rate_eMBB_users = 0
         self.achieved_system_energy_efficiency = 0
         self.achieved_system_reward = 0
+        self.eMBB_User_delay_requirement_revenue = 5
+        self.URLLC_User_reliability_requirement_revenue = 5
+
         
     def load_cell_tower_sprite(self,screen,SCREEN_WIDTH,SCREEN_HEIGHT,frameCount):
         if frameCount == 0:
@@ -136,9 +139,40 @@ class SBS():
 
     def calculate_achieved_system_reward(self, eMBB_Users, URLLC_Users):
         self.achieved_system_reward = 0
-        eMBB_Users_energy_consumption = 0
-        eMBB_Users_channel_rate = 0
-        eMBB_Users_QOS_requirement = 0
+        eMBB_User_energy_consumption = 0
+        eMBB_User_channel_rate = 0
+        eMBB_User_QOS_requirement_revenue_or_penelaty = 0
+        for eMBB_User in eMBB_Users:
+            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption 
+            eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
+            eMBB_User_QOS_requirement_revenue_or_penelaty = self.achieved_eMBB_delay_requirement_revenue_or_penalty(eMBB_User)
+            self.achieved_system_reward += -eMBB_User_energy_consumption + eMBB_User_channel_rate + eMBB_User_QOS_requirement_revenue_or_penelaty
+
+        self.achieved_system_reward += ((self.achieved_total_rate_URLLC_users-URLLC_Users[0].QOS_requirement_for_transmission.max_allowable_reliability)/self.num_arriving_URLLC_packets)
+
+    def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
+        processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency
+        achieved_local_processing_delay = eMBB_User.achieved_local_processing_delay
+        achieved_offload_processing_delay = eMBB_User.achieved_transmission_delay
+
+        if processing_delay_requirement - max(achieved_local_processing_delay,achieved_offload_processing_delay) >= 0:
+            return self.eMBB_User_delay_requirement_revenue
+        else:
+            return (processing_delay_requirement - max(achieved_local_processing_delay,achieved_offload_processing_delay))
+        
+    def achieved_URLLC_User_reliability_requirement_revenue_or_penalty(self,URLLC_User):
+        reliability_requirement = URLLC_User.QOS_requirement_for_transmission.max_allowable_reliability
+        achieved_reliability = self.achieved_total_rate_URLLC_users
+
+        if ((achieved_reliability-reliability_requirement)/self.num_arriving_URLLC_packets) >= 0:
+            return self.eMBB_User_delay_requirement_revenue
+        else:
+            return ((achieved_reliability-reliability_requirement)/self.num_arriving_URLLC_packets)
+        
+    def perform_timeslot_sequential_events(self,eMBB_Users,URLLC_Users,communication_channel):
+
+
+
 
 
 

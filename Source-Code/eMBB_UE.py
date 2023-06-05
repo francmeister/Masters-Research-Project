@@ -23,6 +23,7 @@ class eMBB_UE(User_Equipment):
         self.max_allowable_latency = 0
         self.max_allowable_reliability = 0
         self.QOS_requirement = QOS_requirement()
+        self.QOS_requirement_for_transmission = QOS_requirement()
         self.packet_size_kilobytes = random.randint(50,100) #Kilobytes
         self.task_arrival_rate_packets_per_second = 0 #Packets/s
         self.user_task = Task(330)
@@ -92,6 +93,7 @@ class eMBB_UE(User_Equipment):
 
     def split_packet(self):
         packet_dec = self.communication_queue[0].packet_queue[0]
+        self.QOS_requirement_for_transmission = self.communication_queue[0].QOS_requirement
         packet_bin = bin(packet_dec)[2:]
         packet_size = len(packet_bin)
         self.packet_offload_size_bits = int(self.allocated_offloading_ratio*packet_size)
