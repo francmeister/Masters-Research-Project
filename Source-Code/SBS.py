@@ -77,17 +77,22 @@ class SBS():
         self.x_position = self.cell_tower_sprite1.get_rect().centerx
         self.y_position = self.cell_tower_sprite1.get_rect().centery
 
-    def collect_state_space(self, system_users):
-        self.associated_users = system_users
-
+    def collect_state_space(self, eMBB_Users, URLLC_Users):
         self.system_state_space.clear()
-        for user in system_users:
+        for user in eMBB_Users:
             self.system_state_space.append(user.collect_state())
 
-    def allocate_transmit_powers(self,eMBB_Users):
+        for user in URLLC_Users:
+            self.system_state_space.append(user.collect_state())
+
+    def allocate_transmit_powers(self,eMBB_Users, URLLC_Users):
         for eMBB_User in eMBB_Users:
             eMBB_User.assigned_transmit_power_dBm = random.randint(1,eMBB_User.max_transmission_power_dBm)
             eMBB_User.calculate_assigned_transmit_power_W()
+
+        for URLLC_User in URLLC_Users:
+            URLLC_User.assigned_transmit_power_dBm = random.randint(1,URLLC_User.max_transmission_power_dBm)
+            URLLC_User.calculate_assigned_transmit_power_W()
 
     def allocate_offlaoding_ratios(self,eMBB_Users):
         for eMBB_User in eMBB_Users:

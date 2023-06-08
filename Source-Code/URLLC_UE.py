@@ -120,3 +120,4 @@ class URLLC_UE(User_Equipment):
                 self.packet_offload_size_bits = len(packet_bin)
                 self.offloaded_packet = random.getrandbits(self.packet_offload_size_bits)
                 self.dequeue_packet()
+
