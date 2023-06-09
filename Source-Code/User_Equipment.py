@@ -25,7 +25,7 @@ class User_Equipment():
         self.total_gain = 0
         self.has_transmitted_this_time_slot = False
         self.communication_queue = []
-        self.energy_consumption_coefficient = 10^-15
+        self.energy_consumption_coefficient = math.pow(10,-15)
         self.achieved_transmission_energy_consumption = 0
         self.achieved_local_processing_delay = 0
         self.achieved_total_energy_consumption = 0

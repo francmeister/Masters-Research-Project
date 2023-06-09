@@ -87,12 +87,14 @@ class SBS():
 
     def allocate_transmit_powers(self,eMBB_Users, URLLC_Users):
         for eMBB_User in eMBB_Users:
-            eMBB_User.assigned_transmit_power_dBm = random.randint(1,eMBB_User.max_transmission_power_dBm)
-            eMBB_User.calculate_assigned_transmit_power_W()
+            if len(eMBB_User.user_state_space.communication_queue) > 0:
+                eMBB_User.assigned_transmit_power_dBm = random.randint(1,eMBB_User.max_transmission_power_dBm)
+                eMBB_User.calculate_assigned_transmit_power_W()
 
         for URLLC_User in URLLC_Users:
-            URLLC_User.assigned_transmit_power_dBm = random.randint(1,URLLC_User.max_transmission_power_dBm)
-            URLLC_User.calculate_assigned_transmit_power_W()
+            if len(eMBB_User.user_state_space.communication_queue) > 0:
+                URLLC_User.assigned_transmit_power_dBm = random.randint(1,URLLC_User.max_transmission_power_dBm)
+                URLLC_User.calculate_assigned_transmit_power_W()
 
     def allocate_offlaoding_ratios(self,eMBB_Users):
         for eMBB_User in eMBB_Users:
@@ -119,6 +121,8 @@ class SBS():
         for eMBB_User in eMBB_Users:
             self.achieved_total_system_energy_consumption += eMBB_User.achieved_total_energy_consumption
 
+        print("achieved_total_system_energy_consumption", self.achieved_total_system_energy_consumption)
+
     def calculate_achieved_total_system_processing_delay(self, eMBB_Users):
         self.achieved_total_system_processing_delay = 0
         for eMBB_User in eMBB_Users:
@@ -136,11 +140,14 @@ class SBS():
             if eMBB_User.has_transmitted_this_time_slot == True:
                 self.achieved_total_rate_eMBB_users += eMBB_User.achieved_channel_rate
 
-    def calculate_achieved_URLLC_reliability(self, URLLC_User):
-        self.achieved_URLLC_reliability = URLLC_User.packet_size_bits*self.num_arriving_URLLC_packets
+    def calculate_achieved_URLLC_reliability(self, URLLC_Users):
+        self.achieved_URLLC_reliability = URLLC_Users[0].packet_size_bits*self.num_arriving_URLLC_packets
 
     def calculate_achieved_system_energy_efficiency(self):
-        self.achieved_system_energy_efficiency = self.achieved_total_rate_eMBB_users/self.achieved_total_system_energy_consumption
+        if self.achieved_total_system_energy_consumption == 0:
+            self.achieved_system_energy_efficiency = 0
+        else:
+            self.achieved_system_energy_efficiency = self.achieved_total_rate_eMBB_users/self.achieved_total_system_energy_consumption
 
     def calculate_achieved_system_reward(self, eMBB_Users, URLLC_Users):
         self.achieved_system_reward = 0
@@ -153,7 +160,8 @@ class SBS():
             eMBB_User_QOS_requirement_revenue_or_penelaty = self.achieved_eMBB_delay_requirement_revenue_or_penalty(eMBB_User)
             self.achieved_system_reward += -eMBB_User_energy_consumption + eMBB_User_channel_rate + eMBB_User_QOS_requirement_revenue_or_penelaty
 
-        self.achieved_system_reward += ((self.achieved_total_rate_URLLC_users-URLLC_Users[0].QOS_requirement_for_transmission.max_allowable_reliability)/self.num_arriving_URLLC_packets)
+        if self.num_arriving_URLLC_packets > 0:
+            self.achieved_system_reward += ((self.achieved_total_rate_URLLC_users-URLLC_Users[0].QOS_requirement_for_transmission.max_allowable_reliability)/self.num_arriving_URLLC_packets)
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
         processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency

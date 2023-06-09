@@ -67,48 +67,53 @@ Communication_Channel_1.create_resource_blocks_URLLC()
 Communication_Channel_1.allocate_resource_blocks_URLLC(URLLC_Users)
 Communication_Channel_1.subcarrier_URLLC_User_mapping()
 
-'''
-for eMBB_User in eMBB_Users:
-    eMBB_User.calculate_distance_from_SBS(SBS1.x_position, SBS1.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
-    eMBB_User.calculate_channel_gain()
-    eMBB_User.generate_task(Communication_Channel_1.short_TTI,Communication_Channel_1.long_TTI)
-    eMBB_User.collect_state()
+num_time_slots = np.arange(1,11)
+for time_slot in num_time_slots:
+    print("Time SLot Number: ", time_slot)
+    for eMBB_User in eMBB_Users:
+        eMBB_User.calculate_distance_from_SBS(SBS1.x_position, SBS1.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
+        eMBB_User.calculate_channel_gain()
+        eMBB_User.generate_task(Communication_Channel_1.short_TTI,Communication_Channel_1.long_TTI)
+        eMBB_User.collect_state()
 
-for URLLC_User in URLLC_Users:
-    URLLC_User.calculate_distance_from_SBS(SBS1.x_position, SBS1.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
-    URLLC_User.calculate_channel_gain()
-    URLLC_User.generate_task(Communication_Channel_1.short_TTI,Communication_Channel_1.long_TTI)
-    URLLC_User.collect_state()
+    for URLLC_User in URLLC_Users:
+        URLLC_User.calculate_distance_from_SBS(SBS1.x_position, SBS1.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
+        URLLC_User.calculate_channel_gain()
+        URLLC_User.generate_task(Communication_Channel_1.short_TTI,Communication_Channel_1.long_TTI)
+        URLLC_User.collect_state()
 
-SBS.collect_state_space(eMBB_Users,URLLC_Users)
-SBS.allocate_transmit_powers(eMBB_Users,URLLC_Users)
-SBS.allocate_offlaoding_ratios(eMBB_Users)
+    SBS1.collect_state_space(eMBB_Users,URLLC_Users)
+    SBS1.allocate_transmit_powers(eMBB_Users,URLLC_Users)
+    SBS1.allocate_offlaoding_ratios(eMBB_Users)
 
-for eMBB_User in eMBB_Users:
-    eMBB_User.calculate_assigned_transmit_power_W()
-    eMBB_User.split_packet()
-    eMBB_User.transmit_to_SBS(Communication_Channel_1, URLLC_Users)
-    eMBB_User.local_processing()
-    eMBB_User.offloading()
-    eMBB_User.total_energy_consumed()
-    eMBB_User.total_processing_delay()
+    for URLLC_User in URLLC_Users:
+        URLLC_User.send_packet()
 
-for URLLC_User in URLLC_Users:
-    URLLC_User.calculate_assigned_transmit_power_W()
-    URLLC_User.send_packet()
-    URLLC_User.transmit_to_SBS(Communication_Channel_1, URLLC_Users)
-    URLLC_User.collect_state()
+    for eMBB_User in eMBB_Users:
+        eMBB_User.split_packet()
 
-SBS1.count_num_arriving_URLLC_packet(URLLC_Users)
-SBS1.receive_offload_packets(eMBB_Users,URLLC_Users)
-SBS1.calculate_achieved_total_system_energy_consumption(eMBB_Users)
-SBS1.calculate_achieved_total_system_processing_delay(eMBB_Users)
-SBS1.calculate_achieved_total_rate_URLLC_users(URLLC_Users)
-SBS1.calculate_achieved_total_rate_eMBB_users(eMBB_Users)
-SBS1.calculate_achieved_URLLC_reliability(URLLC_Users)
-SBS1.calculate_achieved_system_energy_efficiency()
-SBS1.calculate_achieved_system_reward(eMBB_Users,URLLC_Users)
-'''
+    for URLLC_User in URLLC_Users:
+        if URLLC_User.has_transmitted_this_time_slot == True:
+            URLLC_User.transmit_to_SBS(eMBB_Users, Communication_Channel_1)
+
+    for eMBB_User in eMBB_Users:
+        if eMBB_User.has_transmitted_this_time_slot == True:
+            eMBB_User.transmit_to_SBS(Communication_Channel_1, URLLC_Users)
+            eMBB_User.local_processing()
+            eMBB_User.offloading()
+            eMBB_User.total_energy_consumed()
+            eMBB_User.total_processing_delay()
+
+    SBS1.count_num_arriving_URLLC_packet(URLLC_Users)
+    SBS1.receive_offload_packets(eMBB_Users,URLLC_Users)
+    SBS1.calculate_achieved_total_system_energy_consumption(eMBB_Users)
+    SBS1.calculate_achieved_total_system_processing_delay(eMBB_Users)
+    SBS1.calculate_achieved_total_rate_URLLC_users(URLLC_Users)
+    SBS1.calculate_achieved_total_rate_eMBB_users(eMBB_Users)
+    SBS1.calculate_achieved_URLLC_reliability(URLLC_Users)
+    SBS1.calculate_achieved_system_energy_efficiency()
+    SBS1.calculate_achieved_system_reward(eMBB_Users,URLLC_Users)
+
 
 
 

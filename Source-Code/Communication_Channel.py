@@ -185,7 +185,6 @@ class Communication_Channel():
             for subcarrier in subcarriers_on_this_RB:
                 self.subcarrier_URLLC_User_mapping_.append([subcarrier,users_on_this_RB])
 
-        print("subcarrier_URLLC_User_mapping: ",self.subcarrier_URLLC_User_mapping_)
 
 
 
