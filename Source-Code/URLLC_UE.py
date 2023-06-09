@@ -81,7 +81,7 @@ class URLLC_UE(User_Equipment):
         x_diff_metres = (x_diff_pixels/Env_width_pixels)*Env_width_metres
         y_diff_pixels = (y_diff_pixels/Env_width_pixels)*Env_width_metres
 
-        self.distance_from_SBS = math.sqrt(x_diff_metres^2+y_diff_pixels^2)
+        self.distance_from_SBS = math.sqrt(math.pow(x_diff_metres,2)+math.pow(y_diff_pixels,2))
 
     def collect_state(self):
         self.user_state_space.collect(self.total_gain,self.user_task,self.energy_harversted)

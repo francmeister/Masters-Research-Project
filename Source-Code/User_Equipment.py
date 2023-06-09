@@ -33,7 +33,7 @@ class User_Equipment():
 
     def calculate_channel_gain(self):
         #Pathloss gain
-        self.pathloss_gain = (10^(35.3+37.6*math.log10(self.distance_from_SBS)))/10
+        self.pathloss_gain = (math.pow(10,(35.3+37.6*math.log10(self.distance_from_SBS))))/10
         self.small_scale_channel_gain = np.random.rayleigh(1)
         self.large_scale_channel_gain = np.random.lognormal(0.0,1.0)
         self.total_gain = self.small_scale_channel_gain*self.large_scale_channel_gain*self.pathloss_gain

@@ -67,7 +67,7 @@ Communication_Channel_1.create_resource_blocks_URLLC()
 Communication_Channel_1.allocate_resource_blocks_URLLC(URLLC_Users)
 Communication_Channel_1.subcarrier_URLLC_User_mapping()
 
-
+'''
 for eMBB_User in eMBB_Users:
     eMBB_User.calculate_distance_from_SBS(SBS1.x_position, SBS1.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
     eMBB_User.calculate_channel_gain()
@@ -108,6 +108,7 @@ SBS1.calculate_achieved_total_rate_eMBB_users(eMBB_Users)
 SBS1.calculate_achieved_URLLC_reliability(URLLC_Users)
 SBS1.calculate_achieved_system_energy_efficiency()
 SBS1.calculate_achieved_system_reward(eMBB_Users,URLLC_Users)
+'''
 
 
 

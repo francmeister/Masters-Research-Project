@@ -174,7 +174,7 @@ class SBS():
         else:
             return ((achieved_reliability-reliability_requirement)/self.num_arriving_URLLC_packets)
         
-    def perform_timeslot_sequential_events(self,eMBB_Users,URLLC_Users,communication_channel):
+    #def perform_timeslot_sequential_events(self,eMBB_Users,URLLC_Users,communication_channel):
 
 
 
