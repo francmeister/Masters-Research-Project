@@ -1,8 +1,10 @@
+#%%
 import pygame, sys, time, random
 from Spritesheet import SpriteSheet
 import random
 from eMBB_UE import eMBB_UE
 import numpy as np
+import matplotlib.pyplot as plt
 import math
 pygame.init()
 
@@ -14,18 +16,21 @@ class Communication_Channel():
         self.subcarrier_bandwidth_kHz = 120 # 120kHz
         self.num_subcarriers_per_RB_eMBB = 0
         self.num_subcarriers_per_RB_URLLC = 0
-        self.number_URLLC_Users_per_RB = 2
+        self.number_URLLC_Users_per_RB = 3
         self.number_of_resource_blocks_URLLC = 0
         self.SBS_label = SBS_label
         self.eMBB_subcarrier_mappings = []
         self.URLLC_RB_mappings = []
         self.long_TTI = 0.125 #1ms
-        self.short_TTI = 0.018 # 0.143ms
         self.num_minislots_per_timeslot = 7
+        self.URLLC_x_slot = self.long_TTI/self.number_URLLC_Users_per_RB
+        self.short_TTI = self.long_TTI/self.num_minislots_per_timeslot # 0.143ms
         self.noise_spectral_density_dbm = -174 # -174dBM/Hz
         self.noise_spectral_density_W = (math.pow(10,(self.noise_spectral_density_dbm/10)))/1000
         self.resource_block_subcarrier_mapping_eMBB = []
         self.subcarriers = []
+        self.timeslot_intervals = self.num_minislots_per_timeslot
+        self.first_interval = self.long_TTI/self.timeslot_intervals 
         self.num_of_available_subcarriers = self.max_num_of_subcarriers
         self.single_side_standard_deviation = 5
         self.num_allocate_subcarriers_lower_bound = self.num_subcarriers_per_RB_eMBB - self.single_side_standard_deviation
@@ -36,6 +41,7 @@ class Communication_Channel():
         self.resource_blocks_subcarrier_mappings_URLLC = []
         self.resource_blocks_URLLC_mappings = []
         self.subcarrier_URLLC_User_mapping_ = []
+        self.fig, self.ax = plt.subplots()
 
     def get_SBS_and_Users(self,SBS):
         self.SBS_label = SBS.SBS_label
@@ -125,6 +131,7 @@ class Communication_Channel():
         for URLLC_User in URLLC_Users:
             URLLC_User.allocated_RB.append(count1)
             count2+=1
+            URLLC_User.short_TTI_number = count2
             if count2 == self.number_URLLC_Users_per_RB:
                 count2 = 0
                 count1 += 1
@@ -186,6 +193,19 @@ class Communication_Channel():
                 self.subcarrier_URLLC_User_mapping_.append([subcarrier,users_on_this_RB])
 
 
+    def plot_timeframe(self,eMBB_Users,URLLC_Users):
+        for eMBB_User in eMBB_Users:
+            for rectangle in eMBB_User.rectangles:
+                self.ax.add_patch(rectangle)
+        
+        for URLLC_User in URLLC_Users:
+            for rectangle in URLLC_User.rectangles:
+                self.ax.add_patch(rectangle)
+
+        self.ax.autoscale()
+        plt.show()
+
+
 
 
             
@@ -201,3 +221,4 @@ class Communication_Channel():
 
         
     
+# %%

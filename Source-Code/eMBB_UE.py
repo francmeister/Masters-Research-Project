@@ -4,6 +4,7 @@ from User_Equipment import User_Equipment
 from QOS_requirement import QOS_requirement
 from Task import Task
 import numpy as np
+from matplotlib.patches import Rectangle
 import math
 from State_Space import State_Space
 pygame.init()
@@ -59,6 +60,8 @@ class eMBB_UE(User_Equipment):
         self.xpos_move_upper_bound = self.eMBB_UE_screen_position_x + self.single_side_standard_deviation_pos
         self.ypos_move_lower_bound = self.eMBB_UE_screen_position_y - self.single_side_standard_deviation_pos
         self.ypos_move_upper_bound = self.eMBB_UE_screen_position_y + self.single_side_standard_deviation_pos
+        self.rectangles = []
+        self.r,self.g,self.b = self.random_color_generator()
         
 
         #self.sprite = SpriteSheet(self.spriteSheetFilename,self.spriteSheet_x,self.spriteSheet_y,self.spriteSheet_width,self.spriteSheet_height)
@@ -177,6 +180,17 @@ class eMBB_UE(User_Equipment):
 
     def total_processing_delay(self):
         self.achieved_total_processing_delay = self.achieved_local_processing_delay + self.achieved_transmission_delay
+
+    def set_matplotlib_rectangle_properties(self, communication_channel_long_TTI):
+        for subcarrier in self.allocated_subcarriers:
+            rectangle = Rectangle((0,subcarrier),communication_channel_long_TTI,1,color=(self.r,self.g,self.b,0.4))
+            self.rectangles.append(rectangle)
+
+    def random_color_generator(self):
+        r = random.random()
+        g = random.random()
+        b = random.random()
+        return (r,g,b)
 
 
 

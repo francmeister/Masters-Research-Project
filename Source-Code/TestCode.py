@@ -67,6 +67,16 @@ Communication_Channel_1.create_resource_blocks_URLLC()
 Communication_Channel_1.allocate_resource_blocks_URLLC(URLLC_Users)
 Communication_Channel_1.subcarrier_URLLC_User_mapping()
 
+
+for eMBB_User in eMBB_Users:
+    eMBB_User.set_matplotlib_rectangle_properties(Communication_Channel_1.long_TTI)
+
+for URLLC_User in URLLC_Users:
+    URLLC_User.set_matplotlib_rectangle_properties(Communication_Channel_1)
+
+Communication_Channel_1.plot_timeframe(eMBB_Users,URLLC_Users)
+
+'''
 num_time_slots = np.arange(1,11)
 for time_slot in num_time_slots:
     print("Time SLot Number: ", time_slot)
@@ -114,7 +124,7 @@ for time_slot in num_time_slots:
     SBS1.calculate_achieved_system_energy_efficiency()
     SBS1.calculate_achieved_system_reward(eMBB_Users,URLLC_Users)
 
-
+'''
 
 
 

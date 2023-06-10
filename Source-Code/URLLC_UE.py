@@ -4,6 +4,7 @@ from QOS_requirement import QOS_requirement
 from Task import Task
 from User_Equipment import User_Equipment
 from State_Space import State_Space
+from matplotlib.patches import Rectangle
 import math
 pygame.init()
 
@@ -41,6 +42,9 @@ class URLLC_UE(User_Equipment):
         self.packet_offload_size_bits = 0
         self.offloaded_packet = 0
         self.packet_size_bits = 0
+        self.short_TTI_number = 0
+        self.rectangles = []
+        self.r,self.g,self.b = self.random_color_generator()
         
     def load_URLLC_UE_sprite(self,screen):
         self.sprite_surface.blit(self.URLLC_UE_sprite,(0,0))
@@ -118,4 +122,26 @@ class URLLC_UE(User_Equipment):
                 self.offloaded_packet = random.getrandbits(self.packet_offload_size_bits)
                 self.has_transmitted_this_time_slot = True
                 self.dequeue_packet()
+
+    def set_matplotlib_rectangle_properties(self,communication_channel):
+        rand_nums = [] 
+        j = 1
+        for i in range(1,communication_channel.number_URLLC_Users_per_RB + 1):
+            rand_nums.append(j)
+            j+=2
+        print(rand_nums)
+        allocated_subcarriers = communication_channel.resource_blocks_subcarrier_mappings_URLLC[self.allocated_RB[0] - 1]
+        print("self.allocated_RB",self.allocated_RB)
+        print("self.short_TTI_number",self.short_TTI_number)
+        print("communication_channel.URLLC_x_slot",communication_channel.URLLC_x_slot)
+        for subcarrier in allocated_subcarriers:
+            rectangle = Rectangle((rand_nums[self.short_TTI_number-1]*communication_channel.first_interval-communication_channel.short_TTI/2,subcarrier),width=communication_channel.short_TTI,height=1,color=(self.r,self.g,self.b,1))
+            self.rectangles.append(rectangle)
+
+    def random_color_generator(self):
+        r = 1
+        g = 1
+        b = 1
+        return (r,g,b)
+
 
