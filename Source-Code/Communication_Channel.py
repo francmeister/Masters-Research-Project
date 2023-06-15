@@ -10,38 +10,9 @@ pygame.init()
 
 class Communication_Channel():
     def __init__(self,SBS_label):
-        #Telecomm Network Properties
-        self.transmission_queue = []
-        self.max_num_of_subcarriers = 144
-        self.subcarrier_bandwidth_kHz = 120 # 120kHz
-        self.num_subcarriers_per_RB_eMBB = 0
-        self.num_subcarriers_per_RB_URLLC = 0
-        self.number_URLLC_Users_per_RB = 3
-        self.number_of_resource_blocks_URLLC = 0
-        self.SBS_label = SBS_label
-        self.eMBB_subcarrier_mappings = []
-        self.URLLC_RB_mappings = []
-        self.long_TTI = 0.125 #1ms
-        self.num_minislots_per_timeslot = 7
-        self.URLLC_x_slot = self.long_TTI/self.number_URLLC_Users_per_RB
-        self.short_TTI = self.long_TTI/self.num_minislots_per_timeslot # 0.143ms
-        self.noise_spectral_density_dbm = -174 # -174dBM/Hz
-        self.noise_spectral_density_W = (math.pow(10,(self.noise_spectral_density_dbm/10)))/1000
-        self.resource_block_subcarrier_mapping_eMBB = []
-        self.subcarriers = []
-        self.timeslot_intervals = self.num_minislots_per_timeslot
-        self.first_interval = self.long_TTI/self.timeslot_intervals 
-        self.num_of_available_subcarriers = self.max_num_of_subcarriers
-        self.single_side_standard_deviation = 5
-        self.num_allocate_subcarriers_lower_bound = self.num_subcarriers_per_RB_eMBB - self.single_side_standard_deviation
-        self.num_allocate_subcarriers_upper_bound = self.num_subcarriers_per_RB_eMBB + self.single_side_standard_deviation
-        self.eMBB_Users = []
-        self.URLLC_Users = []
-        self.resource_blocks_URLLC = []
-        self.resource_blocks_subcarrier_mappings_URLLC = []
-        self.resource_blocks_URLLC_mappings = []
-        self.subcarrier_URLLC_User_mapping_ = []
-        self.fig, self.ax = plt.subplots()
+        #Telecomm Network Propertiesset_properties(self,SBS_label):
+        self.set_properties(self,SBS_label)
+        
 
     def get_SBS_and_Users(self,SBS):
         self.SBS_label = SBS.SBS_label
@@ -85,7 +56,7 @@ class Communication_Channel():
                     index = self.eMBB_subcarrier_mappings.index([subcarrier,0])
                     self.eMBB_subcarrier_mappings[index] = [subcarrier,eMBB_User.eMBB_UE_label]       
 
-        #print("eMBB_subcarrier_mappings: ", self.eMBB_subcarrier_mappings)
+        print("eMBB_subcarrier_mappings: ", self.eMBB_subcarrier_mappings)
 
     def create_resource_blocks_URLLC(self):
         self.number_of_resource_blocks_URLLC = int(len(self.URLLC_Users)/self.number_URLLC_Users_per_RB)
@@ -120,10 +91,11 @@ class Communication_Channel():
             elif self.number_URLLC_Users_per_RB == 3:
                 self.resource_blocks_URLLC_mappings.append([RB,0,0,0])
 
-        #print("number_of_resource_blocks_URLLC: ", self.number_of_resource_blocks_URLLC) 
-        #print("num_subcarriers_per_RB_URLLC: ", self.num_subcarriers_per_RB_URLLC)     
-        #print("resource_blocks_URLLC: ", self.resource_blocks_URLLC)
-        #print("resource_blocks_subcarrier_mappings_URLLC: ", self.resource_blocks_subcarrier_mappings_URLLC)
+        print(" ")
+        print("number_of_resource_blocks_URLLC: ", self.number_of_resource_blocks_URLLC) 
+        print("num_subcarriers_per_RB_URLLC: ", self.num_subcarriers_per_RB_URLLC)     
+        print("resource_blocks_URLLC: ", self.resource_blocks_URLLC)
+        print("resource_blocks_subcarrier_mappings_URLLC: ", self.resource_blocks_subcarrier_mappings_URLLC)
 
     def allocate_resource_blocks_URLLC(self,URLLC_Users):
         count1 = 1
@@ -174,8 +146,8 @@ class Communication_Channel():
                     if count2 == 3:
                         count2 = 0
                         count1 += 1
-
-       # print("resource_blocks_URLLC_mappings: ", self.resource_blocks_URLLC_mappings)
+        print(" ")
+        print("resource_blocks_URLLC_mappings: ", self.resource_blocks_URLLC_mappings)
 
     def subcarrier_URLLC_User_mapping(self):
         for RB in self.resource_blocks_URLLC_mappings:
@@ -191,6 +163,10 @@ class Communication_Channel():
             subcarriers_on_this_RB = self.resource_blocks_subcarrier_mappings_URLLC[resource_block-1]
             for subcarrier in subcarriers_on_this_RB:
                 self.subcarrier_URLLC_User_mapping_.append([subcarrier,users_on_this_RB])
+        
+        print(" ")
+        print(" ")
+        print("subcarrier_URLLC_User_mapping_", self.subcarrier_URLLC_User_mapping_)
 
 
     def plot_timeframe(self,eMBB_Users,URLLC_Users):
@@ -204,6 +180,39 @@ class Communication_Channel():
 
         self.ax.autoscale()
         plt.show()
+
+    def set_properties(self,SBS_label):
+        self.transmission_queue = []
+        self.max_num_of_subcarriers = 144
+        self.subcarrier_bandwidth_kHz = 120 # 120kHz
+        self.num_subcarriers_per_RB_eMBB = 0
+        self.num_subcarriers_per_RB_URLLC = 0
+        self.number_URLLC_Users_per_RB = 2
+        self.number_of_resource_blocks_URLLC = 0
+        self.SBS_label = SBS_label
+        self.eMBB_subcarrier_mappings = []
+        self.URLLC_RB_mappings = []
+        self.long_TTI = 0.125 #1ms
+        self.num_minislots_per_timeslot = 7
+        self.URLLC_x_slot = self.long_TTI/self.number_URLLC_Users_per_RB
+        self.short_TTI = self.long_TTI/self.num_minislots_per_timeslot # 0.143ms
+        self.noise_spectral_density_dbm = -174 # -174dBM/Hz
+        self.noise_spectral_density_W = (math.pow(10,(self.noise_spectral_density_dbm/10)))/1000
+        self.resource_block_subcarrier_mapping_eMBB = []
+        self.subcarriers = []
+        self.timeslot_intervals = self.num_minislots_per_timeslot
+        self.first_interval = self.long_TTI/self.timeslot_intervals 
+        self.num_of_available_subcarriers = self.max_num_of_subcarriers
+        self.single_side_standard_deviation = 5
+        self.num_allocate_subcarriers_lower_bound = self.num_subcarriers_per_RB_eMBB - self.single_side_standard_deviation
+        self.num_allocate_subcarriers_upper_bound = self.num_subcarriers_per_RB_eMBB + self.single_side_standard_deviation
+        self.eMBB_Users = []
+        self.URLLC_Users = []
+        self.resource_blocks_URLLC = []
+        self.resource_blocks_subcarrier_mappings_URLLC = []
+        self.resource_blocks_URLLC_mappings = []
+        self.subcarrier_URLLC_User_mapping_ = []
+        self.fig, self.ax = plt.subplots()
 
 
 

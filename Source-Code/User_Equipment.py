@@ -7,29 +7,7 @@ pygame.init()
 
 class User_Equipment():
     def __init__(self):
-        #Telecomm Network Properties
-        self.max_transmission_power_dBm = 23 # dBm
-        self.max_transmission_power_W =  (math.pow(10,(self.max_transmission_power_dBm/10)))/1000# Watts
-        self.assigned_transmit_power_dBm = 0
-        self.assigned_transmit_power_W = 0
-        self.cpu_cycles_per_byte = 330
-        self.cpu_clock_frequency = random.randrange(100,1000) #100 Hz to 1000 Hz
-        self.associated_SBS_label = 0
-        self.small_scale_channel_gain = 0
-        self.large_scale_channel_gain = 0
-        self.pathloss_gain = 0
-        self.achieved_channel_rate = 0
-        self.achieved_SNIR = 0
-        self.task_profile = []
-        self.distance_from_SBS = 0
-        self.total_gain = 0
-        self.has_transmitted_this_time_slot = False
-        self.communication_queue = []
-        self.energy_consumption_coefficient = math.pow(10,-15)
-        self.achieved_transmission_energy_consumption = 0
-        self.achieved_local_processing_delay = 0
-        self.achieved_total_energy_consumption = 0
-        self.achieved_total_processing_delay = 0
+        self.set_properties_UE()
 
     def calculate_channel_gain(self):
         #Pathloss gain
@@ -52,4 +30,27 @@ class User_Equipment():
     def dequeue_task(self):
         self.communication_queue.pop(0)
 
+    def set_properties_UE(self):
+        self.max_transmission_power_dBm = 23 # dBm
+        self.max_transmission_power_W =  (math.pow(10,(self.max_transmission_power_dBm/10)))/1000# Watts
+        self.assigned_transmit_power_dBm = 0
+        self.assigned_transmit_power_W = 0
+        self.cpu_cycles_per_byte = 330
+        self.cpu_clock_frequency = random.randrange(100,1000) #100 Hz to 1000 Hz
+        self.associated_SBS_label = 0
+        self.small_scale_channel_gain = 0
+        self.large_scale_channel_gain = 0
+        self.pathloss_gain = 0
+        self.achieved_channel_rate = 0
+        self.achieved_SNIR = 0
+        self.task_profile = []
+        self.distance_from_SBS = 0
+        self.total_gain = 0
+        self.has_transmitted_this_time_slot = False
+        self.communication_queue = []
+        self.energy_consumption_coefficient = math.pow(10,-15)
+        self.achieved_transmission_energy_consumption = 0
+        self.achieved_local_processing_delay = 0
+        self.achieved_total_energy_consumption = 0
+        self.achieved_total_processing_delay = 0
     

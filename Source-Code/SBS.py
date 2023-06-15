@@ -13,12 +13,6 @@ class SBS():
         self.filename4 = 'Resources/cell-tower-spritesheet-4.png'
 
         #SBS Telecom properties
-        self.clock_frequency = 2
-        self.work_load = 0
-        self.eMBB_UEs = []
-        self.URLLC_UEs = []
-        self.achieved_users_energy_consumption = 0
-        self.achieved_users_channel_rate = 0
         self.x_position = 0
         self.y_position = 0
 
@@ -29,24 +23,8 @@ class SBS():
 
         self.sprite_surface = pygame.Surface((self.cell_tower_sprite_width,self.cell_tower_sprite_height))
         self.sprite_surface.set_colorkey((0,0,0))
-        self.associated_users = []
-        self.associated_URLLC_users = []
-        self.associated_eMBB_users = []
-        self.system_state_space = []
-        self.num_arriving_URLLC_packets = 0
-        self.eMBB_Users_packet_queue = []
-        self.URLLC_Users_packet_queue = []
-        self.achieved_total_system_energy_consumption = 0
-        self.achieved_total_system_processing_delay = 0
-        self.achieved_URLLC_reliability = 0
-        self.achieved_total_rate_URLLC_users = 0
-        self.achieved_total_rate_eMBB_users = 0
-        self.achieved_system_energy_efficiency = 0
-        self.achieved_system_reward = 0
-        self.eMBB_User_delay_requirement_revenue = 5
-        self.URLLC_User_reliability_requirement_revenue = 5
-
-        
+        self.set_properties()
+                
     def load_cell_tower_sprite(self,screen,SCREEN_WIDTH,SCREEN_HEIGHT,frameCount):
         if frameCount == 0:
             self.sprite_surface.blit(self.cell_tower_sprite1,(0,0))
@@ -149,6 +127,8 @@ class SBS():
         else:
             self.achieved_system_energy_efficiency = self.achieved_total_rate_eMBB_users/self.achieved_total_system_energy_consumption
 
+        print("self.achieved_system_energy_efficiency",self.achieved_system_energy_efficiency)
+
     def calculate_achieved_system_reward(self, eMBB_Users, URLLC_Users):
         self.achieved_system_reward = 0
         eMBB_User_energy_consumption = 0
@@ -183,6 +163,30 @@ class SBS():
             return ((achieved_reliability-reliability_requirement)/self.num_arriving_URLLC_packets)
         
     #def perform_timeslot_sequential_events(self,eMBB_Users,URLLC_Users,communication_channel):
+
+    def set_properties(self):
+        self.associated_users = []
+        self.associated_URLLC_users = []
+        self.associated_eMBB_users = []
+        self.system_state_space = []
+        self.num_arriving_URLLC_packets = 0
+        self.eMBB_Users_packet_queue = []
+        self.URLLC_Users_packet_queue = []
+        self.achieved_total_system_energy_consumption = 0
+        self.achieved_total_system_processing_delay = 0
+        self.achieved_URLLC_reliability = 0
+        self.achieved_total_rate_URLLC_users = 0
+        self.achieved_total_rate_eMBB_users = 0
+        self.achieved_system_energy_efficiency = 0
+        self.achieved_system_reward = 0
+        self.eMBB_User_delay_requirement_revenue = 5
+        self.URLLC_User_reliability_requirement_revenue = 5
+        self.clock_frequency = 2
+        self.work_load = 0
+        self.eMBB_UEs = []
+        self.URLLC_UEs = []
+        self.achieved_users_energy_consumption = 0
+        self.achieved_users_channel_rate = 0
 
 
 

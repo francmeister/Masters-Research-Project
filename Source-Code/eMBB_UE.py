@@ -21,47 +21,11 @@ class eMBB_UE(User_Equipment):
         self.original_x_pos = screen_position_x
         self.original_y_pos = screen_position_y
         self.filename = 'Resources/eMBB-UE-spritesheet.png'
-
-        #Telecomm Network Properties
-        self.max_allowable_latency = 0
-        self.max_allowable_reliability = 0
-        self.QOS_requirement = QOS_requirement()
-        self.QOS_requirement_for_transmission = QOS_requirement()
-        self.packet_size_kilobytes = random.randint(50,100) #Kilobytes
-        self.task_arrival_rate_packets_per_second = 0 #Packets/s
-        self.user_task = Task(330)
-        self.offloading_ratio = 0
-        self.local_computation_delay_seconds = 0
-        self.achieved_local_energy_consumption = 0
-        self.offload_transmission_energy = 0
-        self.battery_energy_level = 100 # Begin with 100%
-        self.energy_harvested = 0
-        self.achieved_transmission_delay = 0
-        self.allocated_subcarriers = []
-        self.number_of_allocated_subcarriers = 0
-        self.local_queue = []
-        self.timeslot_counter = 0
-        self.minislot_counter = 0
-        self.x_position = 0
-        self.y_position = 0
         self.eMBB_UE_sprite = pygame.image.load(self.filename).convert()
         self.sprite_surface = pygame.Surface((self.eMBB_UE_sprite_width,self.eMBB_UE_sprite_height))
         self.sprite_surface.set_colorkey((0,0,0))
-        self.energy_harversted = 0
-        self.user_state_space = State_Space(self.UE_label,self.total_gain,self.communication_queue,self.energy_harversted)
-        self.allocated_offloading_ratio = 0
-        self.packet_offload_size_bits = 0
-        self.packet_local_size_bits = 0
-        self.packet_size = 0
-        self.intefering_URLLC_Users = []
-        self.offloaded_packet = []
-        self.single_side_standard_deviation_pos = 5
-        self.xpos_move_lower_bound = self.eMBB_UE_screen_position_x - self.single_side_standard_deviation_pos
-        self.xpos_move_upper_bound = self.eMBB_UE_screen_position_x + self.single_side_standard_deviation_pos
-        self.ypos_move_lower_bound = self.eMBB_UE_screen_position_y - self.single_side_standard_deviation_pos
-        self.ypos_move_upper_bound = self.eMBB_UE_screen_position_y + self.single_side_standard_deviation_pos
-        self.rectangles = []
-        self.r,self.g,self.b = self.random_color_generator()
+        self.set_properties_eMBB()
+
         
 
         #self.sprite = SpriteSheet(self.spriteSheetFilename,self.spriteSheet_x,self.spriteSheet_y,self.spriteSheet_width,self.spriteSheet_height)
@@ -191,6 +155,44 @@ class eMBB_UE(User_Equipment):
         g = random.random()
         b = random.random()
         return (r,g,b)
+    
+    def set_properties_eMBB(self):
+        self.max_allowable_latency = 0
+        self.max_allowable_reliability = 0
+        self.QOS_requirement = QOS_requirement()
+        self.QOS_requirement_for_transmission = QOS_requirement()
+        self.packet_size_kilobytes = random.randint(50,100) #Kilobytes
+        self.task_arrival_rate_packets_per_second = 0 #Packets/s
+        self.user_task = Task(330)
+        self.offloading_ratio = 0
+        self.local_computation_delay_seconds = 0
+        self.achieved_local_energy_consumption = 0
+        self.offload_transmission_energy = 0
+        self.battery_energy_level = 100 # Begin with 100%
+        self.energy_harvested = 0
+        self.achieved_transmission_delay = 0
+        self.allocated_subcarriers = []
+        self.number_of_allocated_subcarriers = 0
+        self.local_queue = []
+        self.timeslot_counter = 0
+        self.minislot_counter = 0
+        self.x_position = 0
+        self.y_position = 0
+        self.energy_harversted = 0
+        self.user_state_space = State_Space(self.UE_label,self.total_gain,self.communication_queue,self.energy_harversted)
+        self.allocated_offloading_ratio = 0
+        self.packet_offload_size_bits = 0
+        self.packet_local_size_bits = 0
+        self.packet_size = 0
+        self.intefering_URLLC_Users = []
+        self.offloaded_packet = []
+        self.single_side_standard_deviation_pos = 5
+        self.xpos_move_lower_bound = self.eMBB_UE_screen_position_x - self.single_side_standard_deviation_pos
+        self.xpos_move_upper_bound = self.eMBB_UE_screen_position_x + self.single_side_standard_deviation_pos
+        self.ypos_move_lower_bound = self.eMBB_UE_screen_position_y - self.single_side_standard_deviation_pos
+        self.ypos_move_upper_bound = self.eMBB_UE_screen_position_y + self.single_side_standard_deviation_pos
+        self.rectangles = []
+        self.r,self.g,self.b = self.random_color_generator()
 
 
 

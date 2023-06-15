@@ -18,33 +18,7 @@ class URLLC_UE(User_Equipment):
         self.URLLC_UE_screen_position_x = screen_position_x
         self.URLLC_UE_screen_position_y = screen_position_y
         self.filename = 'Resources/URLLC-UE-spritesheet.png'
-
-        #Telecomm Network Properties
-        self.max_allowable_latency = 0
-        self.max_allowable_reliability = 0
-        self.QOS_requirement = QOS_requirement()
-        self.QOS_requirement_for_transmission = QOS_requirement()
-        self.achieved_reliability = 0
-        self.packet_size_bytes = 32 #bytes
-        self.packet_size_bits = self.packet_size_bytes*8
-        self.task_arrival_rate = 500 #packets/s
-        self.achieved_transmission_delay = 0
-        self.timeslot_counter = 0
-        self.minislot_counter = 0
-        self.minislot_label = 0
-        self.user_task = Task(330)
-        self.URLLC_UE_sprite = pygame.image.load(self.filename).convert()
-        self.sprite_surface = pygame.Surface((self.URLLC_UE_sprite_width,self.URLLC_UE_sprite_height))
-        self.sprite_surface.set_colorkey((0,0,0))
-        self.energy_harversted = 0
-        self.user_state_space = State_Space(self.UE_label,self.total_gain,self.user_task,self.energy_harversted)
-        self.allocated_RB = []
-        self.packet_offload_size_bits = 0
-        self.offloaded_packet = 0
-        self.packet_size_bits = 0
-        self.short_TTI_number = 0
-        self.rectangles = []
-        self.r,self.g,self.b = self.random_color_generator()
+        self.set_properties_URLLC()
         
     def load_URLLC_UE_sprite(self,screen):
         self.sprite_surface.blit(self.URLLC_UE_sprite,(0,0))
@@ -143,5 +117,33 @@ class URLLC_UE(User_Equipment):
         g = 1
         b = 1
         return (r,g,b)
+    
+    def set_properties_URLLC(self):
+        #Telecomm Network Properties
+        self.max_allowable_latency = 0
+        self.max_allowable_reliability = 0
+        self.QOS_requirement = QOS_requirement()
+        self.QOS_requirement_for_transmission = QOS_requirement()
+        self.achieved_reliability = 0
+        self.packet_size_bytes = 32 #bytes
+        self.packet_size_bits = self.packet_size_bytes*8
+        self.task_arrival_rate = 500 #packets/s
+        self.achieved_transmission_delay = 0
+        self.timeslot_counter = 0
+        self.minislot_counter = 0
+        self.minislot_label = 0
+        self.user_task = Task(330)
+        self.URLLC_UE_sprite = pygame.image.load(self.filename).convert()
+        self.sprite_surface = pygame.Surface((self.URLLC_UE_sprite_width,self.URLLC_UE_sprite_height))
+        self.sprite_surface.set_colorkey((0,0,0))
+        self.energy_harversted = 0
+        self.user_state_space = State_Space(self.UE_label,self.total_gain,self.user_task,self.energy_harversted)
+        self.allocated_RB = []
+        self.packet_offload_size_bits = 0
+        self.offloaded_packet = 0
+        self.packet_size_bits = 0
+        self.short_TTI_number = 0
+        self.rectangles = []
+        self.r,self.g,self.b = self.random_color_generator()
 
 
