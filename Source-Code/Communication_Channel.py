@@ -11,7 +11,7 @@ pygame.init()
 class Communication_Channel():
     def __init__(self,SBS_label):
         #Telecomm Network Propertiesset_properties(self,SBS_label):
-        self.set_properties(self,SBS_label)
+        self.set_properties(SBS_label)
         
 
     def get_SBS_and_Users(self,SBS):
@@ -30,12 +30,15 @@ class Communication_Channel():
         for subcarrier in range(1,self.max_num_of_subcarriers + 1):
             self.eMBB_subcarrier_mappings.append([subcarrier,0])
 
-    def allocate_subcarriers_eMBB(self,eMBB_Users):
+    def allocate_subcarriers_eMBB(self,eMBB_Users,number_of_subcarriers_action):
         upper_bound = self.num_allocate_subcarriers_upper_bound
         number_of_eMBB_Users_left = len(eMBB_Users)
+        index = 0
         for eMBB_User in eMBB_Users:
             if self.num_of_available_subcarriers >= upper_bound:
-                allocate_subcarriers = random.randint(self.num_allocate_subcarriers_lower_bound,self.num_allocate_subcarriers_upper_bound)
+                #allocate_subcarriers = random.randint(self.num_allocate_subcarriers_lower_bound,self.num_allocate_subcarriers_upper_bound)
+                allocate_subcarriers = number_of_subcarriers_action[index]
+                index+=1
                 eMBB_User.number_of_allocated_subcarriers = allocate_subcarriers
                 eMBB_User.allocated_subcarriers = self.subcarriers[0:eMBB_User.number_of_allocated_subcarriers]
                 self.num_of_available_subcarriers -= allocate_subcarriers
@@ -68,6 +71,7 @@ class Communication_Channel():
         self.num_subcarriers_per_RB_URLLC = int(self.max_num_of_subcarriers/self.number_of_resource_blocks_URLLC)
         
         #self.resource_blocks_URLLC = np.arange(1,self.number_of_resource_blocks_URLLC + 1)
+        self.resource_blocks_URLLC.clear()
         for i in range(1,self.number_of_resource_blocks_URLLC  + 1):
             self.resource_blocks_URLLC.append(i)
 
@@ -78,11 +82,13 @@ class Communication_Channel():
         for i in range(1,self.max_num_of_subcarriers  + 1):
             subcarriers.append(i)
 
+        self.resource_blocks_subcarrier_mappings_URLLC.clear()
         for RB in self.resource_blocks_URLLC:
             self.resource_blocks_subcarrier_mappings_URLLC.append(subcarriers[start_index:end_index])
             start_index += self.num_subcarriers_per_RB_URLLC
             end_index += self.num_subcarriers_per_RB_URLLC
 
+        self.resource_blocks_URLLC_mappings.clear()
         for RB in range(1,self.number_of_resource_blocks_URLLC + 1):
             if self.number_URLLC_Users_per_RB == 1:
                 self.resource_blocks_URLLC_mappings.append([RB,0])
@@ -100,7 +106,9 @@ class Communication_Channel():
     def allocate_resource_blocks_URLLC(self,URLLC_Users):
         count1 = 1
         count2 = 0
+        
         for URLLC_User in URLLC_Users:
+            URLLC_User.allocated_RB.clear()
             URLLC_User.allocated_RB.append(count1)
             count2+=1
             URLLC_User.short_TTI_number = count2
@@ -150,6 +158,7 @@ class Communication_Channel():
         print("resource_blocks_URLLC_mappings: ", self.resource_blocks_URLLC_mappings)
 
     def subcarrier_URLLC_User_mapping(self):
+        self.subcarrier_URLLC_User_mapping_.clear()
         for RB in self.resource_blocks_URLLC_mappings:
             resource_block = RB[0]
            
@@ -188,6 +197,7 @@ class Communication_Channel():
         self.num_subcarriers_per_RB_eMBB = 0
         self.num_subcarriers_per_RB_URLLC = 0
         self.number_URLLC_Users_per_RB = 2
+        self.max_number_URLLC_Users_per_RB = 3
         self.number_of_resource_blocks_URLLC = 0
         self.SBS_label = SBS_label
         self.eMBB_subcarrier_mappings = []

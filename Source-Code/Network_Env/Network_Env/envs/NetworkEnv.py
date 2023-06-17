@@ -22,21 +22,68 @@ screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 class NetworkEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     def __init__(self):
-        self.action_space = spaces.Box()
-        self.observation_space = spaces.Box()
-        self.STEP_LIMIT = 1000
-        self.sleep = 0
         self.reset()
         self.create_objects()
+        max_offload_decision = 1
+        min_offload_decision = 0
+        number_of_eMBB_users = len(self.eMBB_Users)
+        num_allocate_subcarriers_upper_bound = self.Communication_Channel_1.num_allocate_subcarriers_upper_bound
+        num_allocate_subcarriers_lower_bound = self.Communication_Channel_1.num_allocate_subcarriers_lower_bound
+        max_transmit_power_db = self.eMBB_UE_1.max_transmission_power_dBm
+        min_transmit_power_db = 0
+        max_number_of_URLLC_users_per_RB = self.Communication_Channel_1.max_number_URLLC_Users_per_RB
+        min_number_of_URLLC_users_per_RB = 1
+        self.offload_decisions_label = 0
+        self.allocate_num_subacarriers_label = 1
+        self.allocate_transmit_powers_label = 2
+
+
+
+        action_space_high = np.array([max_offload_decision for _ in range(number_of_eMBB_users)] + [num_allocate_subcarriers_upper_bound for _ in range(number_of_eMBB_users)] + 
+                        [max_transmit_power_db for _ in range(number_of_eMBB_users)] + max_number_of_URLLC_users_per_RB)
+
+        action_space_low = np.array([min_offload_decision for _ in range(number_of_eMBB_users)] + [num_allocate_subcarriers_lower_bound for _ in range(number_of_eMBB_users)] + 
+                        [min_transmit_power_db for _ in range(number_of_eMBB_users)] + min_number_of_URLLC_users_per_RB)
+        
+        self.action_space = spaces.Box(low=action_space_low,high=action_space_high)
+        #self.observation_space = spaces.Box()
+        self.STEP_LIMIT = 1000
+        self.sleep = 0
         self.steps = 0
        
 
     def step(self,action):
         reward = 0
-        
+
+        #collect offload decisions actions 
+        start_index = self.offload_decisions_label*len(self.eMBB_Users)
+        end_index = start_index + len(self.eMBB_Users)
+        offload_decisions_actions = action[start_index:end_index]
+
+        #collect subcarrier allocations actions
+        start_index = self.allocate_num_subacarriers_label*len(self.eMBB_Users) + 1
+        end_index = start_index + len(self.eMBB_Users)
+        subcarrier_allocation_actions = action[start_index:end_index]
+
+        #collect trasmit powers allocations actions
+        start_index = self.allocate_transmit_powers_label*len(self.eMBB_Users) + 1
+        end_index = start_index + len(self.eMBB_Users)
+        transmit_power_actions = action[start_index:end_index]
+
+        #collect the final action - number of URLLC users per RB
+        number_URLLC_Users_per_RB_action = action[len(action)-1]
+
         #Perform Actions
-        self.SBS1.allocate_transmit_powers(self.eMBB_Users,self.URLLC_Users)
-        self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users)
+        self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions)
+        self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions)
+        self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action
+
+        self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
+        self.Communication_Channel_1.initiate_subcarriers()
+        self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users,subcarrier_allocation_actions)
+        self.Communication_Channel_1.create_resource_blocks_URLLC()
+        self.Communication_Channel_1.allocate_resource_blocks_URLLC(self.URLLC_Users)
+        self.Communication_Channel_1.subcarrier_URLLC_User_mapping()
 
         for URLLC_User in self.URLLC_Users:
             URLLC_User.send_packet()

@@ -76,7 +76,7 @@ class eMBB_UE(User_Equipment):
         self.distance_from_SBS = math.sqrt(math.pow(x_diff_metres,2)+math.pow(y_diff_metres,2))
 
     def collect_state(self):
-        self.user_state_space.collect(self.total_gain,self.communication_queue,self.energy_harversted)
+        self.user_state_space.collect(self.total_gain,self.communication_queue,self.energy_harversted,self.QOS_requirement)
         return self.user_state_space
 
     def split_packet(self):
@@ -179,7 +179,7 @@ class eMBB_UE(User_Equipment):
         self.x_position = 0
         self.y_position = 0
         self.energy_harversted = 0
-        self.user_state_space = State_Space(self.UE_label,self.total_gain,self.communication_queue,self.energy_harversted)
+        self.user_state_space = State_Space(self.UE_label,self.total_gain,self.communication_queue,self.energy_harversted,self.QOS_requirement)
         self.allocated_offloading_ratio = 0
         self.packet_offload_size_bits = 0
         self.packet_local_size_bits = 0

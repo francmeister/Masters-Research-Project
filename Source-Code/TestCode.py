@@ -100,6 +100,9 @@ for time_slot in num_time_slots:
     SBS1.allocate_transmit_powers(eMBB_Users,URLLC_Users)
     SBS1.allocate_offlaoding_ratios(eMBB_Users)
 
+    for i in SBS1.system_state_space:
+        print(i)
+
     for URLLC_User in URLLC_Users:
         URLLC_User.send_packet()
 

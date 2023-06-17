@@ -56,27 +56,39 @@ class SBS():
         self.y_position = self.cell_tower_sprite1.get_rect().centery
 
     def collect_state_space(self, eMBB_Users, URLLC_Users):
+        Users = eMBB_Users + URLLC_Users
         self.system_state_space.clear()
-        for user in eMBB_Users:
-            self.system_state_space.append(user.collect_state())
+        channel_gains = []
+        communication_queue_size = []
+        energy_harvested = []
+        latency_requirement = []
+        reliability_requirement = []
+        #Collect Channel gains
+        for user in Users:
+            channel_gains.append(user.user_state_space.channel_gain)
+            communication_queue_size.append(user.user_state_space.communication_queue_size)
+            energy_harvested.append(user.user_state_space.energy_harvested)
+            latency_requirement.append(user.user_state_space.QOS_requirements.max_allowable_latency)
+            reliability_requirement.append(user.user_state_space.QOS_requirements.max_allowable_reliability)
+            
+        self.system_state_space.append(channel_gains)
+        self.system_state_space.append(communication_queue_size)
+        self.system_state_space.append(energy_harvested)
+        self.system_state_space.append(latency_requirement)
+        self.system_state_space.append(reliability_requirement)
 
-        for user in URLLC_Users:
-            self.system_state_space.append(user.collect_state())
+    def allocate_transmit_powers(self,eMBB_Users, action):
+        index = 0
+        for User in eMBB_Users:
+            User.assigned_transmit_power_dBm = action[index]
+            User.calculate_assigned_transmit_power_W()
+            index+=1
 
-    def allocate_transmit_powers(self,eMBB_Users, URLLC_Users):
+    def allocate_offlaoding_ratios(self,eMBB_Users, action):
+        index = 0
         for eMBB_User in eMBB_Users:
-            if len(eMBB_User.user_state_space.communication_queue) > 0:
-                eMBB_User.assigned_transmit_power_dBm = random.randint(1,eMBB_User.max_transmission_power_dBm)
-                eMBB_User.calculate_assigned_transmit_power_W()
-
-        for URLLC_User in URLLC_Users:
-            if len(eMBB_User.user_state_space.communication_queue) > 0:
-                URLLC_User.assigned_transmit_power_dBm = random.randint(1,URLLC_User.max_transmission_power_dBm)
-                URLLC_User.calculate_assigned_transmit_power_W()
-
-    def allocate_offlaoding_ratios(self,eMBB_Users):
-        for eMBB_User in eMBB_Users:
-            eMBB_User.allocated_offloading_ratio = random.random()
+            eMBB_User.allocated_offloading_ratio = action[index]
+            index+=1
 
     def count_num_arriving_URLLC_packet(self,URLLC_Users):
         self.num_arriving_URLLC_packets = 0

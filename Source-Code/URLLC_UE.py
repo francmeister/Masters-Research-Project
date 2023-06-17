@@ -64,7 +64,7 @@ class URLLC_UE(User_Equipment):
         self.distance_from_SBS = math.sqrt(math.pow(x_diff_metres,2)+math.pow(y_diff_pixels,2))
 
     def collect_state(self):
-        self.user_state_space.collect(self.total_gain,self.user_task,self.energy_harversted)
+        self.user_state_space.collect(self.total_gain,self.communication_queue,self.energy_harversted,self.QOS_requirement)
         return self.user_state_space
     
     def transmit_to_SBS(self, eMBB_Users,communication_channel):
@@ -137,7 +137,7 @@ class URLLC_UE(User_Equipment):
         self.sprite_surface = pygame.Surface((self.URLLC_UE_sprite_width,self.URLLC_UE_sprite_height))
         self.sprite_surface.set_colorkey((0,0,0))
         self.energy_harversted = 0
-        self.user_state_space = State_Space(self.UE_label,self.total_gain,self.user_task,self.energy_harversted)
+        self.user_state_space = State_Space(self.UE_label,self.total_gain,self.communication_queue,self.energy_harversted,self.QOS_requirement)
         self.allocated_RB = []
         self.packet_offload_size_bits = 0
         self.offloaded_packet = 0
