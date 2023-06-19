@@ -53,4 +53,7 @@ class User_Equipment():
         self.achieved_local_processing_delay = 0
         self.achieved_total_energy_consumption = 0
         self.achieved_total_processing_delay = 0
+        self.min_channel_gain = -100
+        self.max_channel_gain = 100
+        self.max_energy_harvested = 100
     

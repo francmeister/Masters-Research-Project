@@ -34,7 +34,7 @@ min_transmit_power_db = 1
 4. Number of URLLC users per RB 
 
 '''
-
+'''
 action_space = Box(low=np.array([min_offload_decision,num_allocate_subcarriers_lower_bound,min_transmit_power_db,min_number_of_URLLC_users_per_RB]),
                    high=np.array([max_offload_decision,num_allocate_subcarriers_upper_bound,max_transmit_power_db,max_number_of_URLLC_users_per_RB]),
                    shape=(4,number_of_eMBB_users),dtype=np.float32)
@@ -52,14 +52,14 @@ print(obs_low)
 print(obs_high)
 print("Action Space High: ", action_space_high)
 print("Action Space Low: ", action_space_low)
+'''
 
-g = [[1,2,3,4],
-     [5,6,7,8]]
-r = [[2,2,2,2,2,2],
-     [3,3,3,3,3,3]]
+pathloss_gain = 2
+small_scale_channel_gain = np.random.rayleigh(1)
+large_scale_channel_gain = np.random.lognormal(0.0,1.0)
+total_gain = small_scale_channel_gain*large_scale_channel_gain*pathloss_gain
 
-h = g+r
-print()
+print(total_gain)
 #################################################################################################################################
 
 #Observation Space

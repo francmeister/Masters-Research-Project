@@ -120,8 +120,9 @@ class URLLC_UE(User_Equipment):
     
     def set_properties_URLLC(self):
         #Telecomm Network Properties
-        self.max_allowable_latency = 0
-        self.max_allowable_reliability = 0
+        self.max_allowable_latency = 1 #1 ms
+        self.max_allowable_reliability = 10^-7
+        self.min_allowable_reliability = 10^-10
         self.QOS_requirement = QOS_requirement()
         self.QOS_requirement_for_transmission = QOS_requirement()
         self.achieved_reliability = 0
@@ -145,5 +146,8 @@ class URLLC_UE(User_Equipment):
         self.short_TTI_number = 0
         self.rectangles = []
         self.r,self.g,self.b = self.random_color_generator()
+        self.min_communication_qeueu_size = 0
+        self.max_communication_qeueu_size = 128000
+        
 
 

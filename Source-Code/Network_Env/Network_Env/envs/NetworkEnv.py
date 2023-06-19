@@ -24,6 +24,8 @@ class NetworkEnv(gym.Env):
     def __init__(self):
         self.reset()
         self.create_objects()
+
+        #Action Space Bound Paramaters
         max_offload_decision = 1
         min_offload_decision = 0
         number_of_eMBB_users = len(self.eMBB_Users)
@@ -37,6 +39,19 @@ class NetworkEnv(gym.Env):
         self.offload_decisions_label = 0
         self.allocate_num_subacarriers_label = 1
         self.allocate_transmit_powers_label = 2
+        self.num_urllc_users_per_RB_label = 3
+
+        #Observation Space Bound Parameters
+        channel_gain_min = self.eMBB_UE_1.min_channel_gain
+        channel_gain_max = self.eMBB_UE_1.max_channel_gain
+        communication_queue_min = self.eMBB_UE_1.min_communication_qeueu_size
+        communication_queue_max = self.eMBB_UE_1.max_communication_qeueu_size
+        energy_harvested_min = 0
+        energy_harvested_max = self.eMBB_UE_1.max_energy_harvested
+        latency_requirement_min = 0
+        latency_requirement_max = self.URLLC_UE_1.max_allowable_latency
+        reliability_requirement_min = self.URLLC_UE_1.min_allowable_reliability
+        reliability_requirement_max = self.URLLC_UE_1.max_allowable_reliability
 
 
         '''
@@ -64,22 +79,22 @@ class NetworkEnv(gym.Env):
         reward = 0
 
         #collect offload decisions actions 
-        start_index = self.offload_decisions_label*len(self.eMBB_Users)
-        end_index = start_index + len(self.eMBB_Users)
-        offload_decisions_actions = action[start_index:end_index]
+        #start_index = self.offload_decisions_label*len(self.eMBB_Users)
+        #end_index = start_index + len(self.eMBB_Users)
+        offload_decisions_actions = action[self.offload_decisions_label]
 
         #collect subcarrier allocations actions
-        start_index = self.allocate_num_subacarriers_label*len(self.eMBB_Users) + 1
-        end_index = start_index + len(self.eMBB_Users)
-        subcarrier_allocation_actions = action[start_index:end_index]
+        #start_index = self.allocate_num_subacarriers_label*len(self.eMBB_Users) + 1
+        #end_index = start_index + len(self.eMBB_Users)
+        subcarrier_allocation_actions = action[self.allocate_num_subacarriers_label]
 
         #collect trasmit powers allocations actions
-        start_index = self.allocate_transmit_powers_label*len(self.eMBB_Users) + 1
-        end_index = start_index + len(self.eMBB_Users)
-        transmit_power_actions = action[start_index:end_index]
+        #start_index = self.allocate_transmit_powers_label*len(self.eMBB_Users) + 1
+        #end_index = start_index + len(self.eMBB_Users)
+        transmit_power_actions = action[self.allocate_transmit_powers_label]
 
         #collect the final action - number of URLLC users per RB
-        number_URLLC_Users_per_RB_action = action[len(action)-1]
+        number_URLLC_Users_per_RB_action = action[self.num_urllc_users_per_RB_label]
 
         #Perform Actions
         self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions)

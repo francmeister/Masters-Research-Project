@@ -157,7 +157,7 @@ class eMBB_UE(User_Equipment):
         return (r,g,b)
     
     def set_properties_eMBB(self):
-        self.max_allowable_latency = 0
+        self.max_allowable_latency = 2000 #[1,2] s
         self.max_allowable_reliability = 0
         self.QOS_requirement = QOS_requirement()
         self.QOS_requirement_for_transmission = QOS_requirement()
@@ -193,6 +193,8 @@ class eMBB_UE(User_Equipment):
         self.ypos_move_upper_bound = self.eMBB_UE_screen_position_y + self.single_side_standard_deviation_pos
         self.rectangles = []
         self.r,self.g,self.b = self.random_color_generator()
+        self.min_communication_qeueu_size = 0
+        self.max_communication_qeueu_size = 8000000
 
 
 
