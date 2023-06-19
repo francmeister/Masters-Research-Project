@@ -22,8 +22,8 @@ screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 class NetworkEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     def __init__(self):
-        self.reset()
         self.create_objects()
+        self.reset()
 
         #Action Space Bound Paramaters
         max_offload_decision = 1
@@ -53,23 +53,23 @@ class NetworkEnv(gym.Env):
         reliability_requirement_min = self.URLLC_UE_1.min_allowable_reliability
         reliability_requirement_max = self.URLLC_UE_1.max_allowable_reliability
 
+        
+        action_space_high = [[max_offload_decision for _ in range(number_of_eMBB_users)], [num_allocate_subcarriers_upper_bound for _ in range(number_of_eMBB_users)], 
+                        [max_transmit_power_db for _ in range(number_of_eMBB_users)], [max_number_of_URLLC_users_per_RB for _ in range(number_of_eMBB_users)]]
 
-        '''
-        action_space_high = np.array([max_offload_decision for _ in range(number_of_eMBB_users)] + [num_allocate_subcarriers_upper_bound for _ in range(number_of_eMBB_users)] + 
-                        [max_transmit_power_db for _ in range(number_of_eMBB_users)] + max_number_of_URLLC_users_per_RB)
+        action_space_low = [[min_offload_decision for _ in range(number_of_eMBB_users)], [num_allocate_subcarriers_lower_bound for _ in range(number_of_eMBB_users)], 
+                        [min_transmit_power_db for _ in range(number_of_eMBB_users)], [min_number_of_URLLC_users_per_RB for _ in range(number_of_eMBB_users)]]
+        self.action_space = spaces.Box(low=np.float32(action_space_low),high=np.float32(action_space_high))
 
-        action_space_low = np.array([min_offload_decision for _ in range(number_of_eMBB_users)] + [num_allocate_subcarriers_lower_bound for _ in range(number_of_eMBB_users)] + 
-                        [min_transmit_power_db for _ in range(number_of_eMBB_users)] + min_number_of_URLLC_users_per_RB)
-        self.action_space = spaces.Box(low=action_space_low,high=action_space_high)
-        '''
-        self.action_space = spaces.Box(low=np.array([min_offload_decision,num_allocate_subcarriers_lower_bound,min_transmit_power_db,min_number_of_URLLC_users_per_RB]),
-                                       high=np.array([max_offload_decision,num_allocate_subcarriers_upper_bound,max_transmit_power_db,max_number_of_URLLC_users_per_RB]),
-                                       shape=(4,number_of_eMBB_users),dtype=np.float32)
-
-        self.observation_space = spaces.Box(low=np.array([channel_gain_min,communication_queue_min,energy_harvested_min,latency_requirement_min,reliability_requirement_min]),
-                                            high=np.array([channel_gain_max,communication_queue_max,energy_harvested_max,latency_requirement_max,reliability_requirement_max]),
-                                            shape=(5,number_of_users),dtype=np.float32)
-       
+        observation_space_high = [[channel_gain_max for _ in range(number_of_users)], [communication_queue_max for _ in range(number_of_users)], 
+                        [energy_harvested_max for _ in range(number_of_users)], [latency_requirement_max for _ in range(number_of_users)], 
+                        [reliability_requirement_max for _ in range(number_of_users)]]
+        
+        observation_space_low = [[channel_gain_min for _ in range(number_of_users)], [communication_queue_min for _ in range(number_of_users)], 
+                        [energy_harvested_min for _ in range(number_of_users)], [latency_requirement_min for _ in range(number_of_users)], 
+                        [reliability_requirement_min for _ in range(number_of_users)]]
+        
+        self.observation_space = spaces.Box(low=np.array(np.float32(observation_space_low)), high=np.array(np.float32(observation_space_high)))
         self.STEP_LIMIT = 1000
         self.sleep = 0
         self.steps = 0
@@ -77,29 +77,26 @@ class NetworkEnv(gym.Env):
 
     def step(self,action):
         reward = 0
-
         #collect offload decisions actions 
-        #start_index = self.offload_decisions_label*len(self.eMBB_Users)
-        #end_index = start_index + len(self.eMBB_Users)
         offload_decisions_actions = action[self.offload_decisions_label]
 
         #collect subcarrier allocations actions
-        #start_index = self.allocate_num_subacarriers_label*len(self.eMBB_Users) + 1
-        #end_index = start_index + len(self.eMBB_Users)
         subcarrier_allocation_actions = action[self.allocate_num_subacarriers_label]
+        subcarrier_allocation_actions = (np.rint(subcarrier_allocation_actions)).astype(int)
 
         #collect trasmit powers allocations actions
-        #start_index = self.allocate_transmit_powers_label*len(self.eMBB_Users) + 1
-        #end_index = start_index + len(self.eMBB_Users)
         transmit_power_actions = action[self.allocate_transmit_powers_label]
 
         #collect the final action - number of URLLC users per RB
         number_URLLC_Users_per_RB_action = action[self.num_urllc_users_per_RB_label]
+        number_URLLC_Users_per_RB_action = (np.rint(number_URLLC_Users_per_RB_action)).astype(int)
+        number_URLLC_Users_per_RB_action = int(sum(number_URLLC_Users_per_RB_action) / len(number_URLLC_Users_per_RB_action))
 
         #Perform Actions
         self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions)
         self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions)
         self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action
+        print("number of URLLC users per RB", self.Communication_Channel_1.number_URLLC_Users_per_RB)
 
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_subcarriers()
@@ -149,15 +146,18 @@ class NetworkEnv(gym.Env):
             URLLC_User.generate_task(self.Communication_Channel_1.short_TTI,self.Communication_Channel_1.long_TTI)
             URLLC_User.collect_state()
 
-        observation = self.SBS1.collect_state_space(self.eMBB_Users,self.URLLC_Users)
+        observation = np.array(self.SBS1.collect_state_space(self.eMBB_Users,self.URLLC_Users))
         done = self.check_timestep()
-        info = 0
+        info = {'reward': reward}
         self.steps+=1
 
-      
+        print("observation after action:",observation)
+        print("reward after action:",reward)
+        print("done after action:",done)
         return observation,reward,done,info
     
     def reset(self):
+        print("resetting......")
         self.steps = 0
         self.SBS1.set_properties()
         for eMBB_User in self.eMBB_Users:
@@ -177,6 +177,7 @@ class NetworkEnv(gym.Env):
 
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_subcarriers()
+        '''
         self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users)
         self.Communication_Channel_1.create_resource_blocks_URLLC()
         self.Communication_Channel_1.allocate_resource_blocks_URLLC(self.URLLC_Users)
@@ -188,12 +189,14 @@ class NetworkEnv(gym.Env):
 
         for URLLC_User in self.URLLC_Users:
             URLLC_User.set_matplotlib_rectangle_properties(self.Communication_Channel_1)
+        '''
 
         #Communication_Channel_1.plot_timeframe(eMBB_Users,URLLC_Users)
-
+        info = {'reward': 0}
         self.SBS1.collect_state_space(self.eMBB_Users,self.URLLC_Users)
-        observation = self.SBS1.system_state_space
-        return observation
+        observation = np.array(self.SBS1.system_state_space)
+        print("observation",observation)
+        return observation,info
 
     def render(self, mode='human'):
         pass
@@ -253,3 +256,5 @@ class NetworkEnv(gym.Env):
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:
             return True
+        else: 
+            return False

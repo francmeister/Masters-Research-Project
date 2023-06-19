@@ -1,8 +1,14 @@
 import numpy as np
+import gym
+import Network_Env
 
 
+env = gym.make('NetworkEnv-v0')
+env.reset()
 max_capacity = 4000
-
+action = env.action_space.sample()
+print("Action Sample", action)
+env.step(action)
 lead_time = 5
 obs_dim = lead_time + 4 # total 9
 
@@ -54,12 +60,7 @@ print("Action Space High: ", action_space_high)
 print("Action Space Low: ", action_space_low)
 '''
 
-pathloss_gain = 2
-small_scale_channel_gain = np.random.rayleigh(1)
-large_scale_channel_gain = np.random.lognormal(0.0,1.0)
-total_gain = small_scale_channel_gain*large_scale_channel_gain*pathloss_gain
 
-print(total_gain)
 #################################################################################################################################
 
 #Observation Space

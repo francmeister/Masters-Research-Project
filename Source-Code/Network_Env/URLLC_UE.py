@@ -26,7 +26,7 @@ class URLLC_UE(User_Equipment):
 
     def generate_task(self,short_TTI,long_TTI):
         self.timeslot_counter+=1
-        print("Timeslot Counter: ",self.timeslot_counter*long_TTI)
+        #print("Timeslot Counter: ",self.timeslot_counter*long_TTI)
         number_of_trials = 1
         probability = 0.5
         sample_size = 1
@@ -42,7 +42,7 @@ class URLLC_UE(User_Equipment):
             if(x == 1):
                 self.task_arrival_rate_packets_per_second = 500 #Packets/s
                 self.max_allowable_latency = 1 #1 ms
-                self.max_allowable_reliability = 10^-7
+                self.max_allowable_reliability = math.pow(10,-7)
                 self.packet_size_bits = 32*8 # 32 bytes. 8 bits in a byte
                 self.QOS_requirement.set_requirements(self.max_allowable_latency,self.max_allowable_reliability)
                 self.user_task.create_task(self.task_arrival_rate_packets_per_second,self.packet_size_bits,self.QOS_requirement)
@@ -121,8 +121,8 @@ class URLLC_UE(User_Equipment):
     def set_properties_URLLC(self):
         #Telecomm Network Properties
         self.max_allowable_latency = 1 #1 ms
-        self.max_allowable_reliability = 10^-7
-        self.min_allowable_reliability = 10^-10
+        self.max_allowable_reliability = math.pow(10,-7)
+        self.min_allowable_reliability = math.pow(10,-10)
         self.QOS_requirement = QOS_requirement()
         self.QOS_requirement_for_transmission = QOS_requirement()
         self.achieved_reliability = 0
