@@ -27,6 +27,7 @@ class NetworkEnv(gym.Env):
         max_offload_decision = 1
         min_offload_decision = 0
         number_of_eMBB_users = len(self.eMBB_Users)
+        number_of_users = len(self.eMBB_Users) + len(self.URLLC_Users)
         num_allocate_subcarriers_upper_bound = self.Communication_Channel_1.num_allocate_subcarriers_upper_bound
         num_allocate_subcarriers_lower_bound = self.Communication_Channel_1.num_allocate_subcarriers_lower_bound
         max_transmit_power_db = self.eMBB_UE_1.max_transmission_power_dBm
@@ -38,15 +39,22 @@ class NetworkEnv(gym.Env):
         self.allocate_transmit_powers_label = 2
 
 
-
+        '''
         action_space_high = np.array([max_offload_decision for _ in range(number_of_eMBB_users)] + [num_allocate_subcarriers_upper_bound for _ in range(number_of_eMBB_users)] + 
                         [max_transmit_power_db for _ in range(number_of_eMBB_users)] + max_number_of_URLLC_users_per_RB)
 
         action_space_low = np.array([min_offload_decision for _ in range(number_of_eMBB_users)] + [num_allocate_subcarriers_lower_bound for _ in range(number_of_eMBB_users)] + 
                         [min_transmit_power_db for _ in range(number_of_eMBB_users)] + min_number_of_URLLC_users_per_RB)
-        
         self.action_space = spaces.Box(low=action_space_low,high=action_space_high)
-        #self.observation_space = spaces.Box()
+        '''
+        self.action_space = spaces.Box(low=np.array([min_offload_decision,num_allocate_subcarriers_lower_bound,min_transmit_power_db,min_number_of_URLLC_users_per_RB]),
+                                       high=np.array([max_offload_decision,num_allocate_subcarriers_upper_bound,max_transmit_power_db,max_number_of_URLLC_users_per_RB]),
+                                       shape=(4,number_of_eMBB_users),dtype=np.float32)
+
+        self.observation_space = spaces.Box(low=np.array([channel_gain_min,communication_queue_min,energy_harvested_min,latency_requirement_min,reliability_requirement_min]),
+                                            high=np.array([channel_gain_max,communication_queue_max,energy_harvested_max,latency_requirement_max,reliability_requirement_max]),
+                                            shape=(5,number_of_users),dtype=np.float32)
+       
         self.STEP_LIMIT = 1000
         self.sleep = 0
         self.steps = 0

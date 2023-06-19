@@ -34,6 +34,15 @@ min_transmit_power_db = 1
 4. Number of URLLC users per RB 
 
 '''
+
+action_space = Box(low=np.array([min_offload_decision,num_allocate_subcarriers_lower_bound,min_transmit_power_db,min_number_of_URLLC_users_per_RB]),
+                   high=np.array([max_offload_decision,num_allocate_subcarriers_upper_bound,max_transmit_power_db,max_number_of_URLLC_users_per_RB]),
+                   shape=(4,number_of_eMBB_users),dtype=np.float32)
+
+observation_space = Box(low=np.array([channel_gain_min,communication_queue_min,energy_harvested_min,latency_requirement_min,reliability_requirement_min]),
+                        high=np.array([channel_gain_max,communication_queue_max,energy_harvested_max,latency_requirement_max,reliability_requirement_max]),
+                        shape=(5,number_of_users),dtype=np.float32)
+
 action_space_high = np.array([max_offload_decision for _ in range(number_of_eMBB_users)] + [num_allocate_subcarriers_upper_bound for _ in range(number_of_eMBB_users)] + 
                         [max_transmit_power_db for _ in range(number_of_eMBB_users)])
 
@@ -44,6 +53,13 @@ print(obs_high)
 print("Action Space High: ", action_space_high)
 print("Action Space Low: ", action_space_low)
 
+g = [[1,2,3,4],
+     [5,6,7,8]]
+r = [[2,2,2,2,2,2],
+     [3,3,3,3,3,3]]
+
+h = g+r
+print()
 #################################################################################################################################
 
 #Observation Space
@@ -57,7 +73,5 @@ print("Action Space Low: ", action_space_low)
 4. QOS requirement - latency requirement and reliability requirement
 '''
 #channel gain
-g = [1,2,3]
-r = [4,4,5]
-t = g + r
-print(t)
+
+
