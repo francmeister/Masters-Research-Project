@@ -31,7 +31,7 @@ class Communication_Channel():
             self.eMBB_subcarrier_mappings.append([subcarrier,0])
 
     def allocate_subcarriers_eMBB(self,eMBB_Users,number_of_subcarriers_action):
-        print("number_of_subcarriers_action",number_of_subcarriers_action)
+        #print("number_of_subcarriers_action",number_of_subcarriers_action)
         upper_bound = self.num_allocate_subcarriers_upper_bound
         number_of_eMBB_Users_left = len(eMBB_Users)
         index = 0
