@@ -22,7 +22,7 @@ class URLLC_UE(User_Equipment):
         
     def load_URLLC_UE_sprite(self,screen):
         self.sprite_surface.blit(self.URLLC_UE_sprite,(0,0))
-        screen.blit(self.sprite_surface,(self.URLLC_UE_screen_position_x,self.URLLC_UE_screen_position_y))
+        #screen.blit(self.sprite_surface,(self.URLLC_UE_screen_position_x,self.URLLC_UE_screen_position_y))
 
     def generate_task(self,short_TTI,long_TTI):
         self.timeslot_counter+=1

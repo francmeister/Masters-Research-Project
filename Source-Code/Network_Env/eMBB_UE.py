@@ -21,7 +21,8 @@ class eMBB_UE(User_Equipment):
         self.original_x_pos = screen_position_x
         self.original_y_pos = screen_position_y
         self.filename = 'Resources/eMBB-UE-spritesheet.png'
-        self.eMBB_UE_sprite = pygame.image.load(self.filename).convert()
+        self.eMBB_UE_sprite = pygame.image.load(self.filename)
+        #self.eMBB_UE_sprite.convert()
         self.sprite_surface = pygame.Surface((self.eMBB_UE_sprite_width,self.eMBB_UE_sprite_height))
         self.sprite_surface.set_colorkey((0,0,0))
         self.set_properties_eMBB()
@@ -31,7 +32,7 @@ class eMBB_UE(User_Equipment):
         #self.sprite = SpriteSheet(self.spriteSheetFilename,self.spriteSheet_x,self.spriteSheet_y,self.spriteSheet_width,self.spriteSheet_height)
     def load_eMBB_UE_sprite(self,screen):
         self.sprite_surface.blit(self.eMBB_UE_sprite,(0,0))
-        screen.blit(self.sprite_surface,(self.eMBB_UE_screen_position_x,self.eMBB_UE_screen_position_y))
+        #screen.blit(self.sprite_surface,(self.eMBB_UE_screen_position_x,self.eMBB_UE_screen_position_y))
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
         self.eMBB_UE_screen_position_x = random.randint(self.xpos_move_lower_bound,self.xpos_move_upper_bound)

@@ -16,10 +16,14 @@ class SBS():
         self.x_position = 0
         self.y_position = 0
 
-        self.cell_tower_sprite1 = pygame.image.load(self.filename1).convert()
-        self.cell_tower_sprite2 = pygame.image.load(self.filename2).convert()
-        self.cell_tower_sprite3 = pygame.image.load(self.filename3).convert()
-        self.cell_tower_sprite4 = pygame.image.load(self.filename4).convert()
+        self.cell_tower_sprite1 = pygame.image.load(self.filename1)
+        #self.cell_tower_sprite1.convert()
+        self.cell_tower_sprite2 = pygame.image.load(self.filename2)
+        #self.cell_tower_sprite2.convert()
+        self.cell_tower_sprite3 = pygame.image.load(self.filename3)
+        #self.cell_tower_sprite3.convert()
+        self.cell_tower_sprite4 = pygame.image.load(self.filename4)
+        #self.cell_tower_sprite4.convert()
 
         self.sprite_surface = pygame.Surface((self.cell_tower_sprite_width,self.cell_tower_sprite_height))
         self.sprite_surface.set_colorkey((0,0,0))
@@ -29,23 +33,23 @@ class SBS():
         if frameCount == 0:
             self.sprite_surface.blit(self.cell_tower_sprite1,(0,0))
             #screen.blit(sprite_surface,(SCREEN_WIDTH/2-self.cell_tower_sprite_width/2,SCREEN_HEIGHT/2-self.cell_tower_sprite_height))
-            screen.blit(self.sprite_surface,(400,0))
+            #screen.blit(self.sprite_surface,(400,0))
 
         elif frameCount == 1:
             self.sprite_surface.blit(self.cell_tower_sprite2,(0,0))
             #screen.blit(sprite_surface,(SCREEN_WIDTH/2-self.cell_tower_sprite_width/2,SCREEN_HEIGHT/2-self.cell_tower_sprite_height))
-            screen.blit(self.sprite_surface,(400,0))
+            #screen.blit(self.sprite_surface,(400,0))
 
 
         elif frameCount == 2:
             self.sprite_surface.blit(self.cell_tower_sprite3,(0,0))
             #screen.blit(sprite_surface,(SCREEN_WIDTH/2-self.cell_tower_sprite_width/2,SCREEN_HEIGHT/2-self.cell_tower_sprite_height))
-            screen.blit(self.sprite_surface,(400,0))
+            #screen.blit(self.sprite_surface,(400,0))
 
         elif frameCount == 3:
             self.sprite_surface.blit(self.cell_tower_sprite4,(0,0))
             #screen.blit(sprite_surface,(SCREEN_WIDTH/2-self.cell_tower_sprite_width/2,SCREEN_HEIGHT/2-self.cell_tower_sprite_height))
-            screen.blit(self.sprite_surface,(400,0))
+            #screen.blit(self.sprite_surface,(400,0))
 
     def associate_users(self, eMBB_Users, URLLC_Users):
         self.associated_eMBB_users = eMBB_Users
