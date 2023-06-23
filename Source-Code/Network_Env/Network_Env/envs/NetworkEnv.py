@@ -28,8 +28,8 @@ class NetworkEnv(gym.Env):
         #Action Space Bound Paramaters
         max_offload_decision = 1
         min_offload_decision = 0
-        number_of_eMBB_users = len(self.eMBB_Users)
-        number_of_users = len(self.eMBB_Users) + len(self.URLLC_Users)
+        self.number_of_eMBB_users = len(self.eMBB_Users)
+        self.number_of_users = len(self.eMBB_Users) + len(self.URLLC_Users)
         num_allocate_subcarriers_upper_bound = self.Communication_Channel_1.num_allocate_subcarriers_upper_bound
         num_allocate_subcarriers_lower_bound = self.Communication_Channel_1.num_allocate_subcarriers_lower_bound
         max_transmit_power_db = self.eMBB_UE_1.max_transmission_power_dBm
@@ -54,20 +54,20 @@ class NetworkEnv(gym.Env):
         reliability_requirement_max = self.URLLC_UE_1.max_allowable_reliability
 
         #Define upper and lower bounds of observation and action spaces
-        action_space_high = [[max_offload_decision for _ in range(number_of_eMBB_users)], [num_allocate_subcarriers_upper_bound for _ in range(number_of_eMBB_users)], 
-                        [max_transmit_power_db for _ in range(number_of_eMBB_users)], [max_number_of_URLLC_users_per_RB for _ in range(number_of_eMBB_users)]]
+        action_space_high = [[max_offload_decision for _ in range(self.number_of_users)], [num_allocate_subcarriers_upper_bound for _ in range(self.number_of_users)], 
+                        [max_transmit_power_db for _ in range(self.number_of_users)], [max_number_of_URLLC_users_per_RB for _ in range(self.number_of_users)]]
 
-        action_space_low = [[min_offload_decision for _ in range(number_of_eMBB_users)], [num_allocate_subcarriers_lower_bound for _ in range(number_of_eMBB_users)], 
-                        [min_transmit_power_db for _ in range(number_of_eMBB_users)], [min_number_of_URLLC_users_per_RB for _ in range(number_of_eMBB_users)]]
+        action_space_low = [[min_offload_decision for _ in range(self.number_of_users)], [num_allocate_subcarriers_lower_bound for _ in range(self.number_of_users)], 
+                        [min_transmit_power_db for _ in range(self.number_of_users)], [min_number_of_URLLC_users_per_RB for _ in range(self.number_of_users)]]
         self.action_space = spaces.Box(low=np.float32(action_space_low),high=np.float32(action_space_high))
 
-        observation_space_high = [[channel_gain_max for _ in range(number_of_users)], [communication_queue_max for _ in range(number_of_users)], 
-                        [energy_harvested_max for _ in range(number_of_users)], [latency_requirement_max for _ in range(number_of_users)], 
-                        [reliability_requirement_max for _ in range(number_of_users)]]
+        observation_space_high = [[channel_gain_max for _ in range(self.number_of_users)], [communication_queue_max for _ in range(self.number_of_users)], 
+                        [energy_harvested_max for _ in range(self.number_of_users)], [latency_requirement_max for _ in range(self.number_of_users)], 
+                        [reliability_requirement_max for _ in range(self.number_of_users)]]
         
-        observation_space_low = [[channel_gain_min for _ in range(number_of_users)], [communication_queue_min for _ in range(number_of_users)], 
-                        [energy_harvested_min for _ in range(number_of_users)], [latency_requirement_min for _ in range(number_of_users)], 
-                        [reliability_requirement_min for _ in range(number_of_users)]]
+        observation_space_low = [[channel_gain_min for _ in range(self.number_of_users)], [communication_queue_min for _ in range(self.number_of_users)], 
+                        [energy_harvested_min for _ in range(self.number_of_users)], [latency_requirement_min for _ in range(self.number_of_users)], 
+                        [reliability_requirement_min for _ in range(self.number_of_users)]]
         
         self.observation_space = spaces.Box(low=np.array(np.float32(observation_space_low)), high=np.array(np.float32(observation_space_high)))
         self.STEP_LIMIT = 1000
@@ -78,17 +78,17 @@ class NetworkEnv(gym.Env):
     def step(self,action):
         reward = 0
         #collect offload decisions actions 
-        offload_decisions_actions = action[self.offload_decisions_label]
+        offload_decisions_actions = action[self.offload_decisions_label][0:self.number_of_eMBB_users]
 
         #collect subcarrier allocations actions
-        subcarrier_allocation_actions = action[self.allocate_num_subacarriers_label]
+        subcarrier_allocation_actions = action[self.allocate_num_subacarriers_label][0:self.number_of_eMBB_users]
         subcarrier_allocation_actions = (np.rint(subcarrier_allocation_actions)).astype(int)
 
         #collect trasmit powers allocations actions
-        transmit_power_actions = action[self.allocate_transmit_powers_label]
+        transmit_power_actions = action[self.allocate_transmit_powers_label][0:self.number_of_eMBB_users]
 
         #collect the final action - number of URLLC users per RB
-        number_URLLC_Users_per_RB_action = action[self.num_urllc_users_per_RB_label]
+        number_URLLC_Users_per_RB_action = action[self.num_urllc_users_per_RB_label][0:self.number_of_eMBB_users]
         number_URLLC_Users_per_RB_action = (np.rint(number_URLLC_Users_per_RB_action)).astype(int)
         number_URLLC_Users_per_RB_action = int(sum(number_URLLC_Users_per_RB_action) / len(number_URLLC_Users_per_RB_action))
 
