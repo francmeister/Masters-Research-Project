@@ -17,7 +17,7 @@ ENV_WIDTH_METRES = 400
 ENV_HEIGHT_METRES = 400
 
 clock = pygame.time.Clock()
-#screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
 class NetworkEnv(gym.Env):
     metadata = {'render.modes': ['human']}
