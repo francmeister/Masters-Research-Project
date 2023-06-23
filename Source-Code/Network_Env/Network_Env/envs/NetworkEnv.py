@@ -53,7 +53,7 @@ class NetworkEnv(gym.Env):
         reliability_requirement_min = self.URLLC_UE_1.min_allowable_reliability
         reliability_requirement_max = self.URLLC_UE_1.max_allowable_reliability
 
-        
+        #Define upper and lower bounds of observation and action spaces
         action_space_high = [[max_offload_decision for _ in range(number_of_eMBB_users)], [num_allocate_subcarriers_upper_bound for _ in range(number_of_eMBB_users)], 
                         [max_transmit_power_db for _ in range(number_of_eMBB_users)], [max_number_of_URLLC_users_per_RB for _ in range(number_of_eMBB_users)]]
 
@@ -151,9 +151,12 @@ class NetworkEnv(gym.Env):
         info = {'reward': reward}
         self.steps+=1
 
-        print("observation after action:",observation)
-        print("reward after action:",reward)
-        print("done after action:",done)
+        print("observation after action:")
+        print(observation)
+        print("reward after action:")
+        print(reward)
+        print("done after action:")
+        print(done)
         return observation,reward,done,info
     
     def reset(self):
@@ -177,25 +180,11 @@ class NetworkEnv(gym.Env):
 
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_subcarriers()
-        '''
-        self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users)
-        self.Communication_Channel_1.create_resource_blocks_URLLC()
-        self.Communication_Channel_1.allocate_resource_blocks_URLLC(self.URLLC_Users)
-        self.Communication_Channel_1.subcarrier_URLLC_User_mapping()
-
-        #Plotting timeframe
-        for eMBB_User in self.eMBB_Users:
-            eMBB_User.set_matplotlib_rectangle_properties(self.Communication_Channel_1.long_TTI)
-
-        for URLLC_User in self.URLLC_Users:
-            URLLC_User.set_matplotlib_rectangle_properties(self.Communication_Channel_1)
-        '''
-
-        #Communication_Channel_1.plot_timeframe(eMBB_Users,URLLC_Users)
         info = {'reward': 0}
         self.SBS1.collect_state_space(self.eMBB_Users,self.URLLC_Users)
         observation = np.array(self.SBS1.system_state_space)
-        print("observation",observation)
+        print("Ïnitial observation")
+        print(observation)
         return observation,info
 
     def render(self, mode='human'):
@@ -258,3 +247,6 @@ class NetworkEnv(gym.Env):
             return True
         else: 
             return False
+        
+    def seed(self):
+        pass

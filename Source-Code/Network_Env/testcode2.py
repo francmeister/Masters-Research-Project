@@ -7,15 +7,22 @@ env = gym.make('NetworkEnv-v0')
 env.reset()
 max_capacity = 4000
 action = env.action_space.sample()
-print("Action Sample", action)
+print("max_action:")
+print(env.action_space.high)
+print("min_action:")
+print(env.action_space.low)
+print("Action Sample")
+print(action)
 observation,reward,done,info = env.step(action)
-print("observation space shape:", env.observation_space.shape[0])
-print("action space shape:", env.action_space.shape[0])
-print("max_action:", env.action_space.high)
+print("observation space dim:")
+print(env.observation_space.shape[0])
+print("action space dim:")
+print(env.action_space.shape[0])
 lead_time = 5
 obs_dim = lead_time + 4 # total 9
 xu = [action, observation]
-print("Action-Observation:", xu)
+print("Action-Observation:")
+print(xu)
 obs_low = np.zeros(obs_dim)
 max_mean_daily_demand = 200
 max_unit_selling_price = 100
