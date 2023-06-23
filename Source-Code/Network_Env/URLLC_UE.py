@@ -134,7 +134,8 @@ class URLLC_UE(User_Equipment):
         self.minislot_counter = 0
         self.minislot_label = 0
         self.user_task = Task(330)
-        self.URLLC_UE_sprite = pygame.image.load(self.filename).convert()
+        self.URLLC_UE_sprite = pygame.image.load(self.filename)
+        #self.URLLC_UE_sprite.convert()
         self.sprite_surface = pygame.Surface((self.URLLC_UE_sprite_width,self.URLLC_UE_sprite_height))
         self.sprite_surface.set_colorkey((0,0,0))
         self.energy_harversted = 0
