@@ -203,7 +203,7 @@ class NetworkEnv(gym.Env):
         self.SBS1.collect_state_space(self.eMBB_Users,self.URLLC_Users)
         observation = np.array(self.SBS1.system_state_space, dtype=np.float32)
         observation = np.transpose(observation)
-        print("Ïnitial observation")
+        print("Ïnitial observation-")
         print(observation)
         return observation,info
 
