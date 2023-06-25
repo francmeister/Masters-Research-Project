@@ -1,26 +1,32 @@
 import numpy as np
 import gym
 import Network_Env
+import pybullet_envs
+import torch
 
 
 env = gym.make('NetworkEnv-v0')
+#env = gym.make('AntBulletEnv-v0')
 env.reset()
 max_capacity = 4000
 action = env.action_space.sample()
+observation = env.observation_space.sample()
+print("Observation Space sample:")
+print(observation)
 print("max_action:")
 print(env.action_space.high)
 print("min_action:")
 print(env.action_space.low)
 print("Action Sample")
 print(action)
-observation,reward,done,info = env.step(action)
+#observation,reward,done,info = env.step(action)
 print("observation space dim:")
-print(env.observation_space.shape[0])
+print(env.observation_space.shape)
 print("action space dim:")
-print(env.action_space.shape[0])
+print(env.action_space.shape)
 lead_time = 5
 obs_dim = lead_time + 4 # total 9
-xu = [action, observation]
+xu = torch.cat(action,observation)
 print("Action-Observation:")
 print(xu)
 obs_low = np.zeros(obs_dim)
