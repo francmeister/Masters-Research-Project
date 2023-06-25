@@ -92,6 +92,8 @@ class NetworkEnv(gym.Env):
        
 
     def step(self,action):
+        print("Action before transposition")
+        print(action)
         action = np.array(action)
         action = np.transpose(action)
         print("Action transposed")
