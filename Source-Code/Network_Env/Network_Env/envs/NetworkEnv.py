@@ -102,9 +102,8 @@ class NetworkEnv(gym.Env):
         #collect offload decisions actions 
         offload_decisions_actions = action[self.offload_decisions_label]
         print("offload_decisions_actions: ",offload_decisions_actions)
-        print("offload_decisions_actions: ",offload_decisions_actions[2])
         offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
-
+        print("offload_decisions_actions: ",offload_decisions_actions)
         #collect subcarrier allocations actions
         subcarrier_allocation_actions = action[self.allocate_num_subacarriers_label]
         subcarrier_allocation_actions = subcarrier_allocation_actions[0:self.number_of_eMBB_users]
