@@ -77,7 +77,8 @@ action.append(3)
 action.append(3)
 action.append(3)
 action.append(3)
-
+t = action[2]
+print(t)
 reward = 4
 done = 5
 RPB.add((state,next_state,action,reward,done))

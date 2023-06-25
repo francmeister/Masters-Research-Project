@@ -101,6 +101,8 @@ class NetworkEnv(gym.Env):
         reward = 0
         #collect offload decisions actions 
         offload_decisions_actions = action[self.offload_decisions_label]
+        print("offload_decisions_actions: ",offload_decisions_actions)
+        print("offload_decisions_actions: ",offload_decisions_actions[2])
         offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
 
         #collect subcarrier allocations actions
