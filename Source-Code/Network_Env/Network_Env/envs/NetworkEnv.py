@@ -94,19 +94,27 @@ class NetworkEnv(gym.Env):
     def step(self,action):
         action = np.array(action)
         action = np.transpose(action)
+        print("Action transposed")
+        print(action)
+        print("self.offload_decisions_label", self.offload_decisions_label)
+        print("self.number_of_eMBB_users", self.number_of_eMBB_users)
         reward = 0
         #collect offload decisions actions 
-        offload_decisions_actions = action[self.offload_decisions_label][0:self.number_of_eMBB_users]
+        offload_decisions_actions = action[self.offload_decisions_label]
+        offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
 
         #collect subcarrier allocations actions
-        subcarrier_allocation_actions = action[self.allocate_num_subacarriers_label][0:self.number_of_eMBB_users]
+        subcarrier_allocation_actions = action[self.allocate_num_subacarriers_label]
+        subcarrier_allocation_actions = subcarrier_allocation_actions[0:self.number_of_eMBB_users]
         subcarrier_allocation_actions = (np.rint(subcarrier_allocation_actions)).astype(int)
 
         #collect trasmit powers allocations actions
-        transmit_power_actions = action[self.allocate_transmit_powers_label][0:self.number_of_eMBB_users]
+        transmit_power_actions = action[self.allocate_transmit_powers_label]
+        transmit_power_actions = transmit_power_actions[0:self.number_of_eMBB_users]
 
         #collect the final action - number of URLLC users per RB
-        number_URLLC_Users_per_RB_action = action[self.num_urllc_users_per_RB_label][0:self.number_of_eMBB_users]
+        number_URLLC_Users_per_RB_action = action[self.num_urllc_users_per_RB_label]
+        number_URLLC_Users_per_RB_action = number_URLLC_Users_per_RB_action[0:self.number_of_eMBB_users]
         number_URLLC_Users_per_RB_action = (np.rint(number_URLLC_Users_per_RB_action)).astype(int)
         number_URLLC_Users_per_RB_action = int(sum(number_URLLC_Users_per_RB_action) / len(number_URLLC_Users_per_RB_action))
 
