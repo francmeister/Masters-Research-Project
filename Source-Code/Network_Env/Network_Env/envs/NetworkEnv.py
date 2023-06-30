@@ -5,6 +5,7 @@ from eMBB_UE import eMBB_UE
 from Communication_Channel import Communication_Channel
 from SBS import SBS
 from URLLC_UE import URLLC_UE
+from numpy import interp
 
 pygame.init()
 
@@ -26,16 +27,16 @@ class NetworkEnv(gym.Env):
         self.reset()
 
         #Action Space Bound Paramaters
-        max_offload_decision = 1
-        min_offload_decision = 0
+        self.max_offload_decision = 1
+        self.min_offload_decision = 0
         self.number_of_eMBB_users = len(self.eMBB_Users)
         self.number_of_users = len(self.eMBB_Users) + len(self.URLLC_Users)
-        num_allocate_subcarriers_upper_bound = self.Communication_Channel_1.num_allocate_subcarriers_upper_bound
-        num_allocate_subcarriers_lower_bound = self.Communication_Channel_1.num_allocate_subcarriers_lower_bound
-        max_transmit_power_db = self.eMBB_UE_1.max_transmission_power_dBm
-        min_transmit_power_db = 0
-        max_number_of_URLLC_users_per_RB = self.Communication_Channel_1.max_number_URLLC_Users_per_RB
-        min_number_of_URLLC_users_per_RB = 1
+        self.num_allocate_subcarriers_upper_bound = self.Communication_Channel_1.num_allocate_subcarriers_upper_bound
+        self.num_allocate_subcarriers_lower_bound = self.Communication_Channel_1.num_allocate_subcarriers_lower_bound
+        self.max_transmit_power_db = self.eMBB_UE_1.max_transmission_power_dBm
+        self.min_transmit_power_db = 0
+        self.max_number_of_URLLC_users_per_RB = self.Communication_Channel_1.max_number_URLLC_Users_per_RB
+        self.min_number_of_URLLC_users_per_RB = 1
         self.offload_decisions_label = 0
         self.allocate_num_subacarriers_label = 1
         self.allocate_transmit_powers_label = 2
@@ -111,31 +112,70 @@ class NetworkEnv(gym.Env):
         offload_decisions_actions = action[self.offload_decisions_label]
         print("offload_decisions_actions: ",offload_decisions_actions)
         offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
+
+        offload_decisions_actions_mapped = []
+        for offload_decision in offload_decisions_actions:
+            offload_decision_mapped = interp(offload_decision,[-1,1],[self.min_offload_decision,self.max_offload_decision])
+            offload_decisions_actions_mapped.append(offload_decision_mapped)
+
         print("offload_decisions_actions: ",offload_decisions_actions)
+        print("offload_decisions_actions_mapped: ",offload_decisions_actions_mapped)
+
         #collect subcarrier allocations actions
+        
         subcarrier_allocation_actions = action[self.allocate_num_subacarriers_label]
         subcarrier_allocation_actions = subcarrier_allocation_actions[0:self.number_of_eMBB_users]
+        subcarrier_allocation_actions_mapped = []
+
+        for subcarrier_allocation_action in subcarrier_allocation_actions:
+            subcarrier_allocation_action_mapped = interp(subcarrier_allocation_action,[-1,1],[self.num_allocate_subcarriers_lower_bound,self.num_allocate_subcarriers_upper_bound])
+            subcarrier_allocation_actions_mapped.append(subcarrier_allocation_action_mapped)
+
         subcarrier_allocation_actions = (np.rint(subcarrier_allocation_actions)).astype(int)
+        subcarrier_allocation_actions_mapped = (np.rint(subcarrier_allocation_actions_mapped)).astype(int)
+
 
         #collect trasmit powers allocations actions
         transmit_power_actions = action[self.allocate_transmit_powers_label]
         transmit_power_actions = transmit_power_actions[0:self.number_of_eMBB_users]
 
+        transmit_power_actions_mapped = []
+
+        for transmit_power_action in transmit_power_actions:
+            transmit_power_action_mapped = interp(transmit_power_action,[-1,1],[self.min_transmit_power_db,self.max_transmit_power_db])
+            transmit_power_actions_mapped.append(transmit_power_action_mapped)
+
         #collect the final action - number of URLLC users per RB
         number_URLLC_Users_per_RB_action = action[self.num_urllc_users_per_RB_label]
         number_URLLC_Users_per_RB_action = number_URLLC_Users_per_RB_action[0:self.number_of_eMBB_users]
+
+        number_URLLC_Users_per_RB_action_mapped = []
+
+        for number_URLLC_Users_per_RB in number_URLLC_Users_per_RB_action:
+            number_URLLC_Users_per_RB_mapped = interp(number_URLLC_Users_per_RB,[-1,1],[self.min_number_of_URLLC_users_per_RB,self.max_number_of_URLLC_users_per_RB])
+            number_URLLC_Users_per_RB_action_mapped.append(number_URLLC_Users_per_RB_mapped)
+
         number_URLLC_Users_per_RB_action = (np.rint(number_URLLC_Users_per_RB_action)).astype(int)
         number_URLLC_Users_per_RB_action = int(sum(number_URLLC_Users_per_RB_action) / len(number_URLLC_Users_per_RB_action))
 
+        number_URLLC_Users_per_RB_action_mapped = (np.rint(number_URLLC_Users_per_RB_action_mapped)).astype(int)
+        number_URLLC_Users_per_RB_action_mapped = int(sum(number_URLLC_Users_per_RB_action_mapped) / len(number_URLLC_Users_per_RB_action_mapped))
+
+
+        print("Action Mapped Transposed")
+        print(offload_decisions_actions_mapped)
+        print(subcarrier_allocation_actions_mapped)
+        print(transmit_power_actions_mapped)
+        print(number_URLLC_Users_per_RB_action_mapped)
         #Perform Actions
-        self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions)
-        self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions)
-        self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action
+        self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
+        self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions_mapped)
+        self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action_mapped
         print("number of URLLC users per RB", self.Communication_Channel_1.number_URLLC_Users_per_RB)
 
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_subcarriers()
-        self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users,subcarrier_allocation_actions)
+        self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users,subcarrier_allocation_actions_mapped)
         self.Communication_Channel_1.create_resource_blocks_URLLC()
         self.Communication_Channel_1.allocate_resource_blocks_URLLC(self.URLLC_Users)
         self.Communication_Channel_1.subcarrier_URLLC_User_mapping()

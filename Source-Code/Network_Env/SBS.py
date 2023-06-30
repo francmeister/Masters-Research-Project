@@ -75,6 +75,8 @@ class SBS():
             latency_requirement.append(user.user_state_space.QOS_requirements.max_allowable_latency)
             reliability_requirement.append(user.user_state_space.QOS_requirements.max_allowable_reliability)
             
+        print("Collecting state space...")
+        print("channel gains", channel_gains)
         self.system_state_space.append(channel_gains)
         self.system_state_space.append(communication_queue_size)
         self.system_state_space.append(energy_harvested)
