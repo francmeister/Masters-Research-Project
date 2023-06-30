@@ -4,6 +4,8 @@ import Network_Env
 import pybullet_envs
 import torch
 
+from numpy import interp
+print("Interpolated number: ",interp(0,[-1,1],[0,25]))
 
 env = gym.make('NetworkEnv-v0')
 #env = gym.make('AntBulletEnv-v0')
