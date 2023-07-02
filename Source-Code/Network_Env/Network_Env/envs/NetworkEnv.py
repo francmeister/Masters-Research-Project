@@ -267,7 +267,9 @@ class NetworkEnv(gym.Env):
         observation = np.transpose(observation)
         print("Ïnitial observation-")
         print(observation)
-        return observation,info
+        reward = 0
+        done = 0
+        return observation,reward,done,info
 
     def render(self, mode='human'):
         pass
