@@ -160,6 +160,7 @@ class Communication_Channel():
 
     def subcarrier_URLLC_User_mapping(self):
         self.subcarrier_URLLC_User_mapping_.clear()
+        print("self.resource_blocks_URLLC_mappings", self.resource_blocks_URLLC_mappings)
         for RB in self.resource_blocks_URLLC_mappings:
             resource_block = RB[0]
            

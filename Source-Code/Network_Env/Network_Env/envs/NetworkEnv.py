@@ -99,6 +99,8 @@ class NetworkEnv(gym.Env):
        
 
     def step(self,action):
+        print("****************************************************")
+        print("Step Started")
         print("Action before transposition")
         print(action)
         action = np.array(action)
@@ -226,13 +228,16 @@ class NetworkEnv(gym.Env):
         done = self.check_timestep()
         info = {'reward': reward}
         self.steps+=1
-
+        print("Step Number: ", self.steps)
         print("observation after action:")
         print(observation)
         print("reward after action:")
         print(reward)
         print("done after action:")
         print(done)
+        print("Step Done")
+        print("****************************************************")
+        print("")
         return observation,reward,done,info
     
     def reset(self):
