@@ -116,3 +116,18 @@ print(state1)
 batch_states = torch.Tensor(batch_states)
 print("Actor output on batch_states")
 print(Actor1.forward(batch_states))
+
+
+h = [3,3,3,3,3,3,3,3,3,3,3,3]
+
+print("lenght of h: ", len(h))
+
+index = 0
+f = []
+for i in range(0,len(h),4):
+  print("i",i)
+  q,w,e,r = h[index],h[index+1],h[index+2],h[index+3]
+  f.append((q,w,e,r))
+  index+=4
+
+print("f",f)
