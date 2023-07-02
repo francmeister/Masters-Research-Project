@@ -105,9 +105,9 @@ class eMBB_UE(User_Equipment):
         print("subcarrier_URLLC_User_mapping", subcarrier_URLLC_User_mapping)
         print("self.allocated_subcarriers", self.allocated_subcarriers)
         for subcarrier in self.allocated_subcarriers:
+            self.intefering_URLLC_Users.append(subcarrier_URLLC_User_mapping[subcarrier - 1])
             if subcarrier == last_subcarrier:
                 break
-            self.intefering_URLLC_Users.append(subcarrier_URLLC_User_mapping[subcarrier - 1])
 
         #Calculate the bandwidth achieved on each subcarrier, each subcarrier receives interference from mapped URLLC users
         achieved_subcarriers_channel_rates = []
@@ -122,6 +122,8 @@ class eMBB_UE(User_Equipment):
                     URLLC_Users_channel_gains.append(URLLC_Users[URLLC_User - 1].total_gain)
             achieved_subcarrier_channel_rate = self.calculate_channel_rate(URLLC_Users_channel_gains,communication_channel)
             achieved_subcarriers_channel_rates.append(achieved_subcarrier_channel_rate)
+            if subcarrier == last_subcarrier:
+                break
 
         self.achieved_channel_rate = sum(achieved_subcarriers_channel_rates)
         print("eMBB User: ", self.eMBB_UE_label,"achieved_channel_rate",self.achieved_channel_rate)
