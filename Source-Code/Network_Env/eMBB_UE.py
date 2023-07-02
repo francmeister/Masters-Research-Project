@@ -99,6 +99,9 @@ class eMBB_UE(User_Equipment):
     def transmit_to_SBS(self, communication_channel, URLLC_Users):
         #Find URLLC users transmitting on this eMBB user's subcarriers
         subcarrier_URLLC_User_mapping = communication_channel.subcarrier_URLLC_User_mapping_
+        print("self.eMBB_UE_label",self.eMBB_UE_label)
+        print("subcarrier_URLLC_User_mapping", subcarrier_URLLC_User_mapping)
+        print("self.allocated_subcarriers", self.allocated_subcarriers)
         for subcarrier in self.allocated_subcarriers:
             self.intefering_URLLC_Users.append(subcarrier_URLLC_User_mapping[subcarrier - 1])
 
