@@ -269,7 +269,7 @@ class NetworkEnv(gym.Env):
         print(observation)
         reward = 0
         done = 0
-        return observation,reward,done,info
+        return observation
 
     def render(self, mode='human'):
         pass
