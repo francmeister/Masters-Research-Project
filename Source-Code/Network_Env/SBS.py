@@ -70,7 +70,7 @@ class SBS():
         #Collect Channel gains
         for user in Users:
             channel_gains.append(user.user_state_space.channel_gain)
-            communication_queue_size.append(user.user_state_space.communication_queue_size)
+            communication_queue_size.append(user.user_state_space.communication_queue_size())
             energy_harvested.append(user.user_state_space.energy_harvested)
             latency_requirement.append(user.user_state_space.QOS_requirements.max_allowable_latency)
             reliability_requirement.append(user.user_state_space.QOS_requirements.max_allowable_reliability)
