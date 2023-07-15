@@ -26,6 +26,7 @@ class SBS():
         #self.cell_tower_sprite4.convert()
 
         self.sprite_surface = pygame.Surface((self.cell_tower_sprite_width,self.cell_tower_sprite_height))
+        self.individual_rewards = []
         self.sprite_surface.set_colorkey((0,0,0))
         self.set_properties()
                 
@@ -153,16 +154,22 @@ class SBS():
         eMBB_User_energy_consumption = 0
         eMBB_User_channel_rate = 0
         eMBB_User_QOS_requirement_revenue_or_penelaty = 0
+        self.individual_rewards.clear()
         for eMBB_User in eMBB_Users:
             eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption 
             eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
             eMBB_User_QOS_requirement_revenue_or_penelaty = self.achieved_eMBB_delay_requirement_revenue_or_penalty(eMBB_User)
-            self.achieved_system_reward += -eMBB_User_energy_consumption + eMBB_User_channel_rate + eMBB_User_QOS_requirement_revenue_or_penelaty
+            individual_reward = -eMBB_User_energy_consumption + eMBB_User_channel_rate + eMBB_User_QOS_requirement_revenue_or_penelaty
+            self.achieved_system_reward += individual_reward
+            self.individual_rewards.append(individual_reward)
 
         if self.num_arriving_URLLC_packets > 0:
             self.achieved_system_reward += ((self.achieved_total_rate_URLLC_users-URLLC_Users[0].QOS_requirement_for_transmission.max_allowable_reliability)/self.num_arriving_URLLC_packets)
+
+        for URLLC_user in URLLC_Users:
+            self.individual_rewards.append(0)
         
-        return self.achieved_system_reward
+        return self.achieved_system_reward, self.individual_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
         processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency
