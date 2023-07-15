@@ -227,6 +227,8 @@ class NetworkEnv(gym.Env):
         observation = np.array(self.SBS1.collect_state_space(self.eMBB_Users,self.URLLC_Users), dtype=np.float32)
         observation = np.transpose(observation)
         done = self.check_timestep()
+        dones = [0 for element in range(len(self.URLLC_Users))]
+        dones.append(done)
         info = {'reward': reward}
         self.steps+=1
         print("Step Number: ", self.steps)
@@ -235,11 +237,11 @@ class NetworkEnv(gym.Env):
         print("reward after action:")
         print(reward)
         print("done after action:")
-        print(done)
+        print(dones)
         print("Step Done")
         print("****************************************************")
         print("")
-        return observation,reward,done,info
+        return observation,reward,dones,info
     
     def reset(self):
         print("resetting......")

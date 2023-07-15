@@ -131,3 +131,17 @@ for i in range(0,len(h),4):
   index+=4
 
 print("f",f)
+
+
+print('***************************************************************')
+
+h = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+print(h)
+print('size of h')
+print(len(h))
+g = h[:len(h)-1] + [2]
+print(g)
+print('size of g')
+print(len(g))
+print('last element of g')
+print(g[len(g)-1])
