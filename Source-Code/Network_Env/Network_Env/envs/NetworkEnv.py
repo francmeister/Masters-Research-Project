@@ -99,20 +99,11 @@ class NetworkEnv(gym.Env):
        
 
     def step(self,action):
-        print("****************************************************")
-        print("Step Started")
-        print("Action before transposition")
-        print(action)
         action = np.array(action)
         action = np.transpose(action)
-        print("Action transposed")
-        print(action)
-        print("self.offload_decisions_label", self.offload_decisions_label)
-        print("self.number_of_eMBB_users", self.number_of_eMBB_users)
         reward = 0
         #collect offload decisions actions 
         offload_decisions_actions = action[self.offload_decisions_label]
-        print("offload_decisions_actions: ",offload_decisions_actions)
         offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
 
         offload_decisions_actions_mapped = []
@@ -120,8 +111,6 @@ class NetworkEnv(gym.Env):
             offload_decision_mapped = interp(offload_decision,[-1,1],[self.min_offload_decision,self.max_offload_decision])
             offload_decisions_actions_mapped.append(offload_decision_mapped)
 
-        print("offload_decisions_actions: ",offload_decisions_actions)
-        print("offload_decisions_actions_mapped: ",offload_decisions_actions_mapped)
 
         #collect subcarrier allocations actions
         
@@ -163,17 +152,10 @@ class NetworkEnv(gym.Env):
         number_URLLC_Users_per_RB_action_mapped = (np.rint(number_URLLC_Users_per_RB_action_mapped)).astype(int)
         number_URLLC_Users_per_RB_action_mapped = int(sum(number_URLLC_Users_per_RB_action_mapped) / len(number_URLLC_Users_per_RB_action_mapped))
 
-
-        print("Action Mapped Transposed")
-        print(offload_decisions_actions_mapped)
-        print(subcarrier_allocation_actions_mapped)
-        print(transmit_power_actions_mapped)
-        print(number_URLLC_Users_per_RB_action_mapped)
         #Perform Actions
         self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
         self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions_mapped)
         self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action_mapped
-        print("number of URLLC users per RB", self.Communication_Channel_1.number_URLLC_Users_per_RB)
 
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_subcarriers()
@@ -227,24 +209,13 @@ class NetworkEnv(gym.Env):
         observation = np.array(self.SBS1.collect_state_space(self.eMBB_Users,self.URLLC_Users), dtype=np.float32)
         observation = np.transpose(observation)
         done = self.check_timestep()
-        dones = [0 for element in range(len(self.URLLC_Users + self.eMBB_Users) - 1 )]
+        dones = [0 for element in range(len(self.URLLC_Users + self.eMBB_Users) - 1)]
         dones.append(done)
         info = {'reward': reward}
         self.steps+=1
-        print("Step Number: ", self.steps)
-        print("observation after action:")
-        print(observation)
-        print("reward after action:")
-        print(reward)
-        print("done after action:")
-        print(dones)
-        print("Step Done")
-        print("****************************************************")
-        print("")
         return observation,reward,dones,info
     
     def reset(self):
-        print("resetting......")
         self.steps = 0
         self.SBS1.set_properties()
         for eMBB_User in self.eMBB_Users:
@@ -268,8 +239,6 @@ class NetworkEnv(gym.Env):
         self.SBS1.collect_state_space(self.eMBB_Users,self.URLLC_Users)
         observation = np.array(self.SBS1.system_state_space, dtype=np.float32)
         observation = np.transpose(observation)
-        print("Ïnitial observation-")
-        print(observation)
         reward = 0
         done = 0
         return observation
