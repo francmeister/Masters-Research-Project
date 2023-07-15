@@ -100,10 +100,6 @@ class eMBB_UE(User_Equipment):
         #Find URLLC users transmitting on this eMBB user's subcarriers
         subcarrier_URLLC_User_mapping = communication_channel.subcarrier_URLLC_User_mapping_
         last_subcarrier = subcarrier_URLLC_User_mapping[len(subcarrier_URLLC_User_mapping)-1][0]
-        print("last_subcarrier:", last_subcarrier)
-        print("self.eMBB_UE_label",self.eMBB_UE_label)
-        print("subcarrier_URLLC_User_mapping", subcarrier_URLLC_User_mapping)
-        print("self.allocated_subcarriers", self.allocated_subcarriers)
         for subcarrier in self.allocated_subcarriers:
             self.intefering_URLLC_Users.append(subcarrier_URLLC_User_mapping[subcarrier - 1])
             if subcarrier == last_subcarrier:
@@ -126,8 +122,6 @@ class eMBB_UE(User_Equipment):
                 break
 
         self.achieved_channel_rate = sum(achieved_subcarriers_channel_rates)
-        print("eMBB User: ", self.eMBB_UE_label,"achieved_channel_rate",self.achieved_channel_rate)
-        print(" ")
 
     def calculate_channel_rate(self,transmitting_URLLC_Users, communication_channel):
         channel_rate = communication_channel.subcarrier_bandwidth_kHz*(1-(len(transmitting_URLLC_Users)/communication_channel.num_minislots_per_timeslot))*math.log2(1+((self.assigned_transmit_power_W*self.total_gain)/(communication_channel.noise_spectral_density_W*communication_channel.subcarrier_bandwidth_kHz*1000)))
@@ -137,17 +131,11 @@ class eMBB_UE(User_Equipment):
         cycles_per_packet = self.cpu_cycles_per_byte*(self.packet_size*0.125)
         self.achieved_local_energy_consumption = self.energy_consumption_coefficient*math.pow(self.cpu_clock_frequency,2)*(1-self.allocated_offloading_ratio)*cycles_per_packet
         self.achieved_local_processing_delay = ((1-self.allocated_offloading_ratio)*cycles_per_packet)/self.cpu_clock_frequency
-        print("eMBB User: ", self.eMBB_UE_label, "self.achieved_local_energy_consumption ",self.achieved_local_energy_consumption )
-        print("eMBB User: ", self.eMBB_UE_label, "self.achieved_local_processing_delay",self.achieved_local_processing_delay)
-        print(" ")
         self.local_queue.pop(0) 
 
     def offloading(self):
         self.achieved_transmission_delay = self.packet_offload_size_bits/self.achieved_channel_rate
         self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*self.achieved_transmission_delay
-        print("eMBB User: ", self.eMBB_UE_label, "achieved_transmission_delay",self.achieved_transmission_delay)
-        print("eMBB User: ", self.eMBB_UE_label, "self.achieved_transmission_energy_consumption",self.achieved_transmission_energy_consumption)
-        print(" ")
 
     def total_energy_consumed(self):
         self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption

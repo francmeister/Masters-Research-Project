@@ -80,7 +80,6 @@ class URLLC_UE(User_Equipment):
                     achieved_subcarriers_channel_rates.append(achieved_subcarrier_channel_gain)
         
         self.achieved_channel_rate = sum(achieved_subcarriers_channel_rates)
-        print("URLLC User: ", self.URLLC_UE_label, "self.achieved_channel_rate", self.achieved_channel_rate)
 
     def calculate_channel_rate(self,interfering_eMBB_user_transmit_power,interfering_eMBB_user_channel_gain,communication_channel):
             channel_rate = communication_channel.subcarrier_bandwidth_kHz*math.log2(1+((self.assigned_transmit_power_W*self.total_gain)/(communication_channel.noise_spectral_density_W*communication_channel.subcarrier_bandwidth_kHz*1000) + interfering_eMBB_user_transmit_power*interfering_eMBB_user_channel_gain))
@@ -105,9 +104,6 @@ class URLLC_UE(User_Equipment):
             j+=2
         print(rand_nums)
         allocated_subcarriers = communication_channel.resource_blocks_subcarrier_mappings_URLLC[self.allocated_RB[0] - 1]
-        print("self.allocated_RB",self.allocated_RB)
-        print("self.short_TTI_number",self.short_TTI_number)
-        print("communication_channel.URLLC_x_slot",communication_channel.URLLC_x_slot)
         for subcarrier in allocated_subcarriers:
             rectangle = Rectangle((rand_nums[self.short_TTI_number-1]*communication_channel.first_interval-communication_channel.short_TTI/2,subcarrier),width=communication_channel.short_TTI,height=1,color=(self.r,self.g,self.b,1))
             self.rectangles.append(rectangle)
