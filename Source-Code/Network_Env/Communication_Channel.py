@@ -223,7 +223,7 @@ class Communication_Channel():
         self.resource_blocks_subcarrier_mappings_URLLC = []
         self.resource_blocks_URLLC_mappings = []
         self.subcarrier_URLLC_User_mapping_ = []
-        self.fig, self.ax = plt.subplots()
+        #self.fig, self.ax = plt.subplots()
 
 
 
