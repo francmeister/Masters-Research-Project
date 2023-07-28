@@ -188,8 +188,8 @@ class Communication_Channel():
             for rectangle in URLLC_User.rectangles:
                 self.ax.add_patch(rectangle)
 
-        self.ax.autoscale()
-        plt.show()
+        #self.ax.autoscale()
+        #plt.show()
 
     def set_properties(self,SBS_label):
         self.transmission_queue = []

@@ -56,14 +56,14 @@ class NetworkEnv(gym.Env):
 
         #Define upper and lower bounds of observation and action spaces
         
-        '''action_space_high = np.array([[max_offload_decision for _ in range(self.number_of_users)], [num_allocate_subcarriers_upper_bound for _ in range(self.number_of_users)], 
-                        [max_transmit_power_db for _ in range(self.number_of_users)], [max_number_of_URLLC_users_per_RB for _ in range(self.number_of_users)]], dtype=np.float32)'''
+        '''action_space_high = np.array([[self.max_offload_decision for _ in range(self.number_of_users)], [self.num_allocate_subcarriers_upper_bound for _ in range(self.number_of_users)], 
+                        [self.max_transmit_power_db for _ in range(self.number_of_users)], [self.max_number_of_URLLC_users_per_RB for _ in range(self.number_of_users)]], dtype=np.float32)'''
         
         action_space_high = np.array([[1 for _ in range(self.number_of_users)], [1 for _ in range(self.number_of_users)], 
                         [1 for _ in range(self.number_of_users)], [1 for _ in range(self.number_of_users)]], dtype=np.float32)
 
-        '''action_space_low = np.array([[min_offload_decision for _ in range(self.number_of_users)], [num_allocate_subcarriers_lower_bound for _ in range(self.number_of_users)], 
-                        [min_transmit_power_db for _ in range(self.number_of_users)], [min_number_of_URLLC_users_per_RB for _ in range(self.number_of_users)]],dtype=np.float32)'''
+        '''action_space_low = np.array([[self.min_offload_decision for _ in range(self.number_of_users)], [self.num_allocate_subcarriers_lower_bound for _ in range(self.number_of_users)], 
+                        [self.min_transmit_power_db for _ in range(self.number_of_users)], [self.min_number_of_URLLC_users_per_RB for _ in range(self.number_of_users)]],dtype=np.float32)'''
         
         action_space_low = np.array([[-1 for _ in range(self.number_of_users)], [-1 for _ in range(self.number_of_users)], 
                         [-1 for _ in range(self.number_of_users)], [-1 for _ in range(self.number_of_users)]],dtype=np.float32)
