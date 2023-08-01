@@ -125,7 +125,7 @@ class eMBB_UE(User_Equipment):
 
     def calculate_channel_rate(self,transmitting_URLLC_Users, communication_channel):
         channel_rate = communication_channel.subcarrier_bandwidth_kHz*(1-(len(transmitting_URLLC_Users)/communication_channel.num_minislots_per_timeslot))*math.log2(1+((self.assigned_transmit_power_W*self.total_gain)/(communication_channel.noise_spectral_density_W*communication_channel.subcarrier_bandwidth_kHz*1000)))
-        print("embb user: ", self.eMBB_UE_label)
+        '''print("embb user: ", self.eMBB_UE_label)
         print("communication_channel.subcarrier_bandwidth_kHz: ", communication_channel.subcarrier_bandwidth_kHz)
         print("len(transmitting_URLLC_Users): ", len(transmitting_URLLC_Users))
         print("communication_channel.num_minislots_per_timeslot: ", communication_channel.num_minislots_per_timeslot)
@@ -139,7 +139,7 @@ class eMBB_UE(User_Equipment):
         print("channel rate: ", channel_rate)
         print("self.packet_offload_size_bits: ", self.packet_offload_size_bits )
         print(" ")
-        print(" ")
+        print(" ")'''
         return channel_rate
     
     def local_processing(self):
