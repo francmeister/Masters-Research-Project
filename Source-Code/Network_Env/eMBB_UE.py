@@ -136,6 +136,8 @@ class eMBB_UE(User_Equipment):
         print("communication_channel.noise_spectral_density_W: ", communication_channel.noise_spectral_density_W)
         print("communication_channel.subcarrier_bandwidth_kHz*1000: ",communication_channel.subcarrier_bandwidth_kHz*1000)
         print("math.log2(1+((self.assigned_transmit_power_W*self.total_gain)/(communication_channel.noise_spectral_density_W*communication_channel.subcarrier_bandwidth_kHz*1000)): ", math.log2(1+((self.assigned_transmit_power_W*self.total_gain)/(communication_channel.noise_spectral_density_W*communication_channel.subcarrier_bandwidth_kHz*1000))))
+        print("channel rate: ", channel_rate)
+        print("self.packet_offload_size_bits: ", self.packet_offload_size_bits )
         print(" ")
         print(" ")
         return channel_rate
