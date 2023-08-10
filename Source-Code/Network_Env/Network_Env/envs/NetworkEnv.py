@@ -100,6 +100,8 @@ class NetworkEnv(gym.Env):
 
     def step(self,action):
         action = np.array(action)
+        print("Action")
+        print(action)
         action = np.transpose(action)
         reward = 0
         #collect offload decisions actions 
