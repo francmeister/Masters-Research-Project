@@ -111,7 +111,7 @@ class NetworkEnv(gym.Env):
 
         offload_decisions_actions_mapped = []
         for offload_decision in offload_decisions_actions:
-            offload_decision_mapped = interp(offload_decision,[-1,1],[self.min_offload_decision,self.max_offload_decision])
+            offload_decision_mapped = interp(offload_decision,[-25,25],[self.min_offload_decision,self.max_offload_decision])
             offload_decisions_actions_mapped.append(offload_decision_mapped)
 
 
@@ -159,8 +159,8 @@ class NetworkEnv(gym.Env):
         #self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
         self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions)
 
-        #self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions_mapped)
-        self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions)
+        self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions_mapped)
+        #self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions)
 
         #self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action_mapped
         self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action
