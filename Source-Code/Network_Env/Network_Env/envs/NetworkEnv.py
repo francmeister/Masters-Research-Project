@@ -156,13 +156,19 @@ class NetworkEnv(gym.Env):
         number_URLLC_Users_per_RB_action_mapped = int(sum(number_URLLC_Users_per_RB_action_mapped) / len(number_URLLC_Users_per_RB_action_mapped))
 
         #Perform Actions
-        self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
-        self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions_mapped)
-        self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action_mapped
+        #self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
+        self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions)
+
+        #self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions_mapped)
+        self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions)
+
+        #self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action_mapped
+        self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action
 
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_subcarriers()
-        self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users,subcarrier_allocation_actions_mapped)
+        #self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users,subcarrier_allocation_actions_mapped)
+        self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users,subcarrier_allocation_actions)
         self.Communication_Channel_1.create_resource_blocks_URLLC()
         self.Communication_Channel_1.allocate_resource_blocks_URLLC(self.URLLC_Users)
         self.Communication_Channel_1.subcarrier_URLLC_User_mapping()
