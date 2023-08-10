@@ -208,6 +208,8 @@ class NetworkEnv(gym.Env):
 
         observation = np.array(self.SBS1.collect_state_space(self.eMBB_Users,self.URLLC_Users), dtype=np.float32)
         observation = np.transpose(observation)
+        print("Observation")
+        print(observation)
         done = self.check_timestep()
         dones = [0 for element in range(len(self.URLLC_Users + self.eMBB_Users) - 1)]
         dones.append(done)
