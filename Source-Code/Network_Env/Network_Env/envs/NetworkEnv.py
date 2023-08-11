@@ -107,9 +107,11 @@ class NetworkEnv(gym.Env):
     def step(self,action):
         action = np.array(action)
         print(" ")
-        print("Action")
+        print("Action before interpolation")
         print(action)
         action = np.transpose(action)
+        print("Action before interpolation transposed")
+        print(action)
         reward = 0
         #collect offload decisions actions 
         offload_decisions_actions = action[self.offload_decisions_label]
@@ -171,6 +173,12 @@ class NetworkEnv(gym.Env):
         self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action_mapped
         #self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action
 
+        print('Action after interpolation transposed')
+        print(offload_decisions_actions_mapped)
+        print(subcarrier_allocation_actions_mapped)
+        print(transmit_power_actions_mapped)
+        print(number_URLLC_Users_per_RB_action_mapped )
+
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_subcarriers()
         self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users,subcarrier_allocation_actions_mapped)
@@ -222,7 +230,8 @@ class NetworkEnv(gym.Env):
             URLLC_User.collect_state()
 
         observation = np.array(self.SBS1.collect_state_space(self.eMBB_Users,self.URLLC_Users), dtype=np.float32)
-
+        print('Observation before interpolation')
+        print(observation)
         #normalize observation values to a range between 0 and 1 using interpolation
         row = 0
         col = 0
@@ -256,9 +265,10 @@ class NetworkEnv(gym.Env):
             
             row += 1
 
+        observation = np.transpose(observation)
         print('observation interpolated')
         print(observation)
-        observation = np.transpose(observation)
+
         done = self.check_timestep()
         dones = [0 for element in range(len(self.URLLC_Users + self.eMBB_Users) - 1)]
         dones.append(done)
@@ -323,6 +333,8 @@ class NetworkEnv(gym.Env):
             
             row += 1
         observation = np.transpose(observation)
+        print('observation interpolated')
+        print(observation)
         reward = 0
         done = 0
         return observation
