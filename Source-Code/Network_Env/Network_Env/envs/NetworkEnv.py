@@ -25,13 +25,6 @@ class NetworkEnv(gym.Env):
     def __init__(self):
         self.create_objects()
 
-        self.OS_channel_gain_label = 0
-        self.OS_comm_queue_label = 1
-        self.OS_energy_harvested_label = 2
-        self.OS_latency_label = 3
-        self.OS_reliability_label = 4
-        self.reset()
-
         #Action Space Bound Paramaters
         self.max_offload_decision = 1
         self.min_offload_decision = 0
@@ -60,6 +53,12 @@ class NetworkEnv(gym.Env):
         self.latency_requirement_max = self.URLLC_UE_1.max_allowable_latency
         self.reliability_requirement_min = self.URLLC_UE_1.min_allowable_reliability
         self.reliability_requirement_max = self.URLLC_UE_1.max_allowable_reliability
+        self.OS_channel_gain_label = 0
+        self.OS_comm_queue_label = 1
+        self.OS_energy_harvested_label = 2
+        self.OS_latency_label = 3
+        self.OS_reliability_label = 4
+        self.reset()
 
         #Define upper and lower bounds of observation and action spaces
         
