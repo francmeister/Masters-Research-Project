@@ -24,6 +24,12 @@ class NetworkEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     def __init__(self):
         self.create_objects()
+
+        self.OS_channel_gain_label = 0
+        self.OS_comm_queue_label = 1
+        self.OS_energy_harvested_label = 2
+        self.OS_latency_label = 3
+        self.OS_reliability_label = 4
         self.reset()
 
         #Action Space Bound Paramaters
@@ -41,11 +47,6 @@ class NetworkEnv(gym.Env):
         self.allocate_num_subacarriers_label = 1
         self.allocate_transmit_powers_label = 2
         self.num_urllc_users_per_RB_label = 3
-        self.OS_channel_gain_label = 0
-        self.OS_comm_queue_label = 1
-        self.OS_energy_harvested_label = 2
-        self.OS_latency_label = 3
-        self.OS_reliability_label = 4
         
 
         #Observation Space Bound Parameters
@@ -76,10 +77,6 @@ class NetworkEnv(gym.Env):
         
         action_space_high = np.transpose(action_space_high)
         action_space_low = np.transpose(action_space_low)
-
-        '''observation_space_high = np.array([[channel_gain_max for _ in range(self.number_of_users)], [communication_queue_max for _ in range(self.number_of_users)], 
-                        [energy_harvested_max for _ in range(self.number_of_users)], [latency_requirement_max for _ in range(self.number_of_users)], 
-                        [reliability_requirement_max for _ in range(self.number_of_users)]],dtype=np.float32)'''
         
         observation_space_high = np.array([[self.channel_gain_max for _ in range(self.number_of_users)], [self.communication_queue_max for _ in range(self.number_of_users)], 
                         [self.energy_harvested_max for _ in range(self.number_of_users)], [self.latency_requirement_max for _ in range(self.number_of_users)], 
@@ -88,10 +85,6 @@ class NetworkEnv(gym.Env):
         observation_space_low = np.array([[self.channel_gain_min for _ in range(self.number_of_users)], [self.communication_queue_min for _ in range(self.number_of_users)], 
                         [self.energy_harvested_min for _ in range(self.number_of_users)], [self.latency_requirement_min for _ in range(self.number_of_users)], 
                         [self.reliability_requirement_min for _ in range(self.number_of_users)]],dtype=np.float32)
-        
-        '''observation_space_low = np.array([[channel_gain_min for _ in range(self.number_of_users)], [communication_queue_min for _ in range(self.number_of_users)], 
-                        [energy_harvested_min for _ in range(self.number_of_users)], [latency_requirement_min for _ in range(self.number_of_users)], 
-                        [reliability_requirement_min for _ in range(self.number_of_users)]],dtype=np.float32)'''
         
         observation_space_high = np.transpose(observation_space_high)
         observation_space_low = np.transpose(observation_space_low)
@@ -295,7 +288,7 @@ class NetworkEnv(gym.Env):
         info = {'reward': 0}
         self.SBS1.collect_state_space(self.eMBB_Users,self.URLLC_Users)
         observation = np.array(self.SBS1.system_state_space, dtype=np.float32)
-        
+
         #normalize observation values to a range between 0 and 1 using interpolation
         row = 0
         col = 0
