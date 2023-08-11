@@ -249,6 +249,7 @@ class NetworkEnv(gym.Env):
                 min_value = self.reliability_requirement_min
                 max_value = self.reliability_requirement_max
 
+            col = 0
             for user in observation_type:
                 observation[row][col] = interp(observation[row][col],[min_value,max_value],[0,1])
                 col += 1
@@ -313,7 +314,7 @@ class NetworkEnv(gym.Env):
             elif row == self.OS_reliability_label:
                 min_value = self.reliability_requirement_min
                 max_value = self.reliability_requirement_max
-                
+
             col = 0
             for user in observation_type:
                 observation[row][col] = interp(observation[row][col],[min_value,max_value],[0,1])
