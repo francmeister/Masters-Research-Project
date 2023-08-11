@@ -258,6 +258,7 @@ class NetworkEnv(gym.Env):
 
         print('observation interpolated')
         print(observation)
+        observation = np.transpose(observation)
         done = self.check_timestep()
         dones = [0 for element in range(len(self.URLLC_Users + self.eMBB_Users) - 1)]
         dones.append(done)
