@@ -24,7 +24,7 @@ class NetworkEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     def __init__(self):
         self.create_objects()
-
+        self.reset()
         #Action Space Bound Paramaters
         self.max_offload_decision = 1
         self.min_offload_decision = 0
@@ -40,25 +40,6 @@ class NetworkEnv(gym.Env):
         self.allocate_num_subacarriers_label = 1
         self.allocate_transmit_powers_label = 2
         self.num_urllc_users_per_RB_label = 3
-        
-
-        #Observation Space Bound Parameters
-        self.channel_gain_min = self.eMBB_UE_1.min_channel_gain
-        self.channel_gain_max = self.eMBB_UE_1.max_channel_gain
-        self.communication_queue_min = self.eMBB_UE_1.min_communication_qeueu_size
-        self.communication_queue_max = self.eMBB_UE_1.max_communication_qeueu_size
-        self.energy_harvested_min = 0
-        self.energy_harvested_max = self.eMBB_UE_1.max_energy_harvested
-        self.latency_requirement_min = 0
-        self.latency_requirement_max = self.URLLC_UE_1.max_allowable_latency
-        self.reliability_requirement_min = self.URLLC_UE_1.min_allowable_reliability
-        self.reliability_requirement_max = self.URLLC_UE_1.max_allowable_reliability
-        self.OS_channel_gain_label = 0
-        self.OS_comm_queue_label = 1
-        self.OS_energy_harvested_label = 2
-        self.OS_latency_label = 3
-        self.OS_reliability_label = 4
-        self.reset()
 
         #Define upper and lower bounds of observation and action spaces
         
@@ -129,7 +110,7 @@ class NetworkEnv(gym.Env):
         subcarrier_allocation_actions = subcarrier_allocation_actions[0:self.number_of_eMBB_users]
         subcarrier_allocation_actions_mapped = []
 
-        print('subcarrier_allocation_actions')
+    
         print(subcarrier_allocation_actions)
         for subcarrier_allocation_action in subcarrier_allocation_actions:
             subcarrier_allocation_action_mapped = interp(subcarrier_allocation_action,[0,1],[self.num_allocate_subcarriers_lower_bound,self.num_allocate_subcarriers_upper_bound])
@@ -288,6 +269,24 @@ class NetworkEnv(gym.Env):
     def reset(self):
         self.steps = 0
         self.SBS1.set_properties()
+        self.OS_channel_gain_label = 0
+        self.OS_comm_queue_label = 1
+        self.OS_energy_harvested_label = 2
+        self.OS_latency_label = 3
+        self.OS_reliability_label = 4
+
+        #Observation Space Bound Parameters
+        self.channel_gain_min = self.eMBB_UE_1.min_channel_gain
+        self.channel_gain_max = self.eMBB_UE_1.max_channel_gain
+        self.communication_queue_min = self.eMBB_UE_1.min_communication_qeueu_size
+        self.communication_queue_max = self.eMBB_UE_1.max_communication_qeueu_size
+        self.energy_harvested_min = 0
+        self.energy_harvested_max = self.eMBB_UE_1.max_energy_harvested
+        self.latency_requirement_min = 0
+        self.latency_requirement_max = self.URLLC_UE_1.max_allowable_latency
+        self.reliability_requirement_min = self.URLLC_UE_1.min_allowable_reliability
+        self.reliability_requirement_max = self.URLLC_UE_1.max_allowable_reliability
+        
         for eMBB_User in self.eMBB_Users:
             eMBB_User.set_properties_UE()
             eMBB_User.set_properties_eMBB()
