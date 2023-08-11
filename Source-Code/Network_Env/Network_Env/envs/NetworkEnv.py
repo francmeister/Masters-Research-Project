@@ -212,7 +212,7 @@ class NetworkEnv(gym.Env):
 
         observation = np.array(self.SBS1.collect_state_space(self.eMBB_Users,self.URLLC_Users), dtype=np.float32)
         print('Observation before interpolation')
-        print(observation)
+        print(np.transpose(observation))
         #normalize observation values to a range between 0 and 1 using interpolation
         row = 0
         col = 0
@@ -298,7 +298,8 @@ class NetworkEnv(gym.Env):
         info = {'reward': 0}
         self.SBS1.collect_state_space(self.eMBB_Users,self.URLLC_Users)
         observation = np.array(self.SBS1.system_state_space, dtype=np.float32)
-
+        print('Observation before transpose')
+        print(np.transpose(observation))
         #normalize observation values to a range between 0 and 1 using interpolation
         row = 0
         col = 0
