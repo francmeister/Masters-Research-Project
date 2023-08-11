@@ -129,6 +129,8 @@ class NetworkEnv(gym.Env):
         subcarrier_allocation_actions = subcarrier_allocation_actions[0:self.number_of_eMBB_users]
         subcarrier_allocation_actions_mapped = []
 
+        print('subcarrier_allocation_actions')
+        print(subcarrier_allocation_actions)
         for subcarrier_allocation_action in subcarrier_allocation_actions:
             subcarrier_allocation_action_mapped = interp(subcarrier_allocation_action,[0,1],[self.num_allocate_subcarriers_lower_bound,self.num_allocate_subcarriers_upper_bound])
             print('subcarrier_allocation_action_mapped')
