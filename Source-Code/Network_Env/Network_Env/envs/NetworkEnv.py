@@ -110,17 +110,8 @@ class NetworkEnv(gym.Env):
         subcarrier_allocation_actions = subcarrier_allocation_actions[0:self.number_of_eMBB_users]
         subcarrier_allocation_actions_mapped = []
 
-    
-        print(subcarrier_allocation_actions)
         for subcarrier_allocation_action in subcarrier_allocation_actions:
             subcarrier_allocation_action_mapped = interp(subcarrier_allocation_action,[0,1],[self.num_allocate_subcarriers_lower_bound,self.num_allocate_subcarriers_upper_bound])
-            print('self.num_allocate_subcarriers_lower_bound')
-            print(self.num_allocate_subcarriers_lower_bound)
-            print('self.num_allocate_subcarriers_upper_bound')
-            print(self.num_allocate_subcarriers_upper_bound)
-            print('subcarrier_allocation_action_mapped')
-            print(subcarrier_allocation_action_mapped)
-            subcarrier_allocation_action_mapped 
             subcarrier_allocation_actions_mapped.append(subcarrier_allocation_action_mapped)
 
         subcarrier_allocation_actions = (np.rint(subcarrier_allocation_actions)).astype(int)
@@ -286,7 +277,7 @@ class NetworkEnv(gym.Env):
         self.latency_requirement_max = self.URLLC_UE_1.max_allowable_latency
         self.reliability_requirement_min = self.URLLC_UE_1.min_allowable_reliability
         self.reliability_requirement_max = self.URLLC_UE_1.max_allowable_reliability
-        
+
         for eMBB_User in self.eMBB_Users:
             eMBB_User.set_properties_UE()
             eMBB_User.set_properties_eMBB()
