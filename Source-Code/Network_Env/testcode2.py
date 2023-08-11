@@ -5,7 +5,7 @@ import pybullet_envs
 import torch
 
 from numpy import interp
-print("Interpolated number: ",interp(-1.2,[-1,1],[0,25]))
+print("Interpolated number: ",interp(0.8333,[0,1],[0,25]))
 
 env = gym.make('NetworkEnv-v0')
 #env = gym.make('AntBulletEnv-v0')
@@ -15,8 +15,12 @@ action = env.action_space.sample()
 observation = env.observation_space.sample()
 print("Observation Space sample:")
 print(observation)
+print('observation space high')
+print(env.observation_space.high)
+print('observation space low')
+print(env.observation_space.low)
 print("max_action:")
-print(max(env.action_space.high))
+print(max(env.action_space.high[0]))
 print("min_action:")
 print(env.action_space.low)
 print("Action Sample before transpose")

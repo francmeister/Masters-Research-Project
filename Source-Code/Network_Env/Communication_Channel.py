@@ -62,8 +62,8 @@ class Communication_Channel():
 
 
     def create_resource_blocks_URLLC(self):
-        if self.number_URLLC_Users_per_RB < 1:
-            self.number_URLLC_Users_per_RB = 1
+        #if self.number_URLLC_Users_per_RB < 1:
+           # self.number_URLLC_Users_per_RB = 1
             
         self.number_of_resource_blocks_URLLC = int(len(self.URLLC_Users)/self.number_URLLC_Users_per_RB)
         float_value = len(self.URLLC_Users)/self.number_URLLC_Users_per_RB
