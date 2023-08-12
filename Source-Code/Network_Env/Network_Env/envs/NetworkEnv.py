@@ -144,16 +144,6 @@ class NetworkEnv(gym.Env):
         number_URLLC_Users_per_RB_action_mapped = (np.rint(number_URLLC_Users_per_RB_action_mapped)).astype(int)
         number_URLLC_Users_per_RB_action_mapped = int(sum(number_URLLC_Users_per_RB_action_mapped) / len(number_URLLC_Users_per_RB_action_mapped))
 
-        #Perform Actions
-        self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
-        #self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions)
-
-        self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions_mapped)
-        #self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions)
-
-        self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action_mapped
-        #self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action
-
         #print('Action after interpolation transposed')
         offload_decisions_actions_mapped = [1, 1, 1, 1, 1, 1, 1]
         print("New Timestep: ", self.steps)
@@ -165,6 +155,16 @@ class NetworkEnv(gym.Env):
         print(transmit_power_actions_mapped)
         print("number_URLLC_Users_per_RB_action")
         print(number_URLLC_Users_per_RB_action_mapped)
+        
+        #Perform Actions
+        self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
+        #self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions)
+
+        self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions_mapped)
+        #self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions)
+
+        self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action_mapped
+        #self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action
 
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_subcarriers()
