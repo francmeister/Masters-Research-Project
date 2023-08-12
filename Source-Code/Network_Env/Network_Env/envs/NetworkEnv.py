@@ -155,6 +155,7 @@ class NetworkEnv(gym.Env):
         #self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action
 
         #print('Action after interpolation transposed')
+        offload_decisions_actions_mapped = [1 1 1 1 1 1 1]
         print("New Timestep: ", self.steps)
         print("offload_decisions_actions")
         print(offload_decisions_actions_mapped)
