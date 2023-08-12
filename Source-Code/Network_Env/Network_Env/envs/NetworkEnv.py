@@ -157,7 +157,7 @@ class NetworkEnv(gym.Env):
         #print("transmit_power_actions")
         #print(transmit_power_actions_mapped)
         #print("number_URLLC_Users_per_RB_action")
-        #print(number_URLLC_Users_per_RB_action_mapped)
+        # print(number_URLLC_Users_per_RB_action_mapped)
 
         #Perform Actions
         self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
@@ -204,9 +204,9 @@ class NetworkEnv(gym.Env):
         self.SBS1.calculate_achieved_URLLC_reliability(self.URLLC_Users)
         self.SBS1.calculate_achieved_system_energy_efficiency()
         system_reward, reward = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users,self.URLLC_Users)
-        print('Reward')
-        print(reward)
-        print(' ')
+        #print('Reward')
+       # print(reward)
+        #print(' ')
 
         #Update game state after performing actions
         for eMBB_User in self.eMBB_Users:
