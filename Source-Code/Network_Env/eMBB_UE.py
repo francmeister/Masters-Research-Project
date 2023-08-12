@@ -145,11 +145,11 @@ class eMBB_UE(User_Equipment):
     def local_processing(self):
         cycles_per_packet = self.cpu_cycles_per_byte*(self.packet_size*0.125)
         self.achieved_local_energy_consumption = self.energy_consumption_coefficient*math.pow(self.cpu_clock_frequency,2)*(1-self.allocated_offloading_ratio)*cycles_per_packet
-        print("eMBB user: ", self.eMBB_UE_label)
-        print("self.achieved_local_energy_consumption")
-        print(self.achieved_local_energy_consumption)
-        print('self.allocated_offloading_ratio')
-        print(self.allocated_offloading_ratio)
+        #print("eMBB user: ", self.eMBB_UE_label)
+        #print("self.achieved_local_energy_consumption")
+        #print(self.achieved_local_energy_consumption)
+        #print('self.allocated_offloading_ratio')
+        #print(self.allocated_offloading_ratio)
         self.achieved_local_processing_delay = ((1-self.allocated_offloading_ratio)*cycles_per_packet)/self.cpu_clock_frequency
         self.local_queue.pop(0) 
 
