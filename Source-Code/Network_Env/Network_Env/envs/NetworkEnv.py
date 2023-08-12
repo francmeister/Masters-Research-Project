@@ -197,6 +197,7 @@ class NetworkEnv(gym.Env):
         system_reward, reward = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users,self.URLLC_Users)
         print('Reward')
         print(reward)
+        print(' ')
 
         #Update game state after performing actions
         for eMBB_User in self.eMBB_Users:
