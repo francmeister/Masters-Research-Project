@@ -155,10 +155,15 @@ class NetworkEnv(gym.Env):
         #self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action
 
         #print('Action after interpolation transposed')
-        #print(offload_decisions_actions_mapped)
-        #print(subcarrier_allocation_actions_mapped)
-        #print(transmit_power_actions_mapped)
-        #print(number_URLLC_Users_per_RB_action_mapped )
+        print("New Timestep: ", self.steps)
+        print("offload_decisions_actions")
+        print(offload_decisions_actions_mapped)
+        print("subcarrier_allocation_actions")
+        print(subcarrier_allocation_actions_mapped)
+        print("transmit_power_actions")
+        print(transmit_power_actions_mapped)
+        print("number_URLLC_Users_per_RB_action")
+        print(number_URLLC_Users_per_RB_action_mapped)
 
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_subcarriers()
