@@ -31,30 +31,9 @@ print(env.observation_space.shape)
 print("action space dim:")
 print(env.action_space.shape)
 env.step(action)
-lead_time = 5
-obs_dim = lead_time + 4 # total 9
-xu = torch.cat(action,observation)
-print("Action-Observation:")
-print(xu)
-obs_low = np.zeros(obs_dim)
-max_mean_daily_demand = 200
-max_unit_selling_price = 100
-max_daily_holding = 5
-
-obs_high = np.array([max_capacity for _ in range(lead_time)] +
-                    [max_mean_daily_demand, max_unit_selling_price,
-                     max_daily_holding]
-                    )
-max_offload_decision = 1
-min_offload_decision = 0
-
-number_of_eMBB_users = 7
-
-num_allocate_subcarriers_upper_bound = 25 # get this from the communication channel class
-num_allocate_subcarriers_lower_bound = 15 # get this from the communication channel class
-
-max_transmit_power_db = 20
-min_transmit_power_db = 1
+dones = [1,2,3,4,5]
+print(dones[5])
+print(len(dones))
 
 # my action space consists of
 '''
