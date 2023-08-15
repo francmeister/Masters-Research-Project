@@ -266,7 +266,7 @@ class NetworkEnv(gym.Env):
         dones.append(done)
         info = {'reward': reward}
         self.steps+=1
-        print('Timestep: ', self.steps)
+        #print('Timestep: ', self.steps)
         return observation,reward,dones,info
     
     def reset(self):
