@@ -32,7 +32,7 @@ print("action space dim:")
 print(env.action_space.shape)
 env.step(action)
 dones = [1,2,3,4,5]
-print(dones[5])
+print(dones[3])
 print(len(dones))
 
 # my action space consists of
