@@ -149,15 +149,15 @@ class NetworkEnv(gym.Env):
         #transmit_power_actions_mapped = [20,20,20,20,20,20,20]
         #subcarrier_allocation_actions_mapped = [10,10,10,10,10,10,10]
         #number_URLLC_Users_per_RB_action_mapped = 3
-        #print("New Timestep: ", self.steps)
-        #print("offload_decisions_actions")
-        #print(offload_decisions_actions_mapped)
-        #print("subcarrier_allocation_actions")
-        #print(subcarrier_allocation_actions_mapped)
-        #print("transmit_power_actions")
-        #print(transmit_power_actions_mapped)
-        #print("number_URLLC_Users_per_RB_action")
-        #print(number_URLLC_Users_per_RB_action_mapped)
+        print("New Timestep: ", self.steps)
+        print("offload_decisions_actions")
+        print(offload_decisions_actions_mapped)
+        print("subcarrier_allocation_actions")
+        print(subcarrier_allocation_actions_mapped)
+        print("transmit_power_actions")
+        print(transmit_power_actions_mapped)
+        print("number_URLLC_Users_per_RB_action")
+        print(number_URLLC_Users_per_RB_action_mapped)
 
         #Perform Actions
         self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
