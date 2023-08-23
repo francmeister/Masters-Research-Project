@@ -125,12 +125,12 @@ class NetworkEnv(gym.Env):
         #subcarrier_allocation_actions_mapped = [10,10,10,10,10,10,10]
         #number_URLLC_Users_per_RB_action_mapped = 3
         #print("New Timestep: ", self.steps)
-        print("offload_decisions_actions")
-        print(offload_decisions_actions_mapped)
-        print("RB_allocation_actions")
-        print(RB_allocation_actions_mapped)
-        print("transmit_power_actions")
-        print(transmit_power_actions_mapped)
+        #print("offload_decisions_actions")
+        #print(offload_decisions_actions_mapped)
+        #print("RB_allocation_actions")
+        #print(RB_allocation_actions_mapped)
+        #print("transmit_power_actions")
+       # print(transmit_power_actions_mapped)
 
 
         #Perform Actions
