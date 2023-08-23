@@ -89,8 +89,6 @@ class NetworkEnv(gym.Env):
         #collect offload decisions actions 
         offload_decisions_actions = action[self.offload_decisions_label]
         #offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
-        print("offlaod decisions")
-        print(offload_decisions_actions)
         offload_decisions_actions_mapped = []
         for offload_decision in offload_decisions_actions:
             offload_decision_mapped = interp(offload_decision,[0,1],[self.min_offload_decision,self.max_offload_decision])
@@ -126,13 +124,13 @@ class NetworkEnv(gym.Env):
         #transmit_power_actions_mapped = [20,20,20,20,20,20,20]
         #subcarrier_allocation_actions_mapped = [10,10,10,10,10,10,10]
         #number_URLLC_Users_per_RB_action_mapped = 3
-        print("New Timestep: ", self.steps)
-        print("offload_decisions_actions")
-        print(offload_decisions_actions_mapped)
-        print("RB_allocation_actions")
-        print(RB_allocation_actions_mapped)
-        print("transmit_power_actions")
-        print(transmit_power_actions_mapped)
+        #print("New Timestep: ", self.steps)
+        #print("offload_decisions_actions")
+        #print(offload_decisions_actions_mapped)
+        #print("RB_allocation_actions")
+        #print(RB_allocation_actions_mapped)
+        #print("transmit_power_actions")
+        #print(transmit_power_actions_mapped)
 
 
         #Perform Actions
