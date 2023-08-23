@@ -44,7 +44,7 @@ class eMBB_UE(User_Equipment):
 
         #After every 1s generate packets with a uniform distribution between 5 and 10 packets per second
         #Long TTI = 0.125 ms. 1 second should be achieved after every 8000 timeslots
-        if(self.timeslot_counter*long_TTI >= 1000):
+        if(self.timeslot_counter*long_TTI >= 1):
             self.timeslot_counter = 0
 
             #Require Task Arrival Rate, bits/packets, CPU cycles/packet
