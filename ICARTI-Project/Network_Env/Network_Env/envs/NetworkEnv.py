@@ -78,6 +78,7 @@ class NetworkEnv(gym.Env):
        
 
     def step(self,action):
+        print(self.steps)
         action = np.array(action)
         #print(" ")
         #print("Action before interpolation")
