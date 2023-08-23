@@ -98,6 +98,8 @@ class eMBB_UE(User_Equipment):
 
     def calculate_channel_rate(self, communication_channel):
         channel_rate = communication_channel.RB_bandwidth_Hz*math.log2(1+((self.assigned_transmit_power_W*self.total_gain)/(communication_channel.noise_spectral_density_W*communication_channel.RB_bandwidth_Hz)))
+        print("channel rate: ", channel_rate)
+
         return channel_rate
     
     def local_processing(self):
@@ -112,6 +114,7 @@ class eMBB_UE(User_Equipment):
 
     def total_energy_consumed(self):
         self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
+        print("Energy: ", self.achieved_total_energy_consumption)
 
     def total_processing_delay(self):
         self.achieved_total_processing_delay = self.achieved_local_processing_delay + self.achieved_transmission_delay
