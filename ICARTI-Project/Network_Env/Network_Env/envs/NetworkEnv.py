@@ -89,7 +89,8 @@ class NetworkEnv(gym.Env):
         #collect offload decisions actions 
         offload_decisions_actions = action[self.offload_decisions_label]
         #offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
-
+        print("offlaod decisions")
+        print(offload_decisions_actions)
         offload_decisions_actions_mapped = []
         for offload_decision in offload_decisions_actions:
             offload_decision_mapped = interp(offload_decision,[0,1],[self.min_offload_decision,self.max_offload_decision])
