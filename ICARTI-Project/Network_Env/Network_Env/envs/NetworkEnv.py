@@ -88,7 +88,7 @@ class NetworkEnv(gym.Env):
         reward = 0
         #collect offload decisions actions 
         offload_decisions_actions = action[self.offload_decisions_label]
-        offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
+        #offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
 
         offload_decisions_actions_mapped = []
         for offload_decision in offload_decisions_actions:
@@ -99,7 +99,7 @@ class NetworkEnv(gym.Env):
         #collect subcarrier allocations actions
         
         RB_allocation_actions = action[self.allocate_num_RB_label]
-        RB_allocation_actions = RB_allocation_actions[0:self.number_of_eMBB_users]
+       # RB_allocation_actions = RB_allocation_actions[0:self.number_of_eMBB_users]
         RB_allocation_actions_mapped = []
 
         for RB_allocation_action in RB_allocation_actions:
@@ -112,7 +112,7 @@ class NetworkEnv(gym.Env):
 
         #collect trasmit powers allocations actions
         transmit_power_actions = action[self.allocate_transmit_powers_label]
-        transmit_power_actions = transmit_power_actions[0:self.number_of_eMBB_users]
+       # transmit_power_actions = transmit_power_actions[0:self.number_of_eMBB_users]
 
         transmit_power_actions_mapped = []
 
