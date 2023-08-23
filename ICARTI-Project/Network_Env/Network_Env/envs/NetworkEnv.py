@@ -161,9 +161,9 @@ class NetworkEnv(gym.Env):
         self.SBS1.calculate_achieved_total_rate_eMBB_users(self.eMBB_Users)
         self.SBS1.calculate_achieved_system_energy_efficiency()
         system_reward, reward = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users)
-        print('Reward')
-        print(reward)
-        print(' ')
+        #print('Reward')
+       # print(reward)
+        #print(' ')
 
         #Update game state after performing actions
         for eMBB_User in self.eMBB_Users:
