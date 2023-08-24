@@ -161,9 +161,9 @@ class SBS():
             total_energy += eMBB_User_energy_consumption
             eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
             total_rate += eMBB_User_channel_rate
-            eMBB_User_QOS_requirement_revenue_or_penelaty = self.achieved_eMBB_delay_requirement_revenue_or_penalty(eMBB_User)
-            total_QOS_revenue += eMBB_User_QOS_requirement_revenue_or_penelaty
-            individual_reward = eMBB_User_energy_consumption #+ eMBB_User_channel_rate + eMBB_User_QOS_requirement_revenue_or_penelaty
+            #eMBB_User_QOS_requirement_revenue_or_penelaty = self.achieved_eMBB_delay_requirement_revenue_or_penalty(eMBB_User)
+            #total_QOS_revenue += eMBB_User_QOS_requirement_revenue_or_penelaty
+            individual_reward = eMBB_User_channel_rate#eMBB_User_energy_consumption #+ eMBB_User_channel_rate + eMBB_User_QOS_requirement_revenue_or_penelaty
             self.achieved_system_reward += individual_reward
             self.individual_rewards.append(individual_reward)
 
@@ -171,11 +171,11 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
 
-        if self.num_arriving_URLLC_packets > 0:
-            self.achieved_system_reward += ((self.achieved_total_rate_URLLC_users-URLLC_Users[0].QOS_requirement_for_transmission.max_allowable_reliability)/self.num_arriving_URLLC_packets)
+        #if self.num_arriving_URLLC_packets > 0:
+         #   self.achieved_system_reward += ((self.achieved_total_rate_URLLC_users-URLLC_Users[0].QOS_requirement_for_transmission.max_allowable_reliability)/self.num_arriving_URLLC_packets)
 
-        for URLLC_user in URLLC_Users:
-            self.individual_rewards.append(0)
+       # for URLLC_user in URLLC_Users:
+        #    self.individual_rewards.append(0)
         
         return self.achieved_system_reward, self.individual_rewards
 
