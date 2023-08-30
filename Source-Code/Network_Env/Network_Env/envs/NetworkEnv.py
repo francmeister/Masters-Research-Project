@@ -145,7 +145,7 @@ class NetworkEnv(gym.Env):
         number_URLLC_Users_per_RB_action_mapped = int(sum(number_URLLC_Users_per_RB_action_mapped) / len(number_URLLC_Users_per_RB_action_mapped))
 
         #print('Action after interpolation transposed')
-        #offload_decisions_actions_mapped = [1, 1, 1, 1, 1, 1, 1]
+        offload_decisions_actions_mapped = [0, 0, 0.5, 0.5, 1, 1, 1]
         #transmit_power_actions_mapped = [20,20,20,20,20,20,20]
         #subcarrier_allocation_actions_mapped = [10,10,15,15,20,20,20]
         #number_URLLC_Users_per_RB_action_mapped = 3

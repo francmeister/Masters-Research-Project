@@ -157,6 +157,7 @@ class eMBB_UE(User_Equipment):
     def offloading(self):
         self.achieved_transmission_delay = self.packet_offload_size_bits/self.achieved_channel_rate
         self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*self.achieved_transmission_delay
+        print('transmission energy consumed: ', self.achieved_transmission_energy_consumption)
 
     def total_energy_consumed(self):
         self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
