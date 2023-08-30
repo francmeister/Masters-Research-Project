@@ -156,6 +156,7 @@ class NetworkEnv(gym.Env):
         print(subcarrier_allocation_actions_mapped)
         print("transmit_power_actions")
         print(transmit_power_actions_mapped)
+        print(' ')
         #print("number_URLLC_Users_per_RB_action")
         #print(number_URLLC_Users_per_RB_action_mapped)
 
