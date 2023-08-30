@@ -153,7 +153,7 @@ class eMBB_UE(User_Equipment):
         #print('self.allocated_offloading_ratio')
         #print(self.allocated_offloading_ratio)
         self.achieved_local_processing_delay = ((1-self.allocated_offloading_ratio)*cycles_per_packet)/self.cpu_clock_frequency
-        self.achieved_local_processing_delay = interp(self.achieved_local_processing_delay,[0,0.05],[0,1000])
+        self.achieved_local_energy_consumption = interp(self.achieved_local_energy_consumption,[0,0.05],[0,1000])
         print('achieved_local_energy_consumption: ',self.achieved_local_energy_consumption)
         self.local_queue.pop(0) 
 
