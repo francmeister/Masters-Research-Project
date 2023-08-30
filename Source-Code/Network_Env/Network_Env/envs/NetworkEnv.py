@@ -207,7 +207,7 @@ class NetworkEnv(gym.Env):
         #print('Reward')
         #print(reward)
         #print(' ')
-        
+        #mapped_reward = interp(reward,[0,1000],[7200000000,7830000000])
         #Update game state after performing actions
         for eMBB_User in self.eMBB_Users:
             eMBB_User.calculate_distance_from_SBS(self.SBS1.x_position, self.SBS1.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
