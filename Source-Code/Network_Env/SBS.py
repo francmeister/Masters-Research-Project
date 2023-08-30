@@ -1,7 +1,7 @@
 import pygame, sys, time, random
 from Spritesheet import SpriteSheet
 pygame.init()
-
+from numpy import interp
 class SBS():
     def __init__(self, SBS_label):
         self.SBS_label = SBS_label
