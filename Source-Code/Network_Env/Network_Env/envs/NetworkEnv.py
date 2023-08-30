@@ -206,7 +206,7 @@ class NetworkEnv(gym.Env):
         self.SBS1.calculate_achieved_system_energy_efficiency()
         system_reward, reward = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users,self.URLLC_Users)
         #print('Reward')
-        print(reward)
+        #print(reward)
         #print(' ')
         #mapped_reward = interp(reward,[0,1000],[7200000000,7830000000])
         #Update game state after performing actions
