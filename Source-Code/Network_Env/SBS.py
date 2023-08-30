@@ -183,7 +183,7 @@ class SBS():
         for URLLC_user in URLLC_Users:
            self.individual_rewards.append(0)
         
-        return self.achieved_system_reward, self.individual_rewards
+        return self.achieved_system_reward, self.individual_rewards, total_energy,total_rate
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
         processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency

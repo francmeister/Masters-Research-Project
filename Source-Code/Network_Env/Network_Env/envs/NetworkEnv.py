@@ -40,6 +40,8 @@ class NetworkEnv(gym.Env):
         self.allocate_num_subacarriers_label = 1
         self.allocate_transmit_powers_label = 2
         self.num_urllc_users_per_RB_label = 3
+        self.total_energy = 0
+        self.total_rate = 0
 
         #Define upper and lower bounds of observation and action spaces
         
@@ -204,7 +206,7 @@ class NetworkEnv(gym.Env):
         self.SBS1.calculate_achieved_total_rate_eMBB_users(self.eMBB_Users)
         self.SBS1.calculate_achieved_URLLC_reliability(self.URLLC_Users)
         self.SBS1.calculate_achieved_system_energy_efficiency()
-        system_reward, reward = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users,self.URLLC_Users)
+        system_reward, reward, self.total_energy,self.total_rate = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users,self.URLLC_Users)
         #print('Reward')
         #print(reward)
         #print(' ')
