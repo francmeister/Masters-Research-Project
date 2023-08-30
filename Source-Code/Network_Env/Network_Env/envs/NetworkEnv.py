@@ -146,8 +146,8 @@ class NetworkEnv(gym.Env):
 
         #print('Action after interpolation transposed')
         #offload_decisions_actions_mapped = [1, 1, 1, 1, 1, 1, 1]
-        transmit_power_actions_mapped = [2,5,5,10,15,20,20]
-        #subcarrier_allocation_actions_mapped = [10,10,10,10,10,10,10]
+        transmit_power_actions_mapped = [20,20,20,20,20,20,20]
+        subcarrier_allocation_actions_mapped = [10,10,15,15,20,20,20]
         #number_URLLC_Users_per_RB_action_mapped = 3
         #print("New Timestep: ", self.steps)
         print("offload_decisions_actions")
