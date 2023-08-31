@@ -7,8 +7,8 @@ import torch
 from numpy import interp
 print("Interpolated number: ",interp(0.8333,[0,1],[0,25]))
 
-env = gym.make('NetworkEnv-v0')
-#env = gym.make('AntBulletEnv-v0')
+#env = gym.make('NetworkEnv-v0')
+env = gym.make('AntBulletEnv-v0')
 env.reset()
 max_capacity = 4000
 action = env.action_space.sample()

@@ -2,8 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 a_load = np.load('TD3_NetworkEnv-v0_0.npy')
+offload_actions = np.load('offloading_actions.npy')
+power_actions = np.load('power_actions.npy')
+subcarrier_actions = np.load('subcarrier_actions.npy')
 
-print(a_load)
+print(subcarrier_actions)
 print('fdfdf')
 
 # data to be plotted
