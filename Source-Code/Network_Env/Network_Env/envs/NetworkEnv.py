@@ -42,6 +42,9 @@ class NetworkEnv(gym.Env):
         self.num_urllc_users_per_RB_label = 3
         self.total_energy = 0
         self.total_rate = 0
+        self.offload_decisions = []
+        self.powers = []
+        self.subcarriers = []
 
         #Define upper and lower bounds of observation and action spaces
         
@@ -161,6 +164,9 @@ class NetworkEnv(gym.Env):
         #print(' ')
         #print("number_URLLC_Users_per_RB_action")
         #print(number_URLLC_Users_per_RB_action_mapped)
+        self.offload_decisions = offload_decision_mapped
+        self.powers = transmit_power_actions_mapped
+        self.subcarriers = subcarrier_allocation_actions_mapped
 
         #Perform Actions
         self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
