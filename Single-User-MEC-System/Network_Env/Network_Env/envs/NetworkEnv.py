@@ -331,8 +331,6 @@ class NetworkEnv(gym.Env):
             elif row == self.OS_latency_label:
                 min_value = self.latency_requirement_min
                 max_value = self.latency_requirement_max
-                print('min_value: ', min_value)
-                print('max_value: ', max_value)
 
             #elif row == self.OS_reliability_label:
             #    min_value = self.reliability_requirement_min
