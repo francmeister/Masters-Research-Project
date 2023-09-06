@@ -121,7 +121,7 @@ class SBS():
             else:
                 individual_reward = eMBB_User_channel_rate/eMBB_User_energy_consumption #+ eMBB_User_channel_rate + eMBB_User_QOS_requirement_revenue_or_penelaty
             self.achieved_system_reward += individual_reward
-            print('reward: ', self.achieved_system_reward)
+            #print('reward: ', self.achieved_system_reward)
             self.individual_rewards.append(individual_reward)
 
         #print("total_energy: ", total_energy)

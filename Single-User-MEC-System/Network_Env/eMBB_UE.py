@@ -157,7 +157,7 @@ class eMBB_UE(User_Equipment):
         #print('Max achievable rate: ', max_achievable_rate)
         #print('Min achievable rate: ', min_achievable_rate)
         self.achieved_channel_rate = interp(self.achieved_channel_rate,[min_achievable_rate,max_achievable_rate],[0,5000])
-        print('total rate: ',self.achieved_channel_rate)
+        #print('total rate: ',self.achieved_channel_rate)
 
     def calculate_channel_rate(self, communication_channel):
         RB_bandwidth = communication_channel.RB_bandwidth_Hz
@@ -192,7 +192,7 @@ class eMBB_UE(User_Equipment):
 
     def total_energy_consumed(self):
         self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
-        print('total energy: ', self.achieved_total_energy_consumption)
+        #print('total energy: ', self.achieved_total_energy_consumption)
 
     def total_processing_delay(self):
         self.achieved_total_processing_delay = self.achieved_local_processing_delay + self.achieved_transmission_delay
