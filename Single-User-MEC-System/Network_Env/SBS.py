@@ -119,8 +119,9 @@ class SBS():
             if eMBB_User_energy_consumption == 0:
                 individual_reward = 0
             else:
-                individual_reward = eMBB_User_channel_rate#eMBB_User_energy_consumption #+ eMBB_User_channel_rate + eMBB_User_QOS_requirement_revenue_or_penelaty
+                individual_reward = eMBB_User_channel_rate/eMBB_User_energy_consumption #+ eMBB_User_channel_rate + eMBB_User_QOS_requirement_revenue_or_penelaty
             self.achieved_system_reward += individual_reward
+            #print('total energy: ', total_energy)
             self.individual_rewards.append(individual_reward)
 
         #print("total_energy: ", total_energy)

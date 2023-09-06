@@ -11,7 +11,7 @@ from numpy import interp
 env = gym.make('NetworkEnv-v0')
 
 #timesteps = 5
-timesteps = np.arange(0,10,1)
+timesteps = np.arange(0,2,1)
 energies = []
 offload_decisions = []
 RB_allocations = []
@@ -23,6 +23,9 @@ channel_gains = []
 queue_sizes = []
 latencies = []
 
+local_energies = []
+transmit_energies = []
+
 env.reset()
 for timestep in timesteps:
     action = env.action_space.sample()
@@ -31,6 +34,8 @@ for timestep in timesteps:
     channel_gains.append(observation[0][0])
     queue_sizes.append(observation[0][1])
     latencies.append(observation[0][2])
+    local_energies.append(env.eMBB_UE_1.achieved_local_energy_consumption)
+    transmit_energies.append(env.eMBB_UE_1.achieved_transmission_energy_consumption)
     #print('selected actions: ', env.selected_actions)
     #energy_consumed = env.eMBB_Users[0].achieved_total_energy_consumption
     #energies.append(reward[0])
@@ -45,15 +50,16 @@ for timestep in timesteps:
 #print('queue sizes: ', queue_sizes)
 #print('latencies: ', latencies)
 #print('Max Throughput: ', max(throughputs), 'Min Throughput: ', min(throughputs))
-plt.scatter(timesteps, channel_gains, color ="red")
-plt.scatter(timesteps,queue_sizes,color = "blue")
-plt.scatter(timesteps,latencies,color = "green")
+#print(transmit_energies)
+#plt.scatter(timesteps, local_energies, color ="red")
+plt.scatter(timesteps,transmit_energies,color = "blue")
+#plt.scatter(timesteps,latencies,color = "green")
 #plt.plot(offload_ratios,throughput,color = "black")
-plt.legend(["channel gains", "queue sizes", "latencies"])
+plt.legend(["Local energies", "transmit energies", "latencies"])
 plt.xlabel("timesteps")
 plt.ylabel("channel gains, queue sizes, latencies")
 #plt.title("Throughput vs Number of Allocated RBs")
-plt.show()
+#plt.show()
 
 
 

@@ -172,7 +172,10 @@ class eMBB_UE(User_Equipment):
         self.achieved_local_processing_delay = cycles_per_bit/self.cpu_clock_frequency
         self.local_queue.pop(0) 
 
-    def offloading(self):
+        min_local_energy_consumption, max_local_energy_consumption = self.min_and_max_achievable_local_energy_consumption()
+        self.achieved_local_energy_consumption = interp(self.achieved_local_energy_consumption,[min_local_energy_consumption,max_local_energy_consumption],[0,5000])
+
+    def offloading(self,communication_channel):
         if self.achieved_channel_rate == 0:
             self.achieved_transmission_delay = 0
         else:
@@ -180,6 +183,8 @@ class eMBB_UE(User_Equipment):
         self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*self.achieved_transmission_delay
         #self.achieved_transmission_energy_consumption = interp(self.achieved_transmission_energy_consumption,[0,12*math.pow(10,-5)],[0,100])
         #print('transmission energy consumed: ', self.achieved_transmission_energy_consumption)
+        min_offload_energy_consumption, max_offload_energy_consumption = self.min_and_max_achievable_offload_energy_consumption(communication_channel)
+        self.achieved_transmission_energy_consumption = interp(self.achieved_transmission_energy_consumption,[min_offload_energy_consumption,max_offload_energy_consumption],[0,5000])
 
     def total_energy_consumed(self):
         self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
@@ -221,6 +226,24 @@ class eMBB_UE(User_Equipment):
         max_achievable_rate = max_num_RB*(RB_bandwidth_Hz*math.log2(1+(max_channel_rate_numerator/channel_rate_denominator)))
 
         return min_achievable_rate, max_achievable_rate
+    
+    def min_and_max_achievable_local_energy_consumption(self):
+        #Local Consumption
+        cycles_per_bit_max = self.cpu_cycles_per_byte*8*(5000*8000)
+        achieved_local_energy_consumption_max = self.energy_consumption_coefficient*math.pow(self.cpu_clock_frequency,2)*cycles_per_bit_max
+        achieved_local_energy_consumption_min = 0
+        #print("max achievable local energy consumption: ",achieved_local_energy_consumption_max)
+        return achieved_local_energy_consumption_min, achieved_local_energy_consumption_max
+    
+    def min_and_max_achievable_offload_energy_consumption(self,communication_channel):
+        #Offloading energy
+        min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
+        max_achieved_transmission_delay = (5000*8000)/min_achievable_rate
+        achieved_transmission_energy_consumption_max = self.max_transmission_power_W*max_achieved_transmission_delay
+        #self.achieved_transmission_energy_consumption = interp(self.achieved_transmission_energy_consumption,[0,12*math.pow(10,-5)],[0,100])
+        achieved_transmission_energy_consumption_min = 0
+        #print("max achievable offloading energy consumption: ", achieved_transmission_energy_consumption_max)
+        return achieved_transmission_energy_consumption_min, achieved_transmission_energy_consumption_max
 
     #def harvest_energy(self):
 

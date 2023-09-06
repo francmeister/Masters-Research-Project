@@ -196,7 +196,7 @@ class NetworkEnv(gym.Env):
             if eMBB_User.has_transmitted_this_time_slot == True:
                 eMBB_User.transmit_to_SBS(self.Communication_Channel_1)
                 eMBB_User.local_processing()
-                eMBB_User.offloading()
+                eMBB_User.offloading(self.Communication_Channel_1)
                 eMBB_User.total_energy_consumed()
                 eMBB_User.total_processing_delay()
 
@@ -265,6 +265,7 @@ class NetworkEnv(gym.Env):
         #print('Timestep: ', self.steps)
         #print('reward: ', reward)
         self.rewards.append(reward[0])
+        #print('dones: ', dones)
         return observation,reward,dones,info
     
     def reset(self):
