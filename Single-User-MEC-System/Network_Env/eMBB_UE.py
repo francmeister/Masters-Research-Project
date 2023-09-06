@@ -157,6 +157,7 @@ class eMBB_UE(User_Equipment):
         #print('Max achievable rate: ', max_achievable_rate)
         #print('Min achievable rate: ', min_achievable_rate)
         self.achieved_channel_rate = interp(self.achieved_channel_rate,[min_achievable_rate,max_achievable_rate],[0,5000])
+        print('total rate: ',self.achieved_channel_rate)
 
     def calculate_channel_rate(self, communication_channel):
         RB_bandwidth = communication_channel.RB_bandwidth_Hz
@@ -174,6 +175,7 @@ class eMBB_UE(User_Equipment):
 
         min_local_energy_consumption, max_local_energy_consumption = self.min_and_max_achievable_local_energy_consumption()
         self.achieved_local_energy_consumption = interp(self.achieved_local_energy_consumption,[min_local_energy_consumption,max_local_energy_consumption],[0,5000])
+        #print('')
 
     def offloading(self,communication_channel):
         if self.achieved_channel_rate == 0:
@@ -185,9 +187,12 @@ class eMBB_UE(User_Equipment):
         #print('transmission energy consumed: ', self.achieved_transmission_energy_consumption)
         min_offload_energy_consumption, max_offload_energy_consumption = self.min_and_max_achievable_offload_energy_consumption(communication_channel)
         self.achieved_transmission_energy_consumption = interp(self.achieved_transmission_energy_consumption,[min_offload_energy_consumption,max_offload_energy_consumption],[0,5000])
+        #print('transmission energy consumed: ', self.achieved_transmission_energy_consumption)
+        
 
     def total_energy_consumed(self):
         self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
+        print('total energy: ', self.achieved_total_energy_consumption)
 
     def total_processing_delay(self):
         self.achieved_total_processing_delay = self.achieved_local_processing_delay + self.achieved_transmission_delay
