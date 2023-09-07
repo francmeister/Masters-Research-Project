@@ -63,6 +63,8 @@ class eMBB_UE(User_Equipment):
         self.packet_offload_size_bits = 0
         self.packet_local_size_bits = 0
         self.packet_size = 0
+        self.delay_reward = 10
+        self.achieved_channel_rate_normalized = 0
    
     
         self.single_side_standard_deviation_pos = 5
@@ -85,6 +87,7 @@ class eMBB_UE(User_Equipment):
         self.large_scale_channel_gain = 0
         self.pathloss_gain = 0
         self.achieved_channel_rate = 0
+        self.allowable_latency = 0
 
  
         
@@ -156,7 +159,7 @@ class eMBB_UE(User_Equipment):
         min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
         #print('Max achievable rate: ', max_achievable_rate)
         #print('Min achievable rate: ', min_achievable_rate)
-        self.achieved_channel_rate = interp(self.achieved_channel_rate,[min_achievable_rate,max_achievable_rate],[0,5000])
+        self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[min_achievable_rate,max_achievable_rate],[0,5000])
         #print('total rate: ',self.achieved_channel_rate)
 
     def calculate_channel_rate(self, communication_channel):
@@ -174,7 +177,10 @@ class eMBB_UE(User_Equipment):
         self.local_queue.pop(0) 
 
         min_local_energy_consumption, max_local_energy_consumption = self.min_and_max_achievable_local_energy_consumption()
+        min_local_computation_delay, max_local_computation_delay = self.min_max_achievable_local_processing_delay()
+        #print('min local delay: ', min_local_computation_delay, ' max local delay: ', max_local_computation_delay)
         self.achieved_local_energy_consumption = interp(self.achieved_local_energy_consumption,[min_local_energy_consumption,max_local_energy_consumption],[0,5000])
+        self.achieved_local_processing_delay = interp(self.achieved_local_processing_delay,[min_local_computation_delay,max_local_computation_delay],[0,500])
         #print('')
 
     def offloading(self,communication_channel):
@@ -182,11 +188,16 @@ class eMBB_UE(User_Equipment):
             self.achieved_transmission_delay = 0
         else:
             self.achieved_transmission_delay = self.packet_offload_size_bits/self.achieved_channel_rate
+            
         self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*self.achieved_transmission_delay
         #self.achieved_transmission_energy_consumption = interp(self.achieved_transmission_energy_consumption,[0,12*math.pow(10,-5)],[0,100])
         #print('transmission energy consumed: ', self.achieved_transmission_energy_consumption)
         min_offload_energy_consumption, max_offload_energy_consumption = self.min_and_max_achievable_offload_energy_consumption(communication_channel)
+        min_offloading_delay, max_offloading_delay = self.min_max_achievable_offload_delay(communication_channel)
+        #print('min offload delay: ', min_offloading_delay, ' max offload delay: ', max_offloading_delay)
         self.achieved_transmission_energy_consumption = interp(self.achieved_transmission_energy_consumption,[min_offload_energy_consumption,max_offload_energy_consumption],[0,5000])
+        self.achieved_transmission_delay = interp(self.achieved_transmission_delay,[min_offloading_delay,max_offloading_delay],[0,5000])
+        #print('offload delay: ', self.achieved_transmission_delay)
         #print('transmission energy consumed: ', self.achieved_transmission_energy_consumption)
         
 
@@ -196,6 +207,8 @@ class eMBB_UE(User_Equipment):
 
     def total_processing_delay(self):
         self.achieved_total_processing_delay = self.achieved_local_processing_delay + self.achieved_transmission_delay
+        #print('offload ratio: ', self.allocated_offloading_ratio, 'local delay: ', self.achieved_local_processing_delay, 'offlaod delay: ', self.achieved_transmission_delay)
+        
     
     def calculate_channel_gain(self):
         #Pathloss gain
@@ -240,6 +253,13 @@ class eMBB_UE(User_Equipment):
         #print("max achievable local energy consumption: ",achieved_local_energy_consumption_max)
         return achieved_local_energy_consumption_min, achieved_local_energy_consumption_max
     
+    def min_max_achievable_local_processing_delay(self):
+        cycles_per_bit_max = self.cpu_cycles_per_byte*8*(5000*8000)
+        cycles_per_bit_min = self.cpu_cycles_per_byte*8*(1000*8000)
+        achieved_local_processing_delay_max = cycles_per_bit_max/self.cpu_clock_frequency
+        achieved_local_processing_delay_min = cycles_per_bit_min/self.cpu_clock_frequency
+        return achieved_local_processing_delay_min, achieved_local_processing_delay_max
+    
     def min_and_max_achievable_offload_energy_consumption(self,communication_channel):
         #Offloading energy
         min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
@@ -249,6 +269,21 @@ class eMBB_UE(User_Equipment):
         achieved_transmission_energy_consumption_min = 0
         #print("max achievable offloading energy consumption: ", achieved_transmission_energy_consumption_max)
         return achieved_transmission_energy_consumption_min, achieved_transmission_energy_consumption_max
+    
+    def min_max_achievable_offload_delay(self,communication_channel):
+        min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
+        max_achieved_transmission_delay = (5000*8000)/min_achievable_rate
+        min_achieved_transmission_delay = (1000*8000)/max_achievable_rate
+        return min_achieved_transmission_delay, max_achieved_transmission_delay
+    
+    def calculate_delay_penalty(self):
+        
+        if (self.allowable_latency - self.achieved_total_processing_delay) >= 0:
+            delay_reward = self.delay_reward
+        else:
+            delay_reward = (self.allowable_latency - self.achieved_total_processing_delay)
+
+        return delay_reward
 
     #def harvest_energy(self):
 

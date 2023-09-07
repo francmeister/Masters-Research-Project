@@ -109,13 +109,16 @@ class SBS():
         for eMBB_User in eMBB_Users:
             eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption 
             total_energy += eMBB_User_energy_consumption
-            eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
+            eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
             #print('eMBB_User_channel_rate')
             #print(eMBB_User_channel_rate)
             #eMBB_User_channel_rate = interp(eMBB_User_channel_rate,[60000000,153000000],[0,100])
             total_rate += eMBB_User_channel_rate
             #eMBB_User_QOS_requirement_revenue_or_penelaty = self.achieved_eMBB_delay_requirement_revenue_or_penalty(eMBB_User)
             #total_QOS_revenue += eMBB_User_QOS_requirement_revenue_or_penelaty
+            delay_reward = eMBB_User.calculate_delay_penalty()
+            #print('delay reward: ', delay_reward)
+            #print(' ')
             if eMBB_User_energy_consumption == 0:
                 individual_reward = 0
             else:

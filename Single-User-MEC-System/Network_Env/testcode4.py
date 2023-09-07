@@ -11,12 +11,15 @@ from numpy import interp
 env = gym.make('NetworkEnv-v0')
 
 #timesteps = 5
-timesteps = np.arange(0,101,1)
+timesteps = np.arange(0,100,1)
 rewards = []
 offload_decisions = []
 RB_allocations = []
 power_allocations = []
 throughputs = []
+local_delays = []
+transmit_delays = []
+total_delays = []
 
 #state space
 channel_gains = []
@@ -39,10 +42,16 @@ for timestep in timesteps:
     transmit_energies.append(env.eMBB_UE_1.achieved_transmission_energy_consumption)
     #print('selected actions: ', env.selected_actions)
     #energy_consumed = env.eMBB_Users[0].achieved_total_energy_consumption
+    offload_decisions.append(env.eMBB_UE_1.allocated_offloading_ratio)
+    power_allocations.append(env.eMBB_UE_1.assigned_transmit_power_dBm)
+    RB_allocations.append(env.eMBB_UE_1.allocated_RBs)
+    local_delays.append(env.eMBB_UE_1.achieved_local_processing_delay)
+    transmit_delays.append(env.eMBB_UE_1.achieved_transmission_delay)
+    total_delays.append(env.eMBB_UE_1.achieved_total_processing_delay)
     rewards.append(reward[0])
     reward_+=reward[0]
     #throughputs.append(reward[0])
-
+print('max local delay: ', max(local_delays), 'min local delay: ', min(local_delays))
 #print('total reward after 100 timesteps: ', reward_)
 #print('offloading decisions: ', env.selected_offload_decisions)
 #print('Power allocations: ', env.selected_powers)
@@ -55,7 +64,7 @@ for timestep in timesteps:
 #print('Max Throughput: ', max(throughputs), 'Min Throughput: ', min(throughputs))
 #print(transmit_energies)
 #plt.scatter(timesteps, local_energies, color ="red")
-plt.scatter(timesteps,rewards,color = "blue")
+plt.scatter(timesteps,local_delays,color = "blue")
 #plt.scatter(timesteps,latencies,color = "green")
 #plt.plot(offload_ratios,throughput,color = "black")
 plt.legend(["rewards", "transmit energies", "latencies"])
