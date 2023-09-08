@@ -35,6 +35,7 @@ for timestep in timesteps:
     action = env.action_space.sample()
     #print('action: ', action)
     observation,reward,dones,info = env.step(action)
+    #print(env.subcarriers)
 
     
     #throughputs.append(reward[0])

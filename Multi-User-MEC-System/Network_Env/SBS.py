@@ -128,9 +128,11 @@ class SBS():
         fairness_index_normalized = interp(fairness_index,[0,1],[-20,10])
         #print('fairness penalty: ', fairness_index_normalized)
         #print(' ')
-        #new_inidividual_rewards = [x + fairness_index_normalized for x in self.individual_rewards]
-        new_inidividual_rewards = [fairness_index_normalized for _ in range(len(eMBB_Users))]
+        new_inidividual_rewards = [x + fairness_index_normalized for x in self.individual_rewards]
+        #print('new rewards')
+        #new_inidividual_rewards = [fairness_index_normalized for _ in range(len(eMBB_Users))]
         #print(new_inidividual_rewards)
+
         #print("total_energy: ", total_energy)
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
