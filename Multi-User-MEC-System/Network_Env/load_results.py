@@ -18,6 +18,7 @@ timesteps = rewards_throughput_energy[:,0]
 # data to be plotted
 #episodes = np.arange(1,len(power_actions)+1,1)
 #print(rewards_throughput_energy)
+print(timesteps)
 print(subcarrier_actions) 
 # plotting
 plt.title("Line graph")

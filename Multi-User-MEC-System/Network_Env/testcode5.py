@@ -10,11 +10,12 @@ def square_sum(array):
     return sum
 
 number_of_users = 5
-throughputs = [3, 1, 2, 2, 2]
-for array in subcarrier_actions:
-    sum_ = square_sum(array)
-    print(sum)
-    index = (m.pow(sum(array),2))/(len(array)*sum_)
-    print('index: ', index)
+throughputs = [15, 0]
+
+#for array in subcarrier_actions:
+sum_ = square_sum(throughputs)
+print(sum)
+index = (m.pow(sum(throughputs),2))/(len(throughputs)*sum_)
+print('index: ', index)
 
 

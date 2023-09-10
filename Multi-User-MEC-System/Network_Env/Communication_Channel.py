@@ -38,9 +38,10 @@ class Communication_Channel():
                     self.number_of_RBs_available -= 1
             index+=1
 
-        #for eMBB_User in eMBB_Users:
-        #    print('eMBB: ', eMBB_User.UE_label)
-        #    print('Number of allocated RBs: ', len(eMBB_User.allocated_RBs))
+        for eMBB_User in eMBB_Users:
+            #print('eMBB: ', eMBB_User.UE_label)
+            #print('Number of allocated RBs: ', len(eMBB_User.allocated_RBs))
+            self.allocated_RBs.append(len(eMBB_User.allocated_RBs))
 
     def set_properties(self):
         self.system_bandwidth_Hz = 120*math.pow(10,6)
@@ -59,6 +60,7 @@ class Communication_Channel():
         self.num_allocate_RBs_upper_bound = 15
         self.num_allocate_RBs_lower_bound = 1
         self.number_of_RBs_available = self.num_allocate_RBs_upper_bound
+        self.allocated_RBs = []
         #self.fig, self.ax = plt.subplots()
 
 

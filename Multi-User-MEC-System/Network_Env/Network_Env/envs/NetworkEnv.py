@@ -376,8 +376,8 @@ class NetworkEnv(gym.Env):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
         self.eMBB_Users.append(self.eMBB_UE_2)
-        self.eMBB_Users.append(self.eMBB_UE_3)
-        self.eMBB_Users.append(self.eMBB_UE_4)
+        #self.eMBB_Users.append(self.eMBB_UE_3)
+        #self.eMBB_Users.append(self.eMBB_UE_4)
 
 
     def check_timestep(self):
