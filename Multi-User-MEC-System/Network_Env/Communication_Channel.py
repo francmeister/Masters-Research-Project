@@ -37,7 +37,7 @@ class Communication_Channel():
                     eMBB_User.allocated_RBs.append(i) 
                     self.number_of_RBs_available -= 1
             index+=1
-
+        self.allocated_RBs.clear()
         for eMBB_User in eMBB_Users:
             #print('eMBB: ', eMBB_User.UE_label)
             #print('Number of allocated RBs: ', len(eMBB_User.allocated_RBs))
