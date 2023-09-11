@@ -116,7 +116,7 @@ class SBS():
             if eMBB_User_energy_consumption == 0:
                 individual_reward = 0
             else:
-                individual_reward = 0#eMBB_User_channel_rate/eMBB_User_energy_consumption #+ delay_reward
+                individual_reward = eMBB_User_channel_rate/eMBB_User_energy_consumption #+ delay_reward
                 #print('eMBB user: ', eMBB_User.UE_label)
                 #print('Energy efficiency reward: ', eMBB_User_channel_rate/eMBB_User_energy_consumption)
                 #print('delay reward/penalty: ', delay_reward)
@@ -125,7 +125,7 @@ class SBS():
 
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
-        fairness_index_normalized = interp(fairness_index,[0,1],[0,20])
+        #fairness_index_normalized = interp(fairness_index,[0,1],[0,20])
         fairness_penalty = self.calculate_fairness_(eMBB_Users, communication_channel)
         #print('fairness penalty: ', fairness_penalty)
         #print('fairness penalty: ', fairness_index_normalized)
