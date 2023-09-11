@@ -219,6 +219,9 @@ class SBS():
             sum_square_error+=square_error
 
         sum_square_error = math.pow(abs((len(eMBB_Users[0].allocated_RBs))-(len(eMBB_Users[1].allocated_RBs))),2)
+        if sum_square_error == 0:
+            sum_square_error = 1
+        
         return 1/sum_square_error
 
         
