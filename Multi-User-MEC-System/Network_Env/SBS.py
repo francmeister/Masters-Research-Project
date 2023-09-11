@@ -98,7 +98,7 @@ class SBS():
 
         #print("self.achieved_system_energy_efficiency",self.achieved_system_energy_efficiency)
 
-    def calculate_achieved_system_reward(self, eMBB_Users):
+    def calculate_achieved_system_reward(self, eMBB_Users, communication_channel):
         self.achieved_system_reward = 0
         eMBB_User_energy_consumption = 0
         eMBB_User_channel_rate = 0
@@ -126,9 +126,12 @@ class SBS():
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
         fairness_index_normalized = interp(fairness_index,[0,1],[0,20])
+        fairness_penalty = self.calculate_fairness_(eMBB_Users, communication_channel)
+        #print('fairness penalty: ', fairness_penalty)
         #print('fairness penalty: ', fairness_index_normalized)
         #print(' ')
-        new_individual_rewards = [x + fairness_index_normalized for x in self.individual_rewards]
+        new_individual_rewards = [x + fairness_penalty for x in self.individual_rewards]
+        #print('individual rewards: ', new_individual_rewards)
         #print('new individual rewards: ', new_inidividual_rewards)
         #print(' ')
         #print(' ')
@@ -208,6 +211,16 @@ class SBS():
             sum+=math.pow(eMBB_User.achieved_channel_rate,2)
 
         return sum
+    
+    def calculate_fairness_(self,eMBB_Users, communication_channel):
+        sum_square_error = 0
+        for eMBB_user in eMBB_Users:
+            square_error = math.pow(abs(len(eMBB_user.allocated_RBs)-communication_channel.num_of_RBs_per_User),2)
+            sum_square_error+=square_error
+
+        sum_square_error = math.pow(abs((len(eMBB_Users[0].allocated_RBs))-(len(eMBB_Users[1].allocated_RBs))),2)
+        return 1/sum_square_error
+
         
 
 

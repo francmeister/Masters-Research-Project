@@ -12,9 +12,9 @@ class Communication_Channel():
         #Telecomm Network Propertiesset_properties(self,SBS_label):
         self.set_properties()
         
-
     def get_SBS_and_Users(self,SBS):
         self.eMBB_Users = SBS.associated_eMBB_users
+        self.num_of_RBs_per_User = self.num_allocate_RBs_upper_bound/len(self.eMBB_Users)
         #self.num_RB_per_eMBB = int(self.num_RB/len(self.eMBB_Users))
         #self.num_allocate_RB_lower_bound = self.num_RB_per_eMBB - self.single_side_standard_deviation
         #self.num_allocate_RB_upper_bound = self.num_RB_per_eMBB + self.single_side_standard_deviation
@@ -43,6 +43,8 @@ class Communication_Channel():
             #print('Number of allocated RBs: ', len(eMBB_User.allocated_RBs))
             self.allocated_RBs.append(len(eMBB_User.allocated_RBs))
 
+        #print('Allocated RBs: ', self.allocated_RBs)
+
     def set_properties(self):
         self.system_bandwidth_Hz = 120*math.pow(10,6)
         self.subcarrier_bandwidth_Hz = 15*math.pow(10,3) # 15kHz
@@ -61,6 +63,7 @@ class Communication_Channel():
         self.num_allocate_RBs_lower_bound = 1
         self.number_of_RBs_available = self.num_allocate_RBs_upper_bound
         self.allocated_RBs = []
+        self.num_of_RBs_per_User = 0
         #self.fig, self.ax = plt.subplots()
 
 

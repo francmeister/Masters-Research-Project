@@ -202,7 +202,7 @@ class NetworkEnv(gym.Env):
         self.SBS1.calculate_achieved_total_system_processing_delay(self.eMBB_Users)
         self.SBS1.calculate_achieved_total_rate_eMBB_users(self.eMBB_Users)
         self.SBS1.calculate_achieved_system_energy_efficiency()
-        system_reward, reward, self.total_energy,self.total_rate = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users)
+        system_reward, reward, self.total_energy,self.total_rate = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users,self.Communication_Channel_1)
         #print('Reward')
         #print(reward)
         #print(' ')
