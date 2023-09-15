@@ -18,6 +18,7 @@ timesteps = rewards_throughput_energy[:,0]
 rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
 throughputs = rewards_throughput_energy[:,3]
+print(timesteps)
 # data to be plotted
 #episodes = np.arange(1,len(power_actions)+1,1)
 #print(rewards_throughput_energy)
@@ -33,9 +34,9 @@ plt.plot(timesteps,throughputs,color = "green")
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-plt.legend(["transmit powers", "RB allocations"])
+plt.legend(["reward", "energy", ""])
 plt.xlabel("Episodes")
 plt.ylabel("Normalized data")
 plt.title("Evolution of Reward")
-#plt.show()
+plt.show()
 

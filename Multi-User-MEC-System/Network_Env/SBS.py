@@ -106,6 +106,7 @@ class SBS():
         total_energy = 0
         total_rate = 0
         total_QOS_revenue = 0
+        self.fairness_index = 0
         self.individual_rewards.clear()
         for eMBB_User in eMBB_Users:
             eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption 
@@ -116,7 +117,7 @@ class SBS():
             if eMBB_User_energy_consumption == 0:
                 individual_reward = 0
             else:
-                individual_reward = eMBB_User_channel_rate/eMBB_User_energy_consumption #+ delay_reward
+                individual_reward = 0#eMBB_User_channel_rate/eMBB_User_energy_consumption #+ delay_reward
                 #print('eMBB user: ', eMBB_User.UE_label)
                 #print('Energy efficiency reward: ', eMBB_User_channel_rate/eMBB_User_energy_consumption)
                 #print('delay reward/penalty: ', delay_reward)
@@ -125,12 +126,13 @@ class SBS():
 
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
-        #fairness_index_normalized = interp(fairness_index,[0,1],[0,20])
-        fairness_penalty = self.calculate_fairness_(eMBB_Users, communication_channel)
+        fairness_index_normalized = interp(fairness_index,[0,1],[0,20])
+        #fairness_penalty = self.calculate_fairness_(eMBB_Users, communication_channel)
         #print('fairness penalty: ', fairness_penalty)
         #print('fairness penalty: ', fairness_index_normalized)
         #print(' ')
-        new_individual_rewards = [x + fairness_penalty for x in self.individual_rewards]
+        self.fairness_index = fairness_index_normalized
+        new_individual_rewards = [x + fairness_index_normalized for x in self.individual_rewards]
         #print('individual rewards: ', new_individual_rewards)
         #print('new individual rewards: ', new_inidividual_rewards)
         #print(' ')
@@ -190,6 +192,7 @@ class SBS():
         self.URLLC_UEs = []
         self.achieved_users_energy_consumption = 0
         self.achieved_users_channel_rate = 0
+        self.fairness_index = 0
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)
