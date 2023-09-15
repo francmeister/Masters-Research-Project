@@ -117,7 +117,7 @@ class SBS():
             if eMBB_User_energy_consumption == 0:
                 individual_reward = 0
             else:
-                individual_reward = 0#eMBB_User_channel_rate/eMBB_User_energy_consumption #+ delay_reward
+                individual_reward = delay_reward#eMBB_User_channel_rate/eMBB_User_energy_consumption #+ delay_reward
                 #print('eMBB user: ', eMBB_User.UE_label)
                 #print('Energy efficiency reward: ', eMBB_User_channel_rate/eMBB_User_energy_consumption)
                 #print('delay reward/penalty: ', delay_reward)
@@ -132,7 +132,7 @@ class SBS():
         #print('fairness penalty: ', fairness_index_normalized)
         #print(' ')
         self.fairness_index = fairness_index_normalized
-        new_individual_rewards = [x + fairness_index_normalized for x in self.individual_rewards]
+        #new_individual_rewards = [x + fairness_index_normalized for x in self.individual_rewards]
         #print('individual rewards: ', new_individual_rewards)
         #print('new individual rewards: ', new_inidividual_rewards)
         #print(' ')
@@ -146,7 +146,7 @@ class SBS():
         #print("total_QOS_revenue: ", total_QOS_revenue)
      
         
-        return self.achieved_system_reward, new_individual_rewards, total_energy,total_rate
+        return self.achieved_system_reward, self.individual_rewards, total_energy,total_rate
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
         processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency
