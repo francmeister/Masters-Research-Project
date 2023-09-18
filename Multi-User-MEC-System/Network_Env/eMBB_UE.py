@@ -281,8 +281,9 @@ class eMBB_UE(User_Equipment):
             delay_reward = self.delay_reward
         else:
             delay_reward = (self.allowable_latency - self.achieved_total_processing_delay)
-
-        return delay_reward
+        #print('self.allowable_latency: ', self.allowable_latency)
+        #print('self.achieved_total_processing_delay: ', self.achieved_total_processing_delay)
+        return (self.allowable_latency - self.achieved_total_processing_delay)#delay_reward
 
     #def harvest_energy(self):
 
