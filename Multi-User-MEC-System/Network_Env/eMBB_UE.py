@@ -283,7 +283,23 @@ class eMBB_UE(User_Equipment):
             delay_reward = (self.allowable_latency - self.achieved_total_processing_delay)
         #print('self.allowable_latency: ', self.allowable_latency)
         #print('self.achieved_total_processing_delay: ', self.achieved_total_processing_delay)
-        return (self.allowable_latency - self.achieved_total_processing_delay)#delay_reward
+        #print('self.allowable_latency - self.achieved_total_processing_delay: ', self.allowable_latency - self.achieved_total_processing_delay)
+        delay_reward = self.allowable_latency - self.achieved_total_processing_delay
+        min_delay = -2200
+        max_delay = 1980
+        delay_reward = interp(delay_reward,[min_delay,max_delay],[0,5])
+        return delay_reward
+    
+    def calculate_energy_efficiency(self):
+        if self.achieved_total_energy_consumption == 0:
+            energy_efficiency = 0
+        else:
+            energy_efficiency = self.achieved_channel_rate_normalized/self.achieved_total_energy_consumption 
+            
+        min_energy_efficiency = 0
+        max_energy_efficiency = 150
+        energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[0,5])
+        return energy_efficiency
 
     #def harvest_energy(self):
 
