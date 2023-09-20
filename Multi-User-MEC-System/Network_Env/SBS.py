@@ -99,6 +99,7 @@ class SBS():
         #print("self.achieved_system_energy_efficiency",self.achieved_system_energy_efficiency)
 
     def calculate_achieved_system_reward(self, eMBB_Users, communication_channel):
+        #print('number of embb users: ', len(eMBB_Users))
         self.achieved_system_reward = 0
         eMBB_User_energy_consumption = 0
         eMBB_User_channel_rate = 0
@@ -130,6 +131,8 @@ class SBS():
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
         fairness_index_normalized = interp(fairness_index,[0,1],[0,20])
+        print('fairness index: ', fairness_index_normalized)
+        print(' ')
         #fairness_penalty = self.calculate_fairness_(eMBB_Users, communication_channel)
         #print('fairness penalty: ', fairness_penalty)
         #print('fairness penalty: ', fairness_index_normalized)

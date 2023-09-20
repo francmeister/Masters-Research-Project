@@ -35,12 +35,14 @@ for timestep in timesteps:
     action = env.action_space.sample()
     #print('action: ', action)
     observation,reward,dones,info = env.step(action)
+    #print('action: ', action)
+    #print('reward: ', reward)
     rewards.append(reward[0])
     #print(env.subcarriers)
 
     
     #throughputs.append(reward[0])
-print('max local delay: ', max(rewards), 'min local delay: ', min(rewards))
+#print('max local delay: ', max(rewards), 'min local delay: ', min(rewards))
 #print(rewards)
 #print('total reward after 100 timesteps: ', reward_)
 #print('offloading decisions: ', env.selected_offload_decisions)
@@ -61,7 +63,7 @@ plt.scatter(timesteps, rewards, color ="red")
 plt.xlabel("timesteps")
 plt.ylabel("rewards")
 #plt.title("Throughput vs Number of Allocated RBs")
-plt.show()
+#plt.show()
 
 
 
