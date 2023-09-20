@@ -10,7 +10,7 @@ def square_sum(array):
     return sum
 
 number_of_users = 5
-throughputs = [6, 15]
+throughputs = [4, 7, 1, 3]
 
 #for array in subcarrier_actions:
 sum_ = square_sum(throughputs)
