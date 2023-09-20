@@ -43,7 +43,7 @@ class Communication_Channel():
             #print('Number of allocated RBs: ', len(eMBB_User.allocated_RBs))
             self.allocated_RBs.append(len(eMBB_User.allocated_RBs))
 
-        print('Allocated RBs: ', self.allocated_RBs)
+        #print('Allocated RBs: ', self.allocated_RBs)
 
     def set_properties(self):
         self.system_bandwidth_Hz = 120*math.pow(10,6)
