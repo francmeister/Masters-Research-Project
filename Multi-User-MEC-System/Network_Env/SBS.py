@@ -39,6 +39,7 @@ class SBS():
         #self.system_state_space.append(energy_harvested)
         self.system_state_space.append(latency_requirement)
         #self.system_state_space.append(reliability_requirement)
+        #print('queue size: ', communication_queue_size)
         return self.system_state_space
 
     def allocate_transmit_powers(self,eMBB_Users, action):
@@ -116,10 +117,12 @@ class SBS():
             total_rate += eMBB_User_channel_rate
             delay_reward = eMBB_User.calculate_delay_penalty()
             energy_efficiency_reward = eMBB_User.calculate_energy_efficiency()
+            throughput_reward = eMBB_User.calculate_throughput_reward(communication_channel)
+            #print(' ')
             if eMBB_User_energy_consumption == 0:
                 individual_reward = 0
             else:
-                individual_reward = 0#energy_efficiency_reward + delay_reward
+                individual_reward = throughput_reward#energy_efficiency_reward + delay_reward
                 #print('individual reward: ', individual_reward)
                 #print(' ')
                 #print('eMBB user: ', eMBB_User.UE_label)
@@ -151,7 +154,7 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
      
-        return self.achieved_system_reward, new_individual_rewards, total_energy,total_rate
+        return self.achieved_system_reward, self.individual_rewards, total_energy,total_rate
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
         processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency

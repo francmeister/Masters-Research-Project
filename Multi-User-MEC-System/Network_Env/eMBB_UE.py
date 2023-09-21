@@ -148,7 +148,7 @@ class eMBB_UE(User_Equipment):
     def transmit_to_SBS(self, communication_channel):
         #Calculate the bandwidth achieved on each RB
         achieved_RB_channel_rates = []
-
+        #print('number of allocated RBs: ', len(self.allocated_RBs))
         if len(self.allocated_RBs) > 0:
             for RB in self.allocated_RBs:
                 achieved_RB_channel_rate = self.calculate_channel_rate(communication_channel)
@@ -160,6 +160,9 @@ class eMBB_UE(User_Equipment):
         else:
             self.achieved_channel_rate = 0
             self.achieved_channel_rate_normalized = 0
+
+        #print('achieved channel rate: ', self.achieved_channel_rate)
+        #print(' ')
 
     def calculate_channel_rate(self, communication_channel):
         RB_bandwidth = communication_channel.RB_bandwidth_Hz
@@ -300,6 +303,23 @@ class eMBB_UE(User_Equipment):
         max_energy_efficiency = 150
         energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[0,5])
         return energy_efficiency
+    
+    def calculate_throughput_reward(self,communication_channel):
+        queue_size = self.user_state_space.calculate_communication_queue_size()
+        #normalize queue size
+        #queue_size_normalized = interp(queue_size,[0,self.max_communication_qeueu_size],[0,1])
+        #print('queue size: ', queue_size)
+
+        #normalize achieved thoughput
+        #min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
+        #achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[min_achievable_rate,max_achievable_rate],[0,1])
+        throughput_reward = self.achieved_channel_rate - queue_size
+        #print('throughput reward: ', throughput_reward)
+        #Normailze throughput reward
+        min_throughput_reward = -28960000
+        max_throughput_reward = 159844000
+        throughput_reward_normalized = interp(throughput_reward,[min_throughput_reward,max_throughput_reward],[0,1])
+        return throughput_reward_normalized
 
     #def harvest_energy(self):
 
