@@ -122,7 +122,7 @@ class SBS():
             if eMBB_User_energy_consumption == 0:
                 individual_reward = 0
             else:
-                individual_reward = throughput_reward#energy_efficiency_reward + delay_reward
+                individual_reward = 0.6*throughput_reward#energy_efficiency_reward + delay_reward
                 #print('individual reward: ', individual_reward)
                 #print(' ')
                 #print('eMBB user: ', eMBB_User.UE_label)
@@ -133,7 +133,7 @@ class SBS():
 
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
-        fairness_index_normalized = interp(fairness_index,[0,1],[0,20])
+        fairness_index_normalized = 0.4*interp(fairness_index,[0,1],[0,1])
         #print('fairness index: ', fairness_index_normalized)
         #print(' ')
         #fairness_penalty = self.calculate_fairness_(eMBB_Users, communication_channel)
@@ -154,7 +154,7 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
      
-        return self.achieved_system_reward, self.individual_rewards, total_energy,total_rate
+        return self.achieved_system_reward, new_individual_rewards, total_energy,total_rate
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
         processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency
@@ -234,6 +234,9 @@ class SBS():
             sum_square_error = 1
         
         return 1/sum_square_error
+    
+    #def calculate_throughput_variance(self,eMBB_Users):
+        #mean = 
 
         
 

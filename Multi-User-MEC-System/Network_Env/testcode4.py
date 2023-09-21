@@ -11,7 +11,7 @@ from numpy import interp
 env = gym.make('NetworkEnv-v0')
 
 #timesteps = 5
-timesteps = np.arange(0,1000,1)
+timesteps = np.arange(0,10,1)
 rewards = []
 offload_decisions = []
 RB_allocations = []
@@ -42,8 +42,8 @@ for timestep in timesteps:
 
     
     #throughputs.append(reward[0])
-print('max local delay: ', max(rewards), 'min local delay: ', min(rewards))
-#print(rewards)
+#print('max local delay: ', max(rewards), 'min local delay: ', min(rewards))
+print(rewards)
 #print('total reward after 100 timesteps: ', reward_)
 #print('offloading decisions: ', env.selected_offload_decisions)
 #print('Power allocations: ', env.selected_powers)
@@ -63,7 +63,7 @@ plt.scatter(timesteps, rewards, color ="red")
 plt.xlabel("timesteps")
 plt.ylabel("rewards")
 #plt.title("Throughput vs Number of Allocated RBs")
-plt.show()
+#plt.show()
 
 
 
