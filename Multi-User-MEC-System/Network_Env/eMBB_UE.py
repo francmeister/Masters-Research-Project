@@ -321,7 +321,7 @@ class eMBB_UE(User_Equipment):
         if(throughput_reward > 0):
             throughput_reward_normalized = interp(throughput_reward,[min_throughput_reward,max_throughput_reward],[0,1])
         else:
-            throughput_reward_normalized = -0.5
+            throughput_reward_normalized = -0.35
         return throughput_reward_normalized
 
     #def harvest_energy(self):
