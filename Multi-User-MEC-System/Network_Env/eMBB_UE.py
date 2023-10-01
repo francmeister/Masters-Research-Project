@@ -318,7 +318,10 @@ class eMBB_UE(User_Equipment):
         #Normailze throughput reward
         min_throughput_reward = -28960000
         max_throughput_reward = 159844000
-        throughput_reward_normalized = interp(throughput_reward,[min_throughput_reward,max_throughput_reward],[0,1])
+        if(throughput_reward > 0):
+            throughput_reward_normalized = interp(throughput_reward,[min_throughput_reward,max_throughput_reward],[0,1])
+        else:
+            throughput_reward_normalized = -0.2
         return throughput_reward_normalized
 
     #def harvest_energy(self):
