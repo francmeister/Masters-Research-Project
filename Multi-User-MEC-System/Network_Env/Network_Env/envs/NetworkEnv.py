@@ -358,8 +358,6 @@ class NetworkEnv(gym.Env):
         self.eMBB_UE_1 = eMBB_UE(1,100,600)
         self.eMBB_UE_2 = eMBB_UE(2,100,600)
         self.eMBB_UE_3 = eMBB_UE(3,100,600)
-        self.eMBB_UE_4 = eMBB_UE(4,100,600)
-        self.eMBB_UE_5 = eMBB_UE(5,100,600)
 
         #Communication Channel
         self.Communication_Channel_1 = Communication_Channel(self.SBS1.SBS_label)
@@ -378,9 +376,6 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.append(self.eMBB_UE_1)
         self.eMBB_Users.append(self.eMBB_UE_2)
         self.eMBB_Users.append(self.eMBB_UE_3)
-        self.eMBB_Users.append(self.eMBB_UE_4)
-        self.eMBB_Users.append(self.eMBB_UE_5)
-
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:
