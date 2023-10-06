@@ -150,7 +150,7 @@ class NetworkEnv(gym.Env):
         #collect the final action - number of URLLC users per RB
         
         #print('Action after interpolation transposed')
-        #offload_decisions_actions_mapped = [0, 0, 0.5, 0.5, 1, 1, 1]
+        offload_decisions_actions_mapped = [0]#[0, 0, 0.5, 0.5, 1, 1, 1]
         #transmit_power_actions_mapped = [20,20,20,20,20,20,20]
         #subcarrier_allocation_actions_mapped = [10,10,15,15,20,20,20]
         #number_URLLC_Users_per_RB_action_mapped = 3
@@ -210,6 +210,8 @@ class NetworkEnv(gym.Env):
         #Update game state after performing actions
         for eMBB_User in self.eMBB_Users:
             eMBB_User.calculate_distance_from_SBS(self.SBS1.x_position, self.SBS1.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
+            eMBB_User.harvest_energy()
+            eMBB_User.compute_battery_energy_level()
             eMBB_User.calculate_channel_gain()
             eMBB_User.generate_task(self.Communication_Channel_1.long_TTI)
             eMBB_User.collect_state()
@@ -231,9 +233,9 @@ class NetworkEnv(gym.Env):
                 min_value = self.communication_queue_min
                 max_value = self.communication_queue_max
 
-            #elif row == self.OS_energy_harvested_label:
-            #    min_value = self.energy_harvested_min
-            #    max_value = self.energy_harvested_max
+            elif row == self.OS_battery_energy_label:
+                min_value = self.battery_energy_min
+                max_value = self.battery_energy_max
 
             elif row == self.OS_latency_label:
                 min_value = self.latency_requirement_min
@@ -271,7 +273,7 @@ class NetworkEnv(gym.Env):
         self.OS_channel_gain_label = 0
         self.OS_comm_queue_label = 1
         self.OS_latency_label = 2
-        self.OS_energy_harvested_label = 3
+        self.OS_battery_energy_label = 3
         self.OS_reliability_label = 4
 
         #Observation Space Bound Parameters
@@ -279,8 +281,8 @@ class NetworkEnv(gym.Env):
         self.channel_gain_max = self.eMBB_UE_1.max_channel_gain
         self.communication_queue_min = self.eMBB_UE_1.min_communication_qeueu_size
         self.communication_queue_max = self.eMBB_UE_1.max_communication_qeueu_size
-        #self.energy_harvested_min = 0
-        #self.energy_harvested_max = self.eMBB_UE_1.max_energy_harvested
+        self.battery_energy_min = 0
+        self.battery_energy_max = self.eMBB_UE_1.max_battery_energy
         self.latency_requirement_min = 0
         self.latency_requirement_max = self.eMBB_UE_1.max_allowable_latency
         #self.reliability_requirement_min = self.URLLC_UE_1.min_allowable_reliability
@@ -322,9 +324,9 @@ class NetworkEnv(gym.Env):
                 min_value = self.communication_queue_min
                 max_value = self.communication_queue_max
 
-            #elif row == self.OS_energy_harvested_label:
-            #    min_value = self.energy_harvested_min
-            #    max_value = self.energy_harvested_max
+            elif row == self.OS_battery_energy_label:
+                min_value = self.battery_energy_min
+                max_value = self.battery_energy_max
 
             elif row == self.OS_latency_label:
                 min_value = self.latency_requirement_min
@@ -356,8 +358,8 @@ class NetworkEnv(gym.Env):
 
         #Users
         self.eMBB_UE_1 = eMBB_UE(1,100,600)
-        self.eMBB_UE_2 = eMBB_UE(2,100,600)
-        self.eMBB_UE_3 = eMBB_UE(3,100,600)
+        #self.eMBB_UE_2 = eMBB_UE(2,100,600)
+        #self.eMBB_UE_3 = eMBB_UE(3,100,600)
 
         #Communication Channel
         self.Communication_Channel_1 = Communication_Channel(self.SBS1.SBS_label)
@@ -374,8 +376,8 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        self.eMBB_Users.append(self.eMBB_UE_2)
-        self.eMBB_Users.append(self.eMBB_UE_3)
+        #self.eMBB_Users.append(self.eMBB_UE_2)
+        #self.eMBB_Users.append(self.eMBB_UE_3)
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:

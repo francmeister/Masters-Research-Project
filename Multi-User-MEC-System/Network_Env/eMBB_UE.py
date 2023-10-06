@@ -35,13 +35,18 @@ class eMBB_UE(User_Equipment):
         self.min_energy_harvested = 0
         self.max_energy_harvested = 100
 
+        self.max_battery_energy = 25000
+        self.min_battery_energy = 0
+
+        self.battery_energy_level = (random.randint(15000,25000))
+
         self.QOS_requirement = QOS_requirement()
         self.QOS_requirement_for_transmission = QOS_requirement()
         self.user_task = Task(330)
         self.local_computation_delay_seconds = 0
         self.achieved_local_energy_consumption = 0
         self.offload_transmission_energy = 0
-        self.battery_energy_level = 100 # Begin with 100%
+        #self.battery_energy_level = 100 # Begin with 100%
         self.energy_harvested = 0
         self.achieved_transmission_delay = 0
         self.local_queue = []
@@ -65,6 +70,7 @@ class eMBB_UE(User_Equipment):
         self.packet_size = 0
         self.delay_reward = 10
         self.achieved_channel_rate_normalized = 0
+        self.achieved_total_energy_consumption_normalized = 0
    
     
         self.single_side_standard_deviation_pos = 5
@@ -127,8 +133,8 @@ class eMBB_UE(User_Equipment):
         self.distance_from_SBS = math.sqrt(math.pow(x_diff_metres,2)+math.pow(y_diff_metres,2))
 
     def collect_state(self):
-        self.user_state_space.collect(self.total_gain,self.communication_queue,self.energy_harversted,self.QOS_requirement)
-        return self.user_state_space
+            self.user_state_space.collect(self.total_gain,self.communication_queue,self.battery_energy_level,self.QOS_requirement)
+            return self.user_state_space
 
     def split_packet(self):
         if len(self.communication_queue) > 0:
@@ -148,15 +154,15 @@ class eMBB_UE(User_Equipment):
     def transmit_to_SBS(self, communication_channel):
         #Calculate the bandwidth achieved on each RB
         achieved_RB_channel_rates = []
-        #print('number of allocated RBs: ', len(self.allocated_RBs))
-        if len(self.allocated_RBs) > 0:
+        #print('number of allocated RBs: ', len(self.allocate(d_RBs))
+        if (len(self.allocated_RBs)  > 0) and (self.battery_energy_level > 0):
             for RB in self.allocated_RBs:
                 achieved_RB_channel_rate = self.calculate_channel_rate(communication_channel)
                 achieved_RB_channel_rates.append(achieved_RB_channel_rate)
 
             self.achieved_channel_rate = sum(achieved_RB_channel_rates)
             min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
-            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[min_achievable_rate,max_achievable_rate],[0,5000])
+            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[min_achievable_rate,max_achievable_rate],[0,1])
         else:
             self.achieved_channel_rate = 0
             self.achieved_channel_rate_normalized = 0
@@ -204,7 +210,13 @@ class eMBB_UE(User_Equipment):
         
 
     def total_energy_consumed(self):
-        self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
+        if self.battery_energy_level >  self.achieved_total_energy_consumption:
+            self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
+            self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,5000],[0,1])
+            self.battery_energy_level = self.battery_energy_level - self.achieved_total_energy_consumption
+        else:
+            self.achieved_total_energy_consumption = 0
+
         #print('total energy: ', self.achieved_total_energy_consumption)
 
     def total_processing_delay(self):
@@ -297,11 +309,11 @@ class eMBB_UE(User_Equipment):
         if self.achieved_total_energy_consumption == 0:
             energy_efficiency = 0
         else:
-            energy_efficiency = self.achieved_channel_rate_normalized/self.achieved_total_energy_consumption 
+            energy_efficiency = self.achieved_channel_rate_normalized/self.achieved_total_energy_consumption_normalized 
             
         min_energy_efficiency = 0
-        max_energy_efficiency = 150
-        energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[0,5])
+        max_energy_efficiency = 5
+        energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[0,1])
         return energy_efficiency
     
     def calculate_throughput_reward(self,communication_channel):
@@ -324,9 +336,26 @@ class eMBB_UE(User_Equipment):
             throughput_reward_normalized = -0.65
         return throughput_reward_normalized
 
-    #def harvest_energy(self):
+    def compute_battery_energy_level(self):
+        self.battery_energy_level = self.battery_energy_level + self.energy_harvested
 
-    
+    def harvest_energy(self):
+        self.energy_harvested = random.randint(0,5000)
+
+    def energy_consumption_reward(self):
+        energy_reward = self.battery_energy_level - self.achieved_total_energy_consumption
+
+        max_energy_reward = 22000
+        min_energy_reward = 0
+
+        if energy_reward >= 0:
+            energy_reward_normalized = interp(energy_reward,[min_energy_reward,max_energy_reward],[0,1])
+        else:
+            energy_reward_normalized = -0.2
+
+        return energy_reward_normalized
+
+        
 
 
 

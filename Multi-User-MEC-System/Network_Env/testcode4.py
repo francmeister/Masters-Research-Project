@@ -32,6 +32,7 @@ local_energies = []
 transmit_energies = []
 reward_ = 0
 fiarness_index = []
+battery_energies = []
 
 env.reset()
 for timestep in timesteps:
@@ -41,25 +42,15 @@ for timestep in timesteps:
     throughputs.append(env.total_rate)
     energies.append(env.total_energy)
     fiarness_index.append(env.SBS1.fairness_index)
+    battery_energies.append(env.eMBB_UE_1.battery_energy_level)
     #print('action: ', action)
     #print('reward: ', reward)
     rewards.append(reward[0])
     #print(env.subcarriers)
 
-data = {
-    "Throughputs": throughputs,
-    "Energies": energies,
-    "Fairness Index": fiarness_index,
-    "Total Rewards": rewards
-}
-    
-df = pd.DataFrame(data)
 
-print(df)
-x = df.corr(method='pearson')
-print(x)
     #throughputs.append(reward[0])
-#print('max local delay: ', max(rewards), 'min local delay: ', min(rewards))
+print('max offload energy: ', max(rewards), 'local offload: ', min(rewards))
 #print(rewards)
 #print('total reward after 100 timesteps: ', reward_)
 #print('offloading decisions: ', env.selected_offload_decisions)
@@ -72,15 +63,26 @@ print(x)
 #print('latencies: ', latencies)
 #print('Max Throughput: ', max(throughputs), 'Min Throughput: ', min(throughputs))
 #print(transmit_energies)
-plt.scatter(timesteps, rewards, color ="red")
+#plt.scatter(timesteps, battery_energies, color ="red")
 #plt.scatter(timesteps,local_delays,color = "blue")
 #plt.scatter(timesteps,latencies,color = "green")
 #plt.plot(offload_ratios,throughput,color = "black")
 #plt.legend(["rewards", "transmit energies", "latencies"])
-plt.xlabel("timesteps")
-plt.ylabel("rewards")
+#plt.xlabel("timesteps")
+#plt.ylabel("battery energies")
 #plt.title("Throughput vs Number of Allocated RBs")
-#plt.show()
+figure, axis = plt.subplots(2,1)
+
+axis[0].plot(timesteps, rewards)
+axis[0].set_title('energy reward')
+
+axis[1].plot(timesteps, battery_energies)
+axis[1].set_title('battery energies')
+
+#axis[2].plot(timesteps, rewards)
+#axis[2].set_title('rewards')
+plt.show()
+plt.show()
 
 
 
