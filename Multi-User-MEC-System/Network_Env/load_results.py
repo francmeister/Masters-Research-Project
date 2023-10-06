@@ -8,8 +8,8 @@ subcarrier_actions = np.load('subcarrier_actions.npy')
 rewards_throughput_energy = np.load('TD3_NetworkEnv-v0_0.npy')
 allocated_RBs = np.load('allocated_RBs.npy')
 fairness_index = np.load('fairnes_index.npy')
-print('allocated RBs')
-print(allocated_RBs)
+
+print(power_actions)
 #print(fairness_index)
 #print(subcarrier_actions)
 #power_actions = np.array(power_actions)
@@ -39,8 +39,8 @@ throughputs = rewards_throughput_energy[:,3]
 #plt.scatter(timesteps,subcarrier_actions,color="red")
 figure, axis = plt.subplots(3,1)
 
-axis[0].plot(timesteps, fairness_index)
-axis[0].set_title('fairness Index')
+axis[0].plot(timesteps, energies)
+axis[0].set_title('energies')
 
 axis[1].plot(timesteps, throughputs)
 axis[1].set_title('throughputs')

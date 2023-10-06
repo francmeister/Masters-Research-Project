@@ -302,14 +302,14 @@ class eMBB_UE(User_Equipment):
         delay_reward = self.allowable_latency - self.achieved_total_processing_delay
         min_delay = -2200
         max_delay = 1980
-        delay_reward = interp(delay_reward,[min_delay,max_delay],[0,5])
+        delay_reward = interp(delay_reward,[min_delay,max_delay],[0,1])
         return delay_reward
     
     def calculate_energy_efficiency(self):
         if self.achieved_total_energy_consumption == 0:
             energy_efficiency = 0
         else:
-            energy_efficiency = self.achieved_channel_rate_normalized/self.achieved_total_energy_consumption_normalized 
+            energy_efficiency = 0.3*self.achieved_channel_rate_normalized/0.7*self.achieved_total_energy_consumption_normalized 
             
         min_energy_efficiency = 0
         max_energy_efficiency = 5
