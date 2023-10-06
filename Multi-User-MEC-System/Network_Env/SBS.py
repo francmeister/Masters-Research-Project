@@ -111,6 +111,8 @@ class SBS():
         self.fairness_index = 0
         individual_rewards = 0
 
+        self.individual_rewards.clear()
+
         for eMBB_User in eMBB_Users:
             eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption 
             total_energy += eMBB_User_energy_consumption
