@@ -109,7 +109,8 @@ class SBS():
         total_rate = 0
         total_QOS_revenue = 0
         self.fairness_index = 0
-        self.individual_rewards.clear()
+        individual_rewards = 0
+
         for eMBB_User in eMBB_Users:
             eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption 
             total_energy += eMBB_User_energy_consumption
@@ -123,7 +124,7 @@ class SBS():
             if eMBB_User_energy_consumption == 0:
                 individual_reward = 0
             else:
-                individual_reward = energy_efficiency_reward#throughput_reward#0.55*throughput_reward#energy_efficiency_reward + delay_reward
+                individual_reward = energy_efficiency_reward + throughput_reward + energy_reward + delay_reward
                 #print('individual reward: ', individual_reward)
                 #print(' ')
                 #print('eMBB user: ', eMBB_User.UE_label)
@@ -131,6 +132,11 @@ class SBS():
                 #print('delay reward/penalty: ', delay_reward)
             self.achieved_system_reward += individual_reward
             self.individual_rewards.append(individual_reward)
+
+            self.energy_efficiency_rewards+=energy_efficiency_reward
+            self.energy_rewards+=energy_reward
+            self.throughput_rewards+=throughput_reward
+            self.delay_rewards+=delay_reward
 
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
@@ -202,6 +208,10 @@ class SBS():
         self.achieved_users_energy_consumption = 0
         self.achieved_users_channel_rate = 0
         self.fairness_index = 0
+        self.energy_efficiency_rewards = 0
+        self.energy_rewards = 0
+        self.throughput_rewards = 0
+        self.delay_rewards = 0
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)
