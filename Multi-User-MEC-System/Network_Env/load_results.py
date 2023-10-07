@@ -61,7 +61,7 @@ axis[4].plot(timesteps, rewards)
 axis[4].set_title('total reward')
 
 axis[5].plot(timesteps, fairness_index)
-axis[5].set_title('total reward')
+axis[5].set_title('fairness index')
 plt.show()
 #plt.figure(1)
 ###plt.subplot(211)
