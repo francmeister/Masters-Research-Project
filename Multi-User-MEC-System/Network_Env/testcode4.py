@@ -12,7 +12,7 @@ from numpy import interp
 env = gym.make('NetworkEnv-v0')
 
 #timesteps = 5
-timesteps = np.arange(0,200,1)
+timesteps = np.arange(0,100,1)
 rewards = []
 offload_decisions = []
 RB_allocations = []
@@ -33,6 +33,8 @@ transmit_energies = []
 reward_ = 0
 fiarness_index = []
 battery_energies = []
+energies_harvested = []
+energy_consumed = []
 
 env.reset()
 for timestep in timesteps:
@@ -43,6 +45,8 @@ for timestep in timesteps:
     energies.append(env.total_energy)
     fiarness_index.append(env.SBS1.fairness_index)
     battery_energies.append(env.eMBB_UE_1.battery_energy_level)
+    energies_harvested.append(env.eMBB_UE_1.energy_harvested)
+    energy_consumed.append(env.eMBB_UE_1.achieved_total_energy_consumption)
     #print('action: ', action)
     #print('reward: ', reward)
     rewards.append(reward[0])
@@ -71,13 +75,19 @@ print('max offload energy: ', max(rewards), 'local offload: ', min(rewards))
 #plt.xlabel("timesteps")
 #plt.ylabel("battery energies")
 #plt.title("Throughput vs Number of Allocated RBs")
-figure, axis = plt.subplots(2,1)
+figure, axis = plt.subplots(4,1)
 
-axis[0].plot(timesteps, rewards)
-axis[0].set_title('energy reward')
+axis[0].plot(timesteps, energies_harvested)
+axis[0].set_title('energy harvested')
 
-axis[1].plot(timesteps, battery_energies)
-axis[1].set_title('battery energies')
+axis[1].plot(timesteps, energy_consumed)
+axis[1].set_title('energy consumed')
+
+axis[2].plot(timesteps, battery_energies)
+axis[2].set_title('battery energies')
+
+axis[3].plot(timesteps, rewards)
+axis[3].set_title('battery energies reward')
 
 #axis[2].plot(timesteps, rewards)
 #axis[2].set_title('rewards')

@@ -341,7 +341,7 @@ class eMBB_UE(User_Equipment):
         self.battery_energy_level = self.battery_energy_level + self.energy_harvested
 
     def harvest_energy(self):
-        self.energy_harvested = random.randint(0,5000)
+        self.energy_harvested = random.randint(0,2000)
 
     def energy_consumption_reward(self):
         energy_reward = self.battery_energy_level - self.achieved_total_energy_consumption
