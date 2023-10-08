@@ -122,16 +122,11 @@ class SBS():
             energy_reward = eMBB_User.energy_consumption_reward()
             energy_efficiency_reward = eMBB_User.calculate_energy_efficiency()
             throughput_reward = eMBB_User.calculate_throughput_reward(communication_channel)
-            #print(' ')
             if eMBB_User_energy_consumption == 0:
                 individual_reward = 0
             else:
                 individual_reward = 0.30*energy_efficiency_reward + 0.30*throughput_reward + 0.20*energy_reward + 0.20*delay_reward
-                #print('individual reward: ', individual_reward)
-                #print(' ')
-                #print('eMBB user: ', eMBB_User.UE_label)
-                #print('Energy efficiency reward: ', eMBB_User_channel_rate/eMBB_User_energy_consumption)
-                #print('delay reward/penalty: ', delay_reward)
+      
             self.achieved_system_reward += individual_reward
             self.individual_rewards.append(individual_reward)
 
