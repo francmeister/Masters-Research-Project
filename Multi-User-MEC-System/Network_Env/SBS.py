@@ -126,7 +126,7 @@ class SBS():
             if eMBB_User_energy_consumption == 0:
                 individual_reward = 0
             else:
-                individual_reward = eMBB_User.achieved_channel_rate/eMBB_User.achieved_total_energy_consumption#energy_efficiency_reward #+ 0.30*throughput_reward + 0.20*energy_reward + 0.20*delay_reward
+                individual_reward = energy_efficiency_reward#energy_efficiency_reward #+ 0.30*throughput_reward + 0.20*energy_reward + 0.20*delay_reward
                 #print('individual reward: ', individual_reward)
                 #print(' ')
                 #print('eMBB user: ', eMBB_User.UE_label)
