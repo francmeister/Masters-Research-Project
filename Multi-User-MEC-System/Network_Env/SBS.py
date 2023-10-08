@@ -125,7 +125,7 @@ class SBS():
             if eMBB_User_energy_consumption == 0:
                 individual_reward = 0
             else:
-                individual_reward = 0.30*energy_efficiency_reward + 0.30*throughput_reward + 0.20*energy_reward + 0.20*delay_reward
+                individual_reward = energy_efficiency_reward + throughput_reward + energy_reward + delay_reward
       
             self.achieved_system_reward += individual_reward
             self.individual_rewards.append(individual_reward)
