@@ -13,8 +13,8 @@ energy_efficiency_rewards = np.load('energy_efficiency_rewards.npy')
 battery_energy_rewards = np.load('energy_rewards.npy')
 throughput_rewards = np.load('throughput_rewards.npy')
 delay_rewards = np.load('delay_rewards.npy')
-print(energy_efficiency_rewards)
-
+#print(energy_efficiency_rewards)
+print(allocated_RBs)
 #print(power_actions)
 #print(fairness_index)
 #print(subcarrier_actions)
@@ -59,7 +59,7 @@ axis[2].set_title('total reward')
 axis[0].plot(timesteps, energies)
 axis[0].set_title('energies reward')
 
-axis[1].plot(timesteps, throughput_rewards)
+axis[1].plot(timesteps, throughputs)
 axis[1].set_title('throughputs reward')
 
 axis[2].plot(timesteps, energy_efficiency_rewards)
@@ -76,6 +76,8 @@ axis[5].set_title('total reward')
 
 axis[6].plot(timesteps, fairness_index)
 axis[6].set_title('fairness index')
+
+
 
 
 plt.show()

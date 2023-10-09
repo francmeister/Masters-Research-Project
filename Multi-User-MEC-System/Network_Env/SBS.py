@@ -23,21 +23,24 @@ class SBS():
         self.system_state_space.clear()
         channel_gains = []
         communication_queue_size = []
-        #energy_harvested = []
+        battery_energy = []
         latency_requirement = []
+        local_frequencies = []
         #reliability_requirement = []
         #Collect Channel gains
         for user in Users:
             channel_gains.append(user.user_state_space.channel_gain)
             communication_queue_size.append(user.user_state_space.calculate_communication_queue_size())
-            #energy_harvested.append(user.user_state_space.energy_harvested)
+            battery_energy.append(user.user_state_space.battery_energy)
             latency_requirement.append(user.user_state_space.QOS_requirements.max_allowable_latency)
+            local_frequencies.append(user.user_state_space.local_cpu_frequency)
             #reliability_requirement.append(user.user_state_space.QOS_requirements.max_allowable_reliability)
 
         self.system_state_space.append(channel_gains)
         self.system_state_space.append(communication_queue_size)
-        #self.system_state_space.append(energy_harvested)
+        self.system_state_space.append(battery_energy)
         self.system_state_space.append(latency_requirement)
+        self.system_state_space.append(local_frequencies)
         #self.system_state_space.append(reliability_requirement)
         #print('queue size: ', communication_queue_size)
         return self.system_state_space

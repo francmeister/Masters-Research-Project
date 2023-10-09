@@ -38,6 +38,9 @@ class eMBB_UE(User_Equipment):
         self.max_battery_energy = 25000
         self.min_battery_energy = 0
 
+        self.max_cpu_frequency = 5000
+        self.min_cpu_frequency = 5
+
         self.battery_energy_level = (random.randint(15000,25000))
 
         self.QOS_requirement = QOS_requirement()
@@ -63,7 +66,9 @@ class eMBB_UE(User_Equipment):
         self.achieved_local_processing_delay = 0
         self.achieved_total_energy_consumption = 0
         self.achieved_total_processing_delay = 0
-        self.user_state_space = State_Space(self.UE_label,self.total_gain,self.communication_queue,self.energy_harversted,self.QOS_requirement)
+        self.cpu_cycles_per_byte = 330
+        self.cpu_clock_frequency = (random.randint(5,5000)) #cycles/slot
+        self.user_state_space = State_Space(self.UE_label,self.total_gain,self.communication_queue,self.battery_energy_level,self.QOS_requirement,self.cpu_clock_frequency)
         self.allocated_offloading_ratio = 0
         self.packet_offload_size_bits = 0
         self.packet_local_size_bits = 0
@@ -86,8 +91,7 @@ class eMBB_UE(User_Equipment):
         self.min_transmission_power_W =  (math.pow(10,(self.min_transmission_power_dBm/10)))/1000# Watts
         self.assigned_transmit_power_dBm = 0
         self.assigned_transmit_power_W = 0
-        self.cpu_cycles_per_byte = 330
-        self.cpu_clock_frequency = 5000 #cycles/slot
+        
        
         self.small_scale_channel_gain = 0
         self.large_scale_channel_gain = 0
@@ -133,7 +137,8 @@ class eMBB_UE(User_Equipment):
         self.distance_from_SBS = math.sqrt(math.pow(x_diff_metres,2)+math.pow(y_diff_metres,2))
 
     def collect_state(self):
-            self.user_state_space.collect(self.total_gain,self.communication_queue,self.battery_energy_level,self.QOS_requirement)
+            self.cpu_clock_frequency = (random.randint(5,5000))
+            self.user_state_space.collect(self.total_gain,self.communication_queue,self.battery_energy_level,self.QOS_requirement,self.cpu_clock_frequency)
             return self.user_state_space
 
     def split_packet(self):
@@ -159,8 +164,8 @@ class eMBB_UE(User_Equipment):
             for RB in self.allocated_RBs:
                 achieved_RB_channel_rate = self.calculate_channel_rate(communication_channel)
                 achieved_RB_channel_rates.append(achieved_RB_channel_rate)
-
-            self.achieved_channel_rate = sum(achieved_RB_channel_rates)
+            #print('channel gain: ', self.total_gain, " achieved channel rate matrix: ", achieved_RB_channel_rates)
+            self.achieved_channel_rate = achieved_RB_channel_rates[0]
             min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
             self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[min_achievable_rate,max_achievable_rate],[0,1])
         else:
@@ -181,13 +186,14 @@ class eMBB_UE(User_Equipment):
     def local_processing(self):
         cycles_per_bit = self.cpu_cycles_per_byte*8*(self.packet_local_size_bits)
         self.achieved_local_energy_consumption = self.energy_consumption_coefficient*math.pow(self.cpu_clock_frequency,2)*cycles_per_bit
+        #print('self.achieved_local_energy_consumption: ', self.achieved_local_energy_consumption)
         self.achieved_local_processing_delay = cycles_per_bit/self.cpu_clock_frequency
         self.local_queue.pop(0) 
 
         min_local_energy_consumption, max_local_energy_consumption = self.min_and_max_achievable_local_energy_consumption()
         min_local_computation_delay, max_local_computation_delay = self.min_max_achievable_local_processing_delay()
         #print('min local delay: ', min_local_computation_delay, ' max local delay: ', max_local_computation_delay)
-        self.achieved_local_energy_consumption = interp(self.achieved_local_energy_consumption,[min_local_energy_consumption,max_local_energy_consumption],[0,5000])
+        #self.achieved_local_energy_consumption = interp(self.achieved_local_energy_consumption,[min_local_energy_consumption,max_local_energy_consumption],[0,5000])
         self.achieved_local_processing_delay = interp(self.achieved_local_processing_delay,[min_local_computation_delay,max_local_computation_delay],[0,500])
         #print('')
 
@@ -217,6 +223,7 @@ class eMBB_UE(User_Equipment):
         else:
             self.achieved_total_energy_consumption = 0
 
+        #print(self.battery_energy_level)
         #print('total energy: ', self.achieved_total_energy_consumption)
 
     def total_processing_delay(self):

@@ -31,8 +31,8 @@ class NetworkEnv(gym.Env):
         self.number_of_users = len(self.eMBB_Users) 
         self.num_allocate_RB_upper_bound = self.Communication_Channel_1.num_allocate_RBs_upper_bound
         self.num_allocate_RB_lower_bound = self.Communication_Channel_1.num_allocate_RBs_lower_bound
-        self.max_transmit_power_db = self.eMBB_UE_1.max_transmission_power_dBm
-        self.min_transmit_power_db = 0
+        self.max_transmit_power_db = 75#self.eMBB_UE_1.max_transmission_power_dBm
+        self.min_transmit_power_db = 65
         self.offload_decisions_label = 0
         self.allocate_num_RB_label = 1
         self.allocate_transmit_powers_label = 2
@@ -151,8 +151,8 @@ class NetworkEnv(gym.Env):
         
         #print('Action after interpolation transposed')
         #offload_decisions_actions_mapped = [0]#[0, 0, 0.5, 0.5, 1, 1, 1]
-        #transmit_power_actions_mapped = [20,20,20,20,20,20,20]
-        #subcarrier_allocation_actions_mapped = [10,10,15,15,20,20,20]
+        #transmit_power_actions_mapped = [65]#,20,20,20,20,20,20]
+        #RB_allocation_actions_mapped = [10]#,10,15,15,20,20,20]
         #number_URLLC_Users_per_RB_action_mapped = 3
         #print("New Timestep: ", self.steps)
         #print("offload_decisions_actions")
@@ -241,9 +241,9 @@ class NetworkEnv(gym.Env):
                 min_value = self.latency_requirement_min
                 max_value = self.latency_requirement_max
 
-            #elif row == self.OS_reliability_label:
-            #    min_value = self.reliability_requirement_min
-            #    max_value = self.reliability_requirement_max
+            elif row == self.OS_cpu_frequency_label:
+                min_value = self.cpu_frequency_min
+                max_value = self.cpu_frequency_max
 
             col = 0
             for user in observation_type:
@@ -251,7 +251,6 @@ class NetworkEnv(gym.Env):
                 col += 1
             
             row += 1
-
         observation = np.transpose(observation)
         #print('observation interpolated')
         #print(observation)
@@ -275,7 +274,7 @@ class NetworkEnv(gym.Env):
         self.OS_comm_queue_label = 1
         self.OS_latency_label = 2
         self.OS_battery_energy_label = 3
-        self.OS_reliability_label = 4
+        self.OS_cpu_frequency_label = 4
 
         #Observation Space Bound Parameters
         self.channel_gain_min = self.eMBB_UE_1.min_channel_gain
@@ -286,8 +285,8 @@ class NetworkEnv(gym.Env):
         self.battery_energy_max = self.eMBB_UE_1.max_battery_energy
         self.latency_requirement_min = 0
         self.latency_requirement_max = self.eMBB_UE_1.max_allowable_latency
-        #self.reliability_requirement_min = self.URLLC_UE_1.min_allowable_reliability
-        #self.reliability_requirement_max = self.URLLC_UE_1.max_allowable_reliability
+        self.cpu_frequency_max = self.eMBB_UE_1.max_cpu_frequency
+        self.cpu_frequency_min = self.eMBB_UE_1.min_cpu_frequency
 
         for eMBB_User in self.eMBB_Users:
             eMBB_User.set_properties_UE()
@@ -308,6 +307,7 @@ class NetworkEnv(gym.Env):
         self.Communication_Channel_1.initiate_RBs()
         info = {'reward': 0}
         self.SBS1.collect_state_space(self.eMBB_Users)
+        print('battery enegy: ', self.SBS1.system_state_space[4])
         observation = np.array(self.SBS1.system_state_space, dtype=np.float32)
         #print('Observation before transpose')
         #print(np.transpose(observation))
@@ -333,9 +333,9 @@ class NetworkEnv(gym.Env):
                 min_value = self.latency_requirement_min
                 max_value = self.latency_requirement_max
 
-            #elif row == self.OS_reliability_label:
-            #    min_value = self.reliability_requirement_min
-            #    max_value = self.reliability_requirement_max
+            elif row == self.OS_cpu_frequency_label:
+                min_value = self.cpu_frequency_min
+                max_value = self.cpu_frequency_max
 
             col = 0
             for user in observation_type:
@@ -359,9 +359,9 @@ class NetworkEnv(gym.Env):
 
         #Users
         self.eMBB_UE_1 = eMBB_UE(1,100,600)
-        self.eMBB_UE_2 = eMBB_UE(2,100,600)
-        self.eMBB_UE_3 = eMBB_UE(3,100,600)
-        self.eMBB_UE_4 = eMBB_UE(4,100,600)
+        #self.eMBB_UE_2 = eMBB_UE(2,100,600)
+        #self.eMBB_UE_3 = eMBB_UE(3,100,600)
+        #self.eMBB_UE_4 = eMBB_UE(4,100,600)
 
         #Communication Channel
         self.Communication_Channel_1 = Communication_Channel(self.SBS1.SBS_label)
@@ -378,9 +378,9 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        self.eMBB_Users.append(self.eMBB_UE_2)
-        self.eMBB_Users.append(self.eMBB_UE_3)
-        self.eMBB_Users.append(self.eMBB_UE_4)
+        #self.eMBB_Users.append(self.eMBB_UE_2)
+        #self.eMBB_Users.append(self.eMBB_UE_3)
+        #self.eMBB_Users.append(self.eMBB_UE_4)
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:
