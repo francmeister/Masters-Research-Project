@@ -12,7 +12,7 @@ from numpy import interp
 env = gym.make('NetworkEnv-v0')
 
 #timesteps = 5
-timesteps = np.arange(0,10,1)
+timesteps = np.arange(0,5,1)
 rewards = []
 offload_decisions = []
 RB_allocations = []
@@ -39,8 +39,15 @@ local_energy = []
 
 
 env.reset()
+expl_noise = 0.5
 for timestep in timesteps:
     action = env.action_space.sample()
+    print('action before adding noise')
+    print(action)
+    action = (action + np.random.normal(0, expl_noise, size=env.action_space.shape)).clip(env.action_space.low, env.action_space.high)
+    print('action after adding noise')
+    print(action)
+    print(' ')
     #print('action: ', action)
     observation,reward,dones,info = env.step(action)
     #print(observation)
