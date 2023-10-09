@@ -309,7 +309,7 @@ class NetworkEnv(gym.Env):
         self.Communication_Channel_1.initiate_RBs()
         info = {'reward': 0}
         self.SBS1.collect_state_space(self.eMBB_Users)
-        print('battery enegy: ', self.SBS1.system_state_space[4])
+        #print('battery enegy: ', self.SBS1.system_state_space[4])
         observation = np.array(self.SBS1.system_state_space, dtype=np.float32)
         #print('Observation before transpose')
         #print(np.transpose(observation))
