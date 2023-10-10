@@ -32,7 +32,7 @@ class NetworkEnv(gym.Env):
         self.num_allocate_RB_upper_bound = self.Communication_Channel_1.num_allocate_RBs_upper_bound
         self.num_allocate_RB_lower_bound = self.Communication_Channel_1.num_allocate_RBs_lower_bound
         self.max_transmit_power_db = 75#self.eMBB_UE_1.max_transmission_power_dBm
-        self.min_transmit_power_db = 65
+        self.min_transmit_power_db = 55
         self.offload_decisions_label = 0
         self.allocate_num_RB_label = 1
         self.allocate_transmit_powers_label = 2
@@ -95,7 +95,7 @@ class NetworkEnv(gym.Env):
         self.action_space = spaces.Box(low=action_space_low,high=action_space_high)
         self.observation_space = spaces.Box(low=observation_space_low, high=observation_space_high)
 
-        self.STEP_LIMIT = 100
+        self.STEP_LIMIT = 6
         self.sleep = 0
         self.steps = 0
        
