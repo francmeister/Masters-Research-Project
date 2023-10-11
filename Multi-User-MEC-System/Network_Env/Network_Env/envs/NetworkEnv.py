@@ -95,7 +95,7 @@ class NetworkEnv(gym.Env):
         self.action_space = spaces.Box(low=action_space_low,high=action_space_high)
         self.observation_space = spaces.Box(low=observation_space_low, high=observation_space_high)
 
-        self.STEP_LIMIT = 10
+        self.STEP_LIMIT = 45
         self.sleep = 0
         self.steps = 0
        

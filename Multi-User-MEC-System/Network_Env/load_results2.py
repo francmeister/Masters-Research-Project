@@ -14,6 +14,7 @@ throughputs = rewards_throughput_energy[:,3]
 
 figure, axis = plt.subplots(6,1)
 
+
 axis[0].plot(timesteps, energies)
 axis[0].set_title('energies reward')
 
