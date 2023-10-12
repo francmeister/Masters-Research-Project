@@ -59,7 +59,7 @@ class Communication_Channel():
         self.RBs = []
         self.RB_eMBB_mappings = []
         self.num_of_available_RBs = self.num_RB
-        self.num_allocate_RBs_upper_bound = 15
+        self.num_allocate_RBs_upper_bound = 25
         self.num_allocate_RBs_lower_bound = 1
         self.number_of_RBs_available = self.num_allocate_RBs_upper_bound
         self.allocated_RBs = []

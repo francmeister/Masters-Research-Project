@@ -12,7 +12,7 @@ from numpy import interp
 env = gym.make('NetworkEnv-v0')
 
 #timesteps = 5
-timesteps = np.arange(0,5,1)
+timesteps = np.arange(0,200,1)
 rewards = []
 offload_decisions = []
 RB_allocations = []
@@ -39,15 +39,16 @@ local_energy = []
 
 
 env.reset()
-expl_noise = 0.5
+#expl_noise = 0.5
 for timestep in timesteps:
     action = env.action_space.sample()
-    print('action before adding noise')
-    print(action)
-    action = (action + np.random.normal(0, expl_noise, size=env.action_space.shape)).clip(env.action_space.low, env.action_space.high)
-    print('action after adding noise')
-    print(action)
-    print(' ')
+    print(timestep)
+    #print('action before adding noise')
+    #print(action)
+    #action = (action + np.random.normal(0, expl_noise, size=env.action_space.shape)).clip(env.action_space.low, env.action_space.high)
+    #print('action after adding noise')
+    #print(action)
+    #print(' ')
     #print('action: ', action)
     observation,reward,dones,info = env.step(action)
     #print(observation)
@@ -64,8 +65,8 @@ for timestep in timesteps:
 
 
     #throughputs.append(reward[0])
-print('max offload energy: ', max(energy_consumed), 'local offload: ', min(energy_consumed))
-print(energy_consumed)
+print('max offload energy: ', max(rewards), 'local offload: ', min(rewards))
+#print(energy_consumed)
 #print(rewards)
 #print('total reward after 100 timesteps: ', reward_)
 #print('offloading decisions: ', env.selected_offload_decisions)
@@ -78,7 +79,7 @@ print(energy_consumed)
 #print('latencies: ', latencies)
 #print('Max Throughput: ', max(throughputs), 'Min Throughput: ', min(throughputs))
 #print(transmit_energies)
-plt.scatter(timesteps, energy_consumed, color ="red")
+plt.scatter(timesteps, rewards, color ="red")
 #plt.scatter(timesteps,local_delays,color = "blue")
 #plt.scatter(timesteps,latencies,color = "green")
 #plt.plot(offload_ratios,throughput,color = "black")
