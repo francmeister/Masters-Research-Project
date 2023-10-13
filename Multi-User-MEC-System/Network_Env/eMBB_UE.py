@@ -209,7 +209,7 @@ class eMBB_UE(User_Equipment):
         min_offload_energy_consumption, max_offload_energy_consumption = self.min_and_max_achievable_offload_energy_consumption(communication_channel)
         min_offloading_delay, max_offloading_delay = self.min_max_achievable_offload_delay(communication_channel)
         #print('min offload delay: ', min_offloading_delay, ' max offload delay: ', max_offloading_delay)
-        #self.achieved_transmission_energy_consumption = interp(self.achieved_transmission_energy_consumption,[min_offload_energy_consumption,max_offload_energy_consumption],[0,5000])
+        self.achieved_transmission_energy_consumption = interp(self.achieved_transmission_energy_consumption,[min_offload_energy_consumption,max_offload_energy_consumption],[0,5000])
         self.achieved_transmission_delay = interp(self.achieved_transmission_delay,[min_offloading_delay,max_offloading_delay],[0,5000])
         #print('offload delay: ', self.achieved_transmission_delay)
         #print('transmission energy consumed: ', self.achieved_transmission_energy_consumption)
@@ -218,7 +218,7 @@ class eMBB_UE(User_Equipment):
     def total_energy_consumed(self):
         if self.battery_energy_level >  self.achieved_total_energy_consumption:
             self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
-            self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,10000],[0.005,1])
+            self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,5000],[0,1])
             self.battery_energy_level = self.battery_energy_level - self.achieved_total_energy_consumption
         else:
             self.achieved_total_energy_consumption = 0
@@ -316,12 +316,11 @@ class eMBB_UE(User_Equipment):
         if self.achieved_total_energy_consumption == 0:
             energy_efficiency = 0
         else:
-            energy_efficiency = self.achieved_channel_rate_normalized/self.achieved_total_energy_consumption_normalized #0.4*self.achieved_channel_rate_normalized/0.6*self.achieved_total_energy_consumption_normalized
-        
+            energy_efficiency = self.achieved_channel_rate/self.achieved_total_energy_consumption #0.4*self.achieved_channel_rate_normalized/0.6*self.achieved_total_energy_consumption_normalized 
             #energy_efficiency = self.achieved_total_energy_consumption_normalized 
             
         min_energy_efficiency = 0
-        max_energy_efficiency = 200
+        max_energy_efficiency = 2000000
         energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[0,1])
         return energy_efficiency
     
@@ -376,5 +375,3 @@ class eMBB_UE(User_Equipment):
 
 
             
-
-

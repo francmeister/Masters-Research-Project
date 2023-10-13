@@ -117,7 +117,7 @@ class SBS():
         self.individual_rewards.clear()
 
         for eMBB_User in eMBB_Users:
-            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption 
+            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
             total_energy += eMBB_User_energy_consumption
             eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
             total_rate += eMBB_User_channel_rate

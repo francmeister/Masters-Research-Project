@@ -12,7 +12,7 @@ from numpy import interp
 env = gym.make('NetworkEnv-v0')
 
 #timesteps = 5
-timesteps = np.arange(0,200,1)
+timesteps = np.arange(0,10,1)
 rewards = []
 offload_decisions = []
 RB_allocations = []
