@@ -12,8 +12,23 @@ rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
 throughputs = rewards_throughput_energy[:,3]
 
+range_start = 800
+range_finish = 4500
+
+timesteps_ = timesteps[range_start:range_finish]
+rewards_ = rewards[range_start:range_finish]
+energies_ = energies[range_start:range_finish]
+throughputs_ = throughputs[range_start:range_finish]
+
+offload_actions_ = offload_actions[range_start:range_finish]
+power_actions_ = power_actions[range_start:range_finish]
+subcarrier_actions_ = subcarrier_actions[range_start:range_finish]
+
+print(len(timesteps_))
+
 figure, axis = plt.subplots(6,1)
 #plt.plot(timesteps, rewards,color = "blue")
+
 
 axis[0].plot(timesteps, energies)
 axis[0].set_title('energies reward')
@@ -32,7 +47,5 @@ axis[4].set_title('power actions')
 
 axis[5].scatter(timesteps, subcarrier_actions)
 axis[5].set_title('subcarrier actions')
-
-
 
 plt.show()
