@@ -160,8 +160,7 @@ class SBS():
         #print("total_energy: ", total_energy)
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
-        print('total energy: ', total_energy)
-        print('total rate: ', total_rate)
+  
         return self.achieved_system_reward, self.individual_rewards, total_energy,total_rate
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):

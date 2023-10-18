@@ -80,7 +80,7 @@ axis[6].set_title('fairness index')
 
 
 
-plt.show()
+#plt.show()
 #plt.figure(1)
 ###plt.subplot(211)
 #plt.plot(timesteps, fairness_index, color ="red")
