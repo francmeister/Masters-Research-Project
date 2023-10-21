@@ -190,7 +190,8 @@ class NetworkEnv(gym.Env):
         #self.Communication_Channel_1.subcarrier_URLLC_User_mapping()
 
         for eMBB_User in self.eMBB_Users:
-            eMBB_User.split_packet()
+            eMBB_User.increment_task_queue_timers()
+            eMBB_User.split_tasks()
 
         for eMBB_User in self.eMBB_Users:
             if eMBB_User.has_transmitted_this_time_slot == True:
@@ -216,7 +217,7 @@ class NetworkEnv(gym.Env):
             eMBB_User.harvest_energy()
             eMBB_User.compute_battery_energy_level()
             eMBB_User.calculate_channel_gain()
-            eMBB_User.generate_task(self.Communication_Channel_1.long_TTI)
+            eMBB_User.generate_task(self.Communication_Channel_1)
             eMBB_User.collect_state()
 
         observation = np.array(self.SBS1.collect_state_space(self.eMBB_Users), dtype=np.float32)
@@ -363,12 +364,6 @@ class NetworkEnv(gym.Env):
 
         #Users
         self.eMBB_UE_1 = eMBB_UE(1,100,600)
-        self.eMBB_UE_2 = eMBB_UE(2,100,600)
-        self.eMBB_UE_3 = eMBB_UE(3,100,600)
-        self.eMBB_UE_4 = eMBB_UE(4,100,600)
-        self.eMBB_UE_5 = eMBB_UE(5,100,600)
-        self.eMBB_UE_6 = eMBB_UE(6,100,600)
-        self.eMBB_UE_7 = eMBB_UE(7,100,600)
 
         #Communication Channel
         self.Communication_Channel_1 = Communication_Channel(self.SBS1.SBS_label)
@@ -385,12 +380,6 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        self.eMBB_Users.append(self.eMBB_UE_2)
-        self.eMBB_Users.append(self.eMBB_UE_3)
-        self.eMBB_Users.append(self.eMBB_UE_4)
-        self.eMBB_Users.append(self.eMBB_UE_5)
-        self.eMBB_Users.append(self.eMBB_UE_6)
-        self.eMBB_Users.append(self.eMBB_UE_7)
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:

@@ -32,7 +32,8 @@ class SBS():
             channel_gains.append(user.user_state_space.channel_gain)
             communication_queue_size.append(user.user_state_space.calculate_communication_queue_size())
             battery_energy.append(user.user_state_space.battery_energy)
-            latency_requirement.append(user.user_state_space.QOS_requirements.max_allowable_latency)
+            latency_requirement.append(0)
+            #latency_requirement.append(user.user_state_space.QOS_requirements.max_allowable_latency)
             local_frequencies.append(user.user_state_space.local_cpu_frequency)
             #reliability_requirement.append(user.user_state_space.QOS_requirements.max_allowable_reliability)
 
@@ -66,9 +67,10 @@ class SBS():
                 self.num_arriving_URLLC_packets += 1
 
     def receive_offload_packets(self, eMBB_Users):
-        for eMBB_User in eMBB_Users:
-            if eMBB_User.has_transmitted_this_time_slot == True:
-                self.eMBB_Users_packet_queue.append(eMBB_User.offloaded_packet)
+        pass
+        #for eMBB_User in eMBB_Users:
+            #if eMBB_User.has_transmitted_this_time_slot == True:
+                #self.eMBB_Users_packet_queue.append(eMBB_User.offloaded_packet)
 
     def calculate_achieved_total_system_energy_consumption(self, eMBB_Users):
         self.total_system_energy_consumption = 0

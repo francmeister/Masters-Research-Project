@@ -1,14 +1,15 @@
 from Task import Task
+from QOS_requirement import QOS_requirement
 
 class State_Space():
-    def __init__(self, User_label,channel_gain,communication_queue,battery_energy, QOS_requirements,local_cpu_frequency):
-        self.User_label = User_label
-        self.channel_gain = channel_gain
-        self.communication_queue = communication_queue
+    def __init__(self):
+        self.User_label = 0
+        self.channel_gain = 0
+        self.communication_queue = []
         self.communication_queue_size = self.calculate_communication_queue_size()
-        self.battery_energy = battery_energy
-        self.QOS_requirements = QOS_requirements
-        self.local_cpu_frequency = local_cpu_frequency
+        self.battery_energy = 0
+        self.QOS_requirements = QOS_requirement(0,0)
+        self.local_cpu_frequency = 0
 
     def collect(self,channel_gain,communication_queue,battery_energy, QOS_requirements,local_cpu_frequency):
         self.channel_gain = channel_gain
@@ -19,10 +20,6 @@ class State_Space():
         self.local_cpu_frequency = local_cpu_frequency
 
     def calculate_communication_queue_size(self):
-        com_queue_size = 0
-        if len(self.communication_queue) > 0:
-            packet_dec = self.communication_queue[0].packet_queue[0]
-            packet_bin = bin(packet_dec)[2:]
-            com_queue_size = len(packet_bin)
+        com_queue_size = len(self.communication_queue)
 
         return com_queue_size
