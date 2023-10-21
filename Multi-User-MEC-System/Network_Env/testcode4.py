@@ -12,7 +12,7 @@ from numpy import interp
 env = gym.make('NetworkEnv-v0')
 
 #timesteps = 5
-timesteps = np.arange(0,10,1)
+timesteps = np.arange(0,30,1)
 rewards = []
 offload_decisions = []
 RB_allocations = []
@@ -42,7 +42,7 @@ env.reset()
 #expl_noise = 0.5
 for timestep in timesteps:
     action = env.action_space.sample()
-    print(timestep)
+    #print(timestep)
     #print('action before adding noise')
     #print(action)
     #action = (action + np.random.normal(0, expl_noise, size=env.action_space.shape)).clip(env.action_space.low, env.action_space.high)
@@ -105,7 +105,7 @@ axis[3].set_title('battery energies reward')
 
 #axis[2].plot(timesteps, rewards)
 #axis[2].set_title('rewards')
-plt.show()
+#plt.show()
 #plt.show()
 
 

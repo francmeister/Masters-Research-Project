@@ -266,6 +266,7 @@ class NetworkEnv(gym.Env):
         #print('Timestep: ', self.steps)
         #print('reward: ', reward)
         self.rewards.append(reward[0])
+        print(' ')
         
         #print('dones: ', dones)
         return observation,reward,dones,info

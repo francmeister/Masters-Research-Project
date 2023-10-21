@@ -113,6 +113,17 @@ class eMBB_UE(User_Equipment):
     def generate_task(self,long_TTI):
         self.has_transmitted_this_time_slot = False
         self.timeslot_counter+=1
+
+        '''
+        queue_len = 0
+        if len(self.communication_queue) > 0:
+            for task in self.communication_queue:
+                if len(task.packet_queue) > 0:
+                    queue_len+=len(task.packet_queue)
+
+        print('eMBB User: ', self.eMBB_UE_label, 'queue length: ', queue_len)
+        '''
+     
         
         #After every 1s generate packets with a uniform distribution between 5 and 10 packets per second
         #Long TTI = 1 ms. 1 second should be achieved after every 8000 timeslots
@@ -228,6 +239,8 @@ class eMBB_UE(User_Equipment):
 
     def total_processing_delay(self):
         self.achieved_total_processing_delay = self.achieved_local_processing_delay + self.achieved_transmission_delay
+        print('eMBB User: ', self.eMBB_UE_label, 'achieved delay: ', self.achieved_total_processing_delay)
+        #print(' ')
         #print('offload ratio: ', self.allocated_offloading_ratio, 'local delay: ', self.achieved_local_processing_delay, 'offlaod delay: ', self.achieved_transmission_delay)
         
     
