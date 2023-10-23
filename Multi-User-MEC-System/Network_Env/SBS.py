@@ -119,24 +119,26 @@ class SBS():
         self.individual_rewards.clear()
 
         for eMBB_User in eMBB_Users:
-            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
+            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption#_normalized 
             total_energy += eMBB_User_energy_consumption
-            eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
+            eMBB_User_channel_rate = eMBB_User.achieved_channel_rate#_normalized
             total_rate += eMBB_User_channel_rate
             delay_reward = eMBB_User.calculate_delay_penalty()
-            energy_reward = eMBB_User.energy_consumption_reward()
+            battery_energy_reward = eMBB_User.energy_consumption_reward()
             energy_efficiency_reward = eMBB_User.calculate_energy_efficiency()
             throughput_reward = eMBB_User.calculate_throughput_reward(communication_channel)
-            if eMBB_User_energy_consumption == 0:
-                individual_reward = 0
-            else:
-                individual_reward = energy_efficiency_reward + throughput_reward + energy_reward + delay_reward
+            queue_delay_reward = eMBB_User.queueing_delay_reward()
+        
+            #if eMBB_User_energy_consumption == 0:
+            #    individual_reward = 0
+            #else:
+            individual_reward = energy_efficiency_reward #+ battery_energy_reward #+ queue_delay_reward
       
             self.achieved_system_reward += individual_reward
             self.individual_rewards.append(individual_reward)
 
             self.energy_efficiency_rewards+=energy_efficiency_reward
-            self.energy_rewards+=energy_reward
+            self.energy_rewards+=battery_energy_reward
             self.throughput_rewards+=throughput_reward
             self.delay_rewards+=delay_reward
 

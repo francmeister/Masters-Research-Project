@@ -12,7 +12,7 @@ from numpy import interp
 env = gym.make('NetworkEnv-v0')
 
 #timesteps = 5
-timesteps = np.arange(0,10,1)
+timesteps = np.arange(0,5000,1)
 rewards = []
 offload_decisions = []
 RB_allocations = []
@@ -105,7 +105,7 @@ axis[3].set_title('battery energies reward')
 
 #axis[2].plot(timesteps, rewards)
 #axis[2].set_title('rewards')
-#plt.show()
+plt.show()
 #plt.show()
 
 

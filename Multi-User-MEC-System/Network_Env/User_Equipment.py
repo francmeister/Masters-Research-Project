@@ -11,12 +11,12 @@ class User_Equipment():
     def calculate_channel_gain(self):
         #Pathloss gain
         self.pathloss_gain = (math.pow(10,(35.3+37.6*math.log10(self.distance_from_SBS))))/10
-        self.small_scale_channel_gain = np.random.rayleigh(1)
-        self.large_scale_channel_gain = np.random.lognormal(0.0,1.0)
-        self.total_gain = self.small_scale_channel_gain#*self.large_scale_channel_gain*self.pathloss_gain
+        self.small_scale_channel_gain = np.random.exponential(1)
+        #self.large_scale_channel_gain = np.random.lognormal(0.0,1.0)
+        self.total_gain = self.small_scale_channel_gain #*self.large_scale_channel_gain*self.pathloss_gain
 
     def calculate_assigned_transmit_power_W(self):
-        self.assigned_transmit_power_W = (math.pow(10,(self.assigned_transmit_power_dBm/10)))/1000
+        self.assigned_transmit_power_W = self.assigned_transmit_power_dBm#(math.pow(10,(self.assigned_transmit_power_dBm/10)))/1000
 
     def dequeue_packet(self):
         if len(self.communication_queue) > 0:

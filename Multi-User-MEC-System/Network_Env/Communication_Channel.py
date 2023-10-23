@@ -1,7 +1,7 @@
 #%%
 import pygame, sys, time, random
 import random
-from eMBB_UE import eMBB_UE
+#from eMBB_UE import eMBB_UE
 import numpy as np
 import matplotlib.pyplot as plt
 import math
@@ -52,14 +52,14 @@ class Communication_Channel():
         self.RB_bandwidth_Hz = self.subcarrier_bandwidth_Hz*self.num_subcarriers_per_RB
         self.num_RB = int(self.system_bandwidth_Hz/self.RB_bandwidth_Hz)
         self.long_TTI = 1 #1ms
-        self.noise_spectral_density_dbm = -174 # -174dBM/Hz
-        self.noise_spectral_density_W = (math.pow(10,(self.noise_spectral_density_dbm/10)))/1000
+        self.noise_spectral_density_dbm = 1#-174 # -174dBM/Hz
+        self.noise_spectral_density_W = 2#(math.pow(10,(self.noise_spectral_density_dbm/10)))/1000
         self.single_side_standard_deviation = 5
         self.eMBB_Users = []
         self.RBs = []
         self.RB_eMBB_mappings = []
         self.num_of_available_RBs = self.num_RB
-        self.num_allocate_RBs_upper_bound = 25
+        self.num_allocate_RBs_upper_bound = 6
         self.num_allocate_RBs_lower_bound = 1
         self.number_of_RBs_available = self.num_allocate_RBs_upper_bound
         self.allocated_RBs = []
