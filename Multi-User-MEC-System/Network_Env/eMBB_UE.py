@@ -128,6 +128,7 @@ class eMBB_UE(User_Equipment):
         self.task_arrival_rate_tasks_per_second = 0
         self.ptr = 0
         self.queuing_delay = 0
+        self.previous_slot_battery_energy = 0
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
         self.x_position = random.randint(self.xpos_move_lower_bound,self.xpos_move_upper_bound)
@@ -201,7 +202,7 @@ class eMBB_UE(User_Equipment):
 
     def collect_state(self):
             #self.cpu_clock_frequency = (random.randint(5,5000))
-            self.user_state_space.collect(self.total_gain,self.battery_energy_level)
+            self.user_state_space.collect(self.total_gain,self.previous_slot_battery_energy)
             #self.user_state_space.collect(self.total_gain,self.communication_queue,self.battery_energy_level,self.communication_queue[0].QOS_requirement,self.cpu_clock_frequency)
             return self.user_state_space
 
@@ -664,13 +665,14 @@ class eMBB_UE(User_Equipment):
         return throughput_reward_normalized
 
     def compute_battery_energy_level(self):
+        self.previous_slot_battery_energy = self.battery_energy_level
         self.battery_energy_level = self.battery_energy_level + self.energy_harvested
 
     def harvest_energy(self):
         self.energy_harvested = np.random.exponential(250)#random.randint(0,2000)
 
     def energy_consumption_reward(self):
-        energy_reward = self.battery_energy_level - self.achieved_total_energy_consumption
+        energy_reward = self.battery_energy_level + self.energy_harversted - self.achieved_total_energy_consumption
 
         max_energy_reward = 22000
         min_energy_reward = 0
