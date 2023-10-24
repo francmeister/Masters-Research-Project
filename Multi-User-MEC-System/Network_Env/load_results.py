@@ -112,5 +112,5 @@ axis[5].set_title('RB allocation actions')
 #plt.xlabel("Episodes")
 #plt.ylabel("reward")
 #plt.title("Evolution of Reward")
-#plt.show()
+plt.show()
 
