@@ -37,13 +37,13 @@ throughputs = rewards_throughput_energy[:,3]
 #plt.title("Line graph")
 #plt.xlabel("X axis")
 #plt.ylabel("Y axis")
-#plt.plot(timesteps, fairness_index, color ="red")
+plt.plot(timesteps, rewards, color ="black")
 #plt.plot(timesteps,energies,color = "blue")
 #plt.plot(timesteps,throughputs,color = "green")
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-figure, axis = plt.subplots(7,1)
+#figure, axis = plt.subplots(6,1)
 '''
 axis[0].plot(timesteps, energies)
 axis[0].set_title('energies reward')
@@ -55,7 +55,7 @@ axis[2].plot(timesteps, rewards)
 axis[2].set_title('total reward')
 '''
 
-
+'''
 axis[0].plot(timesteps, energies)
 axis[0].set_title('energies reward')
 
@@ -73,6 +73,8 @@ axis[4].set_title('power allocation actions')
 
 axis[5].scatter(timesteps, RBs_actions)
 axis[5].set_title('RB allocation actions')
+'''
+
 
 
 
