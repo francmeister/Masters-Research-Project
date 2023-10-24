@@ -69,13 +69,11 @@ class NetworkEnv(gym.Env):
                         [self.energy_harvested_max for _ in range(self.number_of_users)], [self.latency_requirement_max for _ in range(self.number_of_users)], 
                         [self.reliability_requirement_max for _ in range(self.number_of_users)]],dtype=np.float32)'''
         
-        observation_space_high = np.array([[self.channel_gain_max for _ in range(self.number_of_users)], [self.communication_queue_max for _ in range(self.number_of_users)], 
-                        [self.battery_energy_max for _ in range(self.number_of_users)],[self.latency_requirement_max for _ in range(self.number_of_users)],
-                        [self.cpu_frequency_max for _ in range(self.number_of_users)]],dtype=np.float32)
+        observation_space_high = np.array([[self.channel_gain_max for _ in range(self.number_of_users)], 
+                        [self.battery_energy_max for _ in range(self.number_of_users)]],dtype=np.float32)
         
-        observation_space_low = np.array([[self.channel_gain_min for _ in range(self.number_of_users)], [self.communication_queue_min for _ in range(self.number_of_users)], 
-                        [self.battery_energy_min for _ in range(self.number_of_users)],[self.latency_requirement_min for _ in range(self.number_of_users)],
-                        [self.cpu_frequency_min for _ in range(self.number_of_users)]],dtype=np.float32)
+        observation_space_low = np.array([[self.channel_gain_min for _ in range(self.number_of_users)], 
+                        [self.battery_energy_min for _ in range(self.number_of_users)]],dtype=np.float32)
         
         '''observation_space_low = np.array([[self.channel_gain_min for _ in range(self.number_of_users)], [self.communication_queue_min for _ in range(self.number_of_users)], 
                         [self.energy_harvested_min for _ in range(self.number_of_users)], [self.latency_requirement_min for _ in range(self.number_of_users)], 
