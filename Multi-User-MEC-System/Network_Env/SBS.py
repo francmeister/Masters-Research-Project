@@ -30,18 +30,18 @@ class SBS():
         #Collect Channel gains
         for user in Users:
             channel_gains.append(user.user_state_space.channel_gain)
-            communication_queue_size.append(user.user_state_space.calculate_communication_queue_size())
+            #communication_queue_size.append(user.user_state_space.calculate_communication_queue_size())
             battery_energy.append(user.user_state_space.battery_energy)
-            latency_requirement.append(0)
+            #latency_requirement.append(0)
             #latency_requirement.append(user.user_state_space.QOS_requirements.max_allowable_latency)
-            local_frequencies.append(user.user_state_space.local_cpu_frequency)
+            #local_frequencies.append(user.user_state_space.local_cpu_frequency)
             #reliability_requirement.append(user.user_state_space.QOS_requirements.max_allowable_reliability)
 
         self.system_state_space.append(channel_gains)
-        self.system_state_space.append(communication_queue_size)
+        #self.system_state_space.append(communication_queue_size)
         self.system_state_space.append(battery_energy)
-        self.system_state_space.append(latency_requirement)
-        self.system_state_space.append(local_frequencies)
+        #self.system_state_space.append(latency_requirement)
+        #self.system_state_space.append(local_frequencies)
         #self.system_state_space.append(reliability_requirement)
         #print('queue size: ', communication_queue_size)
         return self.system_state_space
@@ -119,9 +119,9 @@ class SBS():
         self.individual_rewards.clear()
 
         for eMBB_User in eMBB_Users:
-            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption#_normalized 
+            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
             total_energy += eMBB_User_energy_consumption
-            eMBB_User_channel_rate = eMBB_User.achieved_channel_rate#_normalized
+            eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
             total_rate += eMBB_User_channel_rate
             delay_reward = eMBB_User.calculate_delay_penalty()
             battery_energy_reward = eMBB_User.energy_consumption_reward()
@@ -132,7 +132,7 @@ class SBS():
             #if eMBB_User_energy_consumption == 0:
             #    individual_reward = 0
             #else:
-            individual_reward = energy_efficiency_reward #+ battery_energy_reward #+ queue_delay_reward
+            individual_reward = energy_efficiency_reward + battery_energy_reward + queue_delay_reward
       
             self.achieved_system_reward += individual_reward
             self.individual_rewards.append(individual_reward)

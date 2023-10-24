@@ -33,13 +33,13 @@ class eMBB_UE(User_Equipment):
         self.min_communication_qeueu_size = 0
         self.max_communication_qeueu_size = 50
 
-        self.min_channel_gain = 0.1
+        self.min_channel_gain = math.pow(10,-5)
         self.max_channel_gain = 10
 
         self.min_energy_harvested = 0
-        self.max_energy_harvested = 100
+        self.max_energy_harvested = 150
 
-        self.max_battery_energy = 25000
+        self.max_battery_energy = 22000
         self.min_battery_energy = 0
 
         self.max_cpu_frequency = 5000
@@ -61,7 +61,7 @@ class eMBB_UE(User_Equipment):
 
         self.cycles_per_byte = 330
         self.cycles_per_bit = self.cycles_per_byte/8
-        self.max_service_rate_cycles_per_slot = 62000#5000
+        self.max_service_rate_cycles_per_slot = 620000#5000
 
         #self.QOS_requirement = QOS_requirement()
         #self.QOS_requirement_for_transmission = QOS_requirement()
@@ -200,8 +200,8 @@ class eMBB_UE(User_Equipment):
         self.distance_from_SBS = math.sqrt(math.pow(x_diff_metres,2)+math.pow(y_diff_metres,2))
 
     def collect_state(self):
-            self.cpu_clock_frequency = (random.randint(5,5000))
-            self.user_state_space.collect(self.total_gain,self.communication_queue,self.battery_energy_level,0,self.cpu_clock_frequency)
+            #self.cpu_clock_frequency = (random.randint(5,5000))
+            self.user_state_space.collect(self.total_gain,self.battery_energy_level)
             #self.user_state_space.collect(self.total_gain,self.communication_queue,self.battery_energy_level,self.communication_queue[0].QOS_requirement,self.cpu_clock_frequency)
             return self.user_state_space
 
@@ -318,7 +318,7 @@ class eMBB_UE(User_Equipment):
             #print('channel gain: ', self.total_gain, " achieved channel rate matrix: ", achieved_RB_channel_rates)
             self.achieved_channel_rate = sum(achieved_RB_channel_rates)
             min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
-            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[min_achievable_rate,max_achievable_rate],[0,1])
+            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,15000],[0,1])
         else:
             self.achieved_channel_rate = 0
             self.achieved_channel_rate_normalized = 0
@@ -470,8 +470,8 @@ class eMBB_UE(User_Equipment):
         #print('self.achieved_transmission_energy_consumption: ', self.achieved_transmission_energy_consumption)
         #self.achieved_transmission_energy_consumption = interp(self.achieved_transmission_energy_consumption,[0,12*math.pow(10,-5)],[0,100])
         #print('transmission energy consumed: ', self.achieved_transmission_energy_consumption)
-        min_offload_energy_consumption, max_offload_energy_consumption = self.min_and_max_achievable_offload_energy_consumption(communication_channel)
-        min_offloading_delay, max_offloading_delay = self.min_max_achievable_offload_delay(communication_channel)
+        #min_offload_energy_consumption, max_offload_energy_consumption = self.min_and_max_achievable_offload_energy_consumption(communication_channel)
+        #min_offloading_delay, max_offloading_delay = self.min_max_achievable_offload_delay(communication_channel)
         #print('min offload delay: ', min_offloading_delay, ' max offload delay: ', max_offloading_delay)
         #self.achieved_transmission_energy_consumption = interp(self.achieved_transmission_energy_consumption,[min_offload_energy_consumption,max_offload_energy_consumption],[0,5000])
         self.achieved_transmission_delay = 1#interp(self.achieved_transmission_delay,[min_offloading_delay,max_offloading_delay],[0,5000])
@@ -535,7 +535,7 @@ class eMBB_UE(User_Equipment):
     def total_energy_consumed(self):
         if self.battery_energy_level >  self.achieved_total_energy_consumption:
             self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
-            self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,5000],[0,1])
+            self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,1000],[0,1])
             self.battery_energy_level = self.battery_energy_level - self.achieved_total_energy_consumption
         else:
             self.achieved_total_energy_consumption = 0
@@ -553,11 +553,11 @@ class eMBB_UE(User_Equipment):
     def calculate_channel_gain(self):
         #Pathloss gain
         self.pathloss_gain = (math.pow(10,(35.3+37.6*math.log10(self.distance_from_SBS))))/10
-        self.small_scale_channel_gain = np.random.rayleigh(1)
-        self.large_scale_channel_gain = np.random.lognormal(0.0,1.0)
-        self.total_gain = self.small_scale_channel_gain*self.large_scale_channel_gain#self.pathloss_gain
-        if self.total_gain < 0.1:
-            self.total_gain = 0.1
+        self.small_scale_channel_gain = np.random.exponential(1)
+        #self.large_scale_channel_gain = np.random.lognormal(0.0,1.0)
+        self.total_gain = self.small_scale_channel_gain#*self.large_scale_channel_gain#self.pathloss_gain
+        #if self.total_gain < 0.1:
+        #    self.total_gain = 0.1
 
     def calculate_assigned_transmit_power_W(self):
         self.assigned_transmit_power_W = self.assigned_transmit_power_dBm#(math.pow(10,(self.assigned_transmit_power_dBm/10)))/1000
@@ -667,7 +667,7 @@ class eMBB_UE(User_Equipment):
         self.battery_energy_level = self.battery_energy_level + self.energy_harvested
 
     def harvest_energy(self):
-        self.energy_harvested = random.randint(0,2000)
+        self.energy_harvested = np.random.exponential(250)#random.randint(0,2000)
 
     def energy_consumption_reward(self):
         energy_reward = self.battery_energy_level - self.achieved_total_energy_consumption
@@ -699,7 +699,7 @@ class eMBB_UE(User_Equipment):
         if self.queuing_delay > 0:
             qeueuing_delay_reward = 1
         else:
-            qeueuing_delay_reward = self.queuing_delay
+            qeueuing_delay_reward = -1#self.queuing_delay
 
         return qeueuing_delay_reward
         

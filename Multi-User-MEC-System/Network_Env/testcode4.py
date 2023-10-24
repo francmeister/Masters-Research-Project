@@ -12,7 +12,7 @@ from numpy import interp
 env = gym.make('NetworkEnv-v0')
 
 #timesteps = 5
-timesteps = np.arange(0,5000,1)
+timesteps = np.arange(0,500,1)
 rewards = []
 offload_decisions = []
 RB_allocations = []
@@ -58,6 +58,7 @@ for timestep in timesteps:
     battery_energies.append(env.eMBB_UE_1.battery_energy_level)
     energies_harvested.append(env.eMBB_UE_1.energy_harvested)
     energy_consumed.append(env.eMBB_UE_1.achieved_total_energy_consumption)
+    channel_gains.append(env.eMBB_UE_1.total_gain)
     #print('action: ', action)
     #print('reward: ', reward)
     rewards.append(reward[0])

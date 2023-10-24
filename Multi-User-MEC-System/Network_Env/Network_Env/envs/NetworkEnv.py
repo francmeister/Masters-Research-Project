@@ -155,7 +155,7 @@ class NetworkEnv(gym.Env):
         #print('Action after interpolation transposed')
         #offload_decisions_actions_mapped = [0.5]#[0, 0, 0.5, 0.5, 1, 1, 1]
         #transmit_power_actions_mapped = [65]#,20,20,20,20,20,20]
-        #RB_allocation_actions_mapped = [1]#,10,15,15,20,20,20]
+        #RB_allocation_actions_mapped = [6]#,10,15,15,20,20,20]
         #number_URLLC_Users_per_RB_action_mapped = 3
         #print("New Timestep: ", self.steps)
         #print("offload_decisions_actions")
@@ -233,21 +233,21 @@ class NetworkEnv(gym.Env):
                 min_value = self.channel_gain_min
                 max_value = self.channel_gain_max
 
-            elif row == self.OS_comm_queue_label:
-                min_value = self.communication_queue_min
-                max_value = self.communication_queue_max
+            #elif row == self.OS_comm_queue_label:
+            #    min_value = self.communication_queue_min
+            #    max_value = self.communication_queue_max
 
             elif row == self.OS_battery_energy_label:
                 min_value = self.battery_energy_min
                 max_value = self.battery_energy_max
 
-            elif row == self.OS_latency_label:
-                min_value = self.latency_requirement_min
-                max_value = self.latency_requirement_max
+            #elif row == self.OS_latency_label:
+            #    min_value = self.latency_requirement_min
+            #    max_value = self.latency_requirement_max
 
-            elif row == self.OS_cpu_frequency_label:
-                min_value = self.cpu_frequency_min
-                max_value = self.cpu_frequency_max
+            #elif row == self.OS_cpu_frequency_label:
+            #    min_value = self.cpu_frequency_min
+            #    max_value = self.cpu_frequency_max
 
             col = 0
             for user in observation_type:
@@ -277,8 +277,8 @@ class NetworkEnv(gym.Env):
         self.SBS1.set_properties()
         self.OS_channel_gain_label = 0
         self.OS_comm_queue_label = 1
-        self.OS_latency_label = 2
-        self.OS_battery_energy_label = 3
+        self.OS_latency_label = 3
+        self.OS_battery_energy_label = 2
         self.OS_cpu_frequency_label = 4
 
         #Observation Space Bound Parameters
@@ -326,21 +326,21 @@ class NetworkEnv(gym.Env):
                 min_value = self.channel_gain_min
                 max_value = self.channel_gain_max
 
-            elif row == self.OS_comm_queue_label:
-                min_value = self.communication_queue_min
-                max_value = self.communication_queue_max
+            #elif row == self.OS_comm_queue_label:
+            #    min_value = self.communication_queue_min
+            #    max_value = self.communication_queue_max
 
             elif row == self.OS_battery_energy_label:
                 min_value = self.battery_energy_min
                 max_value = self.battery_energy_max
 
-            elif row == self.OS_latency_label:
-                min_value = self.latency_requirement_min
-                max_value = self.latency_requirement_max
+            #elif row == self.OS_latency_label:
+            #    min_value = self.latency_requirement_min
+            #    max_value = self.latency_requirement_max
 
-            elif row == self.OS_cpu_frequency_label:
-                min_value = self.cpu_frequency_min
-                max_value = self.cpu_frequency_max
+            #elif row == self.OS_cpu_frequency_label:
+            #    min_value = self.cpu_frequency_min
+            #    max_value = self.cpu_frequency_max
 
             col = 0
             for user in observation_type:
