@@ -701,7 +701,7 @@ class eMBB_UE(User_Equipment):
         if self.queuing_delay > 0:
             qeueuing_delay_reward = 1
         else:
-            qeueuing_delay_reward = self.queuing_delay
+            qeueuing_delay_reward = -1#self.queuing_delay
 
         return qeueuing_delay_reward
         
