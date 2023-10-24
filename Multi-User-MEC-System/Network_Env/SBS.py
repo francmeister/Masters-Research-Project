@@ -144,7 +144,7 @@ class SBS():
 
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
-        fairness_index_normalized = 0.45*interp(fairness_index,[0,1],[0,1])
+        fairness_index_normalized = interp(fairness_index,[0,1],[0,1])
         #print('fairness index: ', fairness_index_normalized)
         #print(' ')
         #fairness_penalty = self.calculate_fairness_(eMBB_Users, communication_channel)
@@ -152,7 +152,7 @@ class SBS():
         #print('fairness penalty: ', fairness_index_normalized)
         #print(' ')
         self.fairness_index = fairness_index_normalized
-        #new_individual_rewards = [x + fairness_index_normalized for x in self.individual_rewards]
+        new_individual_rewards = [x + fairness_index_normalized for x in self.individual_rewards]
         #print('individual rewards: ', new_individual_rewards)
         #print('new individual rewards: ', new_inidividual_rewards)
         #print(' ')
@@ -165,7 +165,7 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
   
-        return self.achieved_system_reward, self.individual_rewards, total_energy,total_rate
+        return self.achieved_system_reward, new_individual_rewards , total_energy,total_rate
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
         processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency
