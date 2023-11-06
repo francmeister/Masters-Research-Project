@@ -39,6 +39,8 @@ local_energy = []
 
 
 env.reset()
+print('observation sample')
+print(env.observation_space.sample())
 #expl_noise = 0.5
 for timestep in timesteps:
     action = env.action_space.sample()

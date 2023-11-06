@@ -68,18 +68,23 @@ class NetworkEnv(gym.Env):
                         [self.energy_harvested_max for _ in range(self.number_of_users)], [self.latency_requirement_max for _ in range(self.number_of_users)], 
                         [self.reliability_requirement_max for _ in range(self.number_of_users)]],dtype=np.float32)'''
         
-        observation_space_high = np.array([[self.channel_gain_max for _ in range(self.number_of_users)], 
-                        [self.battery_energy_max for _ in range(self.number_of_users)]],dtype=np.float32)
+        number_of_batteries_per_user = 1
+        number_of_states_per_user = self.num_allocate_RB_upper_bound + number_of_batteries_per_user
+
+        observation_space_high = np.array([[[self.channel_gain_max for _ in range(self.num_allocate_RB_upper_bound)] + 
+                                            [self.battery_energy_max for _ in range(1)]]*self.number_of_users],dtype=np.float32)
         
-        observation_space_low = np.array([[self.channel_gain_min for _ in range(self.number_of_users)], 
-                        [self.battery_energy_min for _ in range(self.number_of_users)]],dtype=np.float32)
+        observation_space_high = observation_space_high.reshape(self.number_of_users,number_of_states_per_user)
+
+        
+        observation_space_low = np.array([[[self.channel_gain_min for _ in range(self.num_allocate_RB_upper_bound)] + 
+                                            [self.battery_energy_min for _ in range(1)]]*self.number_of_users],dtype=np.float32)
+        
+        observation_space_low = observation_space_low.reshape(self.number_of_users,number_of_states_per_user)
         
         '''observation_space_low = np.array([[self.channel_gain_min for _ in range(self.number_of_users)], [self.communication_queue_min for _ in range(self.number_of_users)], 
                         [self.energy_harvested_min for _ in range(self.number_of_users)], [self.latency_requirement_min for _ in range(self.number_of_users)], 
                         [self.reliability_requirement_min for _ in range(self.number_of_users)]],dtype=np.float32)'''
-        
-        observation_space_high = np.transpose(observation_space_high)
-        observation_space_low = np.transpose(observation_space_low)
         
         '''
         observation_space_high = [[channel_gain_max],[communication_queue_max],[energy_harvested_max],[latency_requirement_max],[reliability_requirement_max]]
