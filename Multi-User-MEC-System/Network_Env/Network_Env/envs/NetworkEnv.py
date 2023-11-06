@@ -5,6 +5,7 @@ from eMBB_UE import eMBB_UE
 from Communication_Channel import Communication_Channel
 from SBS import SBS
 from numpy import interp
+import pandas as pd
 
 pygame.init()
 
@@ -99,16 +100,60 @@ class NetworkEnv(gym.Env):
 
         #self.action_space = spaces.Box(low=action_space_low,high=action_space_high)
         self.observation_space = spaces.Box(low=observation_space_low, high=observation_space_high)
+        self.total_action_space = []
+
+        self.action_space_dim_1 = self.box_action_space.shape[1] + self.binary_action_space.shape[0]     
 
         self.STEP_LIMIT = 25
         self.sleep = 0
         self.steps = 0
        
+    def reshape_action_space_for_model(self,action):
+        box_action = np.array(action['box_actions'])
+        binary_actions = np.array(action['binary_actions'])
+
+        binary_actions = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
+        self.total_action_space = np.column_stack((box_action,binary_actions))
+  
+        return self.total_action_space
+
+        
+
+    def reshape_action_space_from_model_to_dict(self,action):
+        box_actions = []
+        binary_actions = []
+        for user_action in action:
+            box_actions.append(user_action[0:2])
+            binary_actions.append(user_action[2:len(user_action)])
+
+        box_actions = np.array(box_actions)
+        binary_actions = np.array(binary_actions)
+
+        binary_actions = binary_actions.reshape(1,self.number_of_users * self.num_allocate_RB_upper_bound).squeeze()
+
+        count = 0
+        for binary_action in binary_actions:
+            if binary_action < 0.5:
+                binary_actions[count] = 0
+            else:
+                binary_actions[count] = 1
+            
+            count+=1
+
+        action_space_dict = {
+            'box_actions': box_actions,
+            'binary_actions': binary_actions
+        }
+
+        return action_space_dict
+
+
 
     def step(self,action):
         #.self.selected_actions =
         #  []
         #print(action)
+        self.reshape_action_space_for_model(action)
         box_action = np.array(action['box_actions'])
         #print(" ")
         #print("Action before interpolation")
