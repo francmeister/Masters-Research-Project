@@ -20,7 +20,8 @@ class SBS():
 
     def collect_state_space(self, eMBB_Users):
         Users = eMBB_Users
-        self.system_state_space.clear()
+        self.system_state_space_RB_channel_gains.clear()
+        self.system_state_space_battery_energies.clear()
         channel_gains = []
         communication_queue_size = []
         battery_energy = []
@@ -36,15 +37,20 @@ class SBS():
             #latency_requirement.append(user.user_state_space.QOS_requirements.max_allowable_latency)
             #local_frequencies.append(user.user_state_space.local_cpu_frequency)
             #reliability_requirement.append(user.user_state_space.QOS_requirements.max_allowable_reliability)
-
-        self.system_state_space.append(channel_gains)
+        #print('state space')
+        #print(channel_gains[0])
+        #print(battery_energy)
+        self.system_state_space_RB_channel_gains.append(channel_gains)
         #self.system_state_space.append(communication_queue_size)
-        self.system_state_space.append(battery_energy)
+        self.system_state_space_battery_energies.append(battery_energy)
         #self.system_state_space.append(latency_requirement)
         #self.system_state_space.append(local_frequencies)
         #self.system_state_space.append(reliability_requirement)
         #print('queue size: ', communication_queue_size)
-        return self.system_state_space
+        #print('state space')
+        #print(self.system_state_space_RB_channel_gains)
+        #print(self.system_state_space_battery_energies)
+        return channel_gains, battery_energy
 
     def allocate_transmit_powers(self,eMBB_Users, action):
         index = 0
@@ -132,7 +138,7 @@ class SBS():
             #if eMBB_User_energy_consumption == 0:
             #    individual_reward = 0
             #else:
-            individual_reward = 0.3*energy_efficiency_reward + 0.3*battery_energy_reward + 0.2*queue_delay_reward
+            individual_reward = energy_efficiency_reward + battery_energy_reward + queue_delay_reward 
       
             self.achieved_system_reward += individual_reward
             self.individual_rewards.append(individual_reward)
@@ -165,7 +171,7 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
   
-        return self.achieved_system_reward, new_individual_rewards , total_energy,total_rate
+        return self.achieved_system_reward, self.individual_rewards , total_energy,total_rate
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
         processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency
@@ -192,7 +198,8 @@ class SBS():
         self.associated_users = []
         self.associated_URLLC_users = []
         self.associated_eMBB_users = []
-        self.system_state_space = []
+        self.system_state_space_RB_channel_gains = []
+        self.system_state_space_battery_energies = []
         self.num_arriving_URLLC_packets = 0
         self.eMBB_Users_packet_queue = []
         self.URLLC_Users_packet_queue = []

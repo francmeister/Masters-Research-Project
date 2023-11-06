@@ -80,7 +80,6 @@ class eMBB_UE(User_Equipment):
         self.y_position = self.original_y_position
         self.energy_harversted = 0
         self.distance_from_SBS = 0
-        self.total_gain = 0
         self.has_transmitted_this_time_slot = False
         self.communication_queue = []
         self.energy_consumption_coefficient = math.pow(10,-15)
@@ -129,6 +128,8 @@ class eMBB_UE(User_Equipment):
         self.ptr = 0
         self.queuing_delay = 0
         self.previous_slot_battery_energy = 0
+
+        self.total_gain = np.zeros(self.communication_channel.num_allocate_RBs_upper_bound)
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
         self.x_position = random.randint(self.xpos_move_lower_bound,self.xpos_move_upper_bound)
@@ -312,6 +313,18 @@ class eMBB_UE(User_Equipment):
         #Calculate the bandwidth achieved on each RB
         achieved_RB_channel_rates = []
         #print('number of allocated RBs: ', len(self.allocate(d_RBs))
+        count = 0
+
+        if self.battery_energy_level > 0:
+            for RB_indicator in self.allocated_RBs:
+                RB_channel_gain = self.total_gain[0][count]
+                achieved_RB_channel_rate = self.calculate_channel_rate(communication_channel,RB_indicator,RB_channel_gain)
+                achieved_RB_channel_rates.append(achieved_RB_channel_rate)
+
+            self.achieved_channel_rate = sum(achieved_RB_channel_rates)
+            min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
+            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,15000],[0,1])    
+        '''
         if (len(self.allocated_RBs)  > 0) and (self.battery_energy_level > 0):
             for RB in self.allocated_RBs:
                 achieved_RB_channel_rate = self.calculate_channel_rate(communication_channel)
@@ -323,16 +336,18 @@ class eMBB_UE(User_Equipment):
         else:
             self.achieved_channel_rate = 0
             self.achieved_channel_rate_normalized = 0
+        '''
+        
 
         #print('achieved channel rate: ', self.achieved_channel_rate)
         #print(' ')
 
-    def calculate_channel_rate(self, communication_channel):
+    def calculate_channel_rate(self, communication_channel,RB_indicator,RB_channel_gain):
         RB_bandwidth = communication_channel.RB_bandwidth_Hz
         noise_spectral_density = communication_channel.noise_spectral_density_W
-        channel_rate_numerator = self.assigned_transmit_power_W*self.total_gain
+        channel_rate_numerator = self.assigned_transmit_power_W*RB_channel_gain
         channel_rate_denominator = noise_spectral_density#*RB_bandwidth
-        channel_rate = RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
+        channel_rate = RB_indicator*(RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator)))
         return (channel_rate/1000)
     
     def local_processing(self):
@@ -551,12 +566,13 @@ class eMBB_UE(User_Equipment):
         #print('offload ratio: ', self.allocated_offloading_ratio, 'local delay: ', self.achieved_local_processing_delay, 'offlaod delay: ', self.achieved_transmission_delay)
         
     
-    def calculate_channel_gain(self):
+    def calculate_channel_gain(self,communication_channel):
         #Pathloss gain
-        self.pathloss_gain = (math.pow(10,(35.3+37.6*math.log10(self.distance_from_SBS))))/10
-        self.small_scale_channel_gain = np.random.exponential(1)
+        #self.pathloss_gain = (math.pow(10,(35.3+37.6*math.log10(self.distance_from_SBS))))/10
+        number_of_RBs = communication_channel.num_allocate_RBs_upper_bound
+        self.total_gain = np.random.exponential(1,size=(1,number_of_RBs))
         #self.large_scale_channel_gain = np.random.lognormal(0.0,1.0)
-        self.total_gain = self.small_scale_channel_gain#*self.large_scale_channel_gain#self.pathloss_gain
+        #self.total_gain = self.small_scale_channel_gain#*self.large_scale_channel_gain#self.pathloss_gain
         #if self.total_gain < 0.1:
         #    self.total_gain = 0.1
 

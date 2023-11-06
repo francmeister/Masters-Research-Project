@@ -34,8 +34,8 @@ class NetworkEnv(gym.Env):
         self.max_transmit_power_db = 1000#self.eMBB_UE_1.max_transmission_power_dBm
         self.min_transmit_power_db = 10
         self.offload_decisions_label = 0
-        self.allocate_num_RB_label = 1
-        self.allocate_transmit_powers_label = 2
+        self.allocate_num_RB_label = 4
+        self.allocate_transmit_powers_label = 1
         self.num_urllc_users_per_RB_label = 3
         self.total_energy = 0
         self.total_rate = 0
@@ -53,14 +53,12 @@ class NetworkEnv(gym.Env):
         '''action_space_high = np.array([[self.max_offload_decision for _ in range(self.number_of_users)], [self.num_allocate_subcarriers_upper_bound for _ in range(self.number_of_users)], 
                         [self.max_transmit_power_db for _ in range(self.number_of_users)], [self.max_number_of_URLLC_users_per_RB for _ in range(self.number_of_users)]], dtype=np.float32)'''
         
-        action_space_high = np.array([[1 for _ in range(self.number_of_users)], [1 for _ in range(self.number_of_users)], 
-                        [1 for _ in range(self.number_of_users)]], dtype=np.float32)
+        action_space_high = np.array([[1 for _ in range(self.number_of_users)], [1 for _ in range(self.number_of_users)]], dtype=np.float32)
 
         '''action_space_low = np.array([[self.min_offload_decision for _ in range(self.number_of_users)], [self.num_allocate_subcarriers_lower_bound for _ in range(self.number_of_users)], 
                         [self.min_transmit_power_db for _ in range(self.number_of_users)], [self.min_number_of_URLLC_users_per_RB for _ in range(self.number_of_users)]],dtype=np.float32)'''
         
-        action_space_low = np.array([[0 for _ in range(self.number_of_users)], [0 for _ in range(self.number_of_users)], 
-                        [0 for _ in range(self.number_of_users)]],dtype=np.float32)
+        action_space_low = np.array([[0 for _ in range(self.number_of_users)], [0 for _ in range(self.number_of_users)]],dtype=np.float32)
         
         action_space_high = np.transpose(action_space_high)
         action_space_low = np.transpose(action_space_low)
@@ -89,8 +87,17 @@ class NetworkEnv(gym.Env):
         action_space_high = [[max_offload_decision],[num_allocate_subcarriers_upper_bound],[max_transmit_power_db],[max_number_of_URLLC_users_per_RB]]
         action_space_low = [[min_offload_decision],[num_allocate_subcarriers_lower_bound],[min_transmit_power_db],[min_number_of_URLLC_users_per_RB]]
         '''
+     
+        self.box_action_space = spaces.Box(low=action_space_low,high=action_space_high)
+        self.binary_action_space = spaces.MultiBinary(self.number_of_users * self.num_allocate_RB_upper_bound)
 
-        self.action_space = spaces.Box(low=action_space_low,high=action_space_high)
+        # Combine the action spaces into a dictionary
+        self.action_space = spaces.Dict({
+            'box_actions': self.box_action_space,
+            'binary_actions': self.binary_action_space
+        })
+
+        #self.action_space = spaces.Box(low=action_space_low,high=action_space_high)
         self.observation_space = spaces.Box(low=observation_space_low, high=observation_space_high)
 
         self.STEP_LIMIT = 25
@@ -101,16 +108,17 @@ class NetworkEnv(gym.Env):
     def step(self,action):
         #.self.selected_actions =
         #  []
-        action = np.array(action)
+        #print(action)
+        box_action = np.array(action['box_actions'])
         #print(" ")
         #print("Action before interpolation")
         #print(action)
-        action = np.transpose(action)
+        box_action = np.transpose(box_action)
         #print("Action before interpolation transposed")
         #print(action)
         reward = 0
         #collect offload decisions actions 
-        offload_decisions_actions = action[self.offload_decisions_label]
+        offload_decisions_actions = box_action[self.offload_decisions_label]
         offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
 
         offload_decisions_actions_mapped = []
@@ -118,25 +126,9 @@ class NetworkEnv(gym.Env):
             offload_decision_mapped = interp(offload_decision,[0,1],[self.min_offload_decision,self.max_offload_decision])
             offload_decisions_actions_mapped.append(offload_decision_mapped)
         
-        #self.selected_actions.append(offload_decisions_actions_mapped)
-        #collect subcarrier allocations actions
-        
-        RB_allocation_actions = action[self.allocate_num_RB_label]
-        RB_allocation_actions = RB_allocation_actions[0:self.number_of_eMBB_users]
-        RB_allocation_actions_mapped = []
-        #print('RB_allocation_actions', RB_allocation_actions)
-        for RB_allocation_action in RB_allocation_actions:
-            RB_allocation_action_mapped = interp(RB_allocation_action,[0,1],[self.num_allocate_RB_lower_bound,self.num_allocate_RB_upper_bound])
-            RB_allocation_actions_mapped.append(RB_allocation_action_mapped)
-
-        RB_allocation_actions = (np.rint(RB_allocation_actions)).astype(int)
-        RB_allocation_actions_mapped = (np.rint(RB_allocation_actions_mapped)).astype(int)
-        #print('RB_allocation_action_mapped: ', RB_allocation_actions_mapped)
-        self.selected_RBs.append(RB_allocation_actions_mapped[0]) 
-        #self.selected_actions.append(RB_allocation_actions_mapped)
-
-        #collect trasmit powers allocations actions
-        transmit_power_actions = action[self.allocate_transmit_powers_label]
+       
+         #collect trasmit powers allocations actions
+        transmit_power_actions = box_action[self.allocate_transmit_powers_label]
         transmit_power_actions = transmit_power_actions[0:self.number_of_eMBB_users]
 
         transmit_power_actions_mapped = []
@@ -146,6 +138,24 @@ class NetworkEnv(gym.Env):
             transmit_power_actions_mapped.append(transmit_power_action_mapped)
 
         self.selected_powers.append(transmit_power_actions_mapped[0])
+        
+
+        binary_actions = action['binary_actions']
+        resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
+    
+        RB_allocation_actions = resource_block_action_matrix 
+        #RB_allocation_actions = RB_allocation_actions[0:self.number_of_eMBB_users]
+        #RB_allocation_actions_mapped = []
+        #print('RB_allocation_actions', RB_allocation_actions)
+        #for RB_allocation_action in RB_allocation_actions:
+        #    RB_allocation_action_mapped = interp(RB_allocation_action,[0,1],[self.num_allocate_RB_lower_bound,self.num_allocate_RB_upper_bound])
+        #    RB_allocation_actions_mapped.append(RB_allocation_action_mapped)
+
+        #RB_allocation_actions = (np.rint(RB_allocation_actions)).astype(int)
+        #RB_allocation_actions_mapped = (np.rint(RB_allocation_actions_mapped)).astype(int)
+        #print('RB_allocation_action_mapped: ', RB_allocation_actions_mapped)
+        #self.selected_RBs.append(RB_allocation_actions_mapped[0]) 
+        #self.selected_actions.append(RB_allocation_actions_mapped)
         
         #self.selected_actions.append(transmit_power_actions_mapped)
         #collect the final action - number of URLLC users per RB
@@ -167,7 +177,7 @@ class NetworkEnv(gym.Env):
         #print(number_URLLC_Users_per_RB_action_mapped)
         self.offload_decisions = offload_decision_mapped
         self.powers = transmit_power_actions_mapped
-        self.subcarriers = RB_allocation_actions_mapped
+        self.subcarriers = RB_allocation_actions
 
         #Perform Actions
         self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
@@ -181,7 +191,7 @@ class NetworkEnv(gym.Env):
 
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_RBs()
-        self.Communication_Channel_1.allocate_RBs_eMBB(self.eMBB_Users,RB_allocation_actions_mapped)
+        self.Communication_Channel_1.allocate_RBs_eMBB(self.eMBB_Users,RB_allocation_actions)
         #self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users,subcarrier_allocation_actions)
         #self.Communication_Channel_1.create_resource_blocks_URLLC()
         #self.Communication_Channel_1.allocate_resource_blocks_URLLC(self.URLLC_Users)
@@ -214,48 +224,39 @@ class NetworkEnv(gym.Env):
             eMBB_User.calculate_distance_from_SBS(self.SBS1.x_position, self.SBS1.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
             eMBB_User.harvest_energy()
             eMBB_User.compute_battery_energy_level()
-            eMBB_User.calculate_channel_gain()
+            eMBB_User.calculate_channel_gain(self.Communication_Channel_1)
             eMBB_User.generate_task(self.Communication_Channel_1)
             eMBB_User.collect_state()
 
-        observation = np.array(self.SBS1.collect_state_space(self.eMBB_Users), dtype=np.float32)
-        #print('Observation before interpolation')
+        observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
+        #observation_channel_gains = np.array(observation_channel_gains, dtype=np.float32)
+        #observation_battery_energies = np.array(observation_battery_energies, dtype=np.float32)
+        #print('Observation before transpose')
         #print(np.transpose(observation))
         #normalize observation values to a range between 0 and 1 using interpolation
         row = 0
         col = 0
         min_value = 0
         max_value = 0
-        for observation_type in observation:
-            if row == self.OS_channel_gain_label:
-                min_value = self.channel_gain_min
-                max_value = self.channel_gain_max
+        for channel_gains in observation_channel_gains:
+            for channel_gain in channel_gains:
+                observation_channel_gains[row][col] = interp(observation_channel_gains[row][col],[self.channel_gain_min,self.channel_gain_max],[0,1])
+                col+=1
 
-            #elif row == self.OS_comm_queue_label:
-            #    min_value = self.communication_queue_min
-            #    max_value = self.communication_queue_max
-
-            elif row == self.OS_battery_energy_label:
-                min_value = self.battery_energy_min
-                max_value = self.battery_energy_max
-
-            #elif row == self.OS_latency_label:
-            #    min_value = self.latency_requirement_min
-            #    max_value = self.latency_requirement_max
-
-            #elif row == self.OS_cpu_frequency_label:
-            #    min_value = self.cpu_frequency_min
-            #    max_value = self.cpu_frequency_max
-
+            row+=1
             col = 0
-            for user in observation_type:
-                observation[row][col] = interp(observation[row][col],[min_value,max_value],[0,1])
-                col += 1
-            
-            row += 1
-        observation = np.transpose(observation)
-        #print('observation interpolated')
-        #print(observation)
+
+        row = 0
+        for battery_energy in observation_battery_energies:
+            observation_battery_energies[row] = interp(observation_battery_energies[row],[self.battery_energy_min,self.battery_energy_max],[0,1])
+            row+=1
+        
+        observation_channel_gains = np.array(observation_channel_gains).squeeze()
+      
+        #observation_channel_gains = np.transpose(observation_channel_gains)
+        #observation_battery_energies = np.transpose(observation_battery_energies)
+        observation = np.column_stack((observation_channel_gains,observation_battery_energies)) #observation_channel_gains.
+        
 
         done = self.check_timestep()
         dones = [0 for element in range(len(self.eMBB_Users) - 1)]
@@ -268,6 +269,15 @@ class NetworkEnv(gym.Env):
         #print(' ')
         
         #print('dones: ', dones)
+          # Penalize for having multiple users on the same RB 
+        if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
+            row = 0
+            for item in reward:
+                if item > 0: 
+                    reward[row] = 0
+                row+=1
+            dones[len(dones)-1] = 1
+
         return observation,reward,dones,info
     
     def reset(self):
@@ -290,10 +300,11 @@ class NetworkEnv(gym.Env):
         self.latency_requirement_max = self.eMBB_UE_1.max_allowable_latency
         self.cpu_frequency_max = self.eMBB_UE_1.max_cpu_frequency
         self.cpu_frequency_min = self.eMBB_UE_1.min_cpu_frequency
-
+       
         for eMBB_User in self.eMBB_Users:
-            eMBB_User.set_properties_UE()
+            #eMBB_User.set_properties_UE()
             eMBB_User.set_properties_eMBB()
+            eMBB_User.collect_state()
 
         for URLLC_User in self.URLLC_Users:
             URLLC_User.set_properties_UE()
@@ -309,9 +320,11 @@ class NetworkEnv(gym.Env):
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_RBs()
         info = {'reward': 0}
-        self.SBS1.collect_state_space(self.eMBB_Users)
         #print('battery enegy: ', self.SBS1.system_state_space[4])
-        observation = np.array(self.SBS1.system_state_space, dtype=np.float32)
+        observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
+        
+        #observation_channel_gains = np.array(observation_channel_gains, dtype=np.float32)
+        #observation_battery_energies = np.array(observation_battery_energies, dtype=np.float32)
         #print('Observation before transpose')
         #print(np.transpose(observation))
         #normalize observation values to a range between 0 and 1 using interpolation
@@ -319,36 +332,23 @@ class NetworkEnv(gym.Env):
         col = 0
         min_value = 0
         max_value = 0
-        for observation_type in observation:
-            if row == self.OS_channel_gain_label:
-                min_value = self.channel_gain_min
-                max_value = self.channel_gain_max
+        for channel_gains in observation_channel_gains:
+            for channel_gain in channel_gains:
+                observation_channel_gains[row][col] = interp(observation_channel_gains[row][col],[self.channel_gain_min,self.channel_gain_max],[0,1])
+                col+=1
 
-            #elif row == self.OS_comm_queue_label:
-            #    min_value = self.communication_queue_min
-            #    max_value = self.communication_queue_max
-
-            elif row == self.OS_battery_energy_label:
-                min_value = self.battery_energy_min
-                max_value = self.battery_energy_max
-
-            #elif row == self.OS_latency_label:
-            #    min_value = self.latency_requirement_min
-            #    max_value = self.latency_requirement_max
-
-            #elif row == self.OS_cpu_frequency_label:
-            #    min_value = self.cpu_frequency_min
-            #    max_value = self.cpu_frequency_max
-
+            row+=1
             col = 0
-            for user in observation_type:
-                observation[row][col] = interp(observation[row][col],[min_value,max_value],[0,1])
-                col += 1
-            
-            row += 1
-        observation = np.transpose(observation)
-        #print('observation interpolated')
-        #print(observation)
+
+        row = 0
+        for battery_energy in observation_battery_energies:
+            observation_battery_energies[row] = interp(observation_battery_energies[row],[self.battery_energy_min,self.battery_energy_max],[0,1])
+            row+=1
+        
+        #observation_channel_gains = np.transpose(observation_channel_gains)
+        #observation_battery_energies = np.transpose(observation_battery_energies)
+        observation = np.column_stack((observation_channel_gains,observation_battery_energies)) #observation_channel_gains.
+       
         reward = 0
         done = 0
         return observation

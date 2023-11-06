@@ -27,8 +27,15 @@ class Communication_Channel():
         for RB in range(1,self.num_RB + 1):
             self.RB_eMBB_mappings.append([RB,0])
 
-    def allocate_RBs_eMBB(self,eMBB_Users,number_of_RBs_action):
-        self.number_of_RBs_available = self.num_allocate_RBs_upper_bound
+    def allocate_RBs_eMBB(self,eMBB_Users,RB_allocation):
+        #self.number_of_RBs_available = self.num_allocate_RBs_upper_bound
+
+        count = 0
+        for eMBB_User in eMBB_Users:
+            eMBB_User.allocated_RBs = []
+            eMBB_User.allocated_RBs = RB_allocation[count]
+            count+=1
+        '''
         index = 0
         for eMBB_User in eMBB_Users:
             eMBB_User.allocated_RBs.clear()
@@ -44,6 +51,7 @@ class Communication_Channel():
             self.allocated_RBs.append(len(eMBB_User.allocated_RBs))
 
         #print('Allocated RBs: ', self.allocated_RBs)
+        '''
 
     def set_properties(self):
         self.system_bandwidth_Hz = 120*math.pow(10,6)

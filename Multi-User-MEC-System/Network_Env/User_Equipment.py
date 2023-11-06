@@ -44,7 +44,7 @@ class User_Equipment():
         self.achieved_SNIR = 0
         self.task_profile = []
         self.distance_from_SBS = 0
-        self.total_gain = 0
+        #self.total_gain = np.zeros(self.communication_channel.num_allocate_RBs_upper_bound)
         self.has_transmitted_this_time_slot = False
         self.communication_queue = []
         self.energy_consumption_coefficient = math.pow(10,-15)
