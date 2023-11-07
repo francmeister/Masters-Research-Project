@@ -133,6 +133,10 @@ class NetworkEnv(gym.Env):
 
         box_actions = np.array(box_actions)
         binary_actions = np.array(binary_actions)
+        print('box actions')
+        print(box_actions)
+        print('binary actions')
+        print(binary_actions)
 
         binary_actions = binary_actions.reshape(1,self.number_of_users * self.num_allocate_RB_upper_bound).squeeze()
 
