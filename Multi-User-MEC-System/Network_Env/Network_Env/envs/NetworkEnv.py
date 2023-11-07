@@ -158,7 +158,7 @@ class NetworkEnv(gym.Env):
         #.self.selected_actions =
         #  []
         #print(action)
-        self.reshape_action_space_for_model(action)
+        #self.reshape_action_space_for_model(action)
         box_action = np.array(action['box_actions'])
         #print(" ")
         #print("Action before interpolation")
