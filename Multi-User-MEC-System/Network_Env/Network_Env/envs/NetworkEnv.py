@@ -108,10 +108,6 @@ class NetworkEnv(gym.Env):
         self.total_action_space = []
 
         self.action_space_dim_1 = self.box_action_space.shape[1] + self.num_allocate_RB_upper_bound
-        print('self.box_action_space.shape[1]')
-        print(self.box_action_space.shape[1])   
-        print('self.binary_action_space.shape[0]') 
-        print(self.binary_action_space.shape[0])
 
         self.STEP_LIMIT = 25
         self.sleep = 0
@@ -129,8 +125,6 @@ class NetworkEnv(gym.Env):
         
 
     def reshape_action_space_from_model_to_dict(self,action):
-        print('action')
-        print(action)
         box_actions = []
         binary_actions = []
         for user_action in action:
@@ -139,10 +133,6 @@ class NetworkEnv(gym.Env):
 
         box_actions = np.array(box_actions)
         binary_actions = np.array(binary_actions)
-        print('box actions')
-        print(box_actions)
-        print('binary actions')
-        print(binary_actions)
 
         binary_actions = binary_actions.reshape(1,self.number_of_users * self.num_allocate_RB_upper_bound).squeeze()
 
