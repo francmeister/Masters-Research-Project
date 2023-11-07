@@ -125,6 +125,8 @@ class NetworkEnv(gym.Env):
         
 
     def reshape_action_space_from_model_to_dict(self,action):
+        print('action')
+        print(action)
         box_actions = []
         binary_actions = []
         for user_action in action:
