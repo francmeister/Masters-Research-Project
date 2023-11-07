@@ -108,6 +108,8 @@ class NetworkEnv(gym.Env):
         self.total_action_space = []
 
         self.action_space_dim_1 = self.box_action_space.shape[1] + self.num_allocate_RB_upper_bound
+        self.action_space_high = 1
+        self.action_space_low = 0
 
         self.STEP_LIMIT = 25
         self.sleep = 0
