@@ -107,7 +107,7 @@ class NetworkEnv(gym.Env):
         self.observation_space = spaces.Box(low=observation_space_low, high=observation_space_high)
         self.total_action_space = []
 
-        self.action_space_dim_1 = self.box_action_space.shape[1] + self.binary_action_space.shape[0] 
+        self.action_space_dim_1 = self.box_action_space.shape[1] + self.num_allocate_RB_upper_bound
         print('self.box_action_space.shape[1]')
         print(self.box_action_space.shape[1])   
         print('self.binary_action_space.shape[0]') 
