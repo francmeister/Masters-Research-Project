@@ -51,7 +51,7 @@ class ResourceAllocationEnv(gym.Env):
 # Example usage
 if __name__ == "__main__":
     num_users = 4
-    num_resource_blocks = 10
+    num_resource_blocks = 6
 
     env = ResourceAllocationEnv(num_users, num_resource_blocks)
     obs = env.reset()
