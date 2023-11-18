@@ -330,8 +330,12 @@ class NetworkEnv(gym.Env):
             self.sum_allocations_per_RB_matrix = sum_allocations_per_RB_matrix
             penalty_accumulation = 0
             for sum_allocations_per_RB in sum_allocations_per_RB_matrix:
-                if sum_allocations_per_RB > 0:
+                if sum_allocations_per_RB >= 1:
                     penalty_accumulation += ((sum_allocations_per_RB-1)*penalty_per_RB)
+
+                elif sum_allocations_per_RB == 0:
+                    penalty_accumulation += ((1-sum_allocations_per_RB)*penalty_per_RB)
+            
 
            
 
