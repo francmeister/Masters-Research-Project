@@ -48,6 +48,7 @@ class NetworkEnv(gym.Env):
         self.offload_decisions = []
         self.selected_actions = []
         self.rewards = []
+        self.sum_allocations_per_RB_matrix = []
 
         #Define upper and lower bounds of observation and action spaces
         
@@ -326,6 +327,7 @@ class NetworkEnv(gym.Env):
         if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
            
             sum_allocations_per_RB_matrix = np.sum(resource_block_action_matrix, axis=0)
+            self.sum_allocations_per_RB_matrix = sum_allocations_per_RB_matrix
             penalty_accumulation = 0
             for sum_allocations_per_RB in sum_allocations_per_RB_matrix:
                 if sum_allocations_per_RB > 0:
