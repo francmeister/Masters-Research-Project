@@ -138,7 +138,7 @@ class SBS():
             #if eMBB_User_energy_consumption == 0:
             #    individual_reward = 0
             #else:
-            individual_reward = energy_efficiency_reward + battery_energy_reward + queue_delay_reward 
+            individual_reward = energy_efficiency_reward #+ battery_energy_reward + queue_delay_reward 
       
             self.achieved_system_reward += individual_reward
             self.individual_rewards.append(individual_reward)
@@ -146,7 +146,7 @@ class SBS():
             self.energy_efficiency_rewards+=energy_efficiency_reward
             self.energy_rewards+=battery_energy_reward
             self.throughput_rewards+=throughput_reward
-            self.delay_rewards+=delay_reward
+            self.delay_rewards+=queue_delay_reward
 
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)

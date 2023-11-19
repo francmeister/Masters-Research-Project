@@ -12,7 +12,7 @@ from numpy import interp
 env = gym.make('NetworkEnv-v0')
 
 #timesteps = 5
-timesteps = np.arange(0,10,1)
+timesteps = np.arange(0,8000,1)
 rewards = []
 offload_decisions = []
 RB_allocations = []
@@ -57,13 +57,14 @@ for timestep in timesteps:
     observation,reward,dones,info = env.step(action)
     
     #print(observation)
-    throughputs.append(env.total_rate)
+    throughputs.append(env.eMBB_UE_1.achieved_channel_rate)
     energies.append(env.total_energy)
     fiarness_index.append(env.SBS1.fairness_index)
     battery_energies.append(env.eMBB_UE_1.battery_energy_level)
     energies_harvested.append(env.eMBB_UE_1.energy_harvested)
     energy_consumed.append(env.eMBB_UE_1.achieved_total_energy_consumption)
-    channel_gains.append(env.eMBB_UE_1.total_gain)
+    channel_gains.append(sum(env.eMBB_UE_1.total_gain[0]))
+    power_allocations.append(env.eMBB_UE_1.assigned_transmit_power_W)
     #print('action: ', action)
     #print('reward: ', reward)
     rewards.append(reward[0])
@@ -71,6 +72,18 @@ for timestep in timesteps:
 
 
     #throughputs.append(reward[0])
+
+throughputs = np.roll(throughputs,-1)
+power_allocations = np.roll(power_allocations,-1)
+data = {
+    'channel_gains':channel_gains,
+    'transmit_powers':power_allocations,
+    'achieved_throughputs':throughputs
+}
+df = pd.DataFrame(data=data)
+print(df)
+corr = df.corr(method='pearson')
+print(corr)
 print('max offload energy: ', max(rewards), 'local offload: ', min(rewards))
 #print(energy_consumed)
 #print(rewards)

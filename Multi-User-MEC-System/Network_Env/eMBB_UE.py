@@ -155,7 +155,7 @@ class eMBB_UE(User_Equipment):
 
         #Specify slot task size, computation cycles and latency requirement
         #self.task_arrival_rate_tasks_per_second = random.randint(self.min_task_arrival_rate_tasks_per_second,self.max_task_arrival_rate_tasks_per_second)
-        self.task_arrival_rate_tasks_per_second = np.random.poisson(5,1)
+        self.task_arrival_rate_tasks_per_second = np.random.poisson(25,1)#np.random.poisson(5,1)
         self.task_arrival_rate_tasks_per_second = self.task_arrival_rate_tasks_per_second[0]
         qeueu_timer = 0
 
@@ -234,6 +234,9 @@ class eMBB_UE(User_Equipment):
             #print(df)
             #print(' ')
 
+            #print('self.allocated_offloading_ratio')
+            #print(self.allocated_offloading_ratio)
+            #print('')
             for x in range(0,self.task_arrival_rate_tasks_per_second):
                 packet_dec = self.task_queue[x].bits
                 self.QOS_requirement_for_transmission = self.task_queue[x].QOS_requirement
@@ -241,12 +244,17 @@ class eMBB_UE(User_Equipment):
                 packet_size = len(packet_bin)
                 self.packet_offload_size_bits = int(self.allocated_offloading_ratio*packet_size)
                 self.packet_local_size_bits = int((1-self.allocated_offloading_ratio)*packet_size)
-    
-                local_task = Task(330,self.packet_local_size_bits,self.task_queue[x].QOS_requirement,self.task_queue[x].queue_timer,self.task_queue[x].task_identifier)
-                offload_task = Task(330,self.packet_offload_size_bits,self.task_queue[x].QOS_requirement,self.task_queue[x].queue_timer,self.task_queue[x].task_identifier)
 
-                self.local_queue.append(local_task)
-                self.communication_queue.append(offload_task)
+                if self.packet_local_size_bits > 0:
+                    local_task = Task(330,self.packet_local_size_bits,self.task_queue[x].QOS_requirement,self.task_queue[x].queue_timer,self.task_queue[x].task_identifier)
+                    self.local_queue.append(local_task)
+
+                if self.packet_offload_size_bits > 0:
+                    offload_task = Task(330,self.packet_offload_size_bits,self.task_queue[x].QOS_requirement,self.task_queue[x].queue_timer,self.task_queue[x].task_identifier)
+                    self.communication_queue.append(offload_task)
+
+                
+                
 
                 #self.offloaded_packet = random.getrandbits(self.packet_offload_size_bits)
                 #self.has_transmitted_this_time_slot = True
@@ -316,14 +324,16 @@ class eMBB_UE(User_Equipment):
         count = 0
 
         if self.battery_energy_level > 0:
-            for RB_indicator in self.allocated_RBs:
-                RB_channel_gain = self.total_gain[0][count]
-                achieved_RB_channel_rate = self.calculate_channel_rate(communication_channel,RB_indicator,RB_channel_gain)
-                achieved_RB_channel_rates.append(achieved_RB_channel_rate)
-
-            self.achieved_channel_rate = sum(achieved_RB_channel_rates)
-            min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
-            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,15000],[0,1])    
+             for RB_indicator in self.allocated_RBs:
+                 RB_channel_gain = self.total_gain[0][count]
+                 achieved_RB_channel_rate = self.calculate_channel_rate(communication_channel,RB_indicator,RB_channel_gain)
+                 achieved_RB_channel_rates.append(achieved_RB_channel_rate)
+                 count += 1
+             self.achieved_channel_rate = sum(achieved_RB_channel_rates)
+             min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
+             self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,15000],[0,1])   
+        # 
+         
         '''
         if (len(self.allocated_RBs)  > 0) and (self.battery_energy_level > 0):
             for RB in self.allocated_RBs:
@@ -481,7 +491,7 @@ class eMBB_UE(User_Equipment):
             #print(' ')
 
         self.check_completed_tasks()
-            
+        #self.achieved_transmission_delay = 1
         self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*self.achieved_transmission_delay
         #print('self.achieved_transmission_energy_consumption: ', self.achieved_transmission_energy_consumption)
         #self.achieved_transmission_energy_consumption = interp(self.achieved_transmission_energy_consumption,[0,12*math.pow(10,-5)],[0,100])
@@ -490,7 +500,7 @@ class eMBB_UE(User_Equipment):
         #min_offloading_delay, max_offloading_delay = self.min_max_achievable_offload_delay(communication_channel)
         #print('min offload delay: ', min_offloading_delay, ' max offload delay: ', max_offloading_delay)
         #self.achieved_transmission_energy_consumption = interp(self.achieved_transmission_energy_consumption,[min_offload_energy_consumption,max_offload_energy_consumption],[0,5000])
-        self.achieved_transmission_delay = 1#interp(self.achieved_transmission_delay,[min_offloading_delay,max_offloading_delay],[0,5000])
+        #self.achieved_transmission_delay = 1#interp(self.achieved_transmission_delay,[min_offloading_delay,max_offloading_delay],[0,5000])
         #print('offload delay: ', self.achieved_transmission_delay)
         #print('transmission energy consumed: ', self.achieved_transmission_energy_consumption)
     
@@ -543,9 +553,11 @@ class eMBB_UE(User_Equipment):
 
         sum_latency = 0
         for completed_task in self.completed_tasks:
-            sum_latency+= (completed_task.QOS_requirement.max_allowable_latency - completed_task.queue_timer)
+            if completed_task.QOS_requirement.max_allowable_latency < completed_task.queue_timer:
+                sum_latency+= (completed_task.QOS_requirement.max_allowable_latency - completed_task.queue_timer)
 
         self.queuing_delay = sum_latency
+        #print('self.queuing_delay', self.queuing_delay)
         
 
     def total_energy_consumed(self):
@@ -656,7 +668,7 @@ class eMBB_UE(User_Equipment):
             #energy_efficiency = self.achieved_total_energy_consumption_normalized 
             
         min_energy_efficiency = 0
-        max_energy_efficiency = 500
+        max_energy_efficiency = 60
         energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[0,1])
         return energy_efficiency
     
@@ -698,7 +710,7 @@ class eMBB_UE(User_Equipment):
         else:
             energy_reward_normalized = -0.2
 
-        return energy_reward_normalized
+        return energy_reward
     
     def increment_task_queue_timers(self):
         if len(self.task_queue) > 0:
@@ -714,12 +726,17 @@ class eMBB_UE(User_Equipment):
                 offload_task.increment_queue_timer()
 
     def queueing_delay_reward(self):
-        if self.queuing_delay > 0:
-            qeueuing_delay_reward = 1
-        else:
-            qeueuing_delay_reward = -1#self.queuing_delay
+        min_queueing_delay = -3000
+        max_queueing_delay = 0
+        
+        qeueuing_delay_reward = interp(self.queuing_delay,[min_queueing_delay,max_queueing_delay],[0,1])
 
-        return qeueuing_delay_reward
+        #if self.queuing_delay > 0:
+        #    qeueuing_delay_reward = 1
+        #else:
+        #    #qeueuing_delay_reward = -1#self.queuing_delay
+
+        return  qeueuing_delay_reward#eueuing_delay_reward
         
 
         
