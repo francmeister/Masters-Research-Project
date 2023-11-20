@@ -358,7 +358,7 @@ class NetworkEnv(gym.Env):
                     penalty_accumulation += ((sum_allocations_per_RB-1)*penalty_per_RB)
 
                 elif sum_allocations_per_RB == 0:
-                    penalty_accumulation += -0.5#((1-sum_allocations_per_RB)*penalty_per_RB)
+                    penalty_accumulation += -0.2#((1-sum_allocations_per_RB)*penalty_per_RB)
 
                 elif sum_allocations_per_RB == 1:
                     penalty_accumulation += 0.5
