@@ -364,47 +364,36 @@ class NetworkEnv(gym.Env):
         self.rewards.append(reward[0])
         #print(' ')
         
-        #penalty_per_RB = -(1/self.num_allocate_RB_upper_bound)
-        positive_penalty_for_resource_allocation = 5
-        negative_penalty_for_resource_allocation = -5
-        resource_allocation_penalty = 0
-        # if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
+        penalty_per_RB = -(1/self.num_allocate_RB_upper_bound)
+      
+        if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
            
-        #     sum_allocations_per_RB_matrix = np.sum(resource_block_action_matrix, axis=0)
-        #     self.sum_allocations_per_RB_matrix = sum_allocations_per_RB_matrix
-        #     penalty_accumulation = 0
-        #     for sum_allocations_per_RB in sum_allocations_per_RB_matrix:
-        #         if sum_allocations_per_RB >= 1:
-        #             penalty_accumulation += ((sum_allocations_per_RB-1)*penalty_per_RB)
-
-        #         elif sum_allocations_per_RB == 0:
-        #             penalty_accumulation += -0.2#((1-sum_allocations_per_RB)*penalty_per_RB)
-
-        #         elif sum_allocations_per_RB == 1:
-        #             penalty_accumulation += 0.5
+            sum_allocations_per_RB_matrix = np.sum(resource_block_action_matrix, axis=0)
+            self.sum_allocations_per_RB_matrix = sum_allocations_per_RB_matrix
+            penalty_accumulation = 0
+            for sum_allocations_per_RB in sum_allocations_per_RB_matrix:
+                if sum_allocations_per_RB >= 1:
+                    penalty_accumulation += ((sum_allocations_per_RB-1)*penalty_per_RB)
+                elif sum_allocations_per_RB == 0:
+                    penalty_accumulation += -0.2#((1-sum_allocations_per_RB)*penalty_per_RB)
+                elif sum_allocations_per_RB == 1:
+                    penalty_accumulation += 0.5
 
             
 
-        #     #penalty_accumulation = interp(penalty_accumulation,[-1,0],[-1,5])
+             #penalty_accumulation = interp(penalty_accumulation,[-1,0],[-1,5])
 
-        # elif np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
-        #     sum_allocations_per_RB_matrix = np.sum(resource_block_action_matrix, axis=0)
-        #     self.sum_allocations_per_RB_matrix = sum_allocations_per_RB_matrix
-        #     penalty_accumulation = 0
-        #     for x in range(0,self.num_allocate_RB_upper_bound):
-        #         penalty_accumulation += 0.5
-        #print(resource_block_action_matrix)
-        #print(np.all(np.sum(resource_block_action_matrix, axis=0) == 1))
-        if np.all(np.sum(resource_block_action_matrix, axis=0) == 1):
-            resource_allocation_penalty = positive_penalty_for_resource_allocation
-    
-        else:
-            resource_allocation_penalty = negative_penalty_for_resource_allocation 
-    
+        elif np.all(np.sum(resource_block_action_matrix, axis=0) == 1):
+            sum_allocations_per_RB_matrix = np.sum(resource_block_action_matrix, axis=0)
+            self.sum_allocations_per_RB_matrix = sum_allocations_per_RB_matrix
+            penalty_accumulation = 0
+            for x in range(0,self.num_allocate_RB_upper_bound):
+                penalty_accumulation += 0.5
+
         row = 0
         for item in reward:
             if item > 0: 
-                reward[row] = resource_allocation_penalty
+                reward[row] = penalty_accumulation
             row+=1
             #dones[len(dones)-1] = 1
       
