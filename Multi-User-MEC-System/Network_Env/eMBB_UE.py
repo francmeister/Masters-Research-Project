@@ -669,7 +669,7 @@ class eMBB_UE(User_Equipment):
             
         min_energy_efficiency = 0
         max_energy_efficiency = 250
-        energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[0,1])
+        #energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[0,1])
         return energy_efficiency
     
     def calculate_throughput_reward(self,communication_channel):
