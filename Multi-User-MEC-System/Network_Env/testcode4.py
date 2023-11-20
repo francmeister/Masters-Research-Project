@@ -44,6 +44,8 @@ env.reset()
 #expl_noise = 0.5
 for timestep in timesteps:
     action = env.action_space.sample()
+    #action = env.enforce_constraint(action)
+    #print(action)
     #print(action)
     
     #print(timestep)

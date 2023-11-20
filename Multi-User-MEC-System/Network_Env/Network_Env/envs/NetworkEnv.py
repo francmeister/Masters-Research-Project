@@ -181,9 +181,6 @@ class NetworkEnv(gym.Env):
         binary_actions = action['binary_actions']
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
 
-        action_ = self.enforce_constraint(action)
-        binary_actions = action_['binary_actions']
-        resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
         #print(resource_block_action_matrix)
         #print(' ')
         # done_sampling = True
@@ -396,7 +393,9 @@ class NetworkEnv(gym.Env):
         #     penalty_accumulation = 0
         #     for x in range(0,self.num_allocate_RB_upper_bound):
         #         penalty_accumulation += 0.5
-        if not np.all(np.sum(resource_block_action_matrix, axis=0) == 1):
+        #print(resource_block_action_matrix)
+        #print(np.all(np.sum(resource_block_action_matrix, axis=0) == 1))
+        if np.all(np.sum(resource_block_action_matrix, axis=0) == 1):
             resource_allocation_penalty = positive_penalty_for_resource_allocation
     
         else:
