@@ -390,11 +390,11 @@ class NetworkEnv(gym.Env):
             for x in range(0,self.num_allocate_RB_upper_bound):
                 penalty_accumulation += 0.8
 
-        row = 0
-        for item in reward:
-            if item > 0: 
-                reward[row] = penalty_accumulation
-            row+=1
+        # row = 0
+        # for item in reward:
+        #     if item > 0: 
+        #         reward[row] = penalty_accumulation
+        #     row+=1
           #dones[len(dones)-1] = 1
       
         #print(reward)
