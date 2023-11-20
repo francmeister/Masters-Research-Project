@@ -379,7 +379,7 @@ class NetworkEnv(gym.Env):
             row+=1
             #dones[len(dones)-1] = 1
       
-        print(reward)
+        #print(reward)
         return observation,reward,dones,info
     
     def reset(self):
