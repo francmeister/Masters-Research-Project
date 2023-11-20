@@ -166,17 +166,17 @@ class NetworkEnv(gym.Env):
         binary_actions = action['binary_actions']
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
 
-        done_sampling = True
-        if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
-            while done_sampling:
-                action = self.action_space.sample()
-                box_action = np.array(action['box_actions'])
-                binary_actions = action['binary_actions']
-                resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
-                if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
-                    done_sampling = True
-                else:
-                    done_sampling = False
+        # done_sampling = True
+        # if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
+        #     while done_sampling:
+        #         action = self.action_space.sample()
+        #         box_action = np.array(action['box_actions'])
+        #         binary_actions = action['binary_actions']
+        #         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
+        #         if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
+        #             done_sampling = True
+        #         else:
+        #             done_sampling = False
 
         #print(resource_block_action_matrix)
         #print(" ")
@@ -347,8 +347,39 @@ class NetworkEnv(gym.Env):
         self.rewards.append(reward[0])
         #print(' ')
         
+        penalty_per_RB = -(1/self.num_allocate_RB_upper_bound)
+        if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
+           
+            sum_allocations_per_RB_matrix = np.sum(resource_block_action_matrix, axis=0)
+            self.sum_allocations_per_RB_matrix = sum_allocations_per_RB_matrix
+            penalty_accumulation = 0
+            for sum_allocations_per_RB in sum_allocations_per_RB_matrix:
+                if sum_allocations_per_RB >= 1:
+                    penalty_accumulation += ((sum_allocations_per_RB-1)*penalty_per_RB)
 
- 
+                elif sum_allocations_per_RB == 0:
+                    penalty_accumulation += -0.5#((1-sum_allocations_per_RB)*penalty_per_RB)
+
+                elif sum_allocations_per_RB == 1:
+                    penalty_accumulation += 0.5
+
+            
+
+            #penalty_accumulation = interp(penalty_accumulation,[-1,0],[-1,5])
+
+        else:
+            penalty_accumulation = 0
+            for x in range(0,self.num_allocate_RB_upper_bound):
+                penalty_accumulation += 0.5
+
+        row = 0
+        for item in reward:
+            if item > 0: 
+                reward[row] = penalty_accumulation
+            row+=1
+            #dones[len(dones)-1] = 1
+      
+        print(reward)
         return observation,reward,dones,info
     
     def reset(self):
@@ -433,8 +464,8 @@ class NetworkEnv(gym.Env):
 
         #Users
         self.eMBB_UE_1 = eMBB_UE(1,100,600)
-        #self.eMBB_UE_2 = eMBB_UE(2,100,600)
-        #self.eMBB_UE_3 = eMBB_UE(3,100,600)
+        self.eMBB_UE_2 = eMBB_UE(2,100,600)
+        self.eMBB_UE_3 = eMBB_UE(3,100,600)
 
         #Communication Channel
         self.Communication_Channel_1 = Communication_Channel(self.SBS1.SBS_label)
@@ -452,8 +483,8 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        #self.eMBB_Users.append(self.eMBB_UE_2)
-        #self.eMBB_Users.append(self.eMBB_UE_3)
+        self.eMBB_Users.append(self.eMBB_UE_2)
+        self.eMBB_Users.append(self.eMBB_UE_3)
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:
