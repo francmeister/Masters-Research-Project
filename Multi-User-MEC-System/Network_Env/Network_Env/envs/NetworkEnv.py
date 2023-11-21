@@ -247,7 +247,7 @@ class NetworkEnv(gym.Env):
         #collect the final action - number of URLLC users per RB
         
         #print('Action after interpolation transposed')
-        #offload_decisions_actions_mapped = [0]#[0, 0, 0.5, 0.5, 1, 1, 1]
+        #offload_decisions_actions_mapped = [1]#[0, 0, 0.5, 0.5, 1, 1, 1]
         #transmit_power_actions_mapped = [65]#,20,20,20,20,20,20]
         #RB_allocation_actions_mapped = [6]#,10,15,15,20,20,20]
         #number_URLLC_Users_per_RB_action_mapped = 3
@@ -286,14 +286,14 @@ class NetworkEnv(gym.Env):
         for eMBB_User in self.eMBB_Users:
             eMBB_User.increment_task_queue_timers()
             eMBB_User.split_tasks()
-
+        
         for eMBB_User in self.eMBB_Users:
-            if eMBB_User.has_transmitted_this_time_slot == True:
-                eMBB_User.transmit_to_SBS(self.Communication_Channel_1)
-                eMBB_User.local_processing()
-                eMBB_User.offloading(self.Communication_Channel_1)
-                eMBB_User.total_energy_consumed()
-                eMBB_User.total_processing_delay()
+            #if eMBB_User.has_transmitted_this_time_slot == True:
+            eMBB_User.transmit_to_SBS(self.Communication_Channel_1)
+            eMBB_User.local_processing()
+            eMBB_User.offloading(self.Communication_Channel_1)
+            eMBB_User.total_energy_consumed()
+            eMBB_User.total_processing_delay()
 
         self.SBS1.receive_offload_packets(self.eMBB_Users)
         self.SBS1.calculate_achieved_total_system_energy_consumption(self.eMBB_Users)
@@ -482,8 +482,8 @@ class NetworkEnv(gym.Env):
 
         #Users
         self.eMBB_UE_1 = eMBB_UE(1,100,600)
-        self.eMBB_UE_2 = eMBB_UE(2,100,600)
-        self.eMBB_UE_3 = eMBB_UE(3,100,600)
+        #self.eMBB_UE_2 = eMBB_UE(2,100,600)
+        #self.eMBB_UE_3 = eMBB_UE(3,100,600)
 
         #Communication Channel
         self.Communication_Channel_1 = Communication_Channel(self.SBS1.SBS_label)
@@ -501,8 +501,8 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        self.eMBB_Users.append(self.eMBB_UE_2)
-        self.eMBB_Users.append(self.eMBB_UE_3)
+        #self.eMBB_Users.append(self.eMBB_UE_2)
+        #self.eMBB_Users.append(self.eMBB_UE_3)
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:

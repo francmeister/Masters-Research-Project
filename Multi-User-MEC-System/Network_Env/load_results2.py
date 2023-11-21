@@ -29,23 +29,22 @@ subcarrier_actions_ = subcarrier_actions[range_start:range_finish]
 
 print(len(timesteps))
 
-#figure, axis = plt.subplots(4,1)
-plt.plot(timesteps_, rewards_,color = "blue")
+figure, axis = plt.subplots(3,1)
+#plt.plot(timesteps_, rewards_,color = "blue")
 
-'''
-axis[0].plot(timesteps_, energies_)
+
+axis[0].plot(timesteps, energies)
 axis[0].set_title('energy reward')
 
-axis[1].plot(timesteps_, throughputs_)
-axis[1].set_title('throughputs reward')
+axis[1].plot(timesteps, rewards)
+axis[1].set_title('total reward')
 
-axis[2].plot(timesteps_, rewards_)
-axis[2].set_title('total reward')
+axis[2].scatter(timesteps, offload_actions)
+axis[2].set_title('offlaoding actions')
 
-axis[3].plot(timesteps_, fairness_index_)
-axis[3].set_title('fairness index')
-'''
 
+# axis[3].scatter(timesteps, power_actions)
+# axis[3].set_title('power actions')
 
 '''
 axis[3].plot(timesteps_, fairness_index_)

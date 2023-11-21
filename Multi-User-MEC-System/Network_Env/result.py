@@ -6,4 +6,4 @@ timesteps = np.load('TD3_NetworkEnv-v0_0.npy')
 print(len(result))
 print(len(timesteps))
 
-print(result[300:400])
+print(result)

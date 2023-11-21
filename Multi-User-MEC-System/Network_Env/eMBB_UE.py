@@ -323,7 +323,7 @@ class eMBB_UE(User_Equipment):
         #print('number of allocated RBs: ', len(self.allocate(d_RBs))
         count = 0
 
-        if self.battery_energy_level > 0:
+        if self.battery_energy_level > 0 and self.has_transmitted_this_time_slot == True:
              for RB_indicator in self.allocated_RBs:
                  RB_channel_gain = self.total_gain[0][count]
                  achieved_RB_channel_rate = self.calculate_channel_rate(communication_channel,RB_indicator,RB_channel_gain)
@@ -365,7 +365,7 @@ class eMBB_UE(User_Equipment):
         self.achieved_local_energy_consumption = 0
         self.dequeued_local_tasks.clear()
         counter = 0
-        
+
         for local_task in self.local_queue:
             #print('cycles left: ', cpu_cycles_left)
             #print('local_task.required_computation_cycles: ', local_task.required_computation_cycles)
@@ -561,6 +561,7 @@ class eMBB_UE(User_Equipment):
         
 
     def total_energy_consumed(self):
+       
         if self.battery_energy_level >  self.achieved_total_energy_consumption:
             self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
             self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,1000],[0,1])
@@ -668,8 +669,8 @@ class eMBB_UE(User_Equipment):
             #energy_efficiency = self.achieved_total_energy_consumption_normalized 
             
         min_energy_efficiency = 0
-        max_energy_efficiency = 250
-        #energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[0,1])
+        max_energy_efficiency = 1.5
+        energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[0,10])
         return energy_efficiency
     
     def calculate_throughput_reward(self,communication_channel):
