@@ -66,7 +66,7 @@ axis[0].set_title('energies reward')
 axis[1].plot(timesteps, rewards)
 axis[1].set_title('total reward')
 
-axis[2].plot(timesteps, offload_actions)
+axis[2].scatter(timesteps, offload_actions)
 axis[2].set_title('offlaoding actions')
 
 
