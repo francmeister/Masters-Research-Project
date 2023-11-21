@@ -60,11 +60,14 @@ figure, axis = plt.subplots(3,1)
 axis[0].plot(timesteps, energies)
 axis[0].set_title('energies reward')
 
-axis[1].plot(timesteps, throughputs)
-axis[1].set_title('throughputs reward')
+#axis[1].plot(timesteps, throughputs)
+#axis[1].set_title('throughputs reward')
 
-axis[2].plot(timesteps, rewards)
-axis[2].set_title('total reward')
+axis[1].plot(timesteps, rewards)
+axis[1].set_title('total reward')
+
+axis[2].plot(timesteps, offload_actions)
+axis[2].set_title('offlaoding actions')
 
 
 
