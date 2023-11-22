@@ -371,7 +371,7 @@ class eMBB_UE(User_Equipment):
             #print('local_task.required_computation_cycles: ', local_task.required_computation_cycles)
             if cpu_cycles_left > local_task.required_computation_cycles:
                 #print('cycles left: ', cpu_cycles_left)
-                self.achieved_local_energy_consumption += (self.energy_consumption_coefficient*math.pow(local_task.required_computation_cycles,2)*local_task.required_computation_cycles+50)
+                self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(local_task.required_computation_cycles,2)*local_task.required_computation_cycles
                 cpu_cycles_left-=local_task.required_computation_cycles
                 self.dequeued_local_tasks.append(local_task)
                 counter += 1
