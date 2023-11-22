@@ -32,7 +32,7 @@ class NetworkEnv(gym.Env):
         self.number_of_users = len(self.eMBB_Users) 
         self.num_allocate_RB_upper_bound = self.Communication_Channel_1.num_allocate_RBs_upper_bound
         self.num_allocate_RB_lower_bound = self.Communication_Channel_1.num_allocate_RBs_lower_bound
-        self.max_transmit_power_db = 1000#self.eMBB_UE_1.max_transmission_power_dBm
+        self.max_transmit_power_db = 100#self.eMBB_UE_1.max_transmission_power_dBm
         self.min_transmit_power_db = 10
         self.offload_decisions_label = 0
         self.allocate_num_RB_label = 4
@@ -248,7 +248,7 @@ class NetworkEnv(gym.Env):
         #collect the final action - number of URLLC users per RB
         
         #print('Action after interpolation transposed')
-        #offload_decisions_actions_mapped = [1]#[0, 0, 0.5, 0.5, 1, 1, 1]
+        offload_decisions_actions_mapped = [0]#[0, 0, 0.5, 0.5, 1, 1, 1]
         #transmit_power_actions_mapped = [1000]#,20,20,20,20,20,20]
         #RB_allocation_actions_mapped = [6]#,10,15,15,20,20,20]
         #number_URLLC_Users_per_RB_action_mapped = 3
