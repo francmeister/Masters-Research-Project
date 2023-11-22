@@ -331,7 +331,7 @@ class eMBB_UE(User_Equipment):
                  count += 1
              self.achieved_channel_rate = sum(achieved_RB_channel_rates)
              min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
-             self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,15000],[0,1])   
+             self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,1])   
         # 
          
         '''
@@ -665,7 +665,7 @@ class eMBB_UE(User_Equipment):
         if self.achieved_total_energy_consumption == 0:
             energy_efficiency = 0
         else:
-            energy_efficiency = self.achieved_channel_rate#/self.achieved_total_energy_consumption #0.4*self.achieved_channel_rate_normalized/0.6*self.achieved_total_energy_consumption_normalized 
+            energy_efficiency = self.achieved_channel_rate_normalized/self.achieved_total_energy_consumption_normalized#self.achieved_channel_rate#/self.achieved_total_energy_consumption #0.4*self.achieved_channel_rate_normalized/0.6*self.achieved_total_energy_consumption_normalized 
             
             #energy_efficiency = self.achieved_total_energy_consumption_normalized 
             
