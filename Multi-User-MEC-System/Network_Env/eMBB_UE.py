@@ -665,12 +665,13 @@ class eMBB_UE(User_Equipment):
         if self.achieved_total_energy_consumption == 0:
             energy_efficiency = 0
         else:
-            energy_efficiency = 1/self.achieved_total_energy_consumption#self.achieved_channel_rate/self.achieved_total_energy_consumption #0.4*self.achieved_channel_rate_normalized/0.6*self.achieved_total_energy_consumption_normalized 
+            energy_efficiency = self.achieved_channel_rate#/self.achieved_total_energy_consumption #0.4*self.achieved_channel_rate_normalized/0.6*self.achieved_total_energy_consumption_normalized 
+            
             #energy_efficiency = self.achieved_total_energy_consumption_normalized 
             
         min_energy_efficiency = 0
         max_energy_efficiency = 1.5
-        energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[0,10])
+        #energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[0,10])
         return energy_efficiency
     
     def calculate_throughput_reward(self,communication_channel):

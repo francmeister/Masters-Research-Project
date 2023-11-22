@@ -230,6 +230,7 @@ class NetworkEnv(gym.Env):
         #resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
     
         RB_allocation_actions = resource_block_action_matrix 
+      
         #RB_allocation_actions = RB_allocation_actions[0:self.number_of_eMBB_users]
         #RB_allocation_actions_mapped = []
         #print('RB_allocation_actions', RB_allocation_actions)
@@ -263,7 +264,7 @@ class NetworkEnv(gym.Env):
         #print(number_URLLC_Users_per_RB_action_mapped)
         self.offload_decisions = offload_decision_mapped
         self.powers = transmit_power_actions_mapped
-        self.subcarriers = RB_allocation_actions
+        self.subcarriers = sum(RB_allocation_actions[0])
 
         #Perform Actions
         self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
