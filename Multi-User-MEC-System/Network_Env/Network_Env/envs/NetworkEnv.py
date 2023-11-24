@@ -112,7 +112,7 @@ class NetworkEnv(gym.Env):
         self.action_space_high = 1
         self.action_space_low = 0
 
-        self.STEP_LIMIT = 35
+        self.STEP_LIMIT = 25
         self.sleep = 0
         self.steps = 0
        
