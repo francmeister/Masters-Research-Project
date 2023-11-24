@@ -12,7 +12,7 @@ from numpy import interp
 env = gym.make('NetworkEnv-v0')
 
 #timesteps = 5
-timesteps = np.arange(0,100,1)
+timesteps = np.arange(0,1000,1)
 rewards = []
 offload_decisions = []
 RB_allocations = []
@@ -100,7 +100,7 @@ print('max offload energy: ', max(rewards), 'local offload: ', min(rewards))
 #print('latencies: ', latencies)
 #print('Max Throughput: ', max(throughputs), 'Min Throughput: ', min(throughputs))
 #print(transmit_energies)
-plt.scatter(timesteps, rewards, color ="red")
+plt.plot(timesteps, rewards, color ="red")
 #plt.scatter(timesteps,local_delays,color = "blue")
 #plt.scatter(timesteps,latencies,color = "green")
 #plt.plot(offload_ratios,throughput,color = "black")

@@ -670,8 +670,8 @@ class eMBB_UE(User_Equipment):
             #energy_efficiency = self.achieved_total_energy_consumption_normalized 
             
         min_energy_efficiency = 0
-        max_energy_efficiency = 1.5
-        #energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[0,10])
+        max_energy_efficiency = 10
+        energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[50000,200000])
         return energy_efficiency
     
     def calculate_throughput_reward(self,communication_channel):
