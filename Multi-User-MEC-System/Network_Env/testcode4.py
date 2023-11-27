@@ -70,7 +70,7 @@ for timestep in timesteps:
     #print('action: ', action)
     #print('reward: ', reward)
     rewards.append(reward[0])
-    #print(reward)
+    #print(sum(reward))
     #print(env.subcarriers)
 
 

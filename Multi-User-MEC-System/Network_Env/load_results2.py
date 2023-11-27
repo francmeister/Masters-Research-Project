@@ -40,7 +40,7 @@ figure, axis = plt.subplots(4,1)
 #plt.plot(timesteps_, rewards_,color = "blue")
 
 
-axis[0].scatter(timesteps, throughputs)
+axis[0].plot(timesteps, throughputs)
 axis[0].set_title('throughputs')
 
 
@@ -50,7 +50,7 @@ axis[1].set_title('energy reward')
 axis[2].plot(timesteps, rewards)
 axis[2].set_title('total reward')
 
-axis[3].scatter(timesteps, fairness_index)
+axis[3].plot(timesteps, fairness_index)
 axis[3].set_title('fairness index')
 
 
