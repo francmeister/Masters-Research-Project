@@ -402,7 +402,7 @@ class NetworkEnv(gym.Env):
             reward[row] = penalty_accumulation
             row+=1
         #dones[len(dones)-1] = 1
-     
+        print(reward)
         return observation,reward,dones,info
     
     def reset(self):
