@@ -369,11 +369,9 @@ class NetworkEnv(gym.Env):
         
         penalty_per_RB = -(1/self.num_allocate_RB_upper_bound)
         penalty_accumulation = 0
-        print(np.sum(resource_block_action_matrix, axis=0))
+        sum_allocations_per_RB_matrix = np.sum(resource_block_action_matrix, axis=0)
+        self.sum_allocations_per_RB_matrix = sum_allocations_per_RB_matrix
         if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
-          
-            sum_allocations_per_RB_matrix = np.sum(resource_block_action_matrix, axis=0)
-            self.sum_allocations_per_RB_matrix = sum_allocations_per_RB_matrix
       
             for sum_allocations_per_RB in sum_allocations_per_RB_matrix:
                 if sum_allocations_per_RB >= 1:
@@ -389,10 +387,12 @@ class NetworkEnv(gym.Env):
         #      #penalty_accumulation = interp(penalty_accumulation,[-1,0],[-1,5])
 
         elif np.all(np.sum(resource_block_action_matrix, axis=0) == 1):
-            sum_allocations_per_RB_matrix = np.sum(resource_block_action_matrix, axis=0)
-            self.sum_allocations_per_RB_matrix = sum_allocations_per_RB_matrix
             for x in range(0,self.num_allocate_RB_upper_bound):
                 penalty_accumulation += 1
+
+        for sum_allocations_per_RB in sum_allocations_per_RB_matrix:       
+            if sum_allocations_per_RB == 0:
+                penalty_accumulation += -0.2#((1-sum_allocations_per_RB)*penalty_per_RB)
         
         #print(penalty_accumulation)
         row = 0
