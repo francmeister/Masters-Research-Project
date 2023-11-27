@@ -379,7 +379,7 @@ class NetworkEnv(gym.Env):
                 if sum_allocations_per_RB >= 1:
                     penalty_accumulation += ((sum_allocations_per_RB-1)*penalty_per_RB)
                 elif sum_allocations_per_RB == 0:
-                    penalty_accumulation += -0.2#((1-sum_allocations_per_RB)*penalty_per_RB)
+                    penalty_accumulation += -0.3#((1-sum_allocations_per_RB)*penalty_per_RB)
                 elif sum_allocations_per_RB == 1:
                     penalty_accumulation += 0.5
 
@@ -391,14 +391,14 @@ class NetworkEnv(gym.Env):
             sum_allocations_per_RB_matrix = np.sum(resource_block_action_matrix, axis=0)
             self.sum_allocations_per_RB_matrix = sum_allocations_per_RB_matrix
             for x in range(0,self.num_allocate_RB_upper_bound):
-                penalty_accumulation += 0.8
+                penalty_accumulation += 1
 
-        # row = 0
-        # for item in reward:
-        #     if item > 0: 
-        #         reward[row] = penalty_accumulation
-        #     row+=1
-          #dones[len(dones)-1] = 1
+        row = 0
+        for item in reward:
+            if item > 0: 
+                reward[row] += penalty_accumulation
+            row+=1
+        #dones[len(dones)-1] = 1
       
         #print(reward)
         return observation,reward,dones,info
