@@ -82,7 +82,7 @@ class eMBB_UE(User_Equipment):
         self.distance_from_SBS = 0
         self.has_transmitted_this_time_slot = False
         self.communication_queue = []
-        self.energy_consumption_coefficient = math.pow(10,-15)
+        self.energy_consumption_coefficient = math.pow(10,-12.3)
         self.achieved_transmission_energy_consumption = 0
         self.achieved_local_processing_delay = 0
         self.achieved_total_energy_consumption = 0
@@ -561,7 +561,7 @@ class eMBB_UE(User_Equipment):
         
 
     def total_energy_consumed(self):
-       
+        #print(self.battery_energy_level)
         if self.battery_energy_level >  self.achieved_total_energy_consumption:
             self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
             self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,1000],[0,1])
@@ -665,7 +665,7 @@ class eMBB_UE(User_Equipment):
         if self.achieved_total_energy_consumption == 0:
             energy_efficiency = 0
         else:
-            energy_efficiency = self.achieved_channel_rate_normalized/self.achieved_total_energy_consumption_normalized#self.achieved_channel_rate#/self.achieved_total_energy_consumption #0.4*self.achieved_channel_rate_normalized/0.6*self.achieved_total_energy_consumption_normalized 
+            energy_efficiency = self.achieved_total_energy_consumption_normalized#self.achieved_channel_rate_normalized/self.achieved_total_energy_consumption_normalized#self.achieved_channel_rate#/self.achieved_total_energy_consumption #0.4*self.achieved_channel_rate_normalized/0.6*self.achieved_total_energy_consumption_normalized 
             
             #energy_efficiency = self.achieved_total_energy_consumption_normalized 
             
