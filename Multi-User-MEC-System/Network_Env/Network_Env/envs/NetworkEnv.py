@@ -139,16 +139,16 @@ class NetworkEnv(gym.Env):
         binary_actions = np.array(binary_actions)
 
         binary_actions = binary_actions.reshape(1,self.number_of_users * self.num_allocate_RB_upper_bound).squeeze()
-        print(binary_actions)
+        #print(binary_actions)
         count = 0
         for binary_action in binary_actions:
             if binary_action < 0.5:
                 binary_actions[count] = 0
-            else:
+            elif binary_action >= 0.5:
                 binary_actions[count] = 1
             
             count+=1
-        print(binary_actions)
+        #print(binary_actions)
         action_space_dict = {
             'box_actions': box_actions,
             'binary_actions': binary_actions
@@ -398,7 +398,7 @@ class NetworkEnv(gym.Env):
         row = 0
         for item in reward:
             if item > 0: 
-                reward[row] += penalty_accumulation
+                reward[row] = penalty_accumulation
             row+=1
         #dones[len(dones)-1] = 1
       
