@@ -8,6 +8,9 @@ RBs_actions = np.load('subcarrier_actions.npy')
 rewards_throughput_energy = np.load('TD3_NetworkEnv-v0_0.npy')
 allocated_RBs = np.load('allocated_RBs.npy')
 fairness_index = np.load('fairnes_index.npy')
+sum_allocations_per_RB_matrix = np.load('sum_allocations_per_RB_matrix.npy')
+print(sum_allocations_per_RB_matrix[5])
+print(RBs_actions)
 
 energy_efficiency_rewards = np.load('energy_efficiency_rewards.npy')
 battery_energy_rewards = np.load('energy_rewards.npy')
@@ -55,25 +58,25 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-figure, axis = plt.subplots(6,1)
+figure, axis = plt.subplots(5,1)
 
 axis[0].plot(timesteps, throughputs)
 axis[0].set_title('throughputs reward')
 
-axis[1].plot(timesteps, energies)
-axis[1].set_title('energies reward')
+# axis[1].plot(timesteps, energies)
+# axis[1].set_title('energies reward')
 
-axis[2].plot(timesteps, rewards)
-axis[2].set_title('total reward')
+axis[1].plot(timesteps, rewards)
+axis[1].set_title('total reward')
 
-axis[3].scatter(timesteps, offload_actions)
-axis[3].set_title('offlaoding actions')
+# axis[3].scatter(timesteps, offload_actions)
+# axis[3].set_title('offlaoding actions')
 
-axis[4].scatter(timesteps, power_actions)
-axis[4].set_title('power allocation actions')
+axis[3].scatter(timesteps, power_actions)
+axis[3].set_title('power allocation actions')
 
-axis[5].scatter(timesteps, RBs_actions)
-axis[5].set_title('RB allocation actions')
+axis[4].scatter(timesteps, RBs_actions)
+axis[4].set_title('RB allocation actions')
 
 
 

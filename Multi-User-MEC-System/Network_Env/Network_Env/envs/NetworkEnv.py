@@ -49,6 +49,7 @@ class NetworkEnv(gym.Env):
         self.selected_actions = []
         self.rewards = []
         self.sum_allocations_per_RB_matrix = []
+        self.RB_allocation_matrix = []
 
         #Define upper and lower bounds of observation and action spaces
         
@@ -265,6 +266,7 @@ class NetworkEnv(gym.Env):
         self.offload_decisions = offload_decision_mapped
         self.powers = transmit_power_actions_mapped
         self.subcarriers = sum(RB_allocation_actions[0])
+        self.RB_allocation_matrix = RB_allocation_actions
 
         #Perform Actions
         self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
