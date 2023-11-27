@@ -484,11 +484,11 @@ class eMBB_UE(User_Equipment):
 
             df = pd.DataFrame(data=data)
 
-            #print('Dequeued Offload Tasks')
-            #print(df)
-            #print(' ')
-            #print('Achieved TTI channel rate: ', self.achieved_channel_rate)
-            #print(' ')
+            print('Dequeued Offload Tasks')
+            print(df)
+            print(' ')
+            print('Achieved TTI channel rate: ', self.achieved_channel_rate)
+            print(' ')
 
         self.check_completed_tasks()
         #self.achieved_transmission_delay = 1
