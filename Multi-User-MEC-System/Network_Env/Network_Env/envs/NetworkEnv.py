@@ -371,6 +371,7 @@ class NetworkEnv(gym.Env):
         penalty_accumulation = 0
         sum_allocations_per_RB_matrix = np.sum(resource_block_action_matrix, axis=0)
         self.sum_allocations_per_RB_matrix = sum_allocations_per_RB_matrix
+        print(self.sum_allocations_per_RB_matrix)
         if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
       
             for sum_allocations_per_RB in sum_allocations_per_RB_matrix:
