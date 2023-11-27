@@ -396,13 +396,13 @@ class NetworkEnv(gym.Env):
         
         #print(penalty_accumulation)
         row = 0
+      
         for item in reward:
-            if item > 0: 
-                reward[row] = penalty_accumulation
+            #if item > 0: 
+            reward[row] = penalty_accumulation
             row+=1
         #dones[len(dones)-1] = 1
-      
-        #print(reward)
+     
         return observation,reward,dones,info
     
     def reset(self):
