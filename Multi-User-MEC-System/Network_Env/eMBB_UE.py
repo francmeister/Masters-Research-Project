@@ -704,7 +704,7 @@ class eMBB_UE(User_Equipment):
     def energy_consumption_reward(self):
         energy_reward = self.battery_energy_level + self.energy_harversted - self.achieved_total_energy_consumption
 
-        max_energy_reward = 22000
+        max_energy_reward = 4000
         min_energy_reward = 0
 
         if energy_reward >= 0:
@@ -712,7 +712,7 @@ class eMBB_UE(User_Equipment):
         else:
             energy_reward_normalized = -0.2
 
-        return energy_reward
+        return energy_reward_normalized
     
     def increment_task_queue_timers(self):
         if len(self.task_queue) > 0:
