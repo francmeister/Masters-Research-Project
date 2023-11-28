@@ -39,7 +39,7 @@ class eMBB_UE(User_Equipment):
         self.min_energy_harvested = 0
         self.max_energy_harvested = 150
 
-        self.max_battery_energy = 22000
+        self.max_battery_energy = 2000#22000
         self.min_battery_energy = 0
 
         self.max_cpu_frequency = 5000
@@ -57,7 +57,7 @@ class eMBB_UE(User_Equipment):
         self.max_queue_length_number = self.calculate_max_queue_length_number(self.communication_channel,self.max_task_arrival_rate_tasks_per_second)
         self.min_queue_length = 0
 
-        self.battery_energy_level = (random.randint(15000,25000))
+        self.battery_energy_level = 2000#(random.randint(15000,25000))
 
         self.cycles_per_byte = 330
         self.cycles_per_bit = self.cycles_per_byte/8
@@ -704,9 +704,10 @@ class eMBB_UE(User_Equipment):
     def energy_consumption_reward(self):
         energy_reward = self.battery_energy_level + self.energy_harversted - self.achieved_total_energy_consumption
 
-        max_energy_reward = 4000
+        max_energy_reward = 2000
         min_energy_reward = 0
 
+        #energy_reward_normalized = 0
         if energy_reward >= 0:
             energy_reward_normalized = interp(energy_reward,[min_energy_reward,max_energy_reward],[0,1])
         else:

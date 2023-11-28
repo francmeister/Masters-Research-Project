@@ -14,7 +14,7 @@ print(RB_allocation_matrix)
 print(RBs_actions)
 
 energy_efficiency_rewards = np.load('energy_efficiency_rewards.npy')
-battery_energy_rewards = np.load('energy_rewards.npy')
+battery_energy_rewards = np.load('battery_energy_rewards.npy')
 throughput_rewards = np.load('throughput_rewards.npy')
 delay_rewards = np.load('delay_rewards.npy')
 #print(energy_efficiency_rewards)
@@ -53,31 +53,30 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.title("Line graph")
 #plt.xlabel("X axis")
 #plt.ylabel("Y axis")
-plt.plot(timesteps, rewards, color ="black")
+#plt.plot(timesteps, rewards, color ="black")
 #plt.plot(timesteps,energies,color = "blue")
 #plt.plot(timesteps,throughputs,color = "green")
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-#figure, axis = plt.subplots(5,1)
+figure, axis = plt.subplots(5,1)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
+axis[0].plot(timesteps, battery_energy_rewards)
+axis[0].set_title('battery energies reward')
 
-# axis[0].plot(timesteps, battery_energy_rewards)
-# axis[0].set_title('battery energies reward')
+axis[1].plot(timesteps, rewards)
+axis[1].set_title('total reward')
 
-# axis[1].plot(timesteps, rewards)
-# axis[1].set_title('total reward')
+axis[2].scatter(timesteps, offload_actions)
+axis[2].set_title('offlaoding actions')
 
-# axis[2].scatter(timesteps, offload_actions)
-# axis[2].set_title('offlaoding actions')
+axis[3].scatter(timesteps, power_actions)
+axis[3].set_title('power allocation actions')
 
-# axis[3].scatter(timesteps, power_actions)
-# axis[3].set_title('power allocation actions')
-
-# axis[4].scatter(timesteps, RBs_actions)
-# axis[4].set_title('RB allocation actions')
+axis[4].scatter(timesteps, RBs_actions)
+axis[4].set_title('RB allocation actions')
 
 
 
