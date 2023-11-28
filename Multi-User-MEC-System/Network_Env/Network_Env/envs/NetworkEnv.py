@@ -396,12 +396,12 @@ class NetworkEnv(gym.Env):
                 penalty_accumulation += -0.2#((1-sum_allocations_per_RB)*penalty_per_RB)
         
         #print(penalty_accumulation)
-        row = 0
+        #row = 0
       
-        for item in reward:
+        #for item in reward:
             #if item > 0: 
-            reward[row] = penalty_accumulation
-            row+=1
+        #    reward[row] = penalty_accumulation
+        #    row+=1
         #dones[len(dones)-1] = 1
         #print(reward)
         #print('')
@@ -489,8 +489,8 @@ class NetworkEnv(gym.Env):
 
         #Users
         self.eMBB_UE_1 = eMBB_UE(1,100,600)
-        self.eMBB_UE_2 = eMBB_UE(2,100,600)
-        self.eMBB_UE_3 = eMBB_UE(3,100,600)
+        #self.eMBB_UE_2 = eMBB_UE(2,100,600)
+        #self.eMBB_UE_3 = eMBB_UE(3,100,600)
 
         #Communication Channel
         self.Communication_Channel_1 = Communication_Channel(self.SBS1.SBS_label)
@@ -508,8 +508,8 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        self.eMBB_Users.append(self.eMBB_UE_2)
-        self.eMBB_Users.append(self.eMBB_UE_3)
+        #self.eMBB_Users.append(self.eMBB_UE_2)
+        #self.eMBB_Users.append(self.eMBB_UE_3)
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:
