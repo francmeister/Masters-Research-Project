@@ -144,8 +144,9 @@ class SBS():
             self.individual_rewards.append(individual_reward)
 
             self.energy_efficiency_rewards+=energy_efficiency_reward
-            self.energy_rewards+=battery_energy_reward
-            self.throughput_rewards+=throughput_reward
+            self.battery_energy_rewards+=battery_energy_reward
+            self.throughput_rewards+=total_rate
+            self.energy_rewards+=total_energy
             self.delay_rewards+=queue_delay_reward
 
         fairness_index = self.calculate_fairness(eMBB_Users)
@@ -157,7 +158,7 @@ class SBS():
         #print('fairness penalty: ', fairness_penalty)
         #print('fairness penalty: ', fairness_index_normalized)
         #print(' ')
-        self.fairness_index = fairness_index_normalized
+        self.fairness_index = fairness_index
         new_individual_rewards = [x + fairness_index_normalized for x in self.individual_rewards]
         #print('individual rewards: ', new_individual_rewards)
         #print('new individual rewards: ', new_inidividual_rewards)
@@ -171,7 +172,7 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
   
-        return self.achieved_system_reward, self.individual_rewards , total_energy,total_rate
+        return self.achieved_system_reward, self.individual_rewards , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
         processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency
@@ -223,6 +224,7 @@ class SBS():
         self.energy_rewards = 0
         self.throughput_rewards = 0
         self.delay_rewards = 0
+        self.battery_energy_rewards = 0
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)
