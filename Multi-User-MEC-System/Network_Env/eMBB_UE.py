@@ -583,7 +583,20 @@ class eMBB_UE(User_Equipment):
         #Pathloss gain
         #self.pathloss_gain = (math.pow(10,(35.3+37.6*math.log10(self.distance_from_SBS))))/10
         number_of_RBs = communication_channel.num_allocate_RBs_upper_bound
-        self.total_gain = np.random.exponential(1,size=(1,number_of_RBs))
+        small_scale_gain = np.random.exponential(1,size=(1,number_of_RBs))
+        large_scale_gain = np.random.exponential(1,size=(1,number_of_RBs))
+        first_large_scale_gain = large_scale_gain[0][0]
+        item = 0
+        for gain in large_scale_gain[0]:
+            large_scale_gain[0][item] = first_large_scale_gain
+            item+=1
+        #print('small_scale_gain')
+        #print(small_scale_gain)
+        #print('larger_scale_gain')
+        #print(large_scale_gain)
+        self.total_gain = np.concatenate((small_scale_gain,large_scale_gain),axis=1)#np.random.exponential(1,size=(1,number_of_RBs))
+        #print('self.total_gain')
+        #print(self.total_gain)
         #self.large_scale_channel_gain = np.random.lognormal(0.0,1.0)
         #self.total_gain = self.small_scale_channel_gain#*self.large_scale_channel_gain#self.pathloss_gain
         #if self.total_gain < 0.1:

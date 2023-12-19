@@ -181,6 +181,8 @@ class NetworkEnv(gym.Env):
         box_action = np.array(action['box_actions'])
         binary_actions = action['binary_actions']
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
+        #print(resource_block_action_matrix)
+        #print('')
 
         #print(resource_block_action_matrix)
         #print(' ')
@@ -355,6 +357,8 @@ class NetworkEnv(gym.Env):
         #observation_battery_energies = np.transpose(observation_battery_energies)
       
         observation = np.column_stack((observation_channel_gains,observation_battery_energies)) #observation_channel_gains.
+        #print('observation matrix')
+        #print(observation)
        
 
         done = self.check_timestep()
@@ -489,8 +493,8 @@ class NetworkEnv(gym.Env):
 
         #Users
         self.eMBB_UE_1 = eMBB_UE(1,100,600)
-        #self.eMBB_UE_2 = eMBB_UE(2,100,600)
-        #self.eMBB_UE_3 = eMBB_UE(3,100,600)
+        self.eMBB_UE_2 = eMBB_UE(2,100,600)
+        self.eMBB_UE_3 = eMBB_UE(3,100,600)
 
         #Communication Channel
         self.Communication_Channel_1 = Communication_Channel(self.SBS1.SBS_label)
@@ -508,8 +512,8 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        #self.eMBB_Users.append(self.eMBB_UE_2)
-        #self.eMBB_Users.append(self.eMBB_UE_3)
+        self.eMBB_Users.append(self.eMBB_UE_2)
+        self.eMBB_Users.append(self.eMBB_UE_3)
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:
