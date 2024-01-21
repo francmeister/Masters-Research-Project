@@ -32,6 +32,7 @@ class NetworkEnv(gym.Env):
         self.number_of_users = len(self.eMBB_Users) 
         self.num_allocate_RB_upper_bound = self.Communication_Channel_1.num_allocate_RBs_upper_bound
         self.num_allocate_RB_lower_bound = self.Communication_Channel_1.num_allocate_RBs_lower_bound
+        self.time_divisions_per_slot = self.Communication_Channel_1.time_divisions_per_slot
         self.max_transmit_power_db = 400#self.eMBB_UE_1.max_transmission_power_dBm
         self.min_transmit_power_db = 10
         self.offload_decisions_label = 0
@@ -97,7 +98,7 @@ class NetworkEnv(gym.Env):
         '''
      
         self.box_action_space = spaces.Box(low=action_space_low,high=action_space_high)
-        self.binary_action_space = spaces.MultiBinary(self.number_of_users * self.num_allocate_RB_upper_bound)
+        self.binary_action_space = spaces.MultiBinary(self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
 
         # Combine the action spaces into a dictionary
         self.action_space = spaces.Dict({
@@ -121,7 +122,7 @@ class NetworkEnv(gym.Env):
         box_action = np.array(action['box_actions'])
         binary_actions = np.array(action['binary_actions'])
 
-        binary_actions = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
+        binary_actions = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         self.total_action_space = np.column_stack((box_action,binary_actions))
   
         return self.total_action_space
@@ -160,30 +161,38 @@ class NetworkEnv(gym.Env):
     def enforce_constraint(self,action):
        
         binary_actions = action['binary_actions']
-        resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
-        done_sampling = True
-        if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
-             while done_sampling:
+        resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
+        done_sampling = False
+        if not np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot):
+             while not done_sampling:
                  action = self.action_space.sample()
                  binary_actions = action['binary_actions']
-                 resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
-                 if not np.all(np.sum(resource_block_action_matrix, axis=0) == 1):
+                 resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
+                 if np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot) and np.all(np.sum(resource_block_action_matrix,axis=0) <= 1):
                      done_sampling = True
                  else:
                      done_sampling = False
+        binary_actions = action['binary_actions']
+        resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
+        #print(resource_block_action_matrix)
+        #print(np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot))
+        
         return action
 
     def step(self,action):
         #.self.selected_actions =
+        #print('------------')
+        #f = self.reshape_action_space_for_model(action)
+        #print(f)
         #  []
         #print(action)
         #self.reshape_action_space_for_model(action)
+        action = self.enforce_constraint(action)
         box_action = np.array(action['box_actions'])
         binary_actions = action['binary_actions']
-        resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
-        #print(resource_block_action_matrix)
-        #print('')
+        resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
 
+        #print('resource_block_action_matrix')
         #print(resource_block_action_matrix)
         #print(' ')
         # done_sampling = True

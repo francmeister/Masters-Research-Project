@@ -323,6 +323,8 @@ class eMBB_UE(User_Equipment):
         #print('number of allocated RBs: ', len(self.allocate(d_RBs))
         count = 0
 
+        #print('allocated RBs')
+        #print(self.allocated_RBs)
         if self.battery_energy_level > 0 and self.has_transmitted_this_time_slot == True:
              for RB_indicator in self.allocated_RBs:
                  RB_channel_gain = self.total_gain[0][count]

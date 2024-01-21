@@ -72,6 +72,7 @@ class Communication_Channel():
         self.number_of_RBs_available = self.num_allocate_RBs_upper_bound
         self.allocated_RBs = []
         self.num_of_RBs_per_User = 0
+        self.time_divisions_per_slot = 2
         #self.fig, self.ax = plt.subplots()
 
 
