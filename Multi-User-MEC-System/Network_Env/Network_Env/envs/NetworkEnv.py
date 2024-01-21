@@ -332,6 +332,8 @@ class NetworkEnv(gym.Env):
             eMBB_User.collect_state()
 
         observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
+        print('obs in step')
+        print(observation_channel_gains)
         #observation_channel_gains = np.array(observation_channel_gains, dtype=np.float32)
         #observation_battery_energies = np.array(observation_battery_energies, dtype=np.float32)
         #print('Observation before transpose')
@@ -465,7 +467,8 @@ class NetworkEnv(gym.Env):
         info = {'reward': 0}
         #print('battery enegy: ', self.SBS1.system_state_space[4])
         observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
-        
+        print('obs in reset')
+        print(observation_channel_gains)
         #observation_channel_gains = np.array(observation_channel_gains, dtype=np.float32)
         #observation_battery_energies = np.array(observation_battery_energies, dtype=np.float32)
         #print('Observation before transpose')

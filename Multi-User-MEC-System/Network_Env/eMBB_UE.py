@@ -129,7 +129,7 @@ class eMBB_UE(User_Equipment):
         self.queuing_delay = 0
         self.previous_slot_battery_energy = 0
 
-        self.total_gain = np.zeros(self.communication_channel.num_allocate_RBs_upper_bound)
+        self.total_gain = np.zeros(self.communication_channel.num_allocate_RBs_upper_bound*2)
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
         self.x_position = random.randint(self.xpos_move_lower_bound,self.xpos_move_upper_bound)

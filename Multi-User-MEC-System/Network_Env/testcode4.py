@@ -38,7 +38,9 @@ energy_consumed = []
 local_energy = []
 
 
-env.reset()
+obs = env.reset()
+print('obs')
+print(obs)
 #print('observation sample')
 #print(env.observation_space.sample())
 #expl_noise = 0.5
