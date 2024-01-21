@@ -187,7 +187,7 @@ class NetworkEnv(gym.Env):
         #  []
         #print(action)
         #self.reshape_action_space_for_model(action)
-        action = self.enforce_constraint(action)
+        #action = self.enforce_constraint(action)
         box_action = np.array(action['box_actions'])
         binary_actions = action['binary_actions']
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
