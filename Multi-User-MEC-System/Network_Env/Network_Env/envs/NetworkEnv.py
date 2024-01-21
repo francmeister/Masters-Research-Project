@@ -139,7 +139,7 @@ class NetworkEnv(gym.Env):
         box_actions = np.array(box_actions)
         binary_actions = np.array(binary_actions)
 
-        binary_actions = binary_actions.reshape(1,self.number_of_users * self.num_allocate_RB_upper_bound).squeeze()
+        binary_actions = binary_actions.reshape(1,self.number_of_users * self.num_allocate_RB_upper_bound*self.time_divisions_per_slot).squeeze()
         #print(binary_actions)
         count = 0
         for binary_action in binary_actions:
