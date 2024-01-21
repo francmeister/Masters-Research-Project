@@ -20,10 +20,10 @@ print('observation space low')
 print(env.observation_space.low)
 print("Action Sample before transpose")
 print(action)
-print("max_action:")
-print(env.action_space.high)
-print("min_action:")
-print(env.action_space.low)
+#print("max_action:")
+#print(env.action_space.high)
+#print("min_action:")
+#print(env.action_space.low)
 
 #observation,reward,done,info = env.step(action)
 print("observation space dim:")
@@ -34,6 +34,16 @@ env.step(action)
 dones = [1,2,3,4,5]
 print(dones[3])
 print(len(dones))
+
+print('self.action_space_dim_1')
+print(env.action_space_dim_1)
+print('self.box_action_space.shape[1]')
+print(env.box_action_space.shape[1])
+print('self.num_allocate_RB_upper_bound')
+print(env.num_allocate_RB_upper_bound)
+
+print('binary actions')
+print(env.binary_action_space)
 
 # my action space consists of
 '''
