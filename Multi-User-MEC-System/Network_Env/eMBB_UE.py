@@ -786,20 +786,22 @@ class eMBB_UE(User_Equipment):
     def calculate_queue_lengths(self):
         #Offloading Queue Length
       
-
-        if self.timeslot_counter == 0:
+        if self.timeslot_counter == 0 or self.timeslot_counter == 1:
             self.current_queue_length_off = 0
         else:
             self.previous_offloading_ratio = self.allocated_offloading_ratio
             self.previous_arrival_rate_off = self.previous_offloading_ratio*self.previous_arrival_rate
             self.previous_service_rate_off = self.previous_channel_rate/(self.previous_offloading_ratio*self.previous_task_size_bits)
+            
 
             self.previous_traffic_intensity_off = self.previous_arrival_rate_off/self.previous_service_rate_off
+            
             self.current_queue_length_off = math.pow(self.previous_traffic_intensity_off,2)/(1-self.previous_traffic_intensity_off)
 
         #print('Current Offlaoding Queue Length: ', self.current_queue_length_off)
         #Local Queue Length
-        if self.timeslot_counter == 0:
+        
+        if self.timeslot_counter == 0 or self.timeslot_counter == 1:
             self.current_queue_length_lc = 0
         else:
             self.previous_offloading_ratio = self.allocated_offloading_ratio
