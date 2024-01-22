@@ -801,7 +801,10 @@ class eMBB_UE(User_Equipment):
             else:
                 self.previous_traffic_intensity_off = self.previous_arrival_rate_off/self.previous_service_rate_off
             
-            self.current_queue_length_off = math.pow(self.previous_traffic_intensity_off,2)/(1-self.previous_traffic_intensity_off)
+            if (1-self.previous_traffic_intensity_off) == 0:
+                self.current_queue_length_off = 1
+            else:
+                self.current_queue_length_off = math.pow(self.previous_traffic_intensity_off,2)/(1-self.previous_traffic_intensity_off)
 
         #print('Current Offlaoding Queue Length: ', self.current_queue_length_off)
         #Local Queue Length
@@ -821,7 +824,10 @@ class eMBB_UE(User_Equipment):
             else:
                 self.previous_traffic_intensity_lc = self.previous_arrival_rate_lc/self.previous_service_rate_lc
             
-            self.current_queue_length_lc = math.pow(self.previous_traffic_intensity_lc,2)/(2*(1-self.previous_traffic_intensity_lc))
+            if (1-self.previous_traffic_intensity_lc) == 0:
+                self.current_queue_length_lc = 1
+            else:    
+                self.current_queue_length_lc = math.pow(self.previous_traffic_intensity_lc,2)/(2*(1-self.previous_traffic_intensity_lc))
 
         self.current_queue_length_modified_off = len(self.communication_queue)
         self.current_queue_length_modified_lc = len(self.local_queue)
@@ -855,7 +861,12 @@ class eMBB_UE(User_Equipment):
             current_arrival_rate_lc = self.current_arrival_rate*(1-self.allocated_offloading_ratio)
             local_queuing_delay_modified = self.current_queue_length_modified_lc/current_arrival_rate_lc
 
-        return (1/max(offload_queuing_delay,local_queuing_delay))
+        delay_reward = 1/max(offload_queuing_delay,local_queuing_delay)
+        max_delay_reward = 5
+        min_delay_reward = 0
+        delay_reward_normalized = interp(delay_reward,[min_delay_reward,max_delay_reward],[0,1])
+
+        return delay_reward_normalized
 
 
     #def calculate_queuing_time(self):
