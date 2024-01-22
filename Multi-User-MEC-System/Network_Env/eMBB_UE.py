@@ -791,8 +791,10 @@ class eMBB_UE(User_Equipment):
         else:
             self.previous_offloading_ratio = self.allocated_offloading_ratio
             self.previous_arrival_rate_off = self.previous_offloading_ratio*self.previous_arrival_rate
-            self.previous_service_rate_off = self.previous_channel_rate/(self.previous_offloading_ratio*self.previous_task_size_bits)
-            
+            if (self.previous_offloading_ratio*self.previous_task_size_bits) == 0:
+                self.previous_service_rate_off = 1
+            else:
+                self.previous_service_rate_off = self.previous_channel_rate/(self.previous_offloading_ratio*self.previous_task_size_bits)
 
             self.previous_traffic_intensity_off = self.previous_arrival_rate_off/self.previous_service_rate_off
             
@@ -806,8 +808,10 @@ class eMBB_UE(User_Equipment):
         else:
             self.previous_offloading_ratio = self.allocated_offloading_ratio
             self.previous_arrival_rate_lc = (1-self.previous_offloading_ratio)*self.previous_arrival_rate
-            self.previous_service_rate_lc = self.service_rate_bits_per_slot/((1-self.previous_offloading_ratio)*self.previous_task_size_bits)
-            
+            if ((1-self.previous_offloading_ratio)*self.previous_task_size_bits) == 0:
+                self.previous_service_rate_lc = 1
+            else:
+                self.previous_service_rate_lc = self.service_rate_bits_per_slot/((1-self.previous_offloading_ratio)*self.previous_task_size_bits)
 
             self.previous_traffic_intensity_lc = self.previous_arrival_rate_lc/self.previous_service_rate_lc
             self.current_queue_length_lc = math.pow(self.previous_traffic_intensity_lc,2)/(2*(1-self.previous_traffic_intensity_lc))
