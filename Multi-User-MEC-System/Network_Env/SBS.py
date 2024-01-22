@@ -133,12 +133,12 @@ class SBS():
             battery_energy_reward = eMBB_User.energy_consumption_reward()
             energy_efficiency_reward = eMBB_User.calculate_energy_efficiency()
             throughput_reward = eMBB_User.calculate_throughput_reward(communication_channel)
-            queue_delay_reward = eMBB_User.queueing_delay_reward()
+            queue_delay_reward = eMBB_User.calculate_queuing_delays()
         
             #if eMBB_User_energy_consumption == 0:
             #    individual_reward = 0
             #else:
-            individual_reward = energy_efficiency_reward #+ battery_energy_reward + queue_delay_reward 
+            individual_reward = queue_delay_reward#energy_efficiency_reward #+ battery_energy_reward + queue_delay_reward 
       
             self.achieved_system_reward += individual_reward
             self.individual_rewards.append(individual_reward)

@@ -62,6 +62,7 @@ class eMBB_UE(User_Equipment):
         self.cycles_per_byte = 330
         self.cycles_per_bit = self.cycles_per_byte/8
         self.max_service_rate_cycles_per_slot = 620000#5000
+        self.service_rate_bits_per_slot = (self.max_service_rate_cycles_per_slot/self.cycles_per_byte)*8
 
         #self.QOS_requirement = QOS_requirement()
         #self.QOS_requirement_for_transmission = QOS_requirement()
@@ -130,6 +131,23 @@ class eMBB_UE(User_Equipment):
         self.previous_slot_battery_energy = 0
 
         self.total_gain = np.zeros(self.communication_channel.num_allocate_RBs_upper_bound*2)
+        self.previous_arrival_rate = 0
+        self.previous_arrival_rate_off = 0
+        self.previous_arrival_rate_lc = 0
+        self.previous_service_rate_off = 0
+        self.previous_service_rate_lc = 0
+        self.previous_traffic_intensity_off = 0
+        self.previous_traffic_intensity_lc = 0
+        self.previous_channel_rate = 0
+        self.previous_offloading_ratio = 0
+        self.previous_channel_rate = 0
+        self.previous_task_size_bits = 0
+        self.current_queue_length_off = 0
+        self.current_queue_length_lc = 0
+        self.current_arrival_rate = 0
+        self.current_queue_length_modified_lc = 0
+        self.current_queue_length_modified_off = 0
+
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
         self.x_position = random.randint(self.xpos_move_lower_bound,self.xpos_move_upper_bound)
@@ -157,6 +175,8 @@ class eMBB_UE(User_Equipment):
         #self.task_arrival_rate_tasks_per_second = random.randint(self.min_task_arrival_rate_tasks_per_second,self.max_task_arrival_rate_tasks_per_second)
         self.task_arrival_rate_tasks_per_second = np.random.poisson(25,1)#np.random.poisson(5,1)
         self.task_arrival_rate_tasks_per_second = self.task_arrival_rate_tasks_per_second[0]
+        self.previous_arrival_rate = self.task_arrival_rate_tasks_per_second
+        self.current_arrival_rate = self.task_arrival_rate_tasks_per_second
         qeueu_timer = 0
 
 
@@ -167,6 +187,7 @@ class eMBB_UE(User_Equipment):
                 #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
                 #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
                 task_size_per_slot_bits = int(np.random.uniform(500,1500))#Average of 1000 bits per task in slot #int(task_size_per_slot_kilobytes*8000) #8000 bits in a KB----------
+                self.previous_task_size_bits = task_size_per_slot_bits
                 #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
                 latency_requirement = 10#latency required is 10 ms for every task#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
                 reliability_requirement = 0
@@ -183,6 +204,7 @@ class eMBB_UE(User_Equipment):
                 #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
                 #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
                 task_size_per_slot_bits = int(np.random.uniform(500,1500)) #8000 bits in a KB----------
+                self.previous_task_size_bits = task_size_per_slot_bits
                 #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
                 latency_requirement = 10#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
                 reliability_requirement = 0
@@ -202,10 +224,11 @@ class eMBB_UE(User_Equipment):
         self.distance_from_SBS = math.sqrt(math.pow(x_diff_metres,2)+math.pow(y_diff_metres,2))
 
     def collect_state(self):
-            #self.cpu_clock_frequency = (random.randint(5,5000))
-            self.user_state_space.collect(self.total_gain,self.previous_slot_battery_energy)
-            #self.user_state_space.collect(self.total_gain,self.communication_queue,self.battery_energy_level,self.communication_queue[0].QOS_requirement,self.cpu_clock_frequency)
-            return self.user_state_space
+        #self.cpu_clock_frequency = (random.randint(5,5000))
+        self.calculate_queue_lengths()
+        self.user_state_space.collect(self.total_gain,self.previous_slot_battery_energy)
+        #self.user_state_space.collect(self.total_gain,self.communication_queue,self.battery_energy_level,self.communication_queue[0].QOS_requirement,self.cpu_clock_frequency)
+        return self.user_state_space
 
     def split_tasks(self):
         if len(self.task_queue) > 0:
@@ -229,14 +252,14 @@ class eMBB_UE(User_Equipment):
             }
 
             df = pd.DataFrame(data=data)
-            #print('--------------------------------------------Timeslot: ',self.timeslot_counter, '--------------------------------------------')
-            #print('task queue data')
-            #print(df)
-            #print(' ')
+            # print('--------------------------------------------Timeslot: ',self.timeslot_counter, '--------------------------------------------')
+            # print('task queue data')
+            # print(df)
+            # print(' ')
 
-            #print('self.allocated_offloading_ratio')
-            #print(self.allocated_offloading_ratio)
-            #print('')
+            # print('self.allocated_offloading_ratio')
+            # print(self.allocated_offloading_ratio)
+            # print('')
             for x in range(0,self.task_arrival_rate_tasks_per_second):
                 packet_dec = self.task_queue[x].bits
                 self.QOS_requirement_for_transmission = self.task_queue[x].QOS_requirement
@@ -287,9 +310,9 @@ class eMBB_UE(User_Equipment):
             }
 
             df = pd.DataFrame(data=local_data)
-            #print('local queue data')
-            #print(df)
-            #print(' ')
+            # print('local queue data')
+            # print(df)
+            # print(' ')
 
             offload_task_identities = []
             offload_task_sizes_bits = []
@@ -311,10 +334,10 @@ class eMBB_UE(User_Equipment):
             }
 
             df = pd.DataFrame(data=offload_data)
-            #print('offload queue data')
-            #print(df)
-            #print(' ')
-            #print('Size of offloading queue: ',sum(offload_task_sizes_bits))
+            # print('offload queue data')
+            # print(df)
+            # print(' ')
+            # print('Size of offloading queue: ',sum(offload_task_sizes_bits))
        
 
     def transmit_to_SBS(self, communication_channel):
@@ -332,6 +355,7 @@ class eMBB_UE(User_Equipment):
                  achieved_RB_channel_rates.append(achieved_RB_channel_rate)
                  count += 1
              self.achieved_channel_rate = sum(achieved_RB_channel_rates)
+             self.previous_channel_rate = self.achieved_channel_rate
              min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
              self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,1])   
         # 
@@ -414,11 +438,14 @@ class eMBB_UE(User_Equipment):
 
             df = pd.DataFrame(data=data)
 
-            #print('Dequeued Local Tasks')
-            #print(df)
-            #print(' ')
-            #print('Local Computation energy consumed in this slot: ', self.achieved_local_energy_consumption)
-            #print(' ')
+            # print('Dequeued Local Tasks')
+            # print(df)
+            # print(' ')
+            # print('Local Computation energy consumed in this slot: ', self.achieved_local_energy_consumption)
+            # print(' ')
+            # print('-----------------dequeued local tasks size total---------------------')
+            # print(total_sum_size_dequeued_tasks)
+            # print('')
 
         #print(' ')
         #print(' ')
@@ -486,11 +513,11 @@ class eMBB_UE(User_Equipment):
 
             df = pd.DataFrame(data=data)
 
-            #print('Dequeued Offload Tasks')
-            #print(df)
-            #print(' ')
-            #print('Achieved TTI channel rate: ', self.achieved_channel_rate)
-            #print(' ')
+            # print('Dequeued Offload Tasks')
+            # print(df)
+            # print(' ')
+            # print('Achieved TTI channel rate: ', self.achieved_channel_rate)
+            # print(' ')
 
         self.check_completed_tasks()
         #self.achieved_transmission_delay = 1
@@ -755,6 +782,71 @@ class eMBB_UE(User_Equipment):
         #    #qeueuing_delay_reward = -1#self.queuing_delay
 
         return  qeueuing_delay_reward#eueuing_delay_reward
+    
+    def calculate_queue_lengths(self):
+        #Offloading Queue Length
+      
+
+        if self.timeslot_counter == 0:
+            self.current_queue_length_off = 0
+        else:
+            self.previous_offloading_ratio = self.allocated_offloading_ratio
+            self.previous_arrival_rate_off = self.previous_offloading_ratio*self.previous_arrival_rate
+            self.previous_service_rate_off = self.previous_channel_rate/(self.previous_offloading_ratio*self.previous_task_size_bits)
+
+            self.previous_traffic_intensity_off = self.previous_arrival_rate_off/self.previous_service_rate_off
+            self.current_queue_length_off = math.pow(self.previous_traffic_intensity_off,2)/(1-self.previous_traffic_intensity_off)
+
+        #print('Current Offlaoding Queue Length: ', self.current_queue_length_off)
+        #Local Queue Length
+        if self.timeslot_counter == 0:
+            self.current_queue_length_lc = 0
+        else:
+            self.previous_offloading_ratio = self.allocated_offloading_ratio
+            self.previous_arrival_rate_lc = (1-self.previous_offloading_ratio)*self.previous_arrival_rate
+            self.previous_service_rate_lc = self.service_rate_bits_per_slot/((1-self.previous_offloading_ratio)*self.previous_task_size_bits)
+            
+
+            self.previous_traffic_intensity_lc = self.previous_arrival_rate_lc/self.previous_service_rate_lc
+            self.current_queue_length_lc = math.pow(self.previous_traffic_intensity_lc,2)/(2*(1-self.previous_traffic_intensity_lc))
+
+        self.current_queue_length_modified_off = len(self.communication_queue)
+        self.current_queue_length_modified_lc = len(self.local_queue)
+
+        #print('Current Local Queue Length: ', self.current_queue_length_lc)
+
+    def calculate_queuing_delays(self):
+        #Offload queuing delay
+        #offload_queuing_delay = 1
+        #local_queuing_delay = 1
+        if self.current_queue_length_off < 0:
+            current_arrival_rate_off = self.current_arrival_rate*self.allocated_offloading_ratio
+            offload_queuing_delay = -(self.current_queue_length_off/current_arrival_rate_off)
+        else:
+            offload_queuing_delay = 1  
+
+        if self.current_queue_length_lc < 0:
+            current_arrival_rate_lc = self.current_arrival_rate*(1-self.allocated_offloading_ratio)
+            local_queuing_delay = -(self.current_queue_length_lc/current_arrival_rate_lc)
+        else:
+            local_queuing_delay = 1
+
+        #################################################################################################################
+        offload_queuing_delay_modified = 1
+        local_queuing_delay_modified = 1
+        if self.current_queue_length_modified_off > 0:
+            current_arrival_rate_off = self.current_arrival_rate*self.allocated_offloading_ratio
+            offload_queuing_delay_modified = self.current_queue_length_modified_off/current_arrival_rate_off
+
+        if self.current_queue_length_modified_lc > 0:
+            current_arrival_rate_lc = self.current_arrival_rate*(1-self.allocated_offloading_ratio)
+            local_queuing_delay_modified = self.current_queue_length_modified_lc/current_arrival_rate_lc
+
+        return (1/max(offload_queuing_delay,local_queuing_delay))
+
+
+    #def calculate_queuing_time(self):
+
         
 
         
