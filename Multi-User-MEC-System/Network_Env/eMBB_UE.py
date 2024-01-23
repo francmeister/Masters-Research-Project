@@ -853,6 +853,7 @@ class eMBB_UE(User_Equipment):
         #################################################################################################################
         offload_queuing_delay_modified = 1
         local_queuing_delay_modified = 1
+        
         if self.current_queue_length_modified_off > 0:
             current_arrival_rate_off = self.current_arrival_rate*self.allocated_offloading_ratio
             offload_queuing_delay_modified = self.current_queue_length_modified_off/current_arrival_rate_off
@@ -862,12 +863,13 @@ class eMBB_UE(User_Equipment):
             local_queuing_delay_modified = self.current_queue_length_modified_lc/current_arrival_rate_lc
 
         #delay_reward = 1/max(offload_queuing_delay,local_queuing_delay)
-        delay_reward = 1/max(offload_queuing_delay_modified,local_queuing_delay_modified)
+        delay = max(offload_queuing_delay_modified,local_queuing_delay_modified)
+        delay_reward = 1/delay
         max_delay_reward = 5
         min_delay_reward = 0
         delay_reward_normalized = interp(delay_reward,[min_delay_reward,max_delay_reward],[0,1])
 
-        return delay_reward
+        return delay_reward,delay
 
 
     #def calculate_queuing_time(self):

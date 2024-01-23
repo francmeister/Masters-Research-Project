@@ -121,6 +121,9 @@ class SBS():
         total_QOS_revenue = 0
         self.fairness_index = 0
         individual_rewards = 0
+        queue_delay_reward = 0
+        delay = 0
+        throughput_reward = 0
 
         self.individual_rewards.clear()
 
@@ -133,7 +136,7 @@ class SBS():
             battery_energy_reward = eMBB_User.energy_consumption_reward()
             energy_efficiency_reward = eMBB_User.calculate_energy_efficiency()
             throughput_reward = eMBB_User.calculate_throughput_reward(communication_channel)
-            queue_delay_reward = eMBB_User.calculate_queuing_delays()
+            queue_delay_reward,delay = eMBB_User.calculate_queuing_delays()
         
             #if eMBB_User_energy_consumption == 0:
             #    individual_reward = 0
@@ -148,6 +151,7 @@ class SBS():
             self.throughput_rewards+=total_rate
             self.energy_rewards+=total_energy
             self.delay_rewards+=queue_delay_reward
+            self.delays+=delay
 
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
@@ -225,6 +229,7 @@ class SBS():
         self.throughput_rewards = 0
         self.delay_rewards = 0
         self.battery_energy_rewards = 0
+        self.delays = 0
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)
