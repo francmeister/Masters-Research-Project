@@ -72,18 +72,24 @@ class NetworkEnv(gym.Env):
                         [self.reliability_requirement_max for _ in range(self.number_of_users)]],dtype=np.float32)'''
         
         number_of_batteries_per_user = 1
-        number_of_states_per_user = self.num_allocate_RB_upper_bound*2 + number_of_batteries_per_user
+        number_of_lc_queues_per_user = 1
+        numbers_of_off_queues_per_user = 1
+        number_of_states_per_user = self.num_allocate_RB_upper_bound*2 + number_of_batteries_per_user + numbers_of_off_queues_per_user + number_of_lc_queues_per_user
 
         observation_space_high = np.array([[[self.channel_gain_max for _ in range(self.num_allocate_RB_upper_bound)] + 
                                             [self.channel_gain_max for _ in range(self.num_allocate_RB_upper_bound)] +
-                                            [self.battery_energy_max for _ in range(1)]]*self.number_of_users],dtype=np.float32)
+                                            [self.battery_energy_max for _ in range(1)] +
+                                            [self.max_off_queue_length for _ in range(1)] +
+                                            [self.max_lc_queue_length for _ in range(1)]]*self.number_of_users],dtype=np.float32)
         
         observation_space_high = observation_space_high.reshape(self.number_of_users,number_of_states_per_user)
 
         
         observation_space_low = np.array([[[self.channel_gain_min for _ in range(self.num_allocate_RB_upper_bound)] +
                                            [self.channel_gain_max for _ in range(self.num_allocate_RB_upper_bound)] + 
-                                           [self.battery_energy_min for _ in range(1)]]*self.number_of_users],dtype=np.float32)
+                                           [self.battery_energy_min for _ in range(1)] +
+                                           [self.min_off_queue_length for _ in range(1)] +
+                                           [self.min_lc_queue_length for _ in range(1)]]*self.number_of_users],dtype=np.float32)
         
         observation_space_low = observation_space_low.reshape(self.number_of_users,number_of_states_per_user)
         
