@@ -33,8 +33,8 @@ rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
 throughputs = rewards_throughput_energy[:,3]
 
-start_index = 0
-end_index = 1000
+start_index = 400
+end_index = 25000
 
 timesteps_ = timesteps[start_index:end_index]
 rewards_ = rewards[start_index:end_index]
@@ -71,11 +71,11 @@ figure, axis = plt.subplots(3,1)
 axis[0].plot(timesteps, rewards)
 axis[0].set_title('total reward')
 
-axis[1].scatter(timesteps, energies)
-axis[1].set_title('energies')
+axis[1].plot(timesteps, delay_rewards)
+axis[1].set_title('delay rewards')
 
-axis[2].scatter(timesteps, throughputs)
-axis[2].set_title('throughputs')
+axis[2].plot(timesteps, energy_efficiency_rewards)
+axis[2].set_title('energy efficiency rewards')
 
 #axis[1].scatter(timesteps, offload_actions)
 #axis[1].set_title('offlaoding actions')
