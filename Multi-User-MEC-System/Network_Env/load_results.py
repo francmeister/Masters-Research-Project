@@ -68,10 +68,10 @@ figure, axis = plt.subplots(2,1)
 # axis[0].plot(timesteps, battery_energy_rewards)
 # axis[0].set_title('battery energies reward')
 
-axis[0].plot(timesteps_, rewards_)
+axis[0].plot(timesteps, rewards)
 axis[0].set_title('total reward')
 
-axis[1].scatter(timesteps_, delays_)
+axis[1].scatter(timesteps, delays)
 axis[1].set_title('delays')
 
 #axis[1].scatter(timesteps, offload_actions)
