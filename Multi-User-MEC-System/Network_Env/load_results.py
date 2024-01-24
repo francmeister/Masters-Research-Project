@@ -33,8 +33,8 @@ rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
 throughputs = rewards_throughput_energy[:,3]
 
-start_index = 600
-end_index = 5000
+start_index = 0
+end_index = 1000
 
 timesteps_ = timesteps[start_index:end_index]
 rewards_ = rewards[start_index:end_index]
@@ -61,7 +61,7 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-figure, axis = plt.subplots(2,1)
+figure, axis = plt.subplots(3,1)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
@@ -71,8 +71,11 @@ figure, axis = plt.subplots(2,1)
 axis[0].plot(timesteps, rewards)
 axis[0].set_title('total reward')
 
-axis[1].scatter(timesteps, delays)
-axis[1].set_title('delays')
+axis[1].scatter(timesteps, energies)
+axis[1].set_title('energies')
+
+axis[2].scatter(timesteps, throughputs)
+axis[2].set_title('throughputs')
 
 #axis[1].scatter(timesteps, offload_actions)
 #axis[1].set_title('offlaoding actions')
