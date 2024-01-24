@@ -12,7 +12,7 @@ from numpy import interp
 env = gym.make('NetworkEnv-v0')
 
 #timesteps = 5
-timesteps = np.arange(0,2000,1)
+timesteps = np.arange(0,30,1)
 rewards = []
 offload_decisions = []
 RB_allocations = []
@@ -90,7 +90,7 @@ df = pd.DataFrame(data=data)
 print(df)
 corr = df.corr(method='pearson')
 print(corr)
-print('max offload energy: ', max(rewards), 'local offload: ', min(rewards))
+print('max reward: ', max(rewards), 'min reward: ', min(rewards))
 #print(energy_consumed)
 #print(rewards)
 #print('total reward after 100 timesteps: ', reward_)

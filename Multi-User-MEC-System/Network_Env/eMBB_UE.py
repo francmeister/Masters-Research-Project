@@ -55,7 +55,14 @@ class eMBB_UE(User_Equipment):
         self.min_task_arrival_rate_tasks_per_second = 5
 
         self.max_queue_length_number = self.calculate_max_queue_length_number(self.communication_channel,self.max_task_arrival_rate_tasks_per_second)
+        #print('self.max_queue_length_number: ', self.max_queue_length_number)
         self.min_queue_length = 0
+
+        self.max_lc_queue_length = 50
+        self.max_off_queue_length = 400
+
+        self.min_lc_queue_length = 0
+        self.min_off_queue_length = 0
 
         self.battery_energy_level = 2000#(random.randint(15000,25000))
 
@@ -225,8 +232,8 @@ class eMBB_UE(User_Equipment):
 
     def collect_state(self):
         #self.cpu_clock_frequency = (random.randint(5,5000))
-        self.calculate_queue_lengths()
-        self.user_state_space.collect(self.total_gain,self.previous_slot_battery_energy)
+        offloading_queue_length, local_queue_length = self.calculate_queue_lengths()
+        self.user_state_space.collect(self.total_gain,self.previous_slot_battery_energy,offloading_queue_length, local_queue_length)
         #self.user_state_space.collect(self.total_gain,self.communication_queue,self.battery_energy_level,self.communication_queue[0].QOS_requirement,self.cpu_clock_frequency)
         return self.user_state_space
 
@@ -832,6 +839,7 @@ class eMBB_UE(User_Equipment):
         self.current_queue_length_modified_off = len(self.communication_queue)
         self.current_queue_length_modified_lc = len(self.local_queue)
 
+        return self.current_queue_length_modified_off,self.current_queue_length_modified_lc
         #print('Current Local Queue Length: ', self.current_queue_length_lc)
 
     def calculate_queuing_delays(self):
@@ -857,7 +865,7 @@ class eMBB_UE(User_Equipment):
         if self.current_queue_length_modified_off > 0:
             current_arrival_rate_off = self.current_arrival_rate*self.allocated_offloading_ratio
             offload_queuing_delay_modified = self.current_queue_length_modified_off/current_arrival_rate_off
-
+    
         if self.current_queue_length_modified_lc > 0:
             current_arrival_rate_lc = self.current_arrival_rate*(1-self.allocated_offloading_ratio)
             local_queuing_delay_modified = self.current_queue_length_modified_lc/current_arrival_rate_lc
@@ -868,8 +876,9 @@ class eMBB_UE(User_Equipment):
         max_delay_reward = 5
         min_delay_reward = 0
         delay_reward_normalized = interp(delay_reward,[min_delay_reward,max_delay_reward],[0,1])
-
+        #self.current_queue_length_modified_off,self.current_queue_length_modified_lc
         return delay_reward,delay
+     
 
 
     #def calculate_queuing_time(self):

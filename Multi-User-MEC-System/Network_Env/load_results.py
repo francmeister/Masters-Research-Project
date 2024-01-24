@@ -10,6 +10,7 @@ allocated_RBs = np.load('allocated_RBs.npy')
 fairness_index = np.load('fairnes_index.npy')
 sum_allocations_per_RB_matrix = np.load('sum_allocations_per_RB_matrix.npy')
 RB_allocation_matrix = np.load('RB_allocation_matrix.npy')
+delays = np.load('delays.npy')
 print(RB_allocation_matrix)
 print(RBs_actions)
 
@@ -32,13 +33,14 @@ rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
 throughputs = rewards_throughput_energy[:,3]
 
-start_index = 0
-end_index = 6100
+start_index = 600
+end_index = 5000
 
 timesteps_ = timesteps[start_index:end_index]
 rewards_ = rewards[start_index:end_index]
 energies_ = energies[start_index:end_index]
 throughputs_ = throughputs[start_index:end_index]
+delays_ = delays[start_index:end_index]
 
 offload_actions_ = offload_actions[start_index:end_index]
 power_actions_ = power_actions[start_index:end_index]
@@ -59,24 +61,27 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-figure, axis = plt.subplots(4,1)
+figure, axis = plt.subplots(2,1)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
 # axis[0].plot(timesteps, battery_energy_rewards)
 # axis[0].set_title('battery energies reward')
 
-axis[0].plot(timesteps, rewards)
+axis[0].plot(timesteps_, rewards_)
 axis[0].set_title('total reward')
 
-axis[1].scatter(timesteps, offload_actions)
-axis[1].set_title('offlaoding actions')
+axis[1].scatter(timesteps_, delays_)
+axis[1].set_title('delays')
 
-axis[2].scatter(timesteps, power_actions)
-axis[2].set_title('power allocation actions')
+#axis[1].scatter(timesteps, offload_actions)
+#axis[1].set_title('offlaoding actions')
 
-axis[3].scatter(timesteps, RBs_actions)
-axis[3].set_title('RB allocation actions')
+#axis[2].scatter(timesteps, power_actions)
+#axis[2].set_title('power allocation actions')
+
+#axis[3].scatter(timesteps, RBs_actions)
+#axis[3].set_title('RB allocation actions')
 
 
 

@@ -331,7 +331,8 @@ class NetworkEnv(gym.Env):
             eMBB_User.generate_task(self.Communication_Channel_1)
             eMBB_User.collect_state()
 
-        observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
+        observation_channel_gains, observation_battery_energies, observation_offloading_queue_lengths, observation_local_queue_lengths = self.SBS1.collect_state_space(self.eMBB_Users)
+        #observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
         #observation_channel_gains = np.array(observation_channel_gains, dtype=np.float32)
         #observation_battery_energies = np.array(observation_battery_energies, dtype=np.float32)
         #print('Observation before transpose')
@@ -354,21 +355,34 @@ class NetworkEnv(gym.Env):
             observation_battery_energies[row] = interp(observation_battery_energies[row],[self.battery_energy_min,self.battery_energy_max],[0,1])
             row+=1
         
+        row = 0
+        for offloading_queue_length in observation_offloading_queue_lengths:
+            observation_offloading_queue_lengths[row] = interp(observation_offloading_queue_lengths[row],[self.min_off_queue_length,self.max_off_queue_length],[0,1])
+            row+=1
+
+        row = 0
+        for local_queue_length in observation_local_queue_lengths:
+            observation_local_queue_lengths[row] = interp(observation_local_queue_lengths[row],[self.min_lc_queue_length,self.max_lc_queue_length],[0,1])
+            row+=1
+
         observation_channel_gains = np.array(observation_channel_gains).squeeze()
         
         observation_battery_energies = np.array(observation_battery_energies)
+        observation_offloading_queue_lengths = np.array(observation_offloading_queue_lengths)
+        observation_local_queue_lengths = np.array(observation_local_queue_lengths)
 
         if self.number_of_users == 1:
             observation_channel_gains_num = len(observation_channel_gains)
             observation_battery_energies_num = len(observation_battery_energies)
+            #observation_offloading_queue_lengths_num = len(observation_offloading_queue_lengths)
+            #observation_local_queue_lengths_num = len(observation_local_queue_lengths)
 
             observation_channel_gains = observation_channel_gains.reshape(observation_battery_energies_num,observation_channel_gains_num)
         
       
         #observation_channel_gains = np.transpose(observation_channel_gains)
         #observation_battery_energies = np.transpose(observation_battery_energies)
-      
-        observation = np.column_stack((observation_channel_gains,observation_battery_energies)) #observation_channel_gains.
+        observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths)) #observation_channel_gains.
         #print('observation matrix')
         #print(observation)
        
@@ -443,6 +457,10 @@ class NetworkEnv(gym.Env):
         self.latency_requirement_max = self.eMBB_UE_1.max_allowable_latency
         self.cpu_frequency_max = self.eMBB_UE_1.max_cpu_frequency
         self.cpu_frequency_min = self.eMBB_UE_1.min_cpu_frequency
+        self.max_lc_queue_length = self.eMBB_UE_1.max_lc_queue_length
+        self.min_lc_queue_length = 0
+        self.max_off_queue_length = self.eMBB_UE_1.max_off_queue_length
+        self.min_off_queue_length = 0
        
         for eMBB_User in self.eMBB_Users:
             #eMBB_User.set_properties_UE()
@@ -464,8 +482,8 @@ class NetworkEnv(gym.Env):
         self.Communication_Channel_1.initiate_RBs()
         info = {'reward': 0}
         #print('battery enegy: ', self.SBS1.system_state_space[4])
-        observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
-       
+        #observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
+        observation_channel_gains, observation_battery_energies, observation_offloading_queue_lengths, observation_local_queue_lengths = self.SBS1.collect_state_space(self.eMBB_Users)
         #observation_channel_gains = np.array(observation_channel_gains, dtype=np.float32)
         #observation_battery_energies = np.array(observation_battery_energies, dtype=np.float32)
         #print('Observation before transpose')
@@ -488,9 +506,19 @@ class NetworkEnv(gym.Env):
             observation_battery_energies[row] = interp(observation_battery_energies[row],[self.battery_energy_min,self.battery_energy_max],[0,1])
             row+=1
         
+        row = 0
+        for offloading_queue_length in observation_offloading_queue_lengths:
+            observation_offloading_queue_lengths[row] = interp(observation_offloading_queue_lengths[row],[self.min_off_queue_length,self.max_off_queue_length],[0,1])
+            row+=1
+
+        row = 0
+        for local_queue_length in observation_local_queue_lengths:
+            observation_local_queue_lengths[row] = interp(observation_local_queue_lengths[row],[self.min_lc_queue_length,self.max_lc_queue_length],[0,1])
+            row+=1
+
         #observation_channel_gains = np.transpose(observation_channel_gains)
         #observation_battery_energies = np.transpose(observation_battery_energies)
-        observation = np.column_stack((observation_channel_gains,observation_battery_energies)) #observation_channel_gains.
+        observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths)) #observation_channel_gains.
        
         reward = 0
         done = 0

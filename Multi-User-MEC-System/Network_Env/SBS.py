@@ -25,6 +25,8 @@ class SBS():
         channel_gains = []
         communication_queue_size = []
         battery_energy = []
+        offloading_queue_lengths = []
+        local_queue_lengths = []
         latency_requirement = []
         local_frequencies = []
         #reliability_requirement = []
@@ -33,6 +35,8 @@ class SBS():
             channel_gains.append(user.user_state_space.channel_gain)
             #communication_queue_size.append(user.user_state_space.calculate_communication_queue_size())
             battery_energy.append(user.user_state_space.battery_energy)
+            offloading_queue_lengths.append(user.user_state_space.offloading_queue_length)
+            local_queue_lengths.append(user.user_state_space.local_queue_length)
             #latency_requirement.append(0)
             #latency_requirement.append(user.user_state_space.QOS_requirements.max_allowable_latency)
             #local_frequencies.append(user.user_state_space.local_cpu_frequency)
@@ -43,6 +47,8 @@ class SBS():
         self.system_state_space_RB_channel_gains.append(channel_gains)
         #self.system_state_space.append(communication_queue_size)
         self.system_state_space_battery_energies.append(battery_energy)
+        #self.system_state_space_battery_energies.append(offloading_queue_lengths)
+        #self.system_state_space_battery_energies.append(local_queue_lengths)
         #self.system_state_space.append(latency_requirement)
         #self.system_state_space.append(local_frequencies)
         #self.system_state_space.append(reliability_requirement)
@@ -50,7 +56,8 @@ class SBS():
         #print('state space')
         #print(self.system_state_space_RB_channel_gains)
         #print(self.system_state_space_battery_energies)
-        return channel_gains, battery_energy
+        return channel_gains, battery_energy, offloading_queue_lengths, local_queue_lengths
+        #return channel_gains, battery_energy
 
     def allocate_transmit_powers(self,eMBB_Users, action):
         index = 0
