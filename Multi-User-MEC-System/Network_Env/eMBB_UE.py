@@ -154,6 +154,7 @@ class eMBB_UE(User_Equipment):
         self.current_arrival_rate = 0
         self.current_queue_length_modified_lc = 0
         self.current_queue_length_modified_off = 0
+        self.tasks_dropped = 0
 
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
@@ -604,6 +605,7 @@ class eMBB_UE(User_Equipment):
             self.battery_energy_level = self.battery_energy_level - self.achieved_total_energy_consumption
         else:
             self.achieved_total_energy_consumption = 0
+            self.tasks_dropped+=1
 
         #print(self.battery_energy_level)
         #print('total energy: ', self.achieved_total_energy_consumption)

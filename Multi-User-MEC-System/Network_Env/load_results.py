@@ -61,7 +61,7 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-figure, axis = plt.subplots(3,1)
+figure, axis = plt.subplots(4,1)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
@@ -71,20 +71,19 @@ figure, axis = plt.subplots(3,1)
 axis[0].plot(timesteps, rewards)
 axis[0].set_title('total reward')
 
-axis[1].plot(timesteps, delay_rewards)
-axis[1].set_title('delay rewards')
+# axis[1].plot(timesteps, delay_rewards)
+# axis[1].set_title('delay rewards')
 
-axis[2].plot(timesteps, energy_efficiency_rewards)
-axis[2].set_title('energy efficiency rewards')
+# axis[2].plot(timesteps, energy_efficiency_rewards)
+# axis[2].set_title('energy efficiency rewards')
+axis[1].scatter(timesteps, offload_actions)
+axis[1].set_title('offlaoding actions')
 
-#axis[1].scatter(timesteps, offload_actions)
-#axis[1].set_title('offlaoding actions')
+axis[2].scatter(timesteps, power_actions)
+axis[2].set_title('power allocation actions')
 
-#axis[2].scatter(timesteps, power_actions)
-#axis[2].set_title('power allocation actions')
-
-#axis[3].scatter(timesteps, RBs_actions)
-#axis[3].set_title('RB allocation actions')
+axis[3].scatter(timesteps, RBs_actions)
+axis[3].set_title('RB allocation actions')
 
 
 

@@ -36,6 +36,7 @@ battery_energies = []
 energies_harvested = []
 energy_consumed = []
 local_energy = []
+tasks_dropped = []
 
 
 obs = env.reset()
@@ -73,6 +74,7 @@ for timestep in timesteps:
     #print('action: ', action)
     #print('reward: ', reward)
     rewards.append(reward[0])
+    tasks_dropped.append(env.SBS1.tasks_dropped)
     #print(sum(reward))
     #print(env.subcarriers)
 
@@ -104,7 +106,8 @@ print('max reward: ', max(rewards), 'min reward: ', min(rewards))
 #print('latencies: ', latencies)
 #print('Max Throughput: ', max(throughputs), 'Min Throughput: ', min(throughputs))
 #print(transmit_energies)
-plt.plot(timesteps, rewards, color ="red")
+#plt.plot(timesteps, rewards, color ="red")
+plt.plot(timesteps,tasks_dropped, color = "blue")
 #plt.scatter(timesteps,local_delays,color = "blue")
 #plt.scatter(timesteps,latencies,color = "green")
 #plt.plot(offload_ratios,throughput,color = "black")
