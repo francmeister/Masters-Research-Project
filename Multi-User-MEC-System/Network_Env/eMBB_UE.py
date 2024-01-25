@@ -398,6 +398,7 @@ class eMBB_UE(User_Equipment):
         cpu_cycles_left = self.max_service_rate_cycles_per_slot #check if 
         self.achieved_local_energy_consumption = 0
         self.dequeued_local_tasks.clear()
+        used_cpu_cycles = 0
         counter = 0
 
         for local_task in self.local_queue:
@@ -405,20 +406,22 @@ class eMBB_UE(User_Equipment):
             #print('local_task.required_computation_cycles: ', local_task.required_computation_cycles)
             if cpu_cycles_left > local_task.required_computation_cycles:
                 #print('cycles left: ', cpu_cycles_left)
-                self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(local_task.required_computation_cycles,2)*local_task.required_computation_cycles
+                #self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(local_task.required_computation_cycles,2)*local_task.required_computation_cycles
                 cpu_cycles_left-=local_task.required_computation_cycles
                 self.dequeued_local_tasks.append(local_task)
                 counter += 1
 
             elif cpu_cycles_left < local_task.required_computation_cycles and cpu_cycles_left > self.cycles_per_bit:
                 bits_that_can_be_processed = cpu_cycles_left/self.cycles_per_bit
-                self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(cpu_cycles_left,2)*cpu_cycles_left
+                #self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(cpu_cycles_left,2)*cpu_cycles_left
                 local_task.split_task(bits_that_can_be_processed) 
                 break
 
         for x in range(0,counter):
             self.local_queue.pop(0)
-
+        #self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2) = energy consumed per cycle (J/cycle)
+        used_cpu_cycles = self.max_service_rate_cycles_per_slot - cpu_cycles_left
+        self.achieved_local_energy_consumption = self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2)*used_cpu_cycles
         task_identities = []
         task_latency_requirements = []
         task_attained_queueing_latency = []
@@ -529,7 +532,8 @@ class eMBB_UE(User_Equipment):
 
         self.check_completed_tasks()
         #self.achieved_transmission_delay = 1
-        self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*self.achieved_transmission_delay
+        self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*(1/communication_channel.time_divisions_per_slot)*sum(self.allocated_RBs)
+        #self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*self.achieved_transmission_delay
         #print('self.achieved_transmission_energy_consumption: ', self.achieved_transmission_energy_consumption)
         #self.achieved_transmission_energy_consumption = interp(self.achieved_transmission_energy_consumption,[0,12*math.pow(10,-5)],[0,100])
         #print('transmission energy consumed: ', self.achieved_transmission_energy_consumption)
