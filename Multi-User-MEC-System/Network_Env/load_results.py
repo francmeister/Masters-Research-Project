@@ -11,6 +11,7 @@ fairness_index = np.load('fairnes_index.npy')
 sum_allocations_per_RB_matrix = np.load('sum_allocations_per_RB_matrix.npy')
 RB_allocation_matrix = np.load('RB_allocation_matrix.npy')
 delays = np.load('delays.npy')
+tasks_dropped = np.load('tasks_dropped.npy')
 print(RB_allocation_matrix)
 print(RBs_actions)
 
@@ -41,6 +42,7 @@ rewards_ = rewards[start_index:end_index]
 energies_ = energies[start_index:end_index]
 throughputs_ = throughputs[start_index:end_index]
 delays_ = delays[start_index:end_index]
+tasks_dropped_ = tasks_dropped[start_index:end_index]
 
 offload_actions_ = offload_actions[start_index:end_index]
 power_actions_ = power_actions[start_index:end_index]
@@ -61,7 +63,7 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-figure, axis = plt.subplots(4,1)
+figure, axis = plt.subplots(5,1)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
@@ -74,16 +76,17 @@ axis[0].set_title('total reward')
 # axis[1].plot(timesteps, delay_rewards)
 # axis[1].set_title('delay rewards')
 
-# axis[2].plot(timesteps, energy_efficiency_rewards)
-# axis[2].set_title('energy efficiency rewards')
-axis[1].scatter(timesteps, offload_actions)
-axis[1].set_title('offlaoding actions')
+axis[1].plot(timesteps, tasks_dropped)
+axis[1].set_title('tasks dropped')
 
-axis[2].scatter(timesteps, power_actions)
-axis[2].set_title('power allocation actions')
+axis[2].scatter(timesteps, offload_actions)
+axis[2].set_title('offlaoding actions')
 
-axis[3].scatter(timesteps, RBs_actions)
-axis[3].set_title('RB allocation actions')
+axis[3].scatter(timesteps, power_actions)
+axis[3].set_title('power allocation actions')
+
+axis[4].scatter(timesteps, RBs_actions)
+axis[4].set_title('RB allocation actions')
 
 
 
