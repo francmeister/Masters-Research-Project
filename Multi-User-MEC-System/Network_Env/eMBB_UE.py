@@ -64,12 +64,13 @@ class eMBB_UE(User_Equipment):
         self.min_lc_queue_length = 0
         self.min_off_queue_length = 0
 
-        self.battery_energy_level = 2000#(random.randint(15000,25000))
-
+        self.battery_energy_level = 20000#(random.randint(15000,25000))
+        self.energy_harvesting_constant = 300
         self.cycles_per_byte = 330
         self.cycles_per_bit = self.cycles_per_byte/8
         self.max_service_rate_cycles_per_slot = 620000#5000
         self.service_rate_bits_per_slot = (self.max_service_rate_cycles_per_slot/self.cycles_per_byte)*8
+        
 
         #self.QOS_requirement = QOS_requirement()
         #self.QOS_requirement_for_transmission = QOS_requirement()
@@ -90,7 +91,8 @@ class eMBB_UE(User_Equipment):
         self.distance_from_SBS = 0
         self.has_transmitted_this_time_slot = False
         self.communication_queue = []
-        self.energy_consumption_coefficient = math.pow(10,-12.3)
+        #self.energy_consumption_coefficient = math.pow(10,-12.3)
+        self.energy_consumption_coefficient = math.pow(10,-13.8)
         self.achieved_transmission_energy_consumption = 0
         self.achieved_local_processing_delay = 0
         self.achieved_total_energy_consumption = 0
@@ -155,6 +157,8 @@ class eMBB_UE(User_Equipment):
         self.current_queue_length_modified_lc = 0
         self.current_queue_length_modified_off = 0
         self.tasks_dropped = 0
+        self.small_scale_gain = []
+        self.large_scale_gain = []
 
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
@@ -605,7 +609,7 @@ class eMBB_UE(User_Equipment):
         #print(self.battery_energy_level)
         if self.battery_energy_level >  self.achieved_total_energy_consumption:
             self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
-            self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,1000],[0,1])
+            self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,5500],[0,1])
             self.battery_energy_level = self.battery_energy_level - self.achieved_total_energy_consumption
         else:
             self.achieved_total_energy_consumption = 0
@@ -627,11 +631,15 @@ class eMBB_UE(User_Equipment):
         number_of_RBs = communication_channel.num_allocate_RBs_upper_bound
         small_scale_gain = np.random.exponential(1,size=(1,number_of_RBs))
         large_scale_gain = np.random.exponential(1,size=(1,number_of_RBs))
+        self.small_scale_channel_gain = small_scale_gain
         first_large_scale_gain = large_scale_gain[0][0]
         item = 0
         for gain in large_scale_gain[0]:
             large_scale_gain[0][item] = first_large_scale_gain
             item+=1
+
+        self.small_scale_gain = small_scale_gain
+        self.large_scale_gain = large_scale_gain
         #print('small_scale_gain')
         #print(small_scale_gain)
         #print('larger_scale_gain')
@@ -720,7 +728,7 @@ class eMBB_UE(User_Equipment):
         if self.achieved_total_energy_consumption == 0:
             energy_efficiency = 0
         else:
-            energy_efficiency = self.achieved_channel_rate_normalized/self.achieved_total_energy_consumption_normalized#self.achieved_channel_rate#/self.achieved_total_energy_consumption #0.4*self.achieved_channel_rate_normalized/0.6*self.achieved_total_energy_consumption_normalized 
+            energy_efficiency = self.achieved_total_energy_consumption#self.achieved_channel_rate_normalized/self.achieved_total_energy_consumption_normalized#self.achieved_channel_rate#/self.achieved_total_energy_consumption #0.4*self.achieved_channel_rate_normalized/0.6*self.achieved_total_energy_consumption_normalized 
             
             #energy_efficiency = self.achieved_total_energy_consumption_normalized 
             
@@ -755,18 +763,23 @@ class eMBB_UE(User_Equipment):
 
     def harvest_energy(self):
         self.energy_harvested = np.random.exponential(250)#random.randint(0,2000)
+        small_scale_gain = self.small_scale_gain[0]
+        large_scale_gain = self.large_scale_gain[0]
+        total_gain = sum(small_scale_gain*large_scale_gain)
+        self.energy_harvested = self.energy_harvesting_constant*total_gain
+
 
     def energy_consumption_reward(self):
         energy_reward = self.battery_energy_level + self.energy_harversted - self.achieved_total_energy_consumption
 
-        max_energy_reward = 2000
-        min_energy_reward = 0
+        max_energy_reward = 20000
+        min_energy_reward = -3000
 
         #energy_reward_normalized = 0
-        if energy_reward >= 0:
-            energy_reward_normalized = interp(energy_reward,[min_energy_reward,max_energy_reward],[0,1])
-        else:
-            energy_reward_normalized = -0.2
+        #if energy_reward >= 0:
+        energy_reward_normalized = interp(energy_reward,[min_energy_reward,max_energy_reward],[0,1])
+        #else:
+        #    energy_reward_normalized = -0.2
 
         return energy_reward_normalized
     
