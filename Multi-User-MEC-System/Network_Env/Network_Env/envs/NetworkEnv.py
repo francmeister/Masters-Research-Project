@@ -269,7 +269,7 @@ class NetworkEnv(gym.Env):
         #collect the final action - number of URLLC users per RB
         
         #print('Action after interpolation transposed')
-        #offload_decisions_actions_mapped = [0]#[0, 0, 0.5, 0.5, 1, 1, 1]
+        #offload_decisions_actions_mapped = [0.9]#[0, 0, 0.5, 0.5, 1, 1, 1]
         #transmit_power_actions_mapped = [400]#,20,20,20,20,20,20]
         #RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
         #print(RB_allocation_actions)

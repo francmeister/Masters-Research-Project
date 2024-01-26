@@ -64,8 +64,8 @@ class eMBB_UE(User_Equipment):
         self.min_lc_queue_length = 0
         self.min_off_queue_length = 0
 
-        self.battery_energy_level = 20000#(random.randint(15000,25000))
-        self.energy_harvesting_constant = 300
+        self.battery_energy_level = 25000#(random.randint(15000,25000))
+        self.energy_harvesting_constant = 500
         self.cycles_per_byte = 330
         self.cycles_per_bit = self.cycles_per_byte/8
         self.max_service_rate_cycles_per_slot = 100000#620000
@@ -92,7 +92,7 @@ class eMBB_UE(User_Equipment):
         self.has_transmitted_this_time_slot = False
         self.communication_queue = []
         #self.energy_consumption_coefficient = math.pow(10,-12.3)
-        self.energy_consumption_coefficient = math.pow(10,-11)
+        self.energy_consumption_coefficient = math.pow(10,-11.8)
         self.achieved_transmission_energy_consumption = 0
         self.achieved_local_processing_delay = 0
         self.achieved_total_energy_consumption = 0
@@ -737,7 +737,7 @@ class eMBB_UE(User_Equipment):
         min_energy_efficiency = 0
         max_energy_efficiency = 10
         #energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[50000,200000])
-        return self.achieved_total_energy_consumption#energy_efficiency
+        return energy_efficiency
     
     def calculate_throughput_reward(self,communication_channel):
         queue_size = self.user_state_space.calculate_communication_queue_size()
@@ -772,10 +772,10 @@ class eMBB_UE(User_Equipment):
 
 
     def energy_consumption_reward(self):
-        energy_reward = self.battery_energy_level + self.energy_harversted - self.achieved_total_energy_consumption
+        energy_reward = self.battery_energy_level #+ self.energy_harversted 
 
-        max_energy_reward = 20000
-        min_energy_reward = -3000
+        max_energy_reward = 40000
+        min_energy_reward = -10000
 
         #energy_reward_normalized = 0
         #if energy_reward >= 0:
@@ -783,7 +783,7 @@ class eMBB_UE(User_Equipment):
         #else:
         #    energy_reward_normalized = -0.2
 
-        return energy_reward_normalized
+        return energy_reward#_normalized
     
     def increment_task_queue_timers(self):
         if len(self.task_queue) > 0:
