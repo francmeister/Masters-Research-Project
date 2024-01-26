@@ -57,6 +57,7 @@ class Communication_Channel():
         self.system_bandwidth_Hz = 120*math.pow(10,6)
         self.subcarrier_bandwidth_Hz = 15*math.pow(10,3) # 15kHz
         self.num_subcarriers_per_RB = 12
+        self.num_subcarriers_per_RB = 20
         self.RB_bandwidth_Hz = self.subcarrier_bandwidth_Hz*self.num_subcarriers_per_RB
         self.num_RB = int(self.system_bandwidth_Hz/self.RB_bandwidth_Hz)
         self.long_TTI = 1 #1ms

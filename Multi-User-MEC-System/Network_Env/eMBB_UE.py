@@ -68,7 +68,7 @@ class eMBB_UE(User_Equipment):
         self.energy_harvesting_constant = 300
         self.cycles_per_byte = 330
         self.cycles_per_bit = self.cycles_per_byte/8
-        self.max_service_rate_cycles_per_slot = 620000#5000
+        self.max_service_rate_cycles_per_slot = 100000#620000
         self.service_rate_bits_per_slot = (self.max_service_rate_cycles_per_slot/self.cycles_per_byte)*8
         
 
@@ -92,7 +92,7 @@ class eMBB_UE(User_Equipment):
         self.has_transmitted_this_time_slot = False
         self.communication_queue = []
         #self.energy_consumption_coefficient = math.pow(10,-12.3)
-        self.energy_consumption_coefficient = math.pow(10,-13.8)
+        self.energy_consumption_coefficient = math.pow(10,-11)
         self.achieved_transmission_energy_consumption = 0
         self.achieved_local_processing_delay = 0
         self.achieved_total_energy_consumption = 0
@@ -459,8 +459,8 @@ class eMBB_UE(User_Equipment):
             # print('Local Computation energy consumed in this slot: ', self.achieved_local_energy_consumption)
             # print(' ')
             # print('-----------------dequeued local tasks size total---------------------')
-            # print(total_sum_size_dequeued_tasks)
-            # print('')
+            #print(total_sum_size_dequeued_tasks)
+            #print('')
 
         #print(' ')
         #print(' ')
@@ -476,6 +476,8 @@ class eMBB_UE(User_Equipment):
         offloading_bits = 0
         counter = 0
         self.dequeued_offload_tasks.clear()
+        #print('achieved channel rate')
+        #print(self.achieved_channel_rate)
         if self.achieved_channel_rate == 0:
             self.achieved_transmission_delay = 0
         else:
@@ -735,7 +737,7 @@ class eMBB_UE(User_Equipment):
         min_energy_efficiency = 0
         max_energy_efficiency = 10
         #energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[50000,200000])
-        return energy_efficiency
+        return self.achieved_total_energy_consumption#energy_efficiency
     
     def calculate_throughput_reward(self,communication_channel):
         queue_size = self.user_state_space.calculate_communication_queue_size()

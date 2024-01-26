@@ -269,8 +269,10 @@ class NetworkEnv(gym.Env):
         #collect the final action - number of URLLC users per RB
         
         #print('Action after interpolation transposed')
-        #offload_decisions_actions_mapped = [0.5]#[0, 0, 0.5, 0.5, 1, 1, 1]
-        #transmit_power_actions_mapped = [1000]#,20,20,20,20,20,20]
+        #offload_decisions_actions_mapped = [0]#[0, 0, 0.5, 0.5, 1, 1, 1]
+        #transmit_power_actions_mapped = [400]#,20,20,20,20,20,20]
+        #RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
+        #print(RB_allocation_actions)
         #RB_allocation_actions_mapped = [6]#,10,15,15,20,20,20]
         #number_URLLC_Users_per_RB_action_mapped = 3
         #print("New Timestep: ", self.steps)
@@ -300,6 +302,7 @@ class NetworkEnv(gym.Env):
 
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_RBs()
+        
         self.Communication_Channel_1.allocate_RBs_eMBB(self.eMBB_Users,RB_allocation_actions)
         #self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users,subcarrier_allocation_actions)
         #self.Communication_Channel_1.create_resource_blocks_URLLC()
