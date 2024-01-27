@@ -68,7 +68,7 @@ class eMBB_UE(User_Equipment):
         self.energy_harvesting_constant = 300
         self.cycles_per_byte = 330
         self.cycles_per_bit = self.cycles_per_byte/8
-        self.max_service_rate_cycles_per_slot = 620000#100000#620000
+        self.max_service_rate_cycles_per_slot = 100000#620000
         self.service_rate_bits_per_slot = (self.max_service_rate_cycles_per_slot/self.cycles_per_byte)*8
         
 
