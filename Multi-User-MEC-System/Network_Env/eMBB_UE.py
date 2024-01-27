@@ -68,7 +68,7 @@ class eMBB_UE(User_Equipment):
         self.energy_harvesting_constant = 300
         self.cycles_per_byte = 330
         self.cycles_per_bit = self.cycles_per_byte/8
-        self.max_service_rate_cycles_per_slot = 100000#620000
+        self.max_service_rate_cycles_per_slot = 620000
         self.service_rate_bits_per_slot = (self.max_service_rate_cycles_per_slot/self.cycles_per_byte)*8
         
 
@@ -886,11 +886,16 @@ class eMBB_UE(User_Equipment):
         
         if self.current_queue_length_modified_off > 0:
             current_arrival_rate_off = self.current_arrival_rate*self.allocated_offloading_ratio
-            offload_queuing_delay_modified = self.current_queue_length_modified_off/current_arrival_rate_off
+            if current_arrival_rate_off > 0:
+                offload_queuing_delay_modified = self.current_queue_length_modified_off/current_arrival_rate_off
     
         if self.current_queue_length_modified_lc > 0:
             current_arrival_rate_lc = self.current_arrival_rate*(1-self.allocated_offloading_ratio)
-            local_queuing_delay_modified = self.current_queue_length_modified_lc/current_arrival_rate_lc
+            if current_arrival_rate_lc > 0:
+                local_queuing_delay_modified = self.current_queue_length_modified_lc/current_arrival_rate_lc
+            else:
+                local_queuing_delay_modified = 999999
+            
 
         #delay_reward = 1/max(offload_queuing_delay,local_queuing_delay)
         delay = max(offload_queuing_delay_modified,local_queuing_delay_modified)
