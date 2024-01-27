@@ -736,6 +736,11 @@ class eMBB_UE(User_Equipment):
             
         min_energy_efficiency = 0
         max_energy_efficiency = 10
+        print('energy')
+        print(self.achieved_total_energy_consumption_normalized)
+        print('throughput')
+        print(self.achieved_channel_rate_normalized)
+        print('')
         #energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[50000,200000])
         return energy_efficiency
     
