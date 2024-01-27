@@ -64,11 +64,11 @@ class eMBB_UE(User_Equipment):
         self.min_lc_queue_length = 0
         self.min_off_queue_length = 0
 
-        self.battery_energy_level = 25000#(random.randint(15000,25000))
-        self.energy_harvesting_constant = 500
+        self.battery_energy_level = 20000#(random.randint(15000,25000))
+        self.energy_harvesting_constant = 300
         self.cycles_per_byte = 330
         self.cycles_per_bit = self.cycles_per_byte/8
-        self.max_service_rate_cycles_per_slot = 100000#620000
+        self.max_service_rate_cycles_per_slot = 620000#100000#620000
         self.service_rate_bits_per_slot = (self.max_service_rate_cycles_per_slot/self.cycles_per_byte)*8
         
 
@@ -92,7 +92,7 @@ class eMBB_UE(User_Equipment):
         self.has_transmitted_this_time_slot = False
         self.communication_queue = []
         #self.energy_consumption_coefficient = math.pow(10,-12.3)
-        self.energy_consumption_coefficient = math.pow(10,-11.8)
+        self.energy_consumption_coefficient = math.pow(10,-13.8)
         self.achieved_transmission_energy_consumption = 0
         self.achieved_local_processing_delay = 0
         self.achieved_total_energy_consumption = 0
