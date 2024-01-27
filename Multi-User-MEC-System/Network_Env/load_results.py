@@ -76,10 +76,10 @@ axis[0].set_title('total reward')
 # axis[1].plot(timesteps, tasks_dropped)
 # axis[1].set_title('tasks dropped')
 
-axis[1].plot(timesteps, energies)
+axis[1].plot(timesteps, energy_efficiency_rewards)
 axis[1].set_title('enegies')
 
-axis[2].plot(timesteps, throughputs)
+axis[2].plot(timesteps, delay_rewards)
 axis[2].set_title('throughputs')
 
 # axis[2].plot(timesteps, delay_rewards)
