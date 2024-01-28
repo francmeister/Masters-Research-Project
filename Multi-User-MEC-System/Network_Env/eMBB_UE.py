@@ -784,7 +784,7 @@ class eMBB_UE(User_Equipment):
         #else:
         #    energy_reward_normalized = -0.2
 
-        return energy_reward#_normalized
+        return energy_reward_normalized
     
     def increment_task_queue_timers(self):
         if len(self.task_queue) > 0:
