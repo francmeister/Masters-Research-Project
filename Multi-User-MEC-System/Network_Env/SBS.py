@@ -187,6 +187,8 @@ class SBS():
         overall_users_reward = total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
         overall_users_rewards = [overall_users_reward for _ in range(len(eMBB_Users))]
 
+        print('overall_users_rewards')
+        print(overall_users_rewards)
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
         fairness_index_normalized = 0.2*interp(fairness_index,[0,1],[0,1])
