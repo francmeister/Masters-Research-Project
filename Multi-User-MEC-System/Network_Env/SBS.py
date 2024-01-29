@@ -160,7 +160,10 @@ class SBS():
             total_users_throughput_reward += eMBB_User_channel_rate
             total_users_battery_energies_reward += battery_energy_reward
             total_users_delay_rewards += queue_delay_reward
-            total_users_delay_times_energy_reward += (queue_delay_reward*(1/eMBB_User_energy_consumption))
+            if eMBB_User_energy_consumption == 0:
+                total_users_delay_times_energy_reward = 0
+            else:
+                total_users_delay_times_energy_reward += (queue_delay_reward*(1/eMBB_User_energy_consumption))
             total_users_resource_allocation_reward += resource_allocation_reward
 
         
