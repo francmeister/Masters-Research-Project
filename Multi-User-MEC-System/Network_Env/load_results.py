@@ -34,7 +34,7 @@ rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
 throughputs = rewards_throughput_energy[:,3]
 
-start_index = 400
+start_index = 6200
 end_index = 25000
 
 timesteps_ = timesteps[start_index:end_index]
@@ -43,6 +43,8 @@ energies_ = energies[start_index:end_index]
 throughputs_ = throughputs[start_index:end_index]
 delays_ = delays[start_index:end_index]
 tasks_dropped_ = tasks_dropped[start_index:end_index]
+delay_rewards_ = delay_rewards[start_index:end_index]
+battery_energy_rewards_ = battery_energy_rewards[start_index:end_index]
 
 offload_actions_ = offload_actions[start_index:end_index]
 power_actions_ = power_actions[start_index:end_index]
@@ -70,20 +72,26 @@ figure, axis = plt.subplots(2,1)
 # axis[0].plot(timesteps, battery_energy_rewards)
 # axis[0].set_title('battery energies reward')
 
-axis[0].plot(timesteps, rewards)
-axis[0].set_title('total reward')
+# axis[0].plot(timesteps, rewards)
+# axis[0].set_title('total reward')
 
 # axis[1].plot(timesteps, tasks_dropped)
 # axis[1].set_title('tasks dropped')
 
-# axis[1].plot(timesteps, energy_efficiency_rewards)
-# axis[1].set_title('energy efficiency reward')
+axis[0].plot(timesteps, battery_energy_rewards)
+axis[0].set_title('battery energy reward')
+
+axis[1].plot(timesteps, tasks_dropped)
+axis[1].set_title('tasks dropped')
+
+# axis[2].plot(timesteps, throughputs)
+# axis[2].set_title('throughput')
 
 # axis[2].plot(timesteps, delay_rewards)
 # axis[2].set_title('delay reward')
 
-axis[1].plot(timesteps, battery_energy_rewards)
-axis[1].set_title('battery energy reward')
+# axis[3].plot(timesteps, battery_energy_rewards)
+# axis[3].set_title('battery energy reward')
 
 # axis[3].plot(timesteps, battery_energy_rewards)
 # axis[3].set_title('battery_energy_rewards')

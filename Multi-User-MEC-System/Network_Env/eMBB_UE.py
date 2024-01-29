@@ -159,6 +159,7 @@ class eMBB_UE(User_Equipment):
         self.tasks_dropped = 0
         self.small_scale_gain = []
         self.large_scale_gain = []
+        self.communication_queue_size_before_offloading = 0
 
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
@@ -476,6 +477,10 @@ class eMBB_UE(User_Equipment):
         offloading_bits = 0
         counter = 0
         self.dequeued_offload_tasks.clear()
+        self.communication_queue_size_before_offloading = 0
+
+        for offloading_task in self.communication_queue:
+            self.communication_queue_size_before_offloading += offloading_task.slot_task_size
         #print('achieved channel rate')
         #print(self.achieved_channel_rate)
         if self.achieved_channel_rate == 0:
@@ -677,7 +682,6 @@ class eMBB_UE(User_Equipment):
         channel_rate_denominator = communication_channel.noise_spectral_density_W*RB_bandwidth_Hz
         min_achievable_rate = min_num_RB*(RB_bandwidth_Hz*math.log2(1+(min_channel_rate_numerator/channel_rate_denominator)))
         max_achievable_rate = max_num_RB*(RB_bandwidth_Hz*math.log2(1+(max_channel_rate_numerator/channel_rate_denominator)))
-
         return min_achievable_rate, max_achievable_rate
     
     def min_and_max_achievable_local_energy_consumption(self):
@@ -740,8 +744,8 @@ class eMBB_UE(User_Equipment):
         #energy_efficiency = interp(energy_efficiency,[min_energy_efficiency,max_energy_efficiency],[50000,200000])
         return energy_efficiency
     
-    def calculate_throughput_reward(self,communication_channel):
-        queue_size = self.user_state_space.calculate_communication_queue_size()
+    def calculate_resource_allocation_reward(self,communication_channel):
+        offload_queue_size = self.communication_queue_size_before_offloading
         #normalize queue size
         #queue_size_normalized = interp(queue_size,[0,self.max_communication_qeueu_size],[0,1])
         #print('queue size: ', queue_size)
@@ -749,16 +753,16 @@ class eMBB_UE(User_Equipment):
         #normalize achieved thoughput
         #min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
         #achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[min_achievable_rate,max_achievable_rate],[0,1])
-        throughput_reward = self.achieved_channel_rate - queue_size
+        resource_allocation_reward = self.achieved_channel_rate - offload_queue_size
         #print('throughput reward: ', throughput_reward)
         #Normailze throughput reward
-        min_throughput_reward = -28960000
-        max_throughput_reward = 159844000
-        if(throughput_reward > 0):
-            throughput_reward_normalized = interp(throughput_reward,[min_throughput_reward,max_throughput_reward],[0,1])
-        else:
-            throughput_reward_normalized = -0.65
-        return throughput_reward_normalized
+        min_resource_allocation_reward = -offload_queue_size
+        max_resource_allocation_reward = 7000
+        #if(throughput_reward > 0):
+        resource_allocation_rewardd_normalized = interp(resource_allocation_reward,[min_resource_allocation_reward,max_resource_allocation_reward],[0,5])
+        #else:
+            #throughput_reward_normalized = -0.65
+        return resource_allocation_rewardd_normalized
 
     def compute_battery_energy_level(self):
         self.previous_slot_battery_energy = self.battery_energy_level
