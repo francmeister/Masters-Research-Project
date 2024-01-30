@@ -170,7 +170,7 @@ class SBS():
             #if eMBB_User_energy_consumption == 0:
             #    individual_reward = 0
             #else:
-            individual_reward = energy_efficiency_reward*queue_delay_reward + battery_energy_reward  
+            individual_reward = energy_efficiency_reward#*queue_delay_reward + battery_energy_reward  
       
             self.achieved_system_reward += individual_reward
             self.individual_rewards.append(individual_reward)
@@ -210,8 +210,8 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
   
-        #return self.achieved_system_reward, self.individual_rewards , self.energy_rewards,self.throughput_rewards
-        return self.achieved_system_reward, overall_users_rewards , self.energy_rewards,self.throughput_rewards
+        return self.achieved_system_reward, self.individual_rewards , self.energy_rewards,self.throughput_rewards
+        #return self.achieved_system_reward, overall_users_rewards , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
         processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency
