@@ -184,8 +184,8 @@ class SBS():
             self.tasks_dropped+=tasks_dropped
             self.resource_allocation_rewards += resource_allocation_reward
 
-        overall_users_reward = 1/total_users_energy_reward#total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
-        overall_users_rewards = [overall_users_reward for _ in range(len(eMBB_Users))]
+        #overall_users_reward = 1/total_users_energy_reward#total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
+        #overall_users_rewards = [overall_users_reward for _ in range(len(eMBB_Users))]
        
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
