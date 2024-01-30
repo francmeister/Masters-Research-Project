@@ -184,7 +184,7 @@ class SBS():
             self.tasks_dropped+=tasks_dropped
             self.resource_allocation_rewards += resource_allocation_reward
 
-        overall_users_reward = total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
+        overall_users_reward = 1/total_users_energy_reward#total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
         overall_users_rewards = [overall_users_reward for _ in range(len(eMBB_Users))]
        
         fairness_index = self.calculate_fairness(eMBB_Users)
@@ -210,8 +210,8 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
   
-        return self.achieved_system_reward, self.individual_rewards , self.energy_rewards,self.throughput_rewards
-        #return self.achieved_system_reward, overall_users_rewards , self.energy_rewards,self.throughput_rewards
+        #return self.achieved_system_reward, self.individual_rewards , self.energy_rewards,self.throughput_rewards
+        return self.achieved_system_reward, overall_users_rewards , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
         processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency
