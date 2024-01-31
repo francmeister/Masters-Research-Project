@@ -52,6 +52,7 @@ class NetworkEnv(gym.Env):
         self.rewards = []
         self.sum_allocations_per_RB_matrix = []
         self.RB_allocation_matrix = []
+        self.resource_block_allocation_matrix = []
 
         #Define upper and lower bounds of observation and action spaces
         
@@ -183,7 +184,9 @@ class NetworkEnv(gym.Env):
                      done_sampling = False
         binary_actions = action['binary_actions']
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
-        #print(resource_block_action_matrix)
+        self.resource_block_allocation_matrix.clear()
+        self.resource_block_allocation_matrix.append(resource_block_action_matrix)
+       
         #print(np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot))
         
         return action
@@ -472,6 +475,7 @@ class NetworkEnv(gym.Env):
         self.min_lc_queue_length = 0
         self.max_off_queue_length = self.eMBB_UE_1.max_off_queue_length
         self.min_off_queue_length = 0
+        self.resource_block_allocation_matrix = []
        
         for eMBB_User in self.eMBB_Users:
             #eMBB_User.set_properties_UE()

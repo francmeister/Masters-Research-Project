@@ -50,6 +50,7 @@ for timestep in timesteps:
     action = env.enforce_constraint(action)
     #print('----------------------------------------------------------------------------------------------------------------------------------------------------')
     #print(action)
+    #print('')
     #print(action)
     
     #print(timestep)
@@ -77,6 +78,8 @@ for timestep in timesteps:
     #print('reward: ', reward)
     rewards.append(reward[0])
     tasks_dropped.append(env.SBS1.tasks_dropped)
+  
+
     #print(sum(reward))
     #print(env.subcarriers)
 
