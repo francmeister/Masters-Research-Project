@@ -167,6 +167,14 @@ class NetworkEnv(gym.Env):
 
         return action_space_dict
 
+    def check_resource_block_allocation_constraint(self, binary_actions):
+        resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
+        done_sampling = False
+        resource_allocation_penalty = 0
+        if not np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot):
+            resource_allocation_penalty = -0.05
+
+        return resource_allocation_penalty
 
     def enforce_constraint(self,action):
        
@@ -202,7 +210,9 @@ class NetworkEnv(gym.Env):
         #action = self.enforce_constraint(action)
         box_action = np.array(action['box_actions'])
         binary_actions = action['binary_actions']
-       
+
+        resource_block_allocation_penalty = self.check_resource_block_allocation_constraint(binary_actions)
+    
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
 
         #print('resource_block_action_matrix')
@@ -332,6 +342,10 @@ class NetworkEnv(gym.Env):
         self.SBS1.calculate_achieved_total_rate_eMBB_users(self.eMBB_Users)
         self.SBS1.calculate_achieved_system_energy_efficiency()
         system_reward, reward, self.total_energy,self.total_rate = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users,self.Communication_Channel_1)
+    
+        reward = [x + resource_block_allocation_penalty for x in reward]
+       
+        
         #print('Reward')
         #print(reward)
         #print(' ')
