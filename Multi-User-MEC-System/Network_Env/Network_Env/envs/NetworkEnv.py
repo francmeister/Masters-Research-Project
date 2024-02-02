@@ -175,7 +175,7 @@ class NetworkEnv(gym.Env):
         done_sampling = False
         resource_allocation_penalty = 0
         if not np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot):
-            resource_allocation_penalty = -0.2
+            resource_allocation_penalty = -0.5
             self.resource_allocation_constraint_violation+=1
 
         return resource_allocation_penalty
