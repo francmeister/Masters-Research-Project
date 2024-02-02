@@ -53,6 +53,7 @@ class NetworkEnv(gym.Env):
         self.sum_allocations_per_RB_matrix = []
         self.RB_allocation_matrix = []
         self.resource_block_allocation_matrix = []
+        self.resource_allocation_constraint_violation = 0
 
         #Define upper and lower bounds of observation and action spaces
         
@@ -109,11 +110,13 @@ class NetworkEnv(gym.Env):
      
         self.box_action_space = spaces.Box(low=action_space_low,high=action_space_high)
         self.binary_action_space = spaces.MultiBinary(self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
+        self.user_resource_block_allocations = spaces.MultiDiscrete([self.number_of_users+1]*(self.time_divisions_per_slot*self.num_allocate_RB_upper_bound))
 
         # Combine the action spaces into a dictionary
         self.action_space = spaces.Dict({
             'box_actions': self.box_action_space,
-            'binary_actions': self.binary_action_space
+            'binary_actions': self.binary_action_space,
+            'user_resource_block_allocations':self.user_resource_block_allocations
         })
 
         #self.action_space = spaces.Box(low=action_space_low,high=action_space_high)
@@ -172,7 +175,8 @@ class NetworkEnv(gym.Env):
         done_sampling = False
         resource_allocation_penalty = 0
         if not np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot):
-            resource_allocation_penalty = -2
+            resource_allocation_penalty = -0.05
+            self.resource_allocation_constraint_violation+=1
 
         return resource_allocation_penalty
 
@@ -199,6 +203,11 @@ class NetworkEnv(gym.Env):
         
         return action
 
+    def user_binary_resource_allocations(self,user_resource_block_allocations):
+        user_id = 0
+        for eMBB_user in self.eMBB_Users:
+            user_id = eMBB_user.eMBB_UE_label
+            
     def step(self,action):
         #.self.selected_actions =
         #print('------------')
@@ -210,6 +219,9 @@ class NetworkEnv(gym.Env):
         #action = self.enforce_constraint(action)
         box_action = np.array(action['box_actions'])
         binary_actions = action['binary_actions']
+        #user_resource_block_allocations = action['user_resource_block_allocations']
+        #user_resource_block_allocations = user_resource_block_allocations.reshape(self.time_divisions_per_slot,self.num_allocate_RB_upper_bound)
+ 
 
         resource_block_allocation_penalty = self.check_resource_block_allocation_constraint(binary_actions)
     
@@ -490,6 +502,7 @@ class NetworkEnv(gym.Env):
         self.max_off_queue_length = self.eMBB_UE_1.max_off_queue_length
         self.min_off_queue_length = 0
         self.resource_block_allocation_matrix = []
+        self.resource_allocation_constraint_violation = 0
        
         for eMBB_User in self.eMBB_Users:
             #eMBB_User.set_properties_UE()
