@@ -157,9 +157,12 @@ class eMBB_UE(User_Equipment):
         self.current_queue_length_modified_lc = 0
         self.current_queue_length_modified_off = 0
         self.tasks_dropped = 0
-        self.small_scale_gain = []
-        self.large_scale_gain = []
+        self.small_scale_gain = np.zeros(self.communication_channel.num_allocate_RBs_upper_bound)
+        self.small_scale_gain = np.array([self.small_scale_gain])
+        self.large_scale_gain = np.zeros(self.communication_channel.num_allocate_RBs_upper_bound)
+        self.large_scale_gain = np.array([self.large_scale_gain])
         self.communication_queue_size_before_offloading = 0
+        self.allocated_resource_blocks_numbered = []
 
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
@@ -353,12 +356,12 @@ class eMBB_UE(User_Equipment):
             # print('Size of offloading queue: ',sum(offload_task_sizes_bits))
        
 
-    def transmit_to_SBS(self, communication_channel):
+    def transmit_to_SBS(self, communication_channel, URLLC_users):
         #Calculate the bandwidth achieved on each RB
         achieved_RB_channel_rates = []
         #print('number of allocated RBs: ', len(self.allocate(d_RBs))
         count = 0
-
+        self.find_puncturing_users(communication_channel,URLLC_users)
         #print('allocated RBs')
         #print(self.allocated_RBs)
         if self.battery_energy_level > 0 and self.has_transmitted_this_time_slot == True:
@@ -373,19 +376,7 @@ class eMBB_UE(User_Equipment):
              self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,1])   
         # 
          
-        '''
-        if (len(self.allocated_RBs)  > 0) and (self.battery_energy_level > 0):
-            for RB in self.allocated_RBs:
-                achieved_RB_channel_rate = self.calculate_channel_rate(communication_channel)
-                achieved_RB_channel_rates.append(achieved_RB_channel_rate)
-            #print('channel gain: ', self.total_gain, " achieved channel rate matrix: ", achieved_RB_channel_rates)
-            self.achieved_channel_rate = sum(achieved_RB_channel_rates)
-            min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
-            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,15000],[0,1])
-        else:
-            self.achieved_channel_rate = 0
-            self.achieved_channel_rate_normalized = 0
-        '''
+
         
 
         #print('achieved channel rate: ', self.achieved_channel_rate)
@@ -647,6 +638,7 @@ class eMBB_UE(User_Equipment):
 
         self.small_scale_gain = small_scale_gain
         self.large_scale_gain = large_scale_gain
+    
         #print('small_scale_gain')
         #print(small_scale_gain)
         #print('larger_scale_gain')
@@ -910,6 +902,29 @@ class eMBB_UE(User_Equipment):
         delay_reward_normalized = interp(delay_reward,[min_delay_reward,max_delay_reward],[0,1])
         #self.current_queue_length_modified_off,self.current_queue_length_modified_lc
         return delay_reward,delay
+    
+    def find_puncturing_users(self,communication_channel,URLLC_users):
+        reshaped_allocated_RBs = np.array(self.allocated_RBs)
+        reshaped_allocated_RBs = reshaped_allocated_RBs.squeeze()#.reshape(1,communication_channel.time_divisions_per_slot*communication_channel.num_allocate_RBs_upper_bound)
+        reshaped_allocated_RBs = reshaped_allocated_RBs.reshape(communication_channel.time_divisions_per_slot,communication_channel.num_allocate_RBs_upper_bound)
+        print(reshaped_allocated_RBs)
+        sum_matrix = np.sum(reshaped_allocated_RBs,axis=0)
+        print('sum_matrix')
+        print(sum_matrix)
+        print('')
+        r = 1
+        self.allocated_resource_blocks_numbered.clear()
+        for matrix in sum_matrix:
+            
+            if matrix == 1 or matrix == 2:
+                self.allocated_resource_blocks_numbered.append(r)
+
+            r+=1
+
+        # for URLLC_user in URLLC_users:
+        #     print('URLLC users allocated RB: ', URLLC_user.assigned_resource_block)
+       
+
      
 
 

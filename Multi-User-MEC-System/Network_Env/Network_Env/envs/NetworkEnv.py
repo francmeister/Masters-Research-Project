@@ -2,6 +2,7 @@ import gym
 from gym import spaces
 import pygame, sys, time, random, numpy as np
 from eMBB_UE import eMBB_UE
+from URLLC_UE import URLLC_UE
 from Communication_Channel import Communication_Channel
 from SBS import SBS
 from numpy import interp
@@ -196,8 +197,11 @@ class NetworkEnv(gym.Env):
                      done_sampling = False
         binary_actions = action['binary_actions']
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
+        
         self.resource_block_allocation_matrix.clear()
         self.resource_block_allocation_matrix.append(resource_block_action_matrix)
+        print(resource_block_action_matrix)
+        print('')
        
         #print(np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot))
         
@@ -226,6 +230,7 @@ class NetworkEnv(gym.Env):
         resource_block_allocation_penalty = self.check_resource_block_allocation_constraint(binary_actions)
     
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
+    
         self.resource_block_allocation_matrix.append(resource_block_action_matrix)
         #print('resource_block_action_matrix')
         #print(resource_block_action_matrix)
@@ -336,17 +341,21 @@ class NetworkEnv(gym.Env):
         #self.Communication_Channel_1.allocate_resource_blocks_URLLC(self.URLLC_Users)
         #self.Communication_Channel_1.subcarrier_URLLC_User_mapping()
 
+
         for eMBB_User in self.eMBB_Users:
             eMBB_User.increment_task_queue_timers()
             eMBB_User.split_tasks()
         
         for eMBB_User in self.eMBB_Users:
             #if eMBB_User.has_transmitted_this_time_slot == True:
-            eMBB_User.transmit_to_SBS(self.Communication_Channel_1)
+            eMBB_User.transmit_to_SBS(self.Communication_Channel_1,self.URLLC_Users)
             eMBB_User.local_processing()
             eMBB_User.offloading(self.Communication_Channel_1)
             eMBB_User.total_energy_consumed()
             eMBB_User.total_processing_delay()
+
+        for URLLC_user in self.URLLC_Users:
+            URLLC_user.calculate_achieved_channel_rate(self.eMBB_Users)
 
         self.SBS1.receive_offload_packets(self.eMBB_Users)
         self.SBS1.calculate_achieved_total_system_energy_consumption(self.eMBB_Users)
@@ -517,11 +526,12 @@ class NetworkEnv(gym.Env):
         self.URLLC_Users.clear()
         self.group_users()
 
-        self.SBS1.associate_users(self.eMBB_Users)
+        self.SBS1.associate_users(self.eMBB_Users, self.URLLC_Users)
         self.Communication_Channel_1.set_properties()
 
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_RBs()
+        self.SBS1.allocate_resource_blocks_URLLC(self.Communication_Channel_1, self.URLLC_Users)
         info = {'reward': 0}
         #print('battery enegy: ', self.SBS1.system_state_space[4])
         #observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
@@ -578,6 +588,12 @@ class NetworkEnv(gym.Env):
         self.eMBB_UE_2 = eMBB_UE(2,100,600)
         self.eMBB_UE_3 = eMBB_UE(3,100,600)
 
+        self.URLLC_UE_1 = URLLC_UE(1,100,600)
+        self.URLLC_UE_2 = URLLC_UE(2,100,600)
+        self.URLLC_UE_3 = URLLC_UE(3,100,600)
+        self.URLLC_UE_4 = URLLC_UE(4,100,600)
+
+
         #Communication Channel
         self.Communication_Channel_1 = Communication_Channel(self.SBS1.SBS_label)
 
@@ -587,7 +603,7 @@ class NetworkEnv(gym.Env):
         self.group_users()
 
         #Associate SBS with users
-        self.SBS1.associate_users(self.eMBB_Users)
+        self.SBS1.associate_users(self.eMBB_Users,self.URLLC_Users)
 
 
 
@@ -596,6 +612,11 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.append(self.eMBB_UE_1)
         self.eMBB_Users.append(self.eMBB_UE_2)
         self.eMBB_Users.append(self.eMBB_UE_3)
+
+        self.URLLC_Users.append(self.URLLC_UE_1)
+        self.URLLC_Users.append(self.URLLC_UE_2)
+        self.URLLC_Users.append(self.URLLC_UE_3)
+        self.URLLC_Users.append(self.URLLC_UE_4)
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:

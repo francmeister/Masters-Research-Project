@@ -46,8 +46,9 @@ print(obs)
 #print(env.observation_space.sample())
 #expl_noise = 0.5
 for timestep in timesteps:
+    print('----------------------------------------------------------------------------------------------------------------------------------------------------')
     action = env.action_space.sample()
-    #action = env.enforce_constraint(action)
+    action = env.enforce_constraint(action)
     #print('----------------------------------------------------------------------------------------------------------------------------------------------------')
     #print(action)
     #print('')
@@ -78,6 +79,7 @@ for timestep in timesteps:
     #print('reward: ', reward)
     rewards.append(reward[0])
     tasks_dropped.append(env.SBS1.tasks_dropped)
+    
   
 
     #print(sum(reward))

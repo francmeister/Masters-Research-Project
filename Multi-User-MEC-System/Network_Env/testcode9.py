@@ -1,8 +1,5 @@
 import numpy as np
-num_users = 3
 
-num_mini_slots = 2
+f = np.random.binomial(size=1,n=1,p=0.5)
 
-num_resource_blocks = 4
-
-print(np.zeros((num_users, num_mini_slots, num_resource_blocks), dtype=np.int8))
+print(f)

@@ -1,6 +1,7 @@
 import pygame, sys, time, random
 pygame.init()
 import math
+import numpy as np
 from numpy import interp
 class SBS():
     def __init__(self, SBS_label):
@@ -11,8 +12,9 @@ class SBS():
         self.individual_rewards = []
         self.set_properties()
 
-    def associate_users(self, eMBB_Users):
+    def associate_users(self, eMBB_Users, URLLC_users):
         self.associated_eMBB_users = eMBB_Users
+        self.associated_URLLC_users = URLLC_users
 
     def get_SBS_center_pos(self):
         self.x_position = 200
@@ -302,8 +304,69 @@ class SBS():
         
         return 1/sum_square_error
     
-    #def calculate_throughput_variance(self,eMBB_Users):
-        #mean = 
+    def allocate_resource_blocks_URLLC(self,communication_channel, URLLC_Users):
+        for URLLC_user in URLLC_Users:
+            URLLC_user.calculate_channel_gain_on_all_resource_blocks(communication_channel)
+
+        URLLC_user_tags = []
+        for i in range(0,len(URLLC_Users)):
+            URLLC_user_tags.append(i)
+
+        two_users = []
+        RB_URLLC_mapping = []
+        one = 0
+        two = 0
+        print(URLLC_user_tags)
+        for x in range(0,communication_channel.num_allocate_RBs_upper_bound):
+            two_users.clear()
+            one = 0
+            two = 0
+            if len(URLLC_user_tags) > 0:
+                for y in range(0,2):
+                    random_number = np.random.randint(0, len(URLLC_user_tags), 1)
+                    index = int(URLLC_user_tags[int(random_number)])
+                    URLLC_user_tags = np.delete(URLLC_user_tags,random_number,axis=0)
+                    two_users.append(index)
+                    if y == 0:
+                        one = index
+                    elif y == 1:
+                        two = index
+                RB_URLLC_mapping.append([one,two])
+        r = 1
+        for x in RB_URLLC_mapping:
+            for y in x:
+                for URLLC_user in URLLC_Users:
+                    if URLLC_user.URLLC_UE_label == y+1:
+                        URLLC_user.assigned_resource_block = r
+            r+=1
+
+        
+
+
+        
+
+
+
+        # URLLC_Users_temp = URLLC_Users
+        # RB_URLLC_mapping = []
+        # for x in range(1,communication_channel.num_allocate_RBs_upper_bound+1):
+        #     for y in range(0,communication_channel.num_urllc_users_per_RB):
+        #         if len(URLLC_Users_temp) > 0:
+
+    def get_top_two_indices(arr):
+        # Get the indices of the array sorted in ascending order
+        sorted_indices = np.argsort(arr)
+
+        # Get the index of the largest number (last index after sorting)
+        largest_index = sorted_indices[-1]
+
+        # Get the index of the second largest number (second-to-last index after sorting)
+        second_largest_index = sorted_indices[-2]
+
+        return largest_index
+
+
+
 
         
 
