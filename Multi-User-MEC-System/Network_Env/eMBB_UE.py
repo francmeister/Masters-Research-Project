@@ -163,6 +163,8 @@ class eMBB_UE(User_Equipment):
         self.large_scale_gain = np.array([self.large_scale_gain])
         self.communication_queue_size_before_offloading = 0
         self.allocated_resource_blocks_numbered = []
+        self.time_allocators = []
+        self.time_matrix = []
 
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
@@ -909,9 +911,9 @@ class eMBB_UE(User_Equipment):
         reshaped_allocated_RBs = reshaped_allocated_RBs.reshape(communication_channel.time_divisions_per_slot,communication_channel.num_allocate_RBs_upper_bound)
         print(reshaped_allocated_RBs)
         sum_matrix = np.sum(reshaped_allocated_RBs,axis=0)
-        print('sum_matrix')
-        print(sum_matrix)
-        print('')
+        # print('sum_matrix')
+        # print(sum_matrix)
+        # print('')
         r = 1
         self.allocated_resource_blocks_numbered.clear()
         for matrix in sum_matrix:
@@ -921,6 +923,37 @@ class eMBB_UE(User_Equipment):
 
             r+=1
 
+        r = 0
+        c = 0
+        binary_indicator = 0
+        self.time_allocators = []
+        self.time_matrix = []
+        for col in range(0,communication_channel.num_allocate_RBs_upper_bound):
+            self.time_allocators.clear()
+            for row in range(0,communication_channel.time_divisions_per_slot):
+                binary_indicator = reshaped_allocated_RBs[row][col]
+                #print('row: ', row, 'col: ', col, 'binary indicator: ', binary_indicator)
+                if binary_indicator == 1 and row == 0:
+                    self.time_allocators.append(1)
+                    #print('append 1')
+                elif binary_indicator == 1 and row == 1:
+                    self.time_allocators.append(2)
+                    #print('append 2')
+
+            #print('self.time_allocators: ', self.time_allocators)
+            if len(self.time_allocators) == 1:
+                self.time_matrix.append((self.time_allocators[0]))
+            elif len(self.time_allocators) == 2:
+                self.time_matrix.append((self.time_allocators[0],self.time_allocators[1]))
+            elif len(self.time_allocators) == 0:
+                self.time_matrix.append((0))
+
+          
+            
+            
+
+        #print('')
+        #
         # for URLLC_user in URLLC_users:
         #     print('URLLC users allocated RB: ', URLLC_user.assigned_resource_block)
        

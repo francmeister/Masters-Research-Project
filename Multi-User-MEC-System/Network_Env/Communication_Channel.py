@@ -76,6 +76,7 @@ class Communication_Channel():
         self.allocated_RBs = []
         self.num_of_RBs_per_User = 0
         self.time_divisions_per_slot = 2
+        self.num_of_mini_slots = 7
         #self.fig, self.ax = plt.subplots()
 
 

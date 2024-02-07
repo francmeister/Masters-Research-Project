@@ -332,6 +332,8 @@ class SBS():
                     elif y == 1:
                         two = index
                 RB_URLLC_mapping.append([one,two])
+
+        #print('RB_URLLC_mapping: ', RB_URLLC_mapping)
         r = 1
         for x in RB_URLLC_mapping:
             for y in x:
@@ -339,6 +341,19 @@ class SBS():
                     if URLLC_user.URLLC_UE_label == y+1:
                         URLLC_user.assigned_resource_block = r
             r+=1
+
+        time_allocation = 1
+        for urllc_user in URLLC_Users:
+            urllc_user.assigned_time_block = time_allocation
+            time_allocation+=1
+            if time_allocation == 3:
+                time_allocation = 1
+
+        # for urllc_user in URLLC_Users:
+        #     print('urllc user: ', urllc_user.URLLC_UE_label, 'allocated resource block id: ', urllc_user.assigned_resource_block)
+        #     print('urllc user: ', urllc_user.URLLC_UE_label, 'allocated time block id: ', urllc_user.assigned_time_block)
+
+        # print('')
 
         
 
