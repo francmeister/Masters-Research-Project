@@ -270,6 +270,7 @@ class SBS():
         self.tasks_dropped = 0
         self.resource_allocation_rewards = 0
         self.delay_reward_times_energy_reward = 0
+        self.available_resource_time_blocks = []
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)
@@ -308,46 +309,59 @@ class SBS():
         for URLLC_user in URLLC_Users:
             URLLC_user.calculate_channel_gain_on_all_resource_blocks(communication_channel)
 
-        URLLC_user_tags = []
-        for i in range(0,len(URLLC_Users)):
-            URLLC_user_tags.append(i)
+        # URLLC_user_tags = []
+        # for i in range(0,len(URLLC_Users)):
+        #     URLLC_user_tags.append(i)
 
-        two_users = []
-        RB_URLLC_mapping = []
-        one = 0
-        two = 0
-        print(URLLC_user_tags)
-        for x in range(0,communication_channel.num_allocate_RBs_upper_bound):
-            two_users.clear()
-            one = 0
-            two = 0
-            if len(URLLC_user_tags) > 0:
-                for y in range(0,2):
-                    random_number = np.random.randint(0, len(URLLC_user_tags), 1)
-                    index = int(URLLC_user_tags[int(random_number)])
-                    URLLC_user_tags = np.delete(URLLC_user_tags,random_number,axis=0)
-                    two_users.append(index)
-                    if y == 0:
-                        one = index
-                    elif y == 1:
-                        two = index
-                RB_URLLC_mapping.append([one,two])
+        # two_users = []
+        # RB_URLLC_mapping = []
+        # one = 0
+        # two = 0
+        # print(URLLC_user_tags)
+        # for x in range(0,communication_channel.num_allocate_RBs_upper_bound):
+        #     two_users.clear()
+        #     one = 0
+        #     two = 0
+        #     if len(URLLC_user_tags) > 0:
+        #         for y in range(0,2):
+        #             random_number = np.random.randint(0, len(URLLC_user_tags), 1)
+        #             index = int(URLLC_user_tags[int(random_number)])
+        #             URLLC_user_tags = np.delete(URLLC_user_tags,random_number,axis=0)
+        #             two_users.append(index)
+        #             if y == 0:
+        #                 one = index
+        #             elif y == 1:
+        #                 two = index
+        #         RB_URLLC_mapping.append([one,two])
 
-        #print('RB_URLLC_mapping: ', RB_URLLC_mapping)
-        r = 1
-        for x in RB_URLLC_mapping:
-            for y in x:
-                for URLLC_user in URLLC_Users:
-                    if URLLC_user.URLLC_UE_label == y+1:
-                        URLLC_user.assigned_resource_block = r
-            r+=1
+        # #print('RB_URLLC_mapping: ', RB_URLLC_mapping)
+        # r = 1
+        # for x in RB_URLLC_mapping:
+        #     for y in x:
+        #         for URLLC_user in URLLC_Users:
+        #             if URLLC_user.URLLC_UE_label == y+1:
+        #                 URLLC_user.assigned_resource_block = r
+        #     r+=1
 
-        time_allocation = 1
+        # time_allocation = 1
+        # for urllc_user in URLLC_Users:
+        #     urllc_user.assigned_time_block = time_allocation
+        #     time_allocation+=1
+        #     if time_allocation == 3:
+        #         time_allocation = 1
+
+        for rb in range(1,communication_channel.num_allocate_RBs_upper_bound+1):
+            for tb in range(1,communication_channel.time_divisions_per_slot+1):
+                self.available_resource_time_blocks.append((tb,rb))
+        
         for urllc_user in URLLC_Users:
-            urllc_user.assigned_time_block = time_allocation
-            time_allocation+=1
-            if time_allocation == 3:
-                time_allocation = 1
+            random_number = np.random.randint(0, len(self.available_resource_time_blocks), 1)
+            urllc_user.assigned_resource_time_block = self.available_resource_time_blocks[int(random_number)]
+            self.available_resource_time_blocks = np.delete(self.available_resource_time_blocks,random_number,axis=0)
+            urllc_user.assigned_time_block = urllc_user.assigned_resource_time_block[0]
+            urllc_user.assigned_resource_block = urllc_user.assigned_resource_time_block[1]
+
+        
 
         # for urllc_user in URLLC_Users:
         #     print('urllc user: ', urllc_user.URLLC_UE_label, 'allocated resource block id: ', urllc_user.assigned_resource_block)

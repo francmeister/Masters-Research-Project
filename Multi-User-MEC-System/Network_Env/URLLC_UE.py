@@ -32,7 +32,10 @@ class URLLC_UE(User_Equipment):
         self.service_rate_bits_per_slot = (self.max_service_rate_cycles_per_slot/self.cycles_per_byte)*8
         self.energy_consumption_coefficient = math.pow(10,-13.8)
         self.total_gain = np.zeros(self.communication_channel.num_allocate_RBs_upper_bound*2)
+        self.total_gain_on_allocated_rb = 0
         self.small_scale_gain = 0
+        self.small_scale_gain_on_allocated_rb = 0
+        self.large_scale_gain_on_allocated_rb = 0
         self.large_scale_gain = 0
         self.achieved_channel_rate = 0
         self.task_arrival_rate_tasks_per_slot = 0
@@ -48,6 +51,7 @@ class URLLC_UE(User_Equipment):
         self.reliability_requirement = 0
         self.assigned_resource_block = 0
         self.assigned_time_block = 0
+        self.assigned_resource_time_block = []
         self.puncturing_embb_user_transmit_power = 0
         self.puncturing_embb_user_small_scale_gain = 0
         self.puncturing_embb_user_large_scale_gain = 0
@@ -87,11 +91,14 @@ class URLLC_UE(User_Equipment):
 
         self.small_scale_gain = small_scale_gain
         self.large_scale_gain = large_scale_gain
+        self.small_scale_gain_on_allocated_rb = self.small_scale_gain[0][self.assigned_resource_block-1]
+        self.large_scale_gain_on_allocated_rb = self.large_scale_gain[0][self.assigned_resource_block-1]
         #print('small_scale_gain')
         #print(small_scale_gain)
         #print('larger_scale_gain')
         #print(large_scale_gain)
         #self.total_gain = np.concatenate((small_scale_gain,large_scale_gain),axis=1)#np.random.exponential(1,size=(1,number_of_RBs))
+        self.total_gain_on_allocated_rb = self.small_scale_gain_on_allocated_rb*self.large_scale_gain_on_allocated_rb
         self.total_gain = small_scale_gain*large_scale_gain
         self.total_gain = self.total_gain.squeeze()
         
@@ -109,10 +116,10 @@ class URLLC_UE(User_Equipment):
         #self.total_gain = self.small_scale_gain*self.large_scale_gain
 
     def split_tasks(self):
-        if self.small_scale_gain < self.small_scale_channel_gain_threshold and len(self.task_queue) > 0:
+        if self.small_scale_gain_on_allocated_rb < self.small_scale_channel_gain_threshold and len(self.task_queue) > 0:
             self.local_task_queue.append(self.task_queue[0])
             self.task_queue.clear()
-        elif self.small_scale_gain > self.small_scale_channel_gain_threshold and len(self.task_queue) > 0:
+        elif self.small_scale_gain_on_allocated_rb > self.small_scale_channel_gain_threshold and len(self.task_queue) > 0:
             self.offload_task_queue.append(self.task_queue[0])
             self.has_transmitted_this_time_slot = True
             self.task_queue.clear()
@@ -125,7 +132,7 @@ class URLLC_UE(User_Equipment):
         for eMBB_user in eMBB_users:
             for allocated_rb in eMBB_user.allocated_resource_blocks_numbered:
                 for time_blocks in eMBB_user.time_matrix:
-                    if len(time_blocks) == 1:
+                    if time_blocks == 1 or time_blocks == 2:
                         if allocated_rb == self.assigned_resource_block and self.assigned_time_block == time_blocks:
                             self.puncturing_embb_user_transmit_power = eMBB_user.assigned_transmit_power_W
                             # print('self.assigned_resource_block: ', self.assigned_resource_block)
@@ -133,7 +140,7 @@ class URLLC_UE(User_Equipment):
                             self.puncturing_embb_user_small_scale_gain = eMBB_user.small_scale_gain[0][(self.assigned_resource_block-1)]
                             self.puncturing_embb_user_large_scale_gain = eMBB_user.large_scale_gain[0][(self.assigned_resource_block-1)]
                             break
-                    elif len(time_blocks) == 2:
+                    elif time_blocks == (1,2):
                         for time_block in time_blocks:
                             if allocated_rb == self.assigned_resource_block and self.assigned_time_block == time_block:
                                 self.puncturing_embb_user_transmit_power = eMBB_user.assigned_transmit_power_W
@@ -143,22 +150,23 @@ class URLLC_UE(User_Equipment):
                                 self.puncturing_embb_user_large_scale_gain = eMBB_user.large_scale_gain[0][(self.assigned_resource_block-1)]
                                 break
         
-        print('------------------------------------')
-        print('URLLC user: ', self.URLLC_UE_label, 'assigned RB: ', self.assigned_resource_block)
-        print('URLLC user: ', self.URLLC_UE_label, 'assigned time block: ', self.assigned_time_block)
-        for eMBB_User in eMBB_users:
-            print('eMBB user id: ', eMBB_User.UE_label)
-            print('allocated rbs: ', eMBB_User.allocated_resource_blocks_numbered)
-            print('eMBB_user small scale gain: ', eMBB_User.small_scale_gain)
-            print('large scale gain: ', eMBB_User.large_scale_gain)
-            print('assigned_transmit_power_W: ', eMBB_User.assigned_transmit_power_W)
-            print('')
+        # print('------------------------------------')
+        # print('URLLC user: ', self.URLLC_UE_label, 'assigned RB: ', self.assigned_resource_block)
+        # print('URLLC user: ', self.URLLC_UE_label, 'assigned time block: ', self.assigned_time_block)
+        # for eMBB_User in eMBB_users:
+        #     print('eMBB user id: ', eMBB_User.UE_label)
+        #     print('allocated rbs: ', eMBB_User.allocated_resource_blocks_numbered)
+        #     print('allocated time block: ', eMBB_User.time_matrix)
+        #     print('eMBB_user small scale gain: ', eMBB_User.small_scale_gain)
+        #     print('large scale gain: ', eMBB_User.large_scale_gain)
+        #     print('assigned_transmit_power_W: ', eMBB_User.assigned_transmit_power_W)
+        #     print('')
 
-        print('')
-        print('self.puncturing_embb_user_transmit_power: ',self.puncturing_embb_user_transmit_power)
-        print('self.puncturing_embb_user_small_scale_gain: ', self.puncturing_embb_user_small_scale_gain)
-        print('self.puncturing_embb_user_large_scale_gain: ', self.puncturing_embb_user_large_scale_gain)
-        print('------------------------------------')
+        # print('')
+        # print('self.puncturing_embb_user_transmit_power: ',self.puncturing_embb_user_transmit_power)
+        # print('self.puncturing_embb_user_small_scale_gain: ', self.puncturing_embb_user_small_scale_gain)
+        # print('self.puncturing_embb_user_large_scale_gain: ', self.puncturing_embb_user_large_scale_gain)
+        # print('------------------------------------')
 
     def calculate_achieved_channel_rate(self,eMBB_users,communication_channel):
         self.find_puncturing_embb_users(eMBB_users)

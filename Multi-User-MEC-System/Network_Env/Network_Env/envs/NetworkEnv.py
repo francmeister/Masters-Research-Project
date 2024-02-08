@@ -346,6 +346,9 @@ class NetworkEnv(gym.Env):
             eMBB_User.increment_task_queue_timers()
             eMBB_User.split_tasks()
         
+        for urllc_user in self.URLLC_Users:
+            urllc_user.split_tasks()
+
         for eMBB_User in self.eMBB_Users:
             #if eMBB_User.has_transmitted_this_time_slot == True:
             eMBB_User.transmit_to_SBS(self.Communication_Channel_1,self.URLLC_Users)
@@ -385,6 +388,10 @@ class NetworkEnv(gym.Env):
             eMBB_User.compute_battery_energy_level()
             eMBB_User.generate_task(self.Communication_Channel_1)
             eMBB_User.collect_state()
+
+        for urllc_user in self.URLLC_Users:
+            urllc_user.calculate_channel_gain_on_all_resource_blocks(self.Communication_Channel_1)
+            urllc_user.generate_task(self.Communication_Channel_1)
 
         observation_channel_gains, observation_battery_energies, observation_offloading_queue_lengths, observation_local_queue_lengths = self.SBS1.collect_state_space(self.eMBB_Users)
         #observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
@@ -538,6 +545,7 @@ class NetworkEnv(gym.Env):
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_RBs()
         self.SBS1.allocate_resource_blocks_URLLC(self.Communication_Channel_1, self.URLLC_Users)
+        
         info = {'reward': 0}
         #print('battery enegy: ', self.SBS1.system_state_space[4])
         #observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)

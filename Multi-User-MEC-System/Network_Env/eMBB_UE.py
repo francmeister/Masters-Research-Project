@@ -165,6 +165,8 @@ class eMBB_UE(User_Equipment):
         self.allocated_resource_blocks_numbered = []
         self.time_allocators = []
         self.time_matrix = []
+        self.puncturing_urllc_users_ = []
+        self.occupied_resource_time_blocks = []
 
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
@@ -909,7 +911,7 @@ class eMBB_UE(User_Equipment):
         reshaped_allocated_RBs = np.array(self.allocated_RBs)
         reshaped_allocated_RBs = reshaped_allocated_RBs.squeeze()#.reshape(1,communication_channel.time_divisions_per_slot*communication_channel.num_allocate_RBs_upper_bound)
         reshaped_allocated_RBs = reshaped_allocated_RBs.reshape(communication_channel.time_divisions_per_slot,communication_channel.num_allocate_RBs_upper_bound)
-        print(reshaped_allocated_RBs)
+        #print(reshaped_allocated_RBs)
         sum_matrix = np.sum(reshaped_allocated_RBs,axis=0)
         # print('sum_matrix')
         # print(sum_matrix)
@@ -947,6 +949,50 @@ class eMBB_UE(User_Equipment):
                 self.time_matrix.append((self.time_allocators[0],self.time_allocators[1]))
             elif len(self.time_allocators) == 0:
                 self.time_matrix.append((0))
+       
+        self.puncturing_urllc_users(URLLC_users)
+
+    def puncturing_urllc_users(self,urllc_users):
+        self.puncturing_urllc_users_.clear()
+        self.occupied_resource_time_blocks.clear()
+        for allocated_resource_block in self.allocated_resource_blocks_numbered:
+            
+            time_blocks_at_this_rb = self.time_matrix[allocated_resource_block-1]
+            if time_blocks_at_this_rb == 1 or time_blocks_at_this_rb == 2:
+                for urllc_user in urllc_users:
+                    if urllc_user.assigned_resource_block == allocated_resource_block and urllc_user.assigned_time_block == time_blocks_at_this_rb:
+                        self.puncturing_urllc_users_.append(urllc_user.URLLC_UE_label)
+                        if urllc_user.has_transmitted_this_time_slot == True:
+                            self.occupied_resource_time_blocks.append((time_blocks_at_this_rb,allocated_resource_block,1))
+                        elif urllc_user.has_transmitted_this_time_slot == False:
+                            self.occupied_resource_time_blocks.append((time_blocks_at_this_rb,allocated_resource_block,0))
+
+            
+            elif time_blocks_at_this_rb == (1,2):
+                for time_block_at_this_rb in time_blocks_at_this_rb:
+                    for urllc_user in urllc_users:
+                        if urllc_user.assigned_resource_block == allocated_resource_block and urllc_user.assigned_time_block == time_block_at_this_rb:
+                            self.puncturing_urllc_users_.append(urllc_user.URLLC_UE_label)
+                            if urllc_user.has_transmitted_this_time_slot == True:
+                                self.occupied_resource_time_blocks.append((time_block_at_this_rb,allocated_resource_block,1))
+                            elif urllc_user.has_transmitted_this_time_slot == False:
+                                self.occupied_resource_time_blocks.append((time_block_at_this_rb,allocated_resource_block,0))
+
+        # print('émbb user id: ', self.eMBB_UE_label, 'allocated rb: ', self.allocated_resource_blocks_numbered)
+        # print('allocated time blocks: ', self.time_matrix)
+        # print('')
+        # print('self.puncturing_urllc_users_: ', self.puncturing_urllc_users_)
+        # print('occupied resource blocks: ', self.occupied_resource_time_blocks)
+
+        # for urllc_user in urllc_users:
+        #     print('urllc_user id: ', urllc_user.URLLC_UE_label)
+        #     print('allocated rb: ', urllc_user.assigned_resource_block)
+        #     print('allocated time block: ', urllc_user.assigned_time_block)
+        #     print('has user transmitted: ', urllc_user.has_transmitted_this_time_slot)
+        #     print('')
+
+            
+            
 
           
             
