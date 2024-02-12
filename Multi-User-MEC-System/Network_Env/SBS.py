@@ -20,8 +20,9 @@ class SBS():
         self.x_position = 200
         self.y_position = 200
 
-    def collect_state_space(self, eMBB_Users):
-        Users = eMBB_Users
+    def collect_state_space(self, eMBB_Users,urllc_users):
+
+    
         self.system_state_space_RB_channel_gains.clear()
         self.system_state_space_battery_energies.clear()
         channel_gains = []
@@ -29,16 +30,19 @@ class SBS():
         battery_energy = []
         offloading_queue_lengths = []
         local_queue_lengths = []
+        num_arriving_urllc_packets = []
         latency_requirement = []
         local_frequencies = []
         #reliability_requirement = []
         #Collect Channel gains
-        for user in Users:
-            channel_gains.append(user.user_state_space.channel_gain)
+        self.count_num_arriving_urllc_packets(urllc_users)
+        for embb_user in eMBB_Users:
+            channel_gains.append(embb_user.user_state_space.channel_gain)
             #communication_queue_size.append(user.user_state_space.calculate_communication_queue_size())
-            battery_energy.append(user.user_state_space.battery_energy)
-            offloading_queue_lengths.append(user.user_state_space.offloading_queue_length)
-            local_queue_lengths.append(user.user_state_space.local_queue_length)
+            battery_energy.append(embb_user.user_state_space.battery_energy)
+            offloading_queue_lengths.append(embb_user.user_state_space.offloading_queue_length)
+            local_queue_lengths.append(embb_user.user_state_space.local_queue_length)
+            num_arriving_urllc_packets.append(self.num_arriving_urllc_packets)
             #latency_requirement.append(0)
             #latency_requirement.append(user.user_state_space.QOS_requirements.max_allowable_latency)
             #local_frequencies.append(user.user_state_space.local_cpu_frequency)
@@ -49,6 +53,7 @@ class SBS():
         self.system_state_space_RB_channel_gains.append(channel_gains)
         #self.system_state_space.append(communication_queue_size)
         self.system_state_space_battery_energies.append(battery_energy)
+        
         #self.system_state_space_battery_energies.append(offloading_queue_lengths)
         #self.system_state_space_battery_energies.append(local_queue_lengths)
         #self.system_state_space.append(latency_requirement)
@@ -57,8 +62,8 @@ class SBS():
         #print('queue size: ', communication_queue_size)
         #print('state space')
         #print(self.system_state_space_RB_channel_gains)
-        #print(self.system_state_space_battery_energies)
-        return channel_gains, battery_energy, offloading_queue_lengths, local_queue_lengths
+        #print(self.system_state_space_battery_energies)self.num_arriving_urllc_packets
+        return channel_gains, battery_energy, offloading_queue_lengths, local_queue_lengths, num_arriving_urllc_packets
         #return channel_gains, battery_energy
 
     def allocate_transmit_powers(self,eMBB_Users, action):
@@ -242,7 +247,6 @@ class SBS():
         self.associated_eMBB_users = []
         self.system_state_space_RB_channel_gains = []
         self.system_state_space_battery_energies = []
-        self.num_arriving_URLLC_packets = 0
         self.eMBB_Users_packet_queue = []
         self.URLLC_Users_packet_queue = []
         self.achieved_total_system_energy_consumption = 0
@@ -271,6 +275,7 @@ class SBS():
         self.resource_allocation_rewards = 0
         self.delay_reward_times_energy_reward = 0
         self.available_resource_time_blocks = []
+        self.num_arriving_urllc_packets = 0
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)
@@ -309,47 +314,6 @@ class SBS():
         for URLLC_user in URLLC_Users:
             URLLC_user.calculate_channel_gain_on_all_resource_blocks(communication_channel)
 
-        # URLLC_user_tags = []
-        # for i in range(0,len(URLLC_Users)):
-        #     URLLC_user_tags.append(i)
-
-        # two_users = []
-        # RB_URLLC_mapping = []
-        # one = 0
-        # two = 0
-        # print(URLLC_user_tags)
-        # for x in range(0,communication_channel.num_allocate_RBs_upper_bound):
-        #     two_users.clear()
-        #     one = 0
-        #     two = 0
-        #     if len(URLLC_user_tags) > 0:
-        #         for y in range(0,2):
-        #             random_number = np.random.randint(0, len(URLLC_user_tags), 1)
-        #             index = int(URLLC_user_tags[int(random_number)])
-        #             URLLC_user_tags = np.delete(URLLC_user_tags,random_number,axis=0)
-        #             two_users.append(index)
-        #             if y == 0:
-        #                 one = index
-        #             elif y == 1:
-        #                 two = index
-        #         RB_URLLC_mapping.append([one,two])
-
-        # #print('RB_URLLC_mapping: ', RB_URLLC_mapping)
-        # r = 1
-        # for x in RB_URLLC_mapping:
-        #     for y in x:
-        #         for URLLC_user in URLLC_Users:
-        #             if URLLC_user.URLLC_UE_label == y+1:
-        #                 URLLC_user.assigned_resource_block = r
-        #     r+=1
-
-        # time_allocation = 1
-        # for urllc_user in URLLC_Users:
-        #     urllc_user.assigned_time_block = time_allocation
-        #     time_allocation+=1
-        #     if time_allocation == 3:
-        #         time_allocation = 1
-
         for rb in range(1,communication_channel.num_allocate_RBs_upper_bound+1):
             for tb in range(1,communication_channel.time_divisions_per_slot+1):
                 self.available_resource_time_blocks.append((tb,rb))
@@ -360,6 +324,15 @@ class SBS():
             self.available_resource_time_blocks = np.delete(self.available_resource_time_blocks,random_number,axis=0)
             urllc_user.assigned_time_block = urllc_user.assigned_resource_time_block[0]
             urllc_user.assigned_resource_block = urllc_user.assigned_resource_time_block[1]
+
+    def count_num_arriving_urllc_packets(self, urllc_users):
+        self.num_arriving_urllc_packets = 0
+        for urllc_user in urllc_users:
+            if urllc_user.has_transmitted_this_time_slot == True:
+                self.num_arriving_urllc_packets += 1
+
+
+        
 
         
 

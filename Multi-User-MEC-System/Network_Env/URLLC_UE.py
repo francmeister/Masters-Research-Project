@@ -12,18 +12,22 @@ import pandas as pd
 from Communication_Channel import Communication_Channel
 
 class URLLC_UE(User_Equipment):
-    def __init__(self, URLLC_UE_label,x,y):
+    def __init__(self, URLLC_UE_label,User_label, x,y):
         #User_Equipment.__init__(self)
         self.UE_label = URLLC_UE_label
+        #Urllc users will be tagged with a 1
+        self.user_label = User_label
+        self.type_of_user_id = 1
         self.original_x_position = x
         self.original_y_position = y
         self.URLLC_UE_label = URLLC_UE_label
         self.communication_channel = Communication_Channel(1)
+        self.assigned_access_point = 0
+        self.assigned_access_point_label_matrix = []
+        self.assigned_access_point_label_matrix_integers = []
         self.set_properties_URLLC()
 
     def set_properties_URLLC(self):
-
-  
         self.max_task_arrival_rate_tasks_per_second = 10
         self.min_task_arrival_rate_tasks_per_second = 5
         self.cycles_per_byte = 330
@@ -70,11 +74,11 @@ class URLLC_UE(User_Equipment):
         self.task_size_per_slot_bits = 10#10 bits per task in slot 
         qeueu_timer = 0
         
-        
-        QOS_requirement_ = QOS_requirement(self.latency_requirement,self.reliability_requirement)
-        user_task = Task(330,self.task_size_per_slot_bits,QOS_requirement_,qeueu_timer,self.task_identifier)
-        self.task_identifier+=1
-        self.task_queue.append(user_task)
+        if self.task_arrival_rate_tasks_per_slot == 1:
+            QOS_requirement_ = QOS_requirement(self.latency_requirement,self.reliability_requirement)
+            user_task = Task(330,self.task_size_per_slot_bits,QOS_requirement_,qeueu_timer,self.task_identifier)
+            self.task_identifier+=1
+            self.task_queue.append(user_task)
 
     def calculate_channel_gain_on_all_resource_blocks(self,communication_channel):
         #Pathloss gain
@@ -191,3 +195,27 @@ class URLLC_UE(User_Equipment):
     #     channel_rate_denominator = noise_spectral_density#*RB_bandwidth
     #     channel_rate = RB_indicator*(RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator)))
     #     return (channel_rate/1000)
+    def initial_large_scale_gain_all_access_points(self,num_access_point):
+        large_scale_gain = np.random.exponential(1,size=(1,num_access_point))
+        large_scale_gain = large_scale_gain.squeeze()
+        return large_scale_gain
+    
+    def initial_arrival_rates(self):
+        task_arrival_rate = np.random.poisson(25,1)
+        task_arrival_rate = task_arrival_rate[0]
+        return task_arrival_rate
+    
+
+    def assigned_access_point_label_matrix_to_numpy_array(self):
+        #self.assigned_access_point_label_matrix = np.array(self.assigned_access_point_label_matrix)
+       
+        count = 0
+        index = 0
+        for assigned_access_point_label in self.assigned_access_point_label_matrix:
+            index = np.where(assigned_access_point_label == 1)[0]
+            self.assigned_access_point_label_matrix_integers.append(index+1)
+
+        self.assigned_access_point_label_matrix_integers = np.array(self.assigned_access_point_label_matrix_integers)
+
+
+
