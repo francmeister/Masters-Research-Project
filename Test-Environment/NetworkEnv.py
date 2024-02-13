@@ -24,6 +24,7 @@ clock = pygame.time.Clock()
 class NetworkEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     def __init__(self,access_point_id,users):
+        self.access_point_id = access_point_id
         self.create_objects(users)
         self.reset()
         #Action Space Bound Paramaters
@@ -619,6 +620,10 @@ class NetworkEnv(gym.Env):
                 self.eMBB_Users.append(user)
             elif user.type_of_user_id == 1:
                 self.URLLC_Users.append(user)
+
+
+        print('length self.embbusers')
+        print(len(self.eMBB_Users))
         #Users
         # self.eMBB_UE_1 = eMBB_UE(1,100,600)
         # self.eMBB_UE_2 = eMBB_UE(2,100,600)
