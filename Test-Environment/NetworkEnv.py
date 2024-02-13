@@ -23,11 +23,11 @@ clock = pygame.time.Clock()
 
 class NetworkEnv(gym.Env):
     metadata = {'render.modes': ['human']}
-    def __init__(self):
-        self.create_objects()
+    def __init__(self,access_point_id,users):
+        self.create_objects(users)
         self.reset()
         #Action Space Bound Paramaters
-        self.access_point_id = 0#access_point_id
+        self.access_point_id = access_point_id
         self.max_offload_decision = 1
         self.min_offload_decision = 0
         self.number_of_eMBB_users = len(self.eMBB_Users)
@@ -608,25 +608,25 @@ class NetworkEnv(gym.Env):
     def render(self, mode='human'):
         pass
 
-    def create_objects(self):
+    def create_objects(self,users):
         #Small Cell Base station
         self.SBS1 = SBS(1)
         self.eMBB_Users = []
         self.URLLC_Users = []
         
-        # for user in users:
-        #     if user.type_of_user_id == 0:
-        #         self.eMBB_Users.append(user)
-        #     elif user.type_of_user_id == 1:
-        #         self.URLLC_Users.append(user)
+        for user in users:
+            if user.type_of_user_id == 0:
+                self.eMBB_Users.append(user)
+            elif user.type_of_user_id == 1:
+                self.URLLC_Users.append(user)
         #Users
-        self.eMBB_UE_1 = eMBB_UE(1,1,100,600)
-        self.eMBB_UE_2 = eMBB_UE(2,2,100,600)
-        self.eMBB_UE_3 = eMBB_UE(3,3,100,600)
+        # self.eMBB_UE_1 = eMBB_UE(1,100,600)
+        # self.eMBB_UE_2 = eMBB_UE(2,100,600)
+        # self.eMBB_UE_3 = eMBB_UE(3,100,600)
 
-        self.URLLC_UE_1 = URLLC_UE(1,4,100,600)
-        self.URLLC_UE_2 = URLLC_UE(2,5,100,600)
-        self.URLLC_UE_3 = URLLC_UE(3,6,100,600)
+        # self.URLLC_UE_1 = URLLC_UE(1,100,600)
+        # self.URLLC_UE_2 = URLLC_UE(2,100,600)
+        # self.URLLC_UE_3 = URLLC_UE(3,100,600)
         # self.URLLC_UE_4 = URLLC_UE(4,100,600)
         # self.URLLC_UE_5 = URLLC_UE(5,100,600)
         # self.URLLC_UE_6 = URLLC_UE(6,100,600)
@@ -637,7 +637,7 @@ class NetworkEnv(gym.Env):
 
         #Group Users
 
-        self.group_users()
+        #self.group_users()
 
         #Associate SBS with users
         self.SBS1.associate_users(self.eMBB_Users,self.URLLC_Users)
@@ -655,9 +655,9 @@ class NetworkEnv(gym.Env):
         self.URLLC_Users.append(self.URLLC_UE_1)
         self.URLLC_Users.append(self.URLLC_UE_2)
         self.URLLC_Users.append(self.URLLC_UE_3)
-        # self.URLLC_Users.append(self.URLLC_UE_4)
-        # self.URLLC_Users.append(self.URLLC_UE_5)
-        # self.URLLC_Users.append(self.URLLC_UE_6)
+        self.URLLC_Users.append(self.URLLC_UE_4)
+        self.URLLC_Users.append(self.URLLC_UE_5)
+        self.URLLC_Users.append(self.URLLC_UE_6)
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:
