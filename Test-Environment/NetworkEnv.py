@@ -625,6 +625,8 @@ class NetworkEnv(gym.Env):
 
         print('length self.embbusers')
         print(len(self.eMBB_Users))
+        print('length self.urllc')
+        print(len(self.URLLC_Users))
         #Users
         # self.eMBB_UE_1 = eMBB_UE(1,100,600)
         # self.eMBB_UE_2 = eMBB_UE(2,100,600)

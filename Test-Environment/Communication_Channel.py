@@ -15,8 +15,8 @@ class Communication_Channel():
     def get_SBS_and_Users(self,SBS):
         self.eMBB_Users = SBS.associated_eMBB_users
         self.URLLC_Users = SBS.associated_URLLC_users
-        self.num_of_RBs_per_User = self.num_allocate_RBs_upper_bound/len(self.eMBB_Users)
-        self.num_urllc_users_per_RB = self.num_allocate_RBs_upper_bound/len(self.URLLC_Users)
+        #self.num_of_RBs_per_User = self.num_allocate_RBs_upper_bound/len(self.eMBB_Users)
+        #self.num_urllc_users_per_RB = self.num_allocate_RBs_upper_bound/len(self.URLLC_Users)
         #self.num_RB_per_eMBB = int(self.num_RB/len(self.eMBB_Users))
         #self.num_allocate_RB_lower_bound = self.num_RB_per_eMBB - self.single_side_standard_deviation
         #self.num_allocate_RB_upper_bound = self.num_RB_per_eMBB + self.single_side_standard_deviation
