@@ -627,7 +627,7 @@ class NetworkEnv(gym.Env):
         print('length self.urllc: ',len(self.URLLC_Users))
         
         #Users
-        self.eMBB_UE_1 = eMBB_UE(1,100,600)
+        self.eMBB_UE_1 = eMBB_UE(1,2,100,600)
         # self.eMBB_UE_2 = eMBB_UE(2,100,600)
         # self.eMBB_UE_3 = eMBB_UE(3,100,600)
 
