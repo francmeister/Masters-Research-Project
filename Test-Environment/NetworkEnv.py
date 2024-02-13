@@ -130,7 +130,7 @@ class NetworkEnv(gym.Env):
         self.total_action_space = []
 
         self.action_space_dim_1 = self.box_action_space.shape[1] + (self.num_allocate_RB_upper_bound*self.time_divisions_per_slot)
-        print(self.action_space_dim_1)
+        #print(self.action_space_dim_1)
         self.action_space_high = 1
         self.action_space_low = 0
 
@@ -622,11 +622,10 @@ class NetworkEnv(gym.Env):
             elif user.type_of_user_id == 1:
                 self.URLLC_Users.append(user)
 
-
-        print('length self.embbusers')
-        print(len(self.eMBB_Users))
-        print('length self.urllc')
-        print(len(self.URLLC_Users))
+        print('access point id: ', self.access_point_id)
+        print('length self.embbusers: ', len(self.eMBB_Users))
+        print('length self.urllc: ',len(self.URLLC_Users))
+        
         #Users
         # self.eMBB_UE_1 = eMBB_UE(1,100,600)
         # self.eMBB_UE_2 = eMBB_UE(2,100,600)
