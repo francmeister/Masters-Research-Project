@@ -519,19 +519,19 @@ class NetworkEnv(gym.Env):
         self.OS_cpu_frequency_label = 4
 
         #Observation Space Bound Parameters
-        self.channel_gain_min = self.eMBB_UE_1.min_channel_gain
-        self.channel_gain_max = self.eMBB_UE_1.max_channel_gain
-        self.communication_queue_min = self.eMBB_UE_1.min_communication_qeueu_size
-        self.communication_queue_max = self.eMBB_UE_1.max_communication_qeueu_size
+        self.channel_gain_min = self.eMBB_Users[0].min_channel_gain
+        self.channel_gain_max = self.eMBB_Users[0].max_channel_gain
+        self.communication_queue_min = self.eMBB_Users[0].min_communication_qeueu_size
+        self.communication_queue_max = self.eMBB_Users[0].max_communication_qeueu_size
         self.battery_energy_min = 0
-        self.battery_energy_max = self.eMBB_UE_1.max_battery_energy
+        self.battery_energy_max = self.eMBB_Users[0].max_battery_energy
         self.latency_requirement_min = 0
-        self.latency_requirement_max = self.eMBB_UE_1.max_allowable_latency
-        self.cpu_frequency_max = self.eMBB_UE_1.max_cpu_frequency
-        self.cpu_frequency_min = self.eMBB_UE_1.min_cpu_frequency
-        self.max_lc_queue_length = self.eMBB_UE_1.max_lc_queue_length
+        self.latency_requirement_max = self.eMBB_Users[0].max_allowable_latency
+        self.cpu_frequency_max = self.eMBB_Users[0].max_cpu_frequency
+        self.cpu_frequency_min = self.eMBB_Users[0].min_cpu_frequency
+        self.max_lc_queue_length = self.eMBB_Users[0].max_lc_queue_length
         self.min_lc_queue_length = 0
-        self.max_off_queue_length = self.eMBB_UE_1.max_off_queue_length
+        self.max_off_queue_length = self.eMBB_Users[0].max_off_queue_length
         self.min_off_queue_length = 0
         self.resource_block_allocation_matrix = []
         self.resource_allocation_constraint_violation = 0
