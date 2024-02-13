@@ -548,7 +548,7 @@ class NetworkEnv(gym.Env):
 
         self.eMBB_Users.clear()
         self.URLLC_Users.clear()
-        self.group_users()
+        #self.group_users()
 
         self.SBS1.associate_users(self.eMBB_Users, self.URLLC_Users)
         self.Communication_Channel_1.set_properties()
