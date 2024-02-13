@@ -620,13 +620,13 @@ class NetworkEnv(gym.Env):
         #     elif user.type_of_user_id == 1:
         #         self.URLLC_Users.append(user)
         #Users
-        self.eMBB_UE_1 = eMBB_UE(1,100,600)
-        self.eMBB_UE_2 = eMBB_UE(2,100,600)
-        self.eMBB_UE_3 = eMBB_UE(3,100,600)
+        self.eMBB_UE_1 = eMBB_UE(1,1,100,600)
+        self.eMBB_UE_2 = eMBB_UE(2,2,100,600)
+        self.eMBB_UE_3 = eMBB_UE(3,3,100,600)
 
-        self.URLLC_UE_1 = URLLC_UE(1,100,600)
-        self.URLLC_UE_2 = URLLC_UE(2,100,600)
-        self.URLLC_UE_3 = URLLC_UE(3,100,600)
+        self.URLLC_UE_1 = URLLC_UE(1,4,100,600)
+        self.URLLC_UE_2 = URLLC_UE(2,5,100,600)
+        self.URLLC_UE_3 = URLLC_UE(3,6,100,600)
         # self.URLLC_UE_4 = URLLC_UE(4,100,600)
         # self.URLLC_UE_5 = URLLC_UE(5,100,600)
         # self.URLLC_UE_6 = URLLC_UE(6,100,600)
