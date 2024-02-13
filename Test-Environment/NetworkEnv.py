@@ -546,8 +546,9 @@ class NetworkEnv(gym.Env):
             URLLC_User.set_properties_UE()
             URLLC_User.set_properties_URLLC()
 
-        self.eMBB_Users.clear()
-        self.URLLC_Users.clear()
+
+        #self.eMBB_Users.clear()
+        #self.URLLC_Users.clear()
         #self.group_users()
 
         self.SBS1.associate_users(self.eMBB_Users, self.URLLC_Users)
