@@ -5,4 +5,7 @@ count = 1
 Access_point_name = 'Access Point ' + str(count)
 
 large_scale_gain = np.random.exponential(1,size=(1,3))
-print(large_scale_gain.squeeze())
+
+random_number = np.random.randint(0, 6, 1)
+index = int(random_number)
+print(index)
