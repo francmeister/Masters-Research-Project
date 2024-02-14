@@ -628,6 +628,9 @@ class NetworkEnv(gym.Env):
         
         #Users
         self.eMBB_UE_1 = eMBB_UE(1,2,100,600)
+
+        if len(self.eMBB_Users) == 0:
+            self.eMBB_Users.append(self.eMBB_UE_1)
         # self.eMBB_UE_2 = eMBB_UE(2,100,600)
         # self.eMBB_UE_3 = eMBB_UE(3,100,600)
 
