@@ -290,7 +290,7 @@ class NetworkEnv(gym.Env):
         num_power_action = num_offloading_actions
 
         offload_decisions_actions = box_action[0:num_offloading_actions]
-        offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
+        #offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
 
         offload_decisions_actions_mapped = []
         for offload_decision in offload_decisions_actions:
@@ -300,7 +300,7 @@ class NetworkEnv(gym.Env):
        
          #collect trasmit powers allocations actions
         transmit_power_actions = box_action[num_offloading_actions:num_offloading_actions*self.number_of_box_actions]
-        transmit_power_actions = transmit_power_actions[0:self.number_of_eMBB_users]
+        #transmit_power_actions = transmit_power_actions[0:self.number_of_eMBB_users]
 
         transmit_power_actions_mapped = []
 
@@ -308,7 +308,7 @@ class NetworkEnv(gym.Env):
             transmit_power_action_mapped = interp(transmit_power_action,[0,1],[self.min_transmit_power_db,self.max_transmit_power_db])
             transmit_power_actions_mapped.append(transmit_power_action_mapped)
 
-        self.selected_powers.append(transmit_power_actions_mapped[0])
+        #self.selected_powers.append(transmit_power_actions_mapped[0])
         
 
         #binary_actions = action['binary_actions']
