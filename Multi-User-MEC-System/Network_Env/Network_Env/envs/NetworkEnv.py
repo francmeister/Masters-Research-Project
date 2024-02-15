@@ -23,11 +23,11 @@ clock = pygame.time.Clock()
 
 class NetworkEnv(gym.Env):
     metadata = {'render.modes': ['human']}
-    def __init__(self,access_point_id,users):
-        self.create_objects(users)
+    def __init__(self):
+        self.create_objects()
         self.reset()
         #Action Space Bound Paramaters
-        self.access_point_id = access_point_id
+        #self.access_point_id = access_point_id
         self.max_offload_decision = 1
         self.min_offload_decision = 0
         self.number_of_eMBB_users = len(self.eMBB_Users)
@@ -115,34 +115,51 @@ class NetworkEnv(gym.Env):
      
         self.box_action_space = spaces.Box(low=action_space_low,high=action_space_high)
         self.binary_action_space = spaces.MultiBinary(self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
-        self.user_resource_block_allocations = spaces.MultiDiscrete([self.number_of_users+1]*(self.time_divisions_per_slot*self.num_allocate_RB_upper_bound))
+        
 
         # Combine the action spaces into a dictionary
+        #self.action_space = self.box_action_space
+        
         self.action_space = spaces.Dict({
             'box_actions': self.box_action_space,
-            'binary_actions': self.binary_action_space,
-            'user_resource_block_allocations':self.user_resource_block_allocations
+            'binary_actions': self.binary_action_space
         })
 
         #self.action_space = spaces.Box(low=action_space_low,high=action_space_high)
         self.observation_space = spaces.Box(low=observation_space_low, high=observation_space_high)
         self.total_action_space = []
+        
+        sample_action = self.action_space.sample()
+        sample_observation = self.observation_space.sample()
+        reshaped_action_for_model_training = self.reshape_action_space_for_model(sample_action)
+        reshaped_observation_for_model_training = self.reshape_observation_space_for_model(sample_observation)
 
-        self.action_space_dim_1 = self.box_action_space.shape[1] + (self.num_allocate_RB_upper_bound*self.time_divisions_per_slot)
-        print(self.action_space_dim_1)
+        self.action_space_dim = len(reshaped_action_for_model_training)#self.box_action_space.shape[1] + (self.num_allocate_RB_upper_bound*self.time_divisions_per_slot)
+        self.observation_space_dim = len(reshaped_observation_for_model_training)
         self.action_space_high = 1
         self.action_space_low = 0
 
         self.STEP_LIMIT = 30
         self.sleep = 0
         self.steps = 0
+
+    def reshape_observation_space_for_model(self,observation_space):
+        observation_space = np.transpose(observation_space)
+        observation_space = observation_space.reshape(1,len(observation_space)*len(observation_space[0]))
+        observation_space = observation_space.squeeze()
+        return observation_space
        
     def reshape_action_space_for_model(self,action):
         box_action = np.array(action['box_actions'])
         binary_actions = np.array(action['binary_actions'])
 
-        binary_actions = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
+        len_box_actions = len(box_action)* len(box_action[0])
+
+        box_action = box_action.reshape(1,len_box_actions)
+
+        binary_actions = binary_actions.reshape(1,self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         self.total_action_space = np.column_stack((box_action,binary_actions))
+        self.total_action_space = self.total_action_space.squeeze()
   
         return self.total_action_space
 
@@ -218,6 +235,9 @@ class NetworkEnv(gym.Env):
             user_id = eMBB_user.eMBB_UE_label
             
     def step(self,action):
+        g = self.reshape_action_space_for_model(action)
+        #print('action reshaped')
+        #print(g)
         #.self.selected_actions =
         #print('------------')
         #f = self.reshape_action_space_for_model(action)
@@ -456,7 +476,7 @@ class NetworkEnv(gym.Env):
         #observation_battery_energies = np.transpose(observation_battery_energies)
         observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,num_urllc_arriving_packets)) #observation_channel_gains.
         #print('observation matrix')
-        print(observation)
+        observation = self.reshape_observation_space_for_model(observation)
        
 
         done = self.check_timestep()
@@ -507,7 +527,7 @@ class NetworkEnv(gym.Env):
         #dones[len(dones)-1] = 1
         #print(reward)
         #print('')
-        return observation,reward,dones,info
+        return observation,reward,done,info
     
     def reset(self):
         self.steps = 0
@@ -600,7 +620,7 @@ class NetworkEnv(gym.Env):
         #observation_channel_gains = np.transpose(observation_channel_gains)
         #observation_battery_energies = np.transpose(observation_battery_energies)
         observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,num_urllc_arriving_packets)) #observation_channel_gains.
-       
+        observation = self.reshape_observation_space_for_model(observation)
         reward = 0
         done = 0
         return observation
@@ -608,28 +628,23 @@ class NetworkEnv(gym.Env):
     def render(self, mode='human'):
         pass
 
-    def create_objects(self,users):
+    def create_objects(self):
         #Small Cell Base station
         self.SBS1 = SBS(1)
         self.eMBB_Users = []
         self.URLLC_Users = []
-        
-        for user in users:
-            if user.type_of_user_id == 0:
-                self.eMBB_Users.append(user)
-            elif user.type_of_user_id == 1:
-                self.URLLC_Users.append(user)
+  
         #Users
-        # self.eMBB_UE_1 = eMBB_UE(1,100,600)
-        # self.eMBB_UE_2 = eMBB_UE(2,100,600)
-        # self.eMBB_UE_3 = eMBB_UE(3,100,600)
+        self.eMBB_UE_1 = eMBB_UE(1,1,100,600)
+        self.eMBB_UE_2 = eMBB_UE(2,2,100,600)
+        self.eMBB_UE_3 = eMBB_UE(3,3,100,600)
 
-        # self.URLLC_UE_1 = URLLC_UE(1,100,600)
-        # self.URLLC_UE_2 = URLLC_UE(2,100,600)
-        # self.URLLC_UE_3 = URLLC_UE(3,100,600)
-        # self.URLLC_UE_4 = URLLC_UE(4,100,600)
-        # self.URLLC_UE_5 = URLLC_UE(5,100,600)
-        # self.URLLC_UE_6 = URLLC_UE(6,100,600)
+        self.URLLC_UE_1 = URLLC_UE(1,4,100,600)
+        self.URLLC_UE_2 = URLLC_UE(2,5,100,600)
+        self.URLLC_UE_3 = URLLC_UE(3,6,100,600)
+        self.URLLC_UE_4 = URLLC_UE(4,7,100,600)
+        self.URLLC_UE_5 = URLLC_UE(5,8,100,600)
+        self.URLLC_UE_6 = URLLC_UE(6,9,100,600)
 
 
         #Communication Channel
@@ -637,7 +652,7 @@ class NetworkEnv(gym.Env):
 
         #Group Users
 
-        #self.group_users()
+        self.group_users()
 
         #Associate SBS with users
         self.SBS1.associate_users(self.eMBB_Users,self.URLLC_Users)
