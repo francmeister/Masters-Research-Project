@@ -137,7 +137,10 @@ class NetworkEnv(gym.Env):
         reshaped_observation_for_model_training = self.reshape_observation_space_for_model(sample_observation)
 
         self.action_space_dim = len(reshaped_action_for_model_training)#self.box_action_space.shape[1] + (self.num_allocate_RB_upper_bound*self.time_divisions_per_slot)
+        print('self.action_space_dim: ', self.action_space_dim)
+
         self.observation_space_dim = len(reshaped_observation_for_model_training)
+        print('self.observation_space_dim: ', self.observation_space_dim)
         self.action_space_high = 1
         self.action_space_low = 0
 
@@ -155,7 +158,7 @@ class NetworkEnv(gym.Env):
         box_action = np.array(action['box_actions'])
         binary_actions = np.array(action['binary_actions'])
 
-        print('action')
+        print('action reshape_action_space_for_model')
         print(action)
         len_box_actions = len(box_action) * len(box_action[0])
         self.box_action_space_len = len_box_actions
@@ -248,7 +251,7 @@ class NetworkEnv(gym.Env):
             user_id = eMBB_user.eMBB_UE_label
             
     def step(self,action):
-        print('action')
+        print('action in step')
         print(action)
         #g = self.reshape_action_space_for_model(action)
         #print('action reshaped')
