@@ -308,6 +308,8 @@ class NetworkEnv(gym.Env):
             transmit_power_action_mapped = interp(transmit_power_action,[0,1],[self.min_transmit_power_db,self.max_transmit_power_db])
             transmit_power_actions_mapped.append(transmit_power_action_mapped)
 
+        # print('transmit powers: ')
+        # print(transmit_power_actions_mapped)
         #self.selected_powers.append(transmit_power_actions_mapped[0])
         
 
