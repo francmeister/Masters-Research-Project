@@ -114,8 +114,9 @@ class NetworkEnv(gym.Env):
         '''
      
         self.box_action_space = spaces.Box(low=action_space_low,high=action_space_high)
+        self.box_action_space_len = 0
         self.binary_action_space = spaces.MultiBinary(self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
-        
+        self.binary_action_space_len = 0
 
         # Combine the action spaces into a dictionary
         #self.action_space = self.box_action_space
@@ -153,11 +154,13 @@ class NetworkEnv(gym.Env):
         box_action = np.array(action['box_actions'])
         binary_actions = np.array(action['binary_actions'])
 
-        len_box_actions = len(box_action)* len(box_action[0])
+        len_box_actions = len(box_action) * len(box_action[0])
+        self.box_action_space_len = len_box_actions
 
         box_action = box_action.reshape(1,len_box_actions)
 
         binary_actions = binary_actions.reshape(1,self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
+        self.binary_action_space_len = self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound
         self.total_action_space = np.column_stack((box_action,binary_actions))
         self.total_action_space = self.total_action_space.squeeze()
   
@@ -168,14 +171,14 @@ class NetworkEnv(gym.Env):
     def reshape_action_space_from_model_to_dict(self,action):
         box_actions = []
         binary_actions = []
-        for user_action in action:
-            box_actions.append(user_action[0:2])
-            binary_actions.append(user_action[2:len(user_action)])
+
+        box_actions = action[0:self.box_action_space_len]
+        binary_actions = action[self.box_action_space_len:len(action)]
 
         box_actions = np.array(box_actions)
         binary_actions = np.array(binary_actions)
 
-        binary_actions = binary_actions.reshape(1,self.number_of_users * self.num_allocate_RB_upper_bound*self.time_divisions_per_slot).squeeze()
+        #binary_actions = binary_actions.reshape(1,self.number_of_users * self.num_allocate_RB_upper_bound*self.time_divisions_per_slot).squeeze()
         #print(binary_actions)
         count = 0
         for binary_action in binary_actions:
