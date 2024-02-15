@@ -159,10 +159,13 @@ class NetworkEnv(gym.Env):
         self.box_action_space_len = len_box_actions
 
         box_action = box_action.reshape(1,len_box_actions)
+        box_action = box_action.squeeze()
 
         binary_actions = binary_actions.reshape(1,self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
+        binary_actions = binary_actions.squeeze()
         self.binary_action_space_len = self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound
-        self.total_action_space = np.column_stack((box_action,binary_actions))
+        self.total_action_space = np.hstack((box_action,binary_actions))#np.column_stack((box_action,binary_actions))
+        self.total_action_space = np.array(self.total_action_space)
         self.total_action_space = self.total_action_space.squeeze()
 
         action_space_dict = {
@@ -313,8 +316,6 @@ class NetworkEnv(gym.Env):
             transmit_power_action_mapped = interp(transmit_power_action,[0,1],[self.min_transmit_power_db,self.max_transmit_power_db])
             transmit_power_actions_mapped.append(transmit_power_action_mapped)
 
-        print('transmit powers: ')
-        print(transmit_power_actions_mapped)
         #self.selected_powers.append(transmit_power_actions_mapped[0])
         
 
