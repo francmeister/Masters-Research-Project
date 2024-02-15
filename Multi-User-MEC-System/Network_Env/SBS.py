@@ -321,7 +321,8 @@ class SBS():
         
         for urllc_user in URLLC_Users:
             random_number = np.random.randint(0, len(self.available_resource_time_blocks), 1)
-            urllc_user.assigned_resource_time_block = self.available_resource_time_blocks[int(random_number)]
+            random_number = random_number[0]
+            urllc_user.assigned_resource_time_block = self.available_resource_time_blocks[random_number]
             self.available_resource_time_blocks = np.delete(self.available_resource_time_blocks,random_number,axis=0)
             urllc_user.assigned_time_block = urllc_user.assigned_resource_time_block[0]
             urllc_user.assigned_resource_block = urllc_user.assigned_resource_time_block[1]
