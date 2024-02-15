@@ -15,6 +15,10 @@ tasks_dropped = np.load('tasks_dropped.npy')
 resource_allocation_matrix = np.load('resource_allocation_matrix.npy',allow_pickle=True)
 resource_allocation_constraint_violation_count = np.load('resource_allocation_constraint_violation_count.npy',allow_pickle=True)
 resource_allocation_matrix = np.array(resource_allocation_matrix)
+
+rewards_throughput_energy_access_point_1 = np.load('timestep_rewards_energy_throughput (3).npy')
+rewards_throughput_energy_access_point_2 = np.load('timestep_rewards_energy_throughput (4).npy')
+rewards_throughput_energy_access_point_3 = np.load('timestep_rewards_energy_throughput (5).npy')
 #print(resource_allocation_matrix[323])
 #print(len(resource_allocation_matrix))
 #print(RB_allocation_matrix)
@@ -38,6 +42,14 @@ timesteps = rewards_throughput_energy[:,0]
 rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
 throughputs = rewards_throughput_energy[:,3]
+
+timesteps_1 = rewards_throughput_energy_access_point_1[:,0]
+timesteps_2 = rewards_throughput_energy_access_point_2[:,0]
+timesteps_3 = rewards_throughput_energy_access_point_3[:,0]
+
+rewards_1 = rewards_throughput_energy_access_point_1[:,1]
+rewards_2 = rewards_throughput_energy_access_point_2[:,1]
+rewards_3 = rewards_throughput_energy_access_point_3[:,1]
 
 start_index = 6200
 end_index = 25000
@@ -71,21 +83,21 @@ plt.plot(timesteps, resource_allocation_constraint_violation_count, color ="blac
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-#figure, axis = plt.subplots(3,1)
+figure, axis = plt.subplots(3,1)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
 # axis[0].plot(timesteps, battery_energy_rewards)
 # axis[0].set_title('battery energies reward')
 
-# axis[0].plot(timesteps, rewards)
-# axis[0].set_title('energy efficiency')
+axis[0].plot(timesteps_1, rewards_1)
+axis[0].set_title('Access Point 1')
 
-# axis[1].plot(timesteps, energies)
-# axis[1].set_title('energy')
+axis[1].plot(timesteps_2, rewards_2)
+axis[1].set_title('Access Point 2')
 
-# axis[2].plot(timesteps, throughputs)
-# axis[2].set_title('throughput')
+axis[2].plot(timesteps_3, rewards_3)
+axis[2].set_title('Access Point 3')
 
 # axis[1].plot(timesteps, delay_rewards)
 # axis[1].set_title('delay')
