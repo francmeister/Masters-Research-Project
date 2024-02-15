@@ -238,7 +238,7 @@ class NetworkEnv(gym.Env):
             user_id = eMBB_user.eMBB_UE_label
             
     def step(self,action):
-        g = self.reshape_action_space_for_model(action)
+        #g = self.reshape_action_space_for_model(action)
         #print('action reshaped')
         #print(g)
         #.self.selected_actions =
