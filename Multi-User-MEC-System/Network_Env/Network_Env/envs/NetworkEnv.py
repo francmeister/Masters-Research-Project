@@ -133,14 +133,13 @@ class NetworkEnv(gym.Env):
         
         sample_action = self.action_space.sample()
         sample_observation = self.observation_space.sample()
-        reshaped_action_for_model_training, reshaped_action_for_model_training2 = self.reshape_action_space_for_model(sample_action)
+        reshaped_action_for_model_training, reshaped_action_for_model_training2 = self.reshape_action_space_dict(sample_action)
         reshaped_observation_for_model_training = self.reshape_observation_space_for_model(sample_observation)
 
         self.action_space_dim = len(reshaped_action_for_model_training)#self.box_action_space.shape[1] + (self.num_allocate_RB_upper_bound*self.time_divisions_per_slot)
-        print('self.action_space_dim: ', self.action_space_dim)
 
         self.observation_space_dim = len(reshaped_observation_for_model_training)
-        print('self.observation_space_dim: ', self.observation_space_dim)
+      
         self.action_space_high = 1
         self.action_space_low = 0
 
@@ -154,12 +153,10 @@ class NetworkEnv(gym.Env):
         observation_space = observation_space.squeeze()
         return observation_space
        
-    def reshape_action_space_for_model(self,action):
+    def reshape_action_space_dict(self,action):
         box_action = np.array(action['box_actions'])
         binary_actions = np.array(action['binary_actions'])
 
-        print('action reshape_action_space_for_model')
-        print(action)
         len_box_actions = len(box_action) * len(box_action[0])
         self.box_action_space_len = len_box_actions
 
@@ -179,6 +176,26 @@ class NetworkEnv(gym.Env):
         }
   
         return self.total_action_space, action_space_dict
+    
+    def reshape_action_space_for_model(self,action):
+        box_action = np.array(action['box_actions'])
+        binary_actions = np.array(action['binary_actions'])
+
+        #len_box_actions = len(box_action) * len(box_action[0])
+        #self.box_action_space_len = len_box_actions
+
+        #box_action = box_action.reshape(1,len_box_actions)
+        #box_action = box_action.squeeze()
+
+        #binary_actions = binary_actions.reshape(1,self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
+        #binary_actions = binary_actions.squeeze()
+        #self.binary_action_space_len = self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound
+        self.total_action_space = np.hstack((box_action,binary_actions))#np.column_stack((box_action,binary_actions))
+        self.total_action_space = np.array(self.total_action_space)
+        self.total_action_space = self.total_action_space.squeeze()
+
+  
+        return self.total_action_space
 
         
 
