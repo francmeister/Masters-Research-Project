@@ -48,7 +48,9 @@ print(obs)
 for timestep in timesteps:
     print('----------------------------------------------------------------------------------------------------------------------------------------------------')
     action = env.action_space.sample()
-    action = env.enforce_constraint(action)
+    action = env.reshape_action_space_for_model(action)
+    #action = env.enforce_constraint(action)
+    action = env.reshape_action_space_from_model_to_dict(action)
     #print('----------------------------------------------------------------------------------------------------------------------------------------------------')
     #print(action)
     #print('')
@@ -77,7 +79,7 @@ for timestep in timesteps:
     transmit_energies.append(env.eMBB_UE_1.achieved_transmission_energy_consumption)
     #print('action: ', action)
     #print('reward: ', reward)
-    rewards.append(reward[0])
+    rewards.append(reward)
     tasks_dropped.append(env.SBS1.tasks_dropped)
     
   

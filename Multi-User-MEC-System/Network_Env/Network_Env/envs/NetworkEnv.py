@@ -68,7 +68,7 @@ class NetworkEnv(gym.Env):
                         [self.min_transmit_power_db for _ in range(self.number_of_users)], [self.min_number_of_URLLC_users_per_RB for _ in range(self.number_of_users)]],dtype=np.float32)'''
         
         action_space_low = np.array([[0 for _ in range(self.number_of_users)], [0 for _ in range(self.number_of_users)]],dtype=np.float32)
-        
+        self.number_of_box_actions = 2
         action_space_high = np.transpose(action_space_high)
         action_space_low = np.transpose(action_space_low)
         
@@ -114,6 +114,7 @@ class NetworkEnv(gym.Env):
         '''
      
         self.box_action_space = spaces.Box(low=action_space_low,high=action_space_high)
+        self.number_of_box_actions = 2
         self.box_action_space_len = 0
         self.binary_action_space = spaces.MultiBinary(self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         self.binary_action_space_len = 0
@@ -171,7 +172,6 @@ class NetworkEnv(gym.Env):
     def reshape_action_space_from_model_to_dict(self,action):
         box_actions = []
         binary_actions = []
-
         box_actions = action[0:self.box_action_space_len]
         binary_actions = action[self.box_action_space_len:len(action)]
 
@@ -279,12 +279,17 @@ class NetworkEnv(gym.Env):
         #print(" ")
         #print("Action before interpolation")
         #print(action)
-        box_action = np.transpose(box_action)
+        #box_action = np.transpose(box_action)
         #print("Action before interpolation transposed")
         #print(action)
         reward = 0
+
         #collect offload decisions actions 
-        offload_decisions_actions = box_action[self.offload_decisions_label]
+        num_offloading_actions = int(self.box_action_space_len/self.number_of_box_actions)
+
+        num_power_action = num_offloading_actions
+
+        offload_decisions_actions = box_action[0:num_offloading_actions]
         offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
 
         offload_decisions_actions_mapped = []
@@ -294,7 +299,7 @@ class NetworkEnv(gym.Env):
         
        
          #collect trasmit powers allocations actions
-        transmit_power_actions = box_action[self.allocate_transmit_powers_label]
+        transmit_power_actions = box_action[num_offloading_actions:num_offloading_actions*self.number_of_box_actions]
         transmit_power_actions = transmit_power_actions[0:self.number_of_eMBB_users]
 
         transmit_power_actions_mapped = []
@@ -399,7 +404,7 @@ class NetworkEnv(gym.Env):
         self.SBS1.calculate_achieved_system_energy_efficiency()
         system_reward, reward, self.total_energy,self.total_rate = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users,self.Communication_Channel_1)
     
-        reward = [x + resource_block_allocation_penalty for x in reward]
+        #reward = [x + resource_block_allocation_penalty for x in reward]
        
         
         #print('Reward')
@@ -489,7 +494,7 @@ class NetworkEnv(gym.Env):
         self.steps+=1
         #print('Timestep: ', self.steps)
         #print('reward: ', reward)
-        self.rewards.append(reward[0])
+        self.rewards.append(reward)
         #print(' ')
         
         penalty_per_RB = -(1/self.num_allocate_RB_upper_bound)
