@@ -260,7 +260,7 @@ class NetworkEnv(gym.Env):
         #user_resource_block_allocations = user_resource_block_allocations.reshape(self.time_divisions_per_slot,self.num_allocate_RB_upper_bound)
  
 
-        resource_block_allocation_penalty = self.check_resource_block_allocation_constraint(binary_actions)
+        #resource_block_allocation_penalty = self.check_resource_block_allocation_constraint(binary_actions)
     
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
     
