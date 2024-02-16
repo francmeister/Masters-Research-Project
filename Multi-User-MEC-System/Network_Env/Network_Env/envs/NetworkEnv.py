@@ -210,14 +210,7 @@ class NetworkEnv(gym.Env):
 
         #binary_actions = binary_actions.reshape(1,self.number_of_users * self.num_allocate_RB_upper_bound*self.time_divisions_per_slot).squeeze()
         #print(binary_actions)
-        count = 0
-        for binary_action in binary_actions:
-            if binary_action < 0.5:
-                binary_actions[count] = 0
-            elif binary_action >= 0.5:
-                binary_actions[count] = 1
-            
-            count+=1
+ 
         #print(binary_actions)
         action_space_dict = {
             'box_actions': box_actions,
@@ -255,12 +248,47 @@ class NetworkEnv(gym.Env):
         
         self.resource_block_allocation_matrix.clear()
         self.resource_block_allocation_matrix.append(resource_block_action_matrix)
-        # print(resource_block_action_matrix)
-        # print('')
-       
-        #print(np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot))
-        
+    
         return action
+    
+    def apply_resource_allocation_constraint(self,action):
+        box_actions = action['box_actions']
+        binary_actions = action['binary_actions']
+        #matrix = [[[random.uniform(0, 1) for _ in range(6)] for _ in range(2)] for _ in range(3)]
+        #matrix = np.array(matrix)
+        #print('matrix')
+        #print(matrix)
+        resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
+        resource_block_action_matrix_size = self.number_of_users*self.time_divisions_per_slot*self.num_allocate_RB_upper_bound
+        #resource_block_action_matrix = resource_block_action_matrix.squeeze()
+        #print(resource_block_action_matrix[:,:,0])
+        for z in range(0,self.num_allocate_RB_upper_bound):
+            column_array = resource_block_action_matrix[:,:,z]
+            column_array = column_array.reshape(1,self.number_of_users*self.time_divisions_per_slot)
+            column_array = column_array.squeeze()
+            sorted_column_array = np.sort(column_array)[::-1]
+            first_largest_num = sorted_column_array[0]
+            second_largest_num = sorted_column_array[1]
+            index_first_largest_num = np.where(column_array==first_largest_num)[0][0]
+            index_second_largest_num = np.where(column_array==second_largest_num)[0][0]
+            count = 0
+            for x in range(0,self.number_of_users):
+                for y in range(0,(self.time_divisions_per_slot)):
+                    if count == index_first_largest_num or count == index_second_largest_num:
+                        resource_block_action_matrix[x,y,z] = 1
+                    else:
+                        resource_block_action_matrix[x,y,z] = 0
+                    count+=1
+
+        resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
+        resource_block_action_matrix = resource_block_action_matrix.squeeze()
+        action_space_dict = {
+            'box_actions': box_actions,
+            'binary_actions': resource_block_action_matrix
+        }
+        #print(resource_block_action_matrix)
+        return action_space_dict
+
 
     def user_binary_resource_allocations(self,user_resource_block_allocations):
         user_id = 0
@@ -268,7 +296,6 @@ class NetworkEnv(gym.Env):
             user_id = eMBB_user.eMBB_UE_label
             
     def step(self,action):
-      
         #g = self.reshape_action_space_for_model(action)
         #print('action reshaped')
         #print(g)

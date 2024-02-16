@@ -48,7 +48,7 @@ print(obs)
 for timestep in timesteps:
     print('----------------------------------------------------------------------------------------------------------------------------------------------------')
     action = env.action_space.sample()
-    action2, action = env.reshape_action_space_for_model(action)
+    action2, action = env.reshape_action_space_dict(action)
 
     #action = env.enforce_constraint(action)
     #action = env.reshape_action_space_from_model_to_dict(action)
@@ -146,7 +146,7 @@ axis[3].set_title('battery energies reward')
 #axis[2].plot(timesteps, rewards)
 #axis[2].set_title('rewards')
 
-plt.show()
+#plt.show()
 #plt.show()
 
 
