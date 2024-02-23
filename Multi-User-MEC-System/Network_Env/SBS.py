@@ -3,6 +3,8 @@ pygame.init()
 import math
 import numpy as np
 from numpy import interp
+import scipy.stats as stats
+
 class SBS():
     def __init__(self, SBS_label):
         self.SBS_label = SBS_label
@@ -125,7 +127,7 @@ class SBS():
 
         #print("self.achieved_system_energy_efficiency",self.achieved_system_energy_efficiency)
 
-    def calculate_achieved_system_reward(self, eMBB_Users, communication_channel):
+    def calculate_achieved_system_reward(self, eMBB_Users, urllc_users, communication_channel):
         #print('number of embb users: ', len(eMBB_Users))
         self.achieved_system_reward = 0
         eMBB_User_energy_consumption = 0
@@ -151,7 +153,7 @@ class SBS():
         total_users_delay_times_energy_reward = 0
         total_users_resource_allocation_reward = 0
         overall_users_reward = 0
-
+        urllc_reliability_reward, urllc_reliability_reward_normalized = self.calculate_urllc_reliability_reward(urllc_users)
         for eMBB_User in eMBB_Users:
             eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
             total_energy += eMBB_User_energy_consumption
@@ -217,8 +219,8 @@ class SBS():
         #print("total_energy: ", total_energy)
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
-  
-        return self.achieved_system_reward, self.achieved_system_reward , self.energy_rewards,self.throughput_rewards
+        #self.achieved_system_reward
+        return self.achieved_system_reward, urllc_reliability_reward_normalized , self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, overall_users_rewards , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
@@ -277,6 +279,10 @@ class SBS():
         self.delay_reward_times_energy_reward = 0
         self.available_resource_time_blocks = []
         self.num_arriving_urllc_packets = 0
+        self.urllc_reliability_constraint_max = 0.04
+        self.K_mean = 0
+        self.K_variance = 10
+        self.outage_probability = 0
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)
@@ -368,6 +374,36 @@ class SBS():
         second_largest_index = sorted_indices[-2]
 
         return largest_index
+    
+    def calculate_urllc_reliability_reward(self, urllc_users):
+        num_arriving_urllc_packets = self.num_arriving_urllc_packets
+        if len(urllc_users) > 0:
+            urllc_task_size = urllc_users[0].task_size_per_slot_bits    
+
+        urllc_total_rate = 0
+        for urllc_user in urllc_users:
+            urllc_total_rate+=urllc_user.achieved_channel_rate
+
+        K = num_arriving_urllc_packets*urllc_task_size
+        self.K_mean = (len(urllc_users)/2)*urllc_task_size
+        #K_cdf = stats.norm.cdf(K,self.K_mean,self.K_variance)
+        K_cdf = stats.norm.cdf(K,self.K_mean,self.K_variance)
+        self.outage_probability = 1 - K_cdf
+
+        # print('self.K_mean: ', self.K_mean)
+        #print('self.K-cdf: ', K_cdf)
+        # print('self.1/K-cdf: ', 1/K_cdf)
+        # print('total urllc rate: ', urllc_total_rate)
+        # print('(1/K_cdf)*(1-self.urllc_reliability_constraint_max): ', (1/K_cdf)*(1-self.urllc_reliability_constraint_max))
+
+        reliability_reward = urllc_total_rate-(1/K_cdf)*(1-self.urllc_reliability_constraint_max)
+        #print('reliability_reward: ', reliability_reward)
+        reliability_reward_max = 4000
+        reliability_reward_min = 0
+        reliability_reward_normalized = interp(reliability_reward,[reliability_reward_min,reliability_reward_max],[0,1])
+        return reliability_reward, reliability_reward_normalized
+
+        
 
 
 

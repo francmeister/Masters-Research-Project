@@ -71,7 +71,7 @@ class URLLC_UE(User_Equipment):
         #self.task_arrival_rate_tasks_per_second = random.randint(self.min_task_arrival_rate_tasks_per_second,self.max_task_arrival_rate_tasks_per_second)
         self.task_arrival_rate_tasks_per_slot = np.random.binomial(size=1,n=1,p=0.5)#np.random.poisson(5,1)
         self.task_arrival_rate_tasks_per_slot = self.task_arrival_rate_tasks_per_slot[0]
-        self.task_size_per_slot_bits = 10#10 bits per task in slot 
+        #self.task_size_per_slot_bits = 10#10 bits per task in slot 
         qeueu_timer = 0
         
         if self.task_arrival_rate_tasks_per_slot == 1:
