@@ -220,7 +220,7 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
         #self.achieved_system_reward
-        return self.achieved_system_reward, self.achieved_system_reward , self.energy_rewards,self.throughput_rewards
+        return self.achieved_system_reward, urllc_reliability_reward_normalized , self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, overall_users_rewards , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
@@ -281,7 +281,7 @@ class SBS():
         self.num_arriving_urllc_packets = 0
         self.urllc_reliability_constraint_max = 0.04
         self.K_mean = 0
-        self.K_variance = 10
+        self.K_variance = 3
         self.outage_probability = 0
 
     def calculate_fairness(self,eMBB_Users):
@@ -384,11 +384,16 @@ class SBS():
         for urllc_user in urllc_users:
             urllc_total_rate+=urllc_user.achieved_channel_rate
 
-        K = num_arriving_urllc_packets*urllc_task_size
-        self.K_mean = (len(urllc_users)/2)*urllc_task_size
-        #K_cdf = stats.norm.cdf(K,self.K_mean,self.K_variance)
-        K_cdf = stats.norm.cdf(K,self.K_mean,self.K_variance)
-        self.outage_probability = 1 - K_cdf
+        K_mean = (len(urllc_users)/2)*urllc_task_size
+        K_variance = self.K_variance*urllc_task_size
+        K_inv = stats.norm.ppf((1-self.urllc_reliability_constraint_max), loc=K_mean, scale=K_variance)
+        #print('K_inv: ', K_inv)
+        #print('urllc_total_rate: ', urllc_total_rate)
+        # K = num_arriving_urllc_packets*urllc_task_size
+        # self.K_mean = (len(urllc_users)/2)*urllc_task_size
+        # #K_cdf = stats.norm.cdf(K,self.K_mean,self.K_variance)
+        # K_cdf = stats.norm.cdf(K,self.K_mean,self.K_variance)
+        # self.outage_probability = 1 - K_cdf
 
         # print('self.K_mean: ', self.K_mean)
         #print('self.K-cdf: ', K_cdf)
@@ -396,11 +401,11 @@ class SBS():
         # print('total urllc rate: ', urllc_total_rate)
         # print('(1/K_cdf)*(1-self.urllc_reliability_constraint_max): ', (1/K_cdf)*(1-self.urllc_reliability_constraint_max))
 
-        reliability_reward = urllc_total_rate-(1/K_cdf)*(1-self.urllc_reliability_constraint_max)
+        reliability_reward = urllc_total_rate-K_inv
         #print('reliability_reward: ', reliability_reward)
-        reliability_reward_max = 4000
-        reliability_reward_min = 0
-        reliability_reward_normalized = interp(reliability_reward,[reliability_reward_min,reliability_reward_max],[0,1])
+        reliability_reward_max = 2000
+        reliability_reward_min = -2000
+        reliability_reward_normalized = interp(reliability_reward,[reliability_reward_min,reliability_reward_max],[0,5])
         return reliability_reward, reliability_reward_normalized
 
         
