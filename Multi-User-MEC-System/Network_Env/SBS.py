@@ -224,7 +224,7 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
         #self.achieved_system_reward
-        return self.achieved_system_reward, self.achieved_system_reward , self.energy_rewards,self.throughput_rewards
+        return self.achieved_system_reward, urllc_reliability_reward_normalized , self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, overall_users_rewards , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
@@ -413,8 +413,9 @@ class SBS():
         # print('(1/K_cdf)*(1-self.urllc_reliability_constraint_max): ', (1/K_cdf)*(1-self.urllc_reliability_constraint_max))
         #print('urllc rate: ', urllc_total_rate)
         reliability_reward = urllc_total_rate-K_inv
-        average_rate_prev_slots = self.urllc_rate_expectation_over_prev_T_slot(5,urllc_total_rate)
-        variance = urllc_task_size
+        average_rate_prev_slots = self.urllc_rate_expectation_over_prev_T_slot(10,urllc_total_rate)
+        #print('self.previous_rates: ', self.previous_rates)
+        variance = urllc_task_size*10
 
         self.outage_probability = stats.norm.cdf(K,loc=average_rate_prev_slots,scale=variance)
         # print('reliability_reward: ', reliability_reward)
@@ -423,7 +424,7 @@ class SBS():
         reliability_reward_max = 2000
         reliability_reward_min = -2000
         reliability_reward_normalized = interp(reliability_reward,[reliability_reward_min,reliability_reward_max],[0,5])
-        return reliability_reward, reliability_reward_normalized
+        return reliability_reward, self.outage_probability#reliability_reward_normalized
     
     def urllc_rate_expectation_over_prev_T_slot(self, T, urllc_total_rate):
         self.timeslot_counter+=1
