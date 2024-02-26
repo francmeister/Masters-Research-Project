@@ -153,8 +153,10 @@ class SBS():
         total_users_delay_times_energy_reward = 0
         total_users_resource_allocation_reward = 0
         overall_users_reward = 0
+        total_eMBB_User_delay_normalized = 0
         urllc_reliability_reward, urllc_reliability_reward_normalized = self.calculate_urllc_reliability_reward(urllc_users)
         for eMBB_User in eMBB_Users:
+            eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
             eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
             total_energy += eMBB_User_energy_consumption
             eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
@@ -166,6 +168,7 @@ class SBS():
             queue_delay_reward,delay = eMBB_User.calculate_queuing_delays()
             tasks_dropped = eMBB_User.tasks_dropped
 
+            total_eMBB_User_delay_normalized+=eMBB_User_delay_normalized
             total_users_energy_reward += eMBB_User_energy_consumption
             total_users_throughput_reward += eMBB_User_channel_rate
             total_users_battery_energies_reward += battery_energy_reward
@@ -220,7 +223,7 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
         #self.achieved_system_reward
-        return self.achieved_system_reward, urllc_reliability_reward_normalized , self.energy_rewards,self.throughput_rewards
+        return self.achieved_system_reward, total_eMBB_User_delay_normalized , self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, overall_users_rewards , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
