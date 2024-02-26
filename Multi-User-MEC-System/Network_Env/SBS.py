@@ -415,7 +415,7 @@ class SBS():
         reliability_reward = urllc_total_rate-K_inv
         average_rate_prev_slots = self.urllc_rate_expectation_over_prev_T_slot(10,urllc_total_rate)
         #print('self.previous_rates: ', self.previous_rates)
-        variance = urllc_task_size*10
+        variance = urllc_task_size
 
         self.outage_probability = stats.norm.cdf(K,loc=average_rate_prev_slots,scale=variance)
         # print('reliability_reward: ', reliability_reward)
