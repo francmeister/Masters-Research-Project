@@ -78,7 +78,7 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.xlabel("X axis")
 #plt.ylabel("Y axis")
 #plt.plot(timesteps, rewards, color ="black")
-plt.plot(timesteps, outage_probabilities, color ="black")
+plt.plot(timesteps, rewards, color ="black")
 #plt.plot(timesteps,energies,color = "blue")
 #plt.plot(timesteps,throughputs,color = "green")
 #plt.scatter(timesteps,offload_actions,color="blue")

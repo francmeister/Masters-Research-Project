@@ -283,6 +283,9 @@ class SBS():
         self.K_mean = 0
         self.K_variance = 3
         self.outage_probability = 0
+        self.previous_rates = []
+        self.timeslot_counter = 0
+        self.ptr = 0
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)
@@ -384,6 +387,9 @@ class SBS():
         for urllc_user in urllc_users:
             urllc_total_rate+=urllc_user.achieved_channel_rate
 
+        print('urllc_total_rate: ', urllc_total_rate)
+       
+        K = num_arriving_urllc_packets*urllc_task_size
         K_mean = (len(urllc_users)/2)*urllc_task_size
         K_variance = self.K_variance*urllc_task_size
         K_inv = stats.norm.ppf((1-self.urllc_reliability_constraint_max), loc=K_mean, scale=K_variance)
@@ -402,11 +408,34 @@ class SBS():
         # print('(1/K_cdf)*(1-self.urllc_reliability_constraint_max): ', (1/K_cdf)*(1-self.urllc_reliability_constraint_max))
 
         reliability_reward = urllc_total_rate-K_inv
+        average_rate_prev_slots = self.urllc_rate_expectation_over_prev_T_slot(5,urllc_total_rate)
+        variance = urllc_task_size
+
+        self.outage_probability = stats.norm.cdf(K,loc=average_rate_prev_slots,scale=variance)
+        # print('reliability_reward: ', reliability_reward)
+        # print('self.outage_probability: ', self.outage_probability)
         #print('reliability_reward: ', reliability_reward)
         reliability_reward_max = 2000
         reliability_reward_min = -2000
         reliability_reward_normalized = interp(reliability_reward,[reliability_reward_min,reliability_reward_max],[0,5])
         return reliability_reward, reliability_reward_normalized
+    
+    def urllc_rate_expectation_over_prev_T_slot(self, T, urllc_total_rate):
+        self.timeslot_counter+=1
+        number_of_previous_time_slots = T
+
+        if len(self.previous_rates) == number_of_previous_time_slots:
+            self.previous_rates[int(self.ptr)] = urllc_total_rate
+            self.ptr = (self.ptr + 1) % number_of_previous_time_slots
+        else:
+            self.previous_rates.append(urllc_total_rate)
+
+        average_rate = sum(self.previous_rates)/len(self.previous_rates)
+        return average_rate
+
+
+
+
 
         
 
