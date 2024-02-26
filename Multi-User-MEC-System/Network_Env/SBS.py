@@ -387,7 +387,7 @@ class SBS():
         for urllc_user in urllc_users:
             urllc_total_rate+=urllc_user.achieved_channel_rate
 
-        print('urllc_total_rate: ', urllc_total_rate)
+      
        
         K = num_arriving_urllc_packets*urllc_task_size
         K_mean = (len(urllc_users)/2)*urllc_task_size
