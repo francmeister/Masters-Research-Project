@@ -224,7 +224,7 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
         #self.achieved_system_reward
-        return self.achieved_system_reward, urllc_reliability_reward_normalized , self.energy_rewards,self.throughput_rewards
+        return self.achieved_system_reward, self.achieved_system_reward , self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, overall_users_rewards , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
@@ -424,7 +424,7 @@ class SBS():
         reliability_reward_max = 2000
         reliability_reward_min = -2000
         reliability_reward_normalized = interp(reliability_reward,[reliability_reward_min,reliability_reward_max],[0,5])
-        return reliability_reward, self.outage_probability#reliability_reward_normalized
+        return reliability_reward, reliability_reward_normalized
     
     def urllc_rate_expectation_over_prev_T_slot(self, T, urllc_total_rate):
         self.timeslot_counter+=1
