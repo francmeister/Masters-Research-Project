@@ -155,6 +155,7 @@ class SBS():
         overall_users_reward = 0
         total_eMBB_User_delay_normalized = 0
         urllc_reliability_reward, urllc_reliability_reward_normalized = self.calculate_urllc_reliability_reward(urllc_users)
+        self.urllc_reliability_reward_normalized = urllc_reliability_reward_normalized
         for eMBB_User in eMBB_Users:
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
             eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
@@ -223,7 +224,7 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
         #self.achieved_system_reward
-        return self.achieved_system_reward, total_eMBB_User_delay_normalized , self.energy_rewards,self.throughput_rewards
+        return self.achieved_system_reward, self.achieved_system_reward , self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, overall_users_rewards , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
@@ -289,6 +290,7 @@ class SBS():
         self.previous_rates = []
         self.timeslot_counter = 0
         self.ptr = 0
+        self.urllc_reliability_reward_normalized = 0
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)
@@ -409,7 +411,7 @@ class SBS():
         # print('self.1/K-cdf: ', 1/K_cdf)
         # print('total urllc rate: ', urllc_total_rate)
         # print('(1/K_cdf)*(1-self.urllc_reliability_constraint_max): ', (1/K_cdf)*(1-self.urllc_reliability_constraint_max))
-
+        #print('urllc rate: ', urllc_total_rate)
         reliability_reward = urllc_total_rate-K_inv
         average_rate_prev_slots = self.urllc_rate_expectation_over_prev_T_slot(5,urllc_total_rate)
         variance = urllc_task_size
