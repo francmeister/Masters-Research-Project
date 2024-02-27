@@ -174,8 +174,8 @@ class URLLC_UE(User_Equipment):
 
     def calculate_achieved_channel_rate(self,eMBB_users,communication_channel):
         self.find_puncturing_embb_users(eMBB_users)
-        print('self.small_scale_gain: ', self.small_scale_gain)
-        print('self.large_scale_gain: ', self.large_scale_gain)
+        #print('self.small_scale_gain: ', self.small_scale_gain)
+        #print('self.large_scale_gain: ', self.large_scale_gain)
         numerator = self.small_scale_gain[0][self.assigned_resource_block-1]*self.large_scale_gain[0][self.assigned_resource_block-1]*self.transmit_power
         denominator = self.puncturing_embb_user_large_scale_gain*self.puncturing_embb_user_small_scale_gain*self.puncturing_embb_user_transmit_power + communication_channel.noise_spectral_density_W 
         channel_rate = communication_channel.RB_bandwidth_Hz*(1/communication_channel.num_of_mini_slots)*math.log2((1+numerator/denominator))
