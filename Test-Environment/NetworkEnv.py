@@ -576,7 +576,9 @@ class NetworkEnv(gym.Env):
         col = 0
         min_value = 0
         max_value = 0
+        print('observation_channel_gains: ', observation_channel_gains)
         for channel_gains in observation_channel_gains:
+            print('channel gains: ', channel_gains)
             for channel_gain in channel_gains:
                 observation_channel_gains[row][col] = interp(observation_channel_gains[row][col],[self.channel_gain_min,self.channel_gain_max],[0,1])
                 col+=1
@@ -622,9 +624,9 @@ class NetworkEnv(gym.Env):
             elif user.type_of_user_id == 1:
                 self.URLLC_Users.append(user)
 
-        print('access point id: ', self.access_point_id)
-        print('length self.embbusers: ', len(self.eMBB_Users))
-        print('length self.urllc: ',len(self.URLLC_Users))
+        # print('access point id: ', self.access_point_id)
+        # print('length self.embbusers: ', len(self.eMBB_Users))
+        # print('length self.urllc: ',len(self.URLLC_Users))
         
         #Users
         self.eMBB_UE_1 = eMBB_UE(1,2,100,600)

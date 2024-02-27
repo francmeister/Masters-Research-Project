@@ -1,6 +1,8 @@
 import numpy as np
 import gym
-import Network_Env
+from NetworkEnv import NetworkEnv
+from eMBB_UE import eMBB_UE
+from URLLC_UE import URLLC_UE
 import pybullet_envs
 import torch
 import matplotlib.pyplot as plt
@@ -9,7 +11,7 @@ import pandas as pd
 
 from numpy import interp
 
-env = gym.make('NetworkEnv-v0')
+#env = gym.make('NetworkEnv-v0')
 
 #timesteps = 5
 timesteps = np.arange(0,30,1)
@@ -38,7 +40,22 @@ energy_consumed = []
 local_energy = []
 tasks_dropped = []
 
+eMBB_UE_1 = eMBB_UE(1,1,100,600)
+eMBB_UE_2 = eMBB_UE(2,2,100,600)
+eMBB_UE_3 = eMBB_UE(3,3,100,600)
+URLLC_UE_1 = URLLC_UE(1,4,100,600)
+URLLC_UE_2 = URLLC_UE(2,5,100,600)
+URLLC_UE_3 = URLLC_UE(3,6,100,600)
+all_users = []
+all_users.append(eMBB_UE_1)
+all_users.append(eMBB_UE_2)
+all_users.append(eMBB_UE_3)
 
+all_users.append(URLLC_UE_1)
+all_users.append(URLLC_UE_2)
+all_users.append(URLLC_UE_3)
+
+env = NetworkEnv(1,all_users)
 obs = env.reset()
 print('obs')
 print(obs)
@@ -71,7 +88,7 @@ for timestep in timesteps:
     battery_energies.append(env.eMBB_UE_1.battery_energy_level)
     energies_harvested.append(env.eMBB_UE_1.energy_harvested)
     energy_consumed.append(env.eMBB_UE_1.achieved_total_energy_consumption)
-    channel_gains.append(sum(env.eMBB_UE_1.total_gain[0]))
+    #channel_gains.append(sum(env.eMBB_UE_1.total_gain[0]))
     power_allocations.append(env.eMBB_UE_1.assigned_transmit_power_W)
     local_energies.append(env.eMBB_UE_1.achieved_local_energy_consumption)
     transmit_energies.append(env.eMBB_UE_1.achieved_transmission_energy_consumption)
