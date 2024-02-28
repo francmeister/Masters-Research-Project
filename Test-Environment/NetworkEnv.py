@@ -624,9 +624,10 @@ class NetworkEnv(gym.Env):
             elif user.type_of_user_id == 1:
                 self.URLLC_Users.append(user)
 
-        # print('access point id: ', self.access_point_id)
-        # print('length self.embbusers: ', len(self.eMBB_Users))
-        # print('length self.urllc: ',len(self.URLLC_Users))
+        print('access point id: ', self.access_point_id)
+        print('embbusers: ', len(self.eMBB_Users))
+        print('urllc users: ',len(self.URLLC_Users))
+        print('')
         
         #Users
         self.eMBB_UE_1 = eMBB_UE(1,2,100,600)
