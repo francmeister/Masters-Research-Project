@@ -288,7 +288,7 @@ class eMBB_UE(User_Equipment):
             # print(self.allocated_offloading_ratio)
             # print('')
             for x in range(0,self.task_arrival_rate_tasks_per_second):
-                #print('self.task_queue[x]: ', len(self.task_queue))
+                print('self.task_queue[x]: ', len(self.task_queue))
                 packet_dec = self.task_queue[x].bits
                 self.QOS_requirement_for_transmission = self.task_queue[x].QOS_requirement
                 packet_bin = bin(packet_dec)[2:]
