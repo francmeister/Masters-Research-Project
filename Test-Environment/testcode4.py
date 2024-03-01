@@ -55,7 +55,7 @@ all_users.append(URLLC_UE_1)
 all_users.append(URLLC_UE_2)
 all_users.append(URLLC_UE_3)
 
-env = NetworkEnv(1,all_users)
+env = NetworkEnv(1,all_users,1)
 obs = env.reset()
 print('obs')
 print(obs)
