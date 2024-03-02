@@ -42,6 +42,10 @@ tasks_dropped = []
 obs = env.reset()
 print('obs')
 print(obs)
+print('env.observation_space.sample()')
+print(env.observation_space.sample())
+print('env.action_space.sample()')
+print(env.action_space.sample())
 #print('observation sample')
 #print(env.observation_space.sample())
 #expl_noise = 0.5
