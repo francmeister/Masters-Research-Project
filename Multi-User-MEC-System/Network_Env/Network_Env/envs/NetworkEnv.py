@@ -701,8 +701,8 @@ class NetworkEnv(gym.Env):
   
         #Users
         self.eMBB_UE_1 = eMBB_UE(1,1,100,600)
-        #self.eMBB_UE_2 = eMBB_UE(2,2,100,600)
-        #self.eMBB_UE_3 = eMBB_UE(3,3,100,600)
+        self.eMBB_UE_2 = eMBB_UE(2,2,100,600)
+        self.eMBB_UE_3 = eMBB_UE(3,3,100,600)
 
         self.URLLC_UE_1 = URLLC_UE(1,4,100,600)
         self.URLLC_UE_2 = URLLC_UE(2,5,100,600)
@@ -729,8 +729,8 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        #self.eMBB_Users.append(self.eMBB_UE_2)
-        #self.eMBB_Users.append(self.eMBB_UE_3)
+        self.eMBB_Users.append(self.eMBB_UE_2)
+        self.eMBB_Users.append(self.eMBB_UE_3)
 
         self.URLLC_Users.append(self.URLLC_UE_1)
         self.URLLC_Users.append(self.URLLC_UE_2)
