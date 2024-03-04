@@ -408,7 +408,8 @@ class eMBB_UE(User_Equipment):
             #self.achieved_channel_rate_ = sum(achieved_RB_channel_rates_)
             self.previous_channel_rate = self.achieved_channel_rate
             min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
-            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,1]) 
+            #self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,1]) 
+            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,56000],[0,1]) 
         # print('achieved channel rate: ', self.achieved_channel_rate)
         # print('achieved channel rate_: ', self.achieved_channel_rate_)
         # print('')  
@@ -678,7 +679,8 @@ class eMBB_UE(User_Equipment):
         #print(self.battery_energy_level)
         if self.battery_energy_level >  self.achieved_total_energy_consumption:
             self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
-            self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,5500],[0,1])
+            #self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,5500],[0,1])
+            self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,46000],[0,1])
             self.battery_energy_level = self.battery_energy_level - self.achieved_total_energy_consumption
         else:
             self.achieved_total_energy_consumption = 0
