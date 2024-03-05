@@ -176,6 +176,10 @@ class eMBB_UE(User_Equipment):
         self.achieved_channel_rate_ = 0
         self.previous_rates = []
         self.ptr = 0
+        self.task_arrival_rate = 0
+        self.offloading_ratio = 0
+        self.average_packet_size_bits = 0
+        self.max_lc_queue_delay_violation_probability = 0.8
 
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
@@ -204,6 +208,7 @@ class eMBB_UE(User_Equipment):
         #self.task_arrival_rate_tasks_per_second = random.randint(self.min_task_arrival_rate_tasks_per_second,self.max_task_arrival_rate_tasks_per_second)
         self.task_arrival_rate_tasks_per_second = np.random.poisson(25,1)#np.random.poisson(5,1)
         self.task_arrival_rate_tasks_per_second = self.task_arrival_rate_tasks_per_second[0]
+        self.task_arrival_rate = self.task_arrival_rate_tasks_per_second
         self.previous_arrival_rate = self.task_arrival_rate_tasks_per_second
         self.current_arrival_rate = self.task_arrival_rate_tasks_per_second
         qeueu_timer = 0
@@ -544,6 +549,12 @@ class eMBB_UE(User_Equipment):
 
         for offloading_task in self.communication_queue:
             self.communication_queue_size_before_offloading += offloading_task.slot_task_size
+            self.average_packet_size_bits+=offloading_task.slot_task_size
+
+        if len(self.communication_queue) > 0:
+            self.average_packet_size_bits = self.average_packet_size_bits/len(self.communication_queue)
+        else:
+            self.average_packet_size_bits
         #print('achieved channel rate')
         #print(self.achieved_channel_rate)
         if self.achieved_channel_rate == 0:
@@ -1138,6 +1149,60 @@ class eMBB_UE(User_Equipment):
 
         average_rate = sum(self.previous_rates)/len(self.previous_rates)
         return average_rate
+    
+    def offloading_queue_stability_constraint_reward(self):
+        offload_traffic = 0
+        if self.achieved_channel_rate > 0:
+            offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/self.achieved_channel_rate
+        else:
+            offload_traffic
+        reward = 1-offload_traffic
+        return reward#offload_traffic
+    
+    def local_queue_violation_constraint_reward(self):
+        average_packet_size_bits = 0
+        if len(self.local_queue) > 0:
+            for task in self.local_queue:
+                average_packet_size_bits+=task.slot_task_size
+            average_packet_size_bits =  average_packet_size_bits/len(self.local_queue)
+
+        if average_packet_size_bits > 0:
+            average_service_rate = self.service_rate_bits_per_slot/average_packet_size_bits
+        else:
+            average_service_rate = 0
+
+        if average_service_rate > 0 :
+            G = ((1-self.allocated_offloading_ratio)*self.task_arrival_rate)/average_service_rate
+        else:
+            G = 0
+
+        queue_length = len(self.local_queue)
+        print('queue_length: ', queue_length)
+        sum_violation_probability = 0
+        for i in range(0,queue_length+1):
+            sum_violation_probability+=self.probabitlity_of_num_packet(i,G)
+
+        sum_violation_probability = 1 - sum_violation_probability
+        max_sum_violation_probability = 0.5
+        min_sum_violation_probability = -12
+
+        sum_violation_probability_norm = interp(sum_violation_probability,[min_sum_violation_probability,max_sum_violation_probability],[0,1])
+        violation_reward = self.max_lc_queue_delay_violation_probability - sum_violation_probability_norm
+        return violation_reward#sum_violation_probability_norm
+
+    def probabitlity_of_num_packet(self,i,G):
+        p1 = 0.5
+        sum_second_term = 0
+        for k in range(2,(i+1)+1):
+            sum_second_term+= (p1*(math.pow(G,(i+k+1)))/math.factorial((i+k+1)))
+            print(sum_second_term)
+
+        second_term = math.exp(G)*sum_second_term
+        first_term = math.exp(G)*(math.pow(G,i)/math.factorial(i))*p1 
+
+        pi = first_term+second_term
+
+        return pi
 
 
 

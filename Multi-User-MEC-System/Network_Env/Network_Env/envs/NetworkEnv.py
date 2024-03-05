@@ -373,6 +373,7 @@ class NetworkEnv(gym.Env):
         #resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
     
         RB_allocation_actions = resource_block_action_matrix 
+        #print(RB_allocation_actions)
         #RB_allocation_actions = RB_allocation_actions[0:self.number_of_eMBB_users]
         #RB_allocation_actions_mapped = []
         #print('RB_allocation_actions', RB_allocation_actions)
@@ -701,8 +702,8 @@ class NetworkEnv(gym.Env):
   
         #Users
         self.eMBB_UE_1 = eMBB_UE(1,1,100,600)
-        self.eMBB_UE_2 = eMBB_UE(2,2,100,600)
-        self.eMBB_UE_3 = eMBB_UE(3,3,100,600)
+        #self.eMBB_UE_2 = eMBB_UE(2,2,100,600)
+        #self.eMBB_UE_3 = eMBB_UE(3,3,100,600)
 
         self.URLLC_UE_1 = URLLC_UE(1,4,100,600)
         self.URLLC_UE_2 = URLLC_UE(2,5,100,600)
@@ -729,8 +730,8 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        self.eMBB_Users.append(self.eMBB_UE_2)
-        self.eMBB_Users.append(self.eMBB_UE_3)
+        #self.eMBB_Users.append(self.eMBB_UE_2)
+        #self.eMBB_Users.append(self.eMBB_UE_3)
 
         self.URLLC_Users.append(self.URLLC_UE_1)
         self.URLLC_Users.append(self.URLLC_UE_2)
