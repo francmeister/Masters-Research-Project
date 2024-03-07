@@ -171,7 +171,7 @@ class SBS():
             queue_delay_reward,delay = eMBB_User.calculate_queuing_delays()
             tasks_dropped = eMBB_User.tasks_dropped
             total_offload_traffic_reward += eMBB_User.offloading_queue_stability_constraint_reward()
-            total_lc_delay_violation_probability+=eMBB_User.local_queue_violation_constraint_reward()
+            #total_lc_delay_violation_probability+=eMBB_User.local_queue_violation_constraint_reward()
 
             total_eMBB_User_delay_normalized+=eMBB_User_delay_normalized
             total_users_energy_reward += eMBB_User_energy_consumption
