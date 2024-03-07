@@ -390,6 +390,7 @@ class SBS():
     
     def calculate_urllc_reliability_reward(self, urllc_users):
         num_arriving_urllc_packets = self.num_arriving_urllc_packets
+        urllc_task_size = 0
         if len(urllc_users) > 0:
             urllc_task_size = urllc_users[0].task_size_per_slot_bits    
 
