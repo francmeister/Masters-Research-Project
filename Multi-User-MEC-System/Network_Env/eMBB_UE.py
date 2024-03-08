@@ -951,13 +951,13 @@ class eMBB_UE(User_Equipment):
         #local_queuing_delay = 1
         if self.current_queue_length_off < 0:
             current_arrival_rate_off = self.current_arrival_rate*self.allocated_offloading_ratio
-            offload_queuing_delay = -(self.current_queue_length_off/current_arrival_rate_off)
+            offload_queuing_delay = 1#-(self.current_queue_length_off/current_arrival_rate_off)
         else:
             offload_queuing_delay = 1  
 
         if self.current_queue_length_lc < 0:
             current_arrival_rate_lc = self.current_arrival_rate*(1-self.allocated_offloading_ratio)
-            local_queuing_delay = -(self.current_queue_length_lc/current_arrival_rate_lc)
+            local_queuing_delay = 1#-(self.current_queue_length_lc/current_arrival_rate_lc)
         else:
             local_queuing_delay = 1
 

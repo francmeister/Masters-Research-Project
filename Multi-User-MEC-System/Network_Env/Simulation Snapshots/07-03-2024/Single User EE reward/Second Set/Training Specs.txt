@@ -1,0 +1,5 @@
+*Single user
+*Max Transmit power = 30
+*Batch size = 500
+*TD3
+*Reward: Only energy efficiency
