@@ -712,8 +712,10 @@ class NetworkEnv(gym.Env):
         self.eMBB_UE_1 = eMBB_UE(1,1,100,600)
         self.eMBB_UE_2 = eMBB_UE(2,2,100,600)
         self.eMBB_UE_3 = eMBB_UE(3,3,100,600)
+        self.eMBB_UE_4 = eMBB_UE(4,4,100,600)
+        self.eMBB_UE_5 = eMBB_UE(5,5,100,600)
 
-        self.URLLC_UE_1 = URLLC_UE(1,4,100,600)
+        self.URLLC_UE_1 = URLLC_UE(1,6,100,600)
         self.URLLC_UE_2 = URLLC_UE(2,5,100,600)
         self.URLLC_UE_3 = URLLC_UE(3,6,100,600)
         self.URLLC_UE_4 = URLLC_UE(4,7,100,600)
@@ -740,6 +742,8 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.append(self.eMBB_UE_1)
         self.eMBB_Users.append(self.eMBB_UE_2)
         self.eMBB_Users.append(self.eMBB_UE_3)
+        self.eMBB_Users.append(self.eMBB_UE_4)
+        self.eMBB_Users.append(self.eMBB_UE_5)
 
         self.URLLC_Users.append(self.URLLC_UE_1)
         #self.URLLC_Users.append(self.URLLC_UE_2)
