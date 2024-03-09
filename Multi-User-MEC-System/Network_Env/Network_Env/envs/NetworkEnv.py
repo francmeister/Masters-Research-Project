@@ -348,6 +348,7 @@ class NetworkEnv(gym.Env):
         num_power_action = num_offloading_actions
 
         offload_decisions_actions = box_action[0:num_offloading_actions]
+     
         #offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
 
         offload_decisions_actions_mapped = []
@@ -355,8 +356,7 @@ class NetworkEnv(gym.Env):
             offload_decision_mapped = interp(offload_decision,[0,1],[self.min_offload_decision,self.max_offload_decision])
             offload_decisions_actions_mapped.append(offload_decision_mapped)
         
-       
-         #collect trasmit powers allocations actions
+        #collect trasmit powers allocations actions
         transmit_power_actions = box_action[num_offloading_actions:num_offloading_actions*self.number_of_box_actions]
         #transmit_power_actions = transmit_power_actions[0:self.number_of_eMBB_users]
 
@@ -373,6 +373,11 @@ class NetworkEnv(gym.Env):
         #resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
     
         RB_allocation_actions = resource_block_action_matrix 
+        RB_sum_allocations = []
+        for RB_allocation_action in RB_allocation_actions:
+            RB_sum_allocations.append(sum(RB_allocation_action ))
+
+
         #print(RB_allocation_actions)
         #RB_allocation_actions = RB_allocation_actions[0:self.number_of_eMBB_users]
         #RB_allocation_actions_mapped = []
@@ -408,10 +413,13 @@ class NetworkEnv(gym.Env):
         #print(' ')
         #print("number_URLLC_Users_per_RB_action")
         #print(number_URLLC_Users_per_RB_action_mapped)
-        self.offload_decisions = offload_decision_mapped
+        self.offload_decisions = offload_decisions_actions_mapped
         self.powers = transmit_power_actions_mapped
-        self.subcarriers = sum(RB_allocation_actions[0])
+        self.subcarriers = RB_sum_allocations
         self.RB_allocation_matrix = RB_allocation_actions
+
+        #print('self.offload decisions')
+        #print(offload_decision_mapped)
 
         #Perform Actions
         self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)

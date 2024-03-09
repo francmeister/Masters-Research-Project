@@ -1,0 +1,4 @@
+*Number of users = 3
+*Max Transmit Power = 30
+*Training Batch Size = 500
+*TD3

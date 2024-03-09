@@ -2,3 +2,4 @@
 *Max Transmit Power = 30
 *Training Batch Size = 100
 *TD3
+*Total timesteps = 800000

@@ -6,6 +6,7 @@ offload_actions = np.load('offloading_actions.npy')
 power_actions = np.load('power_actions.npy')
 RBs_actions = np.load('subcarrier_actions.npy')
 rewards_throughput_energy = np.load('TD3_NetworkEnv-v0_0.npy')
+rewards_throughput_energy_ = np.load('TD3_NetworkEnv-v0_0_.npy')
 allocated_RBs = np.load('allocated_RBs.npy')
 fairness_index = np.load('fairnes_index.npy')
 sum_allocations_per_RB_matrix = np.load('sum_allocations_per_RB_matrix.npy')
@@ -45,6 +46,9 @@ rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
 throughputs = rewards_throughput_energy[:,3]
 
+timesteps_1_ = rewards_throughput_energy_[:,0]
+rewards_1_ = rewards_throughput_energy_[:,1]
+
 timesteps_1 = rewards_throughput_energy_access_point_1[:,0]
 timesteps_2 = rewards_throughput_energy_access_point_2[:,0]
 timesteps_3 = rewards_throughput_energy_access_point_3[:,0]
@@ -78,14 +82,14 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.title("Line graph")
 #plt.xlabel("X axis")
 #plt.ylabel("Y axis")
-plt.plot(timesteps, rewards, color ="black")
+#plt.plot(timesteps, rewards, color ="blue")
 #plt.plot(timesteps, rewards, color ="black")
 #plt.plot(timesteps,energies,color = "blue")
 #plt.plot(timesteps,throughputs,color = "green")
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-#figure, axis = plt.subplots(5,1)
+figure, axis = plt.subplots(4,1)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
@@ -95,17 +99,20 @@ plt.plot(timesteps, rewards, color ="black")
 # axis[0].plot(timesteps, rewards)
 # axis[0].set_title('total reward')
 
-# axis[1].plot(timesteps, urllc_reliability_reward)
-# axis[1].set_title('reliability reward')
+axis[0].plot(timesteps, energies)
+axis[0].set_title('energy')
 
-# axis[2].plot(timesteps, outage_probabilities)
-# axis[2].set_title('Outage probability')
+axis[1].plot(timesteps, throughputs)
+axis[1].set_title('Throughput')
 
-# axis[3].plot(timesteps, offload_actions)
-# axis[3].set_title('offload actions')
+axis[2].plot(timesteps, offload_actions)
+axis[2].set_title('offload actions')
 
-# axis[4].plot(timesteps, power_actions)
-# axis[4].set_title('power actions')
+axis[3].plot(timesteps, power_actions)
+axis[3].set_title('power actions')
+
+# axis[4].plot(timesteps, RBs_actions)
+# axis[4].set_title('RB allocation actions')
 
 # axis[1].plot(timesteps, delay_rewards)
 # axis[1].set_title('delay')
@@ -177,7 +184,7 @@ axis[5].set_title('RB allocation actions')
 
 
 
-
+plt.tight_layout()
 
 plt.show()
 #plt.figure(1)
