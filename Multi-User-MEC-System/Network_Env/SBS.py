@@ -145,7 +145,14 @@ class SBS():
         tasks_dropped = 0
 
         self.individual_rewards.clear()
-
+        self.individual_energy_rewards = []
+        self.individual_channel_rate_rewards = []
+        self.individual_channel_battery_energy_rewards = []
+        self.individual_delay_rewards = []
+        self.individual_queue_delays = []
+        self.individual_tasks_dropped = []
+        self.individual_energy_efficiency = []
+        self.individual_total_reward = []
         total_users_energy_reward = 0
         total_users_throughput_reward = 0
         total_users_battery_energies_reward = 0
@@ -201,6 +208,14 @@ class SBS():
             self.delays+=delay
             self.tasks_dropped+=tasks_dropped
             self.resource_allocation_rewards += resource_allocation_reward
+            self.individual_energy_rewards.append(eMBB_User_energy_consumption)
+            self.individual_channel_rate_rewards.append(eMBB_User_channel_rate)
+            self.individual_energy_efficiency.append(energy_efficiency_reward)
+            self.individual_total_reward.append(individual_reward)
+            self.individual_channel_battery_energy_rewards.append(battery_energy_reward)
+            self.individual_tasks_dropped.append(tasks_dropped)
+            self.individual_delay_rewards.append(queue_delay_reward)
+            self.individual_queue_delays.append(delay)
 
         #overall_users_reward = 1/total_users_energy_reward#total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
         #overall_users_rewards = [overall_users_reward for _ in range(len(eMBB_Users))]
@@ -296,6 +311,14 @@ class SBS():
         self.ptr = 0
         self.urllc_reliability_reward_normalized = 0
         self.q = 0
+        self.individual_energy_rewards = []
+        self.individual_channel_rate_rewards = []
+        self.individual_channel_battery_energy_rewards = []
+        self.individual_delay_rewards = []
+        self.individual_queue_delays = []
+        self.individual_tasks_dropped = []
+        self.individual_energy_efficiency = []
+        self.individual_total_reward = []
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)
