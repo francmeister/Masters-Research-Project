@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 offload_actions = np.load('offloading_actions.npy')
 power_actions = np.load('power_actions.npy')
 RBs_actions = np.load('subcarrier_actions.npy')
-rewards_throughput_energy = np.load('TD3_NetworkEnv-v0_0.npy')
+rewards_throughput_energy = np.load('timestep_rewards_energy_throughput.npy')
+evaluations = np.load('TD3_NetworkEnv-v0_0.npy')
 rewards_throughput_energy_ = np.load('TD3_NetworkEnv-v0_0_.npy')
 allocated_RBs = np.load('allocated_RBs.npy')
 fairness_index = np.load('fairnes_index.npy')
@@ -18,10 +19,20 @@ urllc_reliability_reward = np.load('urllc_reliability_reward_normalized.npy')
 resource_allocation_matrix = np.load('resource_allocation_matrix.npy',allow_pickle=True)
 resource_allocation_constraint_violation_count = np.load('resource_allocation_constraint_violation_count.npy',allow_pickle=True)
 resource_allocation_matrix = np.array(resource_allocation_matrix)
+individual_energies = np.load('individual_energy_rewards.npy')
+individual_channel_rates = np.load('individual_channel_rate_rewards.npy')
+individual_queue_delays = np.load('individual_queue_delays.npy')
+individual_tasks_dropped = np.load('individual_tasks_dropped.npy')
+individual_delay_rewards = np.load('individual_delay_rewards.npy')
+individual_battery_energy_rewards = np.load('individual_channel_battery_energy_rewards.npy')
+individual_total_reward = np.load('individual_total_reward.npy')
 
-rewards_throughput_energy_access_point_1 = np.load('timestep_rewards_energy_throughput (3).npy')
-rewards_throughput_energy_access_point_2 = np.load('timestep_rewards_energy_throughput (4).npy')
-rewards_throughput_energy_access_point_3 = np.load('timestep_rewards_energy_throughput (5).npy')
+
+
+
+# rewards_throughput_energy_access_point_1 = np.load('timestep_rewards_energy_throughput (3).npy')
+# rewards_throughput_energy_access_point_2 = np.load('timestep_rewards_energy_throughput (4).npy')
+# rewards_throughput_energy_access_point_3 = np.load('timestep_rewards_energy_throughput (5).npy')
 #print(resource_allocation_matrix[323])
 #print(len(resource_allocation_matrix))
 #print(RB_allocation_matrix)
@@ -49,13 +60,13 @@ throughputs = rewards_throughput_energy[:,3]
 timesteps_1_ = rewards_throughput_energy_[:,0]
 rewards_1_ = rewards_throughput_energy_[:,1]
 
-timesteps_1 = rewards_throughput_energy_access_point_1[:,0]
-timesteps_2 = rewards_throughput_energy_access_point_2[:,0]
-timesteps_3 = rewards_throughput_energy_access_point_3[:,0]
+# timesteps_1 = rewards_throughput_energy_access_point_1[:,0]
+# timesteps_2 = rewards_throughput_energy_access_point_2[:,0]
+# timesteps_3 = rewards_throughput_energy_access_point_3[:,0]
 
-rewards_1 = rewards_throughput_energy_access_point_1[:,1]
-rewards_2 = rewards_throughput_energy_access_point_2[:,1]
-rewards_3 = rewards_throughput_energy_access_point_3[:,1]
+# rewards_1 = rewards_throughput_energy_access_point_1[:,1]
+# rewards_2 = rewards_throughput_energy_access_point_2[:,1]
+# rewards_3 = rewards_throughput_energy_access_point_3[:,1]
 
 start_index = 6200
 end_index = 25000
@@ -82,37 +93,42 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.title("Line graph")
 #plt.xlabel("X axis")
 #plt.ylabel("Y axis")
-#plt.plot(timesteps, rewards, color ="blue")
-#plt.plot(timesteps, rewards, color ="black")
+# evaluation_timesteps = []
+# for i in range(0,len(evaluations)):
+#     evaluation_timesteps.append(i)
+# plt.plot(evaluation_timesteps, evaluations, color ="blue")
+# plt.title('Evaluations')
+# plt.plot(timesteps, individual_total_reward)
+# plt.title('Individual Total Reward')
 #plt.plot(timesteps,energies,color = "blue")
 #plt.plot(timesteps,throughputs,color = "green")
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-figure, axis = plt.subplots(4,1)
+#figure, axis = plt.subplots(2,1)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
 # axis[0].plot(timesteps, battery_energy_rewards)
 # axis[0].set_title('battery energies reward')
 
-# axis[0].plot(timesteps, rewards)
-# axis[0].set_title('total reward')
+# axis[0].plot(timesteps, individual_delay_rewards)
+# axis[0].set_title('Individual delay rewards')
 
-axis[0].plot(timesteps, energies)
-axis[0].set_title('energy')
+# axis[1].plot(timesteps, individual_queue_delays)
+# axis[1].set_title('Individual queue delays')
 
-axis[1].plot(timesteps, throughputs)
-axis[1].set_title('Throughput')
+# axis[2].plot(timesteps, RBs_actions)
+# axis[2].set_title('RB allocation actions')
 
-axis[2].plot(timesteps, offload_actions)
-axis[2].set_title('offload actions')
+# axis[0].plot(timesteps, offload_actions)
+# axis[0].set_title('offload actions')
 
-axis[3].plot(timesteps, power_actions)
-axis[3].set_title('power actions')
+# axis[1].plot(timesteps, power_actions)
+# axis[1].set_title('power actions')
 
-# axis[4].plot(timesteps, RBs_actions)
-# axis[4].set_title('RB allocation actions')
+# axis[2].plot(timesteps, RBs_actions)
+# axis[2].set_title('RB allocation actions')
 
 # axis[1].plot(timesteps, delay_rewards)
 # axis[1].set_title('delay')
@@ -184,9 +200,9 @@ axis[5].set_title('RB allocation actions')
 
 
 
-plt.tight_layout()
+#plt.tight_layout()
 
-plt.show()
+#plt.show()
 #plt.figure(1)
 ###plt.subplot(211)
 #plt.plot(timesteps, fairness_index, color ="red")

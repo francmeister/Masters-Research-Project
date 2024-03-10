@@ -216,6 +216,7 @@ class SBS():
             self.individual_tasks_dropped.append(tasks_dropped)
             self.individual_delay_rewards.append(queue_delay_reward)
             self.individual_queue_delays.append(delay)
+            self.total_reward += energy_efficiency_reward*queue_delay_reward + battery_energy_reward
 
         #overall_users_reward = 1/total_users_energy_reward#total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
         #overall_users_rewards = [overall_users_reward for _ in range(len(eMBB_Users))]
@@ -319,6 +320,8 @@ class SBS():
         self.individual_tasks_dropped = []
         self.individual_energy_efficiency = []
         self.individual_total_reward = []
+        self.total_reward = 0
+        self.overall_users_reward = []
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)

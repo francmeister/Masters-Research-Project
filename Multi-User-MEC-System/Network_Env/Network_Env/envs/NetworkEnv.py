@@ -224,10 +224,10 @@ class NetworkEnv(gym.Env):
         done_sampling = False
         resource_allocation_penalty = 0
         if not np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot):
-            resource_allocation_penalty = -0.02
+            #resource_allocation_penalty = -0.02
             self.resource_allocation_constraint_violation+=1
 
-        return resource_allocation_penalty
+        #return resource_allocation_penalty
 
     def enforce_constraint(self,action):
        
@@ -313,7 +313,7 @@ class NetworkEnv(gym.Env):
         #user_resource_block_allocations = user_resource_block_allocations.reshape(self.time_divisions_per_slot,self.num_allocate_RB_upper_bound)
  
 
-        #resource_block_allocation_penalty = self.check_resource_block_allocation_constraint(binary_actions)
+        self.check_resource_block_allocation_constraint(binary_actions)
     
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
     
@@ -742,12 +742,12 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        self.eMBB_Users.append(self.eMBB_UE_2)
-        self.eMBB_Users.append(self.eMBB_UE_3)
-        self.eMBB_Users.append(self.eMBB_UE_4)
-        self.eMBB_Users.append(self.eMBB_UE_5)
-        self.eMBB_Users.append(self.eMBB_UE_6)
-        self.eMBB_Users.append(self.eMBB_UE_7)
+        #self.eMBB_Users.append(self.eMBB_UE_2)
+        #self.eMBB_Users.append(self.eMBB_UE_3)
+        #self.eMBB_Users.append(self.eMBB_UE_4)
+        #self.eMBB_Users.append(self.eMBB_UE_5)
+        #self.eMBB_Users.append(self.eMBB_UE_6)
+        #self.eMBB_Users.append(self.eMBB_UE_7)
 
         self.URLLC_Users.append(self.URLLC_UE_1)
         #self.URLLC_Users.append(self.URLLC_UE_2)
