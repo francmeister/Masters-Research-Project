@@ -55,16 +55,6 @@ class SBS():
         self.system_state_space_RB_channel_gains.append(channel_gains)
         #self.system_state_space.append(communication_queue_size)
         self.system_state_space_battery_energies.append(battery_energy)
-        
-        #self.system_state_space_battery_energies.append(offloading_queue_lengths)
-        #self.system_state_space_battery_energies.append(local_queue_lengths)
-        #self.system_state_space.append(latency_requirement)
-        #self.system_state_space.append(local_frequencies)
-        #self.system_state_space.append(reliability_requirement)
-        #print('queue size: ', communication_queue_size)
-        #print('state space')
-        #print(self.system_state_space_RB_channel_gains)
-        #print(self.system_state_space_battery_energies)self.num_arriving_urllc_packets
         return channel_gains, battery_energy, offloading_queue_lengths, local_queue_lengths, num_arriving_urllc_packets
         #return channel_gains, battery_energy
 
@@ -218,7 +208,7 @@ class SBS():
             self.individual_queue_delays.append(delay)
             self.total_reward += energy_efficiency_reward*queue_delay_reward + battery_energy_reward
 
-        #overall_users_reward = 1/total_users_energy_reward#total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
+        self.overall_users_reward = total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
         #overall_users_rewards = [overall_users_reward for _ in range(len(eMBB_Users))]
         #self.achieved_system_reward += urllc_reliability_reward_normalized
         fairness_index = self.calculate_fairness(eMBB_Users)

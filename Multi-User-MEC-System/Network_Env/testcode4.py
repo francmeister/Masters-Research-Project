@@ -52,9 +52,12 @@ print(env.action_space.sample())
 for timestep in timesteps:
     print('----------------------------------------------------------------------------------------------------------------------------------------------------')
     action = env.action_space.sample()
+    action = env.enforce_constraint(action)
+    #print(action)
     action2, action = env.reshape_action_space_dict(action)
+    #print('')
+    #print(action)
 
-    #action = env.enforce_constraint(action)
     #action = env.reshape_action_space_from_model_to_dict(action)
     # print('action2')
     # print(action)

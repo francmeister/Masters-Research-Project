@@ -3,3 +3,7 @@
 *Batch size = 1000
 *TD3
 *Reward: Only energy efficiency
+*Actor lr = 0.000001
+*Critic lr = 0.0001
+*Max Number of RBs = 6
+*Time divisions per RB = 2

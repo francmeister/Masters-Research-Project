@@ -230,24 +230,43 @@ class NetworkEnv(gym.Env):
         #return resource_allocation_penalty
 
     def enforce_constraint(self,action):
-       
+        box_actions = action['box_actions']
         binary_actions = action['binary_actions']
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
-        done_sampling = False
-        if not np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot):
-             while not done_sampling:
-                 action = self.action_space.sample()
-                 binary_actions = action['binary_actions']
-                 resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
-                 if np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot) and np.all(np.sum(resource_block_action_matrix,axis=0) <= 1):
-                     done_sampling = True
-                 else:
-                     done_sampling = False
-        binary_actions = action['binary_actions']
-        resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
-        
-        self.resource_block_allocation_matrix.clear()
-        self.resource_block_allocation_matrix.append(resource_block_action_matrix)
+        resource_block_action_matrix_size = self.number_of_users*self.time_divisions_per_slot*self.num_allocate_RB_upper_bound
+        #resource_block_action_matrix = resource_block_action_matrix.squeeze()
+        #print(resource_block_action_matrix[:,:,0])
+        for z in range(0,self.num_allocate_RB_upper_bound):
+            index_array = []
+            column_array = resource_block_action_matrix[:,:,z]
+            column_array = column_array.reshape(1,self.number_of_users*self.time_divisions_per_slot)
+            column_array = column_array.squeeze()
+            limit_index_array = len(column_array)
+            index_array = list(range(0, limit_index_array))
+            rand_num = np.random.randint(0, len(index_array), 1)
+            rand_num = rand_num[0]
+            first_num = index_array[rand_num]
+            index_array = np.delete(index_array,rand_num,axis=0)
+            rand_num = np.random.randint(0, len(index_array), 1)
+            rand_num = rand_num[0]
+            second_num = index_array[rand_num]
+            index_first_num = first_num
+            index_second_num = second_num
+            count = 0
+            for x in range(0,self.number_of_users):
+                for y in range(0,(self.time_divisions_per_slot)):
+                    if count == index_first_num or count == index_second_num:
+                        resource_block_action_matrix[x,y,z] = 1
+                    else:
+                        resource_block_action_matrix[x,y,z] = 0
+                    count+=1
+        resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
+        resource_block_action_matrix = resource_block_action_matrix.squeeze()
+        action_space_dict = {
+            'box_actions': box_actions,
+            'binary_actions': resource_block_action_matrix
+        }
+        #print(resource_block_action_matrix)
     
         return action
     
@@ -744,14 +763,14 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        self.eMBB_Users.append(self.eMBB_UE_2)
-        self.eMBB_Users.append(self.eMBB_UE_3)
-        self.eMBB_Users.append(self.eMBB_UE_4)
-        self.eMBB_Users.append(self.eMBB_UE_5)
-        self.eMBB_Users.append(self.eMBB_UE_6)
-        self.eMBB_Users.append(self.eMBB_UE_7)
-        self.eMBB_Users.append(self.eMBB_UE_8)
-        self.eMBB_Users.append(self.eMBB_UE_9)
+        #self.eMBB_Users.append(self.eMBB_UE_2)
+        #self.eMBB_Users.append(self.eMBB_UE_3)
+        #self.eMBB_Users.append(self.eMBB_UE_4)
+        #self.eMBB_Users.append(self.eMBB_UE_5)
+        #self.eMBB_Users.append(self.eMBB_UE_6)
+        #self.eMBB_Users.append(self.eMBB_UE_7)
+        #self.eMBB_Users.append(self.eMBB_UE_8)
+        #self.eMBB_Users.append(self.eMBB_UE_9)
 
         self.URLLC_Users.append(self.URLLC_UE_1)
         #self.URLLC_Users.append(self.URLLC_UE_2)

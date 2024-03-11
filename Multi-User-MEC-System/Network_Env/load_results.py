@@ -105,18 +105,18 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-#figure, axis = plt.subplots(2,1)
+figure, axis = plt.subplots(2,1)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
 # axis[0].plot(timesteps, battery_energy_rewards)
 # axis[0].set_title('battery energies reward')
 
-# axis[0].plot(timesteps, individual_delay_rewards)
-# axis[0].set_title('Individual delay rewards')
+axis[0].plot(timesteps, fairness_index)
+axis[0].set_title('Fairness Index')
 
-# axis[1].plot(timesteps, individual_queue_delays)
-# axis[1].set_title('Individual queue delays')
+axis[1].plot(timesteps, RBs_actions)
+axis[1].set_title('RB allocations')
 
 # axis[2].plot(timesteps, RBs_actions)
 # axis[2].set_title('RB allocation actions')
@@ -200,9 +200,9 @@ axis[5].set_title('RB allocation actions')
 
 
 
-#plt.tight_layout()
+plt.tight_layout()
 
-#plt.show()
+plt.show()
 #plt.figure(1)
 ###plt.subplot(211)
 #plt.plot(timesteps, fairness_index, color ="red")
