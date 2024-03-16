@@ -112,11 +112,11 @@ figure, axis = plt.subplots(2,1)
 # axis[0].plot(timesteps, battery_energy_rewards)
 # axis[0].set_title('battery energies reward')
 
-axis[0].plot(timesteps, fairness_index)
-axis[0].set_title('Fairness Index')
+axis[0].plot(timesteps, rewards)
+axis[0].set_title('Total reward')
 
-axis[1].plot(timesteps, RBs_actions)
-axis[1].set_title('RB allocations')
+axis[1].plot(timesteps, outage_probabilities)
+axis[1].set_title('Outage Probability')
 
 # axis[2].plot(timesteps, RBs_actions)
 # axis[2].set_title('RB allocation actions')
