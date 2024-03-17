@@ -776,8 +776,8 @@ class NetworkEnv(gym.Env):
         self.URLLC_Users.append(self.URLLC_UE_2)
         self.URLLC_Users.append(self.URLLC_UE_3)
         self.URLLC_Users.append(self.URLLC_UE_4)
-        self.URLLC_Users.append(self.URLLC_UE_5)
-        self.URLLC_Users.append(self.URLLC_UE_6)
+        #self.URLLC_Users.append(self.URLLC_UE_5)
+        #self.URLLC_Users.append(self.URLLC_UE_6)
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:

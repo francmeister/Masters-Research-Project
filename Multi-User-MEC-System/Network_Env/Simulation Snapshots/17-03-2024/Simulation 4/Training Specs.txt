@@ -1,0 +1,11 @@
+*Number of embb users = 2
+*Number of urllc users = 4
+*Max Transmit Power = 5000
+*Training Batch Size = 100
+*TD3
+*Total timesteps = 800000
+*Actor lr = 0.000001
+*Critic lr = 0.0001
+*Max Number of RBs = 6
+*Time divisions per RB = 2
+*reward = urrlc_reliability_constraint_normalized
