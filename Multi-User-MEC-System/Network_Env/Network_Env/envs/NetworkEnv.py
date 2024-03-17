@@ -764,7 +764,7 @@ class NetworkEnv(gym.Env):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
         self.eMBB_Users.append(self.eMBB_UE_2)
-        self.eMBB_Users.append(self.eMBB_UE_3)
+        #self.eMBB_Users.append(self.eMBB_UE_3)
         #self.eMBB_Users.append(self.eMBB_UE_4)
         #self.eMBB_Users.append(self.eMBB_UE_5)
         #self.eMBB_Users.append(self.eMBB_UE_6)
@@ -776,8 +776,8 @@ class NetworkEnv(gym.Env):
         self.URLLC_Users.append(self.URLLC_UE_2)
         self.URLLC_Users.append(self.URLLC_UE_3)
         self.URLLC_Users.append(self.URLLC_UE_4)
-        #self.URLLC_Users.append(self.URLLC_UE_5)
-        #self.URLLC_Users.append(self.URLLC_UE_6)
+        self.URLLC_Users.append(self.URLLC_UE_5)
+        self.URLLC_Users.append(self.URLLC_UE_6)
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:
