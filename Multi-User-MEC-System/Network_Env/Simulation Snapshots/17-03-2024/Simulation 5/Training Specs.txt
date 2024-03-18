@@ -1,5 +1,5 @@
 *Number of embb users = 1
-*Number of urllc users = 3
+*Number of urllc users = 2
 *Max Transmit Power = 5000
 *Training Batch Size = 100
 *TD3
