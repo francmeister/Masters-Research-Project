@@ -6,7 +6,11 @@ offload_actions = np.load('offloading_actions.npy')
 power_actions = np.load('power_actions.npy')
 RBs_actions = np.load('subcarrier_actions.npy')
 rewards_throughput_energy = np.load('timestep_rewards_energy_throughput.npy')
+rewards_throughput_energy_TD3 = np.load('timestep_rewards_energy_throughput_TD3.npy')
+rewards_throughput_energy_DDPG = np.load('timestep_rewards_energy_throughput_DDPG.npy')
 evaluations = np.load('TD3_NetworkEnv-v0_0.npy')
+evaluations_TD3 = np.load('TD3_NetworkEnv-v0_0_TD3.npy')
+evaluations_DDPG = np.load('TD3_NetworkEnv-v0_0_DDPG.npy')
 rewards_throughput_energy_ = np.load('TD3_NetworkEnv-v0_0_.npy')
 allocated_RBs = np.load('allocated_RBs.npy')
 fairness_index = np.load('fairnes_index.npy')
@@ -57,6 +61,11 @@ rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
 throughputs = rewards_throughput_energy[:,3]
 
+timesteps_TD3 = rewards_throughput_energy_TD3[:,0]
+timesteps_DDPG = rewards_throughput_energy_DDPG[:,0]
+rewards_TD3 = rewards_throughput_energy_TD3[:,1]
+rewards_DDPG = rewards_throughput_energy_DDPG[:,1]
+
 timesteps_1_ = rewards_throughput_energy_[:,0]
 rewards_1_ = rewards_throughput_energy_[:,1]
 
@@ -93,30 +102,32 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.title("Line graph")
 #plt.xlabel("X axis")
 #plt.ylabel("Y axis")
-# evaluation_timesteps = []
-# for i in range(0,len(evaluations)):
-#     evaluation_timesteps.append(i)
+evaluation_timesteps = []
+for i in range(0,len(evaluations)):
+    evaluation_timesteps.append(i)
 # plt.plot(evaluation_timesteps, evaluations, color ="blue")
 # plt.title('Evaluations')
-# plt.plot(timesteps, individual_total_reward)
+plt.plot(evaluation_timesteps, evaluations_TD3, color="blue", label='TD3')
+plt.plot(evaluation_timesteps, evaluations_DDPG, color="green", label="DDPG")
+plt.legend()
 # plt.title('Individual Total Reward')
 #plt.plot(timesteps,energies,color = "blue")
 #plt.plot(timesteps,throughputs,color = "green")
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-figure, axis = plt.subplots(2,1)
+#figure, axis = plt.subplots(2,1)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
 # axis[0].plot(timesteps, battery_energy_rewards)
 # axis[0].set_title('battery energies reward')
 
-axis[0].plot(timesteps, rewards)
-axis[0].set_title('Total reward')
+# axis[0].plot(timesteps_TD3, rewards_TD3)
+# axis[0].set_title('TD3 Reward')
 
-axis[1].plot(timesteps, outage_probabilities)
-axis[1].set_title('Outage Probability')
+# axis[1].plot(timesteps_DDPG, rewards_DDPG)
+# axis[1].set_title('DDPG Reward')
 
 # axis[2].plot(timesteps, RBs_actions)
 # axis[2].set_title('RB allocation actions')
