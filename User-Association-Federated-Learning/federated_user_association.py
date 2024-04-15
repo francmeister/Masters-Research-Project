@@ -99,6 +99,33 @@ for user in all_users:
 global_entity = GLOBAL_ENTITY()
 global_entity.initialize_global_model(num_input_features+1,num_output_features)
 global_memory = global_entity.initialize_global_memory(max_samples,num_users,num_input_features_per_user,num_access_points)
+initial_user_associations = global_entity.perform_random_association(all_users)
+
+for access_point in access_points:
+   access_point.get_all_users(all_users)
+
+
+for access_point in access_points:
+   access_point_users = []
+   for user in all_users:
+      for association in initial_user_associations:
+         #print(association)
+         if association[0] == user.user_label and association[1][0] == access_point.SBS_label:
+            access_point_users.append(user)
+
+   access_point.associate_users(access_point_users)
+
+# print('access_points[0].users')
+# for user in access_points[0].users:
+#    print(user.user_label)
+
+# print('')
+# for user in access_points[1].users:
+#    print(user.user_label)
+
+# print('')
+# for user in access_points[2].users:
+#    print(user.user_label)
 
 # print('global memory')
 # print(global_memory.storage)
@@ -107,7 +134,9 @@ for access_point in access_points:
    access_point.acquire_global_model(global_entity.global_model)
    access_point.acquire_global_memory(global_memory)
 
-access_points[0].train_local_dnn()
+
+
+#access_points[0].train_local_dnn()
 
 
 

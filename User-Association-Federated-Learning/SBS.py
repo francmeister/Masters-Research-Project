@@ -24,9 +24,18 @@ class SBS():
         self.buffer_memory = []
         self.set_properties()
 
-    def associate_users(self, eMBB_Users, URLLC_users):
-        self.associated_eMBB_users = eMBB_Users
-        self.associated_URLLC_users = URLLC_users
+    def get_all_users(self, all_users):
+        self.all_users = all_users
+
+    def associate_users(self, users):
+        self.users = users
+        self.embb_users = []
+        self.urllc_users = []
+        for user in users:
+            if user.type_of_user_id == 0:
+                self.embb_users.append(user)
+            elif user.type_of_user_id == 1:
+                self.urllc_users.append(user)
 
     # def initialize_DNN_model(self,input_dim,output_dim):
     #     self.access_point_model = DNN(input_dim,output_dim)
@@ -82,33 +91,38 @@ class SBS():
     def train_local_dnn(self):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         x_train, y_train = self.training_memory.sample(20)
-        print('len(x_train[0]): ', len(x_train[0]))
+        # print('len(x_train[0]): ', y_train[0])
         #print(len(x_train[0]))
 
-        x_train_tensor = torch.Tensor(x_train[0]).to(device)
-        y_train_tensor = torch.Tensor(y_train[0]).to(device)
+        x_train_tensor = torch.Tensor(x_train).to(device)
+        y_train_tensor = torch.Tensor(y_train).to(device)
 
         if x_train_tensor.dtype != self.access_point_model.fc1.weight.dtype:
             x_train_tensor = x_train_tensor.to(self.access_point_model.fc1.weight.dtype)
             y_train_tensor = y_train_tensor.to(self.access_point_model.fc1.weight.dtype)
 
-        y_pred_tensor = self.access_point_model(x_train_tensor)
+        for epoch in range(self.num_training_epochs):
+            # for i in range(0,len(x_train_tensor)):
+            #     y_pred_tensor = self.access_point_model(x_train_tensor[i])
+            #     loss = self.criterion(y_pred_tensor, y_train_tensor[i])
+            #     print(loss)
+            #     self.optimizer.zero_grad()
+            #     loss.backward()
+            #     self.optimizer.step()
 
-        print('y_train')
-        print(y_train_tensor)
-        print('y_pred')
-        print(y_pred_tensor)
+            y_pred_tensor = self.access_point_model(x_train_tensor)
+            loss = self.criterion(y_pred_tensor, y_train_tensor)
+            #print(loss)
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
 
-        loss = self.criterion(y_pred_tensor, y_train)
-        self.optimizer.zero_grad()
-        loss.backward()
-        self.optimizer.step()
-
+        # y_pred = self.access_point_model(x_train_tensor)
         # print('xtrain')
-        # print(x_train)
+        # print(y_train_tensor[0])
 
         # print('ytrain')
-        # print(y_train)
+        # print(y_pred[0])
 
     def collect_state_space(self, eMBB_Users,urllc_users):
         self.system_state_space_RB_channel_gains.clear()
@@ -121,50 +135,42 @@ class SBS():
         num_arriving_urllc_packets = []
         latency_requirement = []
         local_frequencies = []
+        embb_user_labels = []
+        for embb_user in eMBB_Users:
+            embb_user_labels.append(embb_user.user_id)
         #reliability_requirement = []
         #Collect Channel gains
         self.count_num_arriving_urllc_packets(urllc_users)
-        for embb_user in eMBB_Users:
-            channel_gains.append(embb_user.user_state_space.channel_gain)
-            #communication_queue_size.append(user.user_state_space.calculate_communication_queue_size())
-            battery_energy.append(embb_user.user_state_space.battery_energy)
-            offloading_queue_lengths.append(embb_user.user_state_space.offloading_queue_length)
-            local_queue_lengths.append(embb_user.user_state_space.local_queue_length)
-            num_arriving_urllc_packets.append(self.num_arriving_urllc_packets)
-            #latency_requirement.append(0)
-            #latency_requirement.append(user.user_state_space.QOS_requirements.max_allowable_latency)
-            #local_frequencies.append(user.user_state_space.local_cpu_frequency)
-            #reliability_requirement.append(user.user_state_space.QOS_requirements.max_allowable_reliability)
-        #print('state space')
-        #print(channel_gains[0])
-        #print(battery_energy)
+        for user in self.all_users:
+            if user.user_label in embb_user_labels:
+                channel_gains.append(embb_user.user_state_space.channel_gain)
+                battery_energy.append(embb_user.user_state_space.battery_energy)
+                offloading_queue_lengths.append(embb_user.user_state_space.offloading_queue_length)
+                local_queue_lengths.append(embb_user.user_state_space.local_queue_length)
+                num_arriving_urllc_packets.append(self.num_arriving_urllc_packets)
+            else:
+                channel_gains.append(0)
+                battery_energy.append(0)
+                offloading_queue_lengths.append(0)
+                local_queue_lengths.append(0)
+                num_arriving_urllc_packets.append(0)
+
         self.system_state_space_RB_channel_gains.append(channel_gains)
-        #self.system_state_space.append(communication_queue_size)
         self.system_state_space_battery_energies.append(battery_energy)
-        
-        #self.system_state_space_battery_energies.append(offloading_queue_lengths)
-        #self.system_state_space_battery_energies.append(local_queue_lengths)
-        #self.system_state_space.append(latency_requirement)
-        #self.system_state_space.append(local_frequencies)
-        #self.system_state_space.append(reliability_requirement)
-        #print('queue size: ', communication_queue_size)
-        #print('state space')
-        #print(self.system_state_space_RB_channel_gains)
-        #print(self.system_state_space_battery_energies)self.num_arriving_urllc_packets
         return channel_gains, battery_energy, offloading_queue_lengths, local_queue_lengths, num_arriving_urllc_packets
         #return channel_gains, battery_energy
 
     def allocate_transmit_powers(self,eMBB_Users, action):
         index = 0
         for User in eMBB_Users:
-            User.assigned_transmit_power_dBm = action[index]
+            User.assigned_transmit_power_dBm = action[User.user_label-1]
             User.calculate_assigned_transmit_power_W()
             index+=1
 
     def allocate_offlaoding_ratios(self,eMBB_Users, action):
         index = 0
         for eMBB_User in eMBB_Users:
-            eMBB_User.allocated_offloading_ratio = action[index]
+            eMBB_User.allocated_offloading_ratio = action[eMBB_User.user_label-1]
             index+=1
 
     def count_num_arriving_URLLC_packet(self,URLLC_Users):

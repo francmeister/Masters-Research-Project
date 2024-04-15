@@ -26,7 +26,7 @@ class GLOBAL_ENTITY():
         self.initial_associations = []
         for user in users:
             user_num_access_points = len(user.access_points_within_radius) 
-            randint = int(random.randint(0,user_num_access_points))
+            randint = int(random.randint(0,user_num_access_points-1))
             user_access_point = user.access_points_within_radius[randint]
             self.initial_associations.append((user.user_label, user_access_point))
         return self.initial_associations

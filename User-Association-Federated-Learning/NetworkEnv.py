@@ -26,7 +26,7 @@ class NetworkEnv(gym.Env):
     def __init__(self,all_users,SBS):
         #self.access_point_id = access_point_id
         #self.user_association_epoch_number = user_association_epoch_number
-        self.create_objects(all_users, SBS)
+        self.create_objects(SBS)
         self.reset()
         #Action Space Bound Paramaters
         #self.access_point_id = access_point_id
@@ -613,17 +613,12 @@ class NetworkEnv(gym.Env):
     def render(self, mode='human'):
         pass
 
-    def create_objects(self,users, SBS):
+    def create_objects(self, SBS):
         #Small Cell Base station
         self.SBS = SBS
-        self.eMBB_Users = []
-        self.URLLC_Users = []
+        self.eMBB_Users = SBS.embb_users
+        self.URLLC_Users = SBS.urllc_users
         
-        for user in users:
-            if user.type_of_user_id == 0:
-                self.eMBB_Users.append(user)
-            elif user.type_of_user_id == 1:
-                self.URLLC_Users.append(user)
         #print('self.user_association_epoch_number: ', self.user_association_epoch_number)
         #print('access point id: ', self.access_point_id)
         print('embbusers: ', len(self.eMBB_Users))
@@ -654,9 +649,9 @@ class NetworkEnv(gym.Env):
         #self.group_users()
 
         #Associate SBS with users
-        self.SBS.associate_users(self.eMBB_Users,self.URLLC_Users)
+        #self.SBS.associate_users(self.eMBB_Users,self.URLLC_Users)
 
-    def acquire_users(self,embb_users,urllc_users):
+    def SBS_reassociate_users(self,users):
         self.eMBB_Users = embb_users
         self.URLLC_users = urllc_users 
 

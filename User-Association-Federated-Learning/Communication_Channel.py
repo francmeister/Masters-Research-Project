@@ -35,25 +35,8 @@ class Communication_Channel():
         count = 0
         for eMBB_User in eMBB_Users:
             eMBB_User.allocated_RBs = []
-            eMBB_User.allocated_RBs = RB_allocation[count]
+            eMBB_User.allocated_RBs = RB_allocation[eMBB_User.user_label-1]
             count+=1
-        '''
-        index = 0
-        for eMBB_User in eMBB_Users:
-            eMBB_User.allocated_RBs.clear()
-            for i in range(1,number_of_RBs_action[index]+1):
-                if self.number_of_RBs_available > 0:
-                    eMBB_User.allocated_RBs.append(i) 
-                    self.number_of_RBs_available -= 1
-            index+=1
-        self.allocated_RBs.clear()
-        for eMBB_User in eMBB_Users:
-            #print('eMBB: ', eMBB_User.UE_label)
-            #print('Number of allocated RBs: ', len(eMBB_User.allocated_RBs))
-            self.allocated_RBs.append(len(eMBB_User.allocated_RBs))
-
-        #print('Allocated RBs: ', self.allocated_RBs)
-        '''
 
     def set_properties(self):
         self.system_bandwidth_Hz = 120*math.pow(10,6)
