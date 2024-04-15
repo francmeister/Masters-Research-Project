@@ -1,0 +1,117 @@
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import TensorDataset, DataLoader
+from sklearn.model_selection import train_test_split
+import torch.nn.functional as F
+import numpy as np
+import random
+import os
+import time
+import gym
+import time
+import threading
+import multiprocessing
+from eMBB_UE import eMBB_UE
+from URLLC_UE import URLLC_UE
+from SBS import SBS
+from Communication_Channel import Communication_Channel
+from numpy import interp
+import math
+from NetworkEnv import NetworkEnv
+from global_entity import GLOBAL_ENTITY
+
+#Create a Square grid of overlapping Access Points (3 APs) - 0 to 100 km both x and y
+
+x_grid = 100
+y_grid = 100
+access_point_radius = 70
+
+num_embb_users = 6
+num_urllc_users = 6
+all_users = []
+user_count = 1
+embb_user_count = 1
+urllc_user_count = 1
+access_point_count = 1
+access_points = []
+num_access_points = 3
+num_users = num_embb_users+num_urllc_users
+num_input_features_per_user = 4
+num_input_features = num_users*num_input_features_per_user
+num_output_features = num_users
+max_samples = 20
+comm_channel = Communication_Channel(1)
+
+for x in range(0,num_embb_users):
+   embb_user = eMBB_UE(embb_user_count,user_count,100,600)
+   all_users.append(embb_user)
+   embb_user_count+=1
+   user_count+=1
+
+for x in range(0,num_urllc_users):
+   urllc_user = URLLC_UE(urllc_user_count,user_count,100,600)
+   all_users.append(urllc_user)
+   urllc_user_count+=1
+   user_count+=1
+
+for x in range(0,num_access_points):
+   access_point = SBS(access_point_count)
+   access_points.append(access_point)
+   access_point_count+=1
+
+access_point_coordinates = []
+for access_point in range(0, num_access_points):
+   x_coord = random.randint(0, x_grid)
+   y_coord = random.randint(0, y_grid)
+   access_point_coordinates.append((x_coord,y_coord))
+
+user_coordinates = []
+for user in range(0, num_users):
+   x_coord = random.randint(0, x_grid)
+   y_coord = random.randint(0, y_grid)
+   user_coordinates.append((x_coord,y_coord))
+
+coord_index = 0
+for access_point in access_points:
+   access_point.set_coordinates(access_point_coordinates[coord_index])
+   coord_index+=1
+
+coord_index = 0
+for user in all_users:
+   user.set_coordinates(user_coordinates[coord_index])
+   user.calculate_distances_from_access_point(access_point_coordinates,access_point_radius)
+   coord_index+=1
+
+
+for access_point in access_points:
+   access_point.find_users_within_distance_radius(access_point_radius, all_users)
+
+for user in all_users:
+   print('user.distances_from_access_point')
+   print(user.distances_from_access_point)
+
+for user in all_users:
+   print('user.access_points_within_radius')
+   print(user.access_points_within_radius)
+
+
+global_entity = GLOBAL_ENTITY()
+global_entity.initialize_global_model(num_input_features+1,num_output_features)
+global_memory = global_entity.initialize_global_memory(max_samples,num_users,num_input_features_per_user,num_access_points)
+
+# print('global memory')
+# print(global_memory.storage)
+
+for access_point in access_points:
+   access_point.acquire_global_model(global_entity.global_model)
+   access_point.acquire_global_memory(global_memory)
+
+access_points[0].train_local_dnn()
+
+
+
+
+
+
+
