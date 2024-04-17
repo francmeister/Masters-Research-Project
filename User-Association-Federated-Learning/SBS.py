@@ -123,6 +123,15 @@ class SBS():
 
         # print('ytrain')
         # print(y_pred[0])
+    def predict_future_association(self):
+        #get the input data
+        input_features = []
+        for user in self.all_users:
+            if user in self.users:
+                input_features.append(user.user_label)
+                input_features.append(user.distance_from_associated_access_point)
+                input_features.append(user.user_association_channel_gain)
+                input_features.append(user.)
 
     def collect_state_space(self, eMBB_Users,urllc_users):
         self.system_state_space_RB_channel_gains.clear()

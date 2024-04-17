@@ -69,6 +69,9 @@ class eMBB_UE(User_Equipment):
         self.slow_fading_gain_change_timer = 0
         self.fast_fading_channel_gain =  np.random.exponential(1)
         self.slow_fading_channel_gain = np.random.exponential(1)
+        self.current_associated_access_point = 0
+        self.distance_from_associated_access_point = 0
+        self.user_association_channel_gain = 0
         #State Space Limits
         self.max_allowable_latency = 2000 #[1,2] s
         self.min_allowable_latency = 1000

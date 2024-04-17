@@ -60,6 +60,9 @@ class URLLC_UE(User_Equipment):
         return self.fast_fading_channel_gain*self.slow_fading_channel_gain
     
     def set_properties_URLLC(self):
+        self.current_associated_access_point = 0
+        self.distance_from_associated_access_point = 0
+        self.user_association_channel_gain = 0
         self.max_transmission_power_dBm = 400 # dBm
         self.min_transmission_power_dBm = 0
         self.slow_fading_gain_change_timer = 0
