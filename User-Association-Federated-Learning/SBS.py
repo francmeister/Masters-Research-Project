@@ -22,6 +22,7 @@ class SBS():
         self.training_memory = DNN_TRAINING_MEMORY()
         #self.access_point_model = DNN(input_dim,output_dim)
         self.buffer_memory = []
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.set_properties()
 
     def get_all_users(self, all_users):
@@ -37,8 +38,8 @@ class SBS():
             elif user.type_of_user_id == 1:
                 self.urllc_users.append(user)
 
-    # def initialize_DNN_model(self,input_dim,output_dim):
-    #     self.access_point_model = DNN(input_dim,output_dim)
+    def initialize_DNN_model(self,global_model):
+        self.access_point_model = global_model
 
     def get_SBS_center_pos(self):
         self.x_position = 200
@@ -78,19 +79,20 @@ class SBS():
     #def predict_future_association(self):
 
     def acquire_global_model(self, global_model):
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.access_point_model = global_model
-        self.access_point_model.to(device)
-        self.criterion = nn.MSELoss()
-        self.optimizer = optim.Adam(self.access_point_model.parameters(), lr=0.001)
-        self.num_training_epochs = 50
+        #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.access_point_model.load_state_dict(global_model.state_dict())
+        #self.access_point_model.to(device)
 
     def acquire_global_memory(self, global_memory):    
         self.training_memory = global_memory   
 
     def train_local_dnn(self):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        x_train, y_train = self.training_memory.sample(20)
+        self.access_point_model.to(device)
+        self.criterion = nn.MSELoss()
+        self.optimizer = optim.Adam(self.access_point_model.parameters(), lr=0.001)
+        self.num_training_epochs = 500
+        x_train, y_train, sample_rewards = self.training_memory.sample(20)
         # print('len(x_train[0]): ', y_train[0])
         #print(len(x_train[0]))
 
@@ -101,6 +103,7 @@ class SBS():
             x_train_tensor = x_train_tensor.to(self.access_point_model.fc1.weight.dtype)
             y_train_tensor = y_train_tensor.to(self.access_point_model.fc1.weight.dtype)
 
+        print('Starting training of local DNN of Access Point: ', self.SBS_label)
         for epoch in range(self.num_training_epochs):
             # for i in range(0,len(x_train_tensor)):
             #     y_pred_tensor = self.access_point_model(x_train_tensor[i])
@@ -116,22 +119,27 @@ class SBS():
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
+        print('Finished training local DNN of Access Point: ', self.SBS_label)
+        return self.access_point_model
 
         # y_pred = self.access_point_model(x_train_tensor)
-        # print('xtrain')
+        # print('y_train_tensor[0]')
         # print(y_train_tensor[0])
 
-        # print('ytrain')
+        # print('y_pred[0]')
         # print(y_pred[0])
     def predict_future_association(self):
-        #get the input data
-        input_features = []
-        for user in self.all_users:
-            if user in self.users:
-                input_features.append(user.user_label)
-                input_features.append(user.distance_from_associated_access_point)
-                input_features.append(user.user_association_channel_gain)
-                input_features.append(user.)
+        preprocessed_inputs = self.preprocess_model_inputs()
+        preprocessed_inputs_tensor = torch.Tensor(preprocessed_inputs).to(self.device)
+        association_prediction = self.access_point_model(preprocessed_inputs_tensor)
+    #     #get the input data
+    #     input_features = []
+    #     for user in self.all_users:
+    #         if user in self.users:
+    #             input_features.append(user.user_label)
+    #             input_features.append(user.distance_from_associated_access_point)
+    #             input_features.append(user.user_association_channel_gain)
+    #             input_features.append(user.)
 
     def collect_state_space(self, eMBB_Users,urllc_users):
         self.system_state_space_RB_channel_gains.clear()

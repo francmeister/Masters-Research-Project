@@ -37,7 +37,7 @@ access_point_count = 1
 access_points = []
 num_access_points = 3
 num_users = num_embb_users+num_urllc_users
-num_input_features_per_user = 4
+num_input_features_per_user = 3
 num_input_features = num_users*num_input_features_per_user
 num_output_features = num_users
 max_samples = 20
@@ -87,19 +87,20 @@ for user in all_users:
 for access_point in access_points:
    access_point.find_users_within_distance_radius(access_point_radius, all_users)
 
-for user in all_users:
-   print('user.distances_from_access_point')
-   print(user.distances_from_access_point)
+# for user in all_users:
+#    print('user.distances_from_access_point')
+#    print(user.distances_from_access_point)
 
-for user in all_users:
-   print('user.access_points_within_radius')
-   print(user.access_points_within_radius)
+# for user in all_users:
+#    print('user.access_points_within_radius')
+#    print(user.access_points_within_radius)
 
 
 global_entity = GLOBAL_ENTITY()
-global_entity.initialize_global_model(num_input_features+1,num_output_features)
+global_entity.initialize_global_model(num_input_features,num_output_features)
 global_memory = global_entity.initialize_global_memory(max_samples,num_users,num_input_features_per_user,num_access_points)
 initial_user_associations = global_entity.perform_random_association(all_users)
+#print(global_memory.storage[0])
 
 for access_point in access_points:
    access_point.get_all_users(all_users)
@@ -136,7 +137,7 @@ for access_point in access_points:
 
 
 
-#access_points[0].train_local_dnn()
+
 
 
 

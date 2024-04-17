@@ -23,9 +23,10 @@ class DNN_TRAINING_MEMORY():
 
   def sample(self, batch_size):
     ind = np.random.randint(0, len(self.storage), size=batch_size)
-    X_inputs, y_outputs = [], []
+    X_inputs, y_outputs, sample_rewards = [], [], []
     for i in ind:
-      X_input, y_output = self.storage[i]
+      X_input, y_output, sample_reward = self.storage[i]
       X_inputs.append(np.array(X_input, copy=False))
       y_outputs.append(np.array(y_output, copy=False))
-    return np.array(X_inputs), np.array(y_outputs)
+      sample_rewards.append(np.array(sample_reward, copy=False))
+    return np.array(X_inputs), np.array(y_outputs), np.array(sample_rewards)
