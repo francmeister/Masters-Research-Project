@@ -537,6 +537,9 @@ class NetworkEnv(gym.Env):
         self.min_off_queue_length = 0
         self.resource_block_allocation_matrix = []
         self.resource_allocation_constraint_violation = 0
+
+        self.eMBB_Users = self.SBS.embb_users
+        self.URLLC_Users = self.SBS.urllc_users
        
         for eMBB_User in self.eMBB_Users:
             #eMBB_User.set_properties_UE()
@@ -650,10 +653,6 @@ class NetworkEnv(gym.Env):
 
         #Associate SBS with users
         #self.SBS.associate_users(self.eMBB_Users,self.URLLC_Users)
-
-    def SBS_reassociate_users(self,users):
-        self.eMBB_Users = embb_users
-        self.URLLC_users = urllc_users 
 
     #def group_users(self):
         #Group all eMBB Users

@@ -23,3 +23,23 @@ class CustomBarrier:
                 print("Access Point: ", access_point_number, " waiting for model aggregation")
                 global_entity.acquire_local_model(local_model)
                 self.condition.wait()
+                
+    def wait_for_reassociations(self, env, global_entity, access_point_number):
+        with self.condition:
+            self.count += 1
+            if self.count == self.num_threads:
+                # All threads have reached the aggregation point
+                # Perform the aggregation here
+                print("Performing reassociations")
+                user_association = global_entity.aggregate_user_associations()
+                env.SBS.reassociate_users(user_association)
+                # Reset the count for the next iteration
+                self.count = 0
+                # Notify all threads that aggregation is complete
+                self.condition.notify_all()
+            else:
+                # Wait for aggregation to complete
+                print("Access Point: ", access_point_number, " waiting for reassociations")
+                SBS_association = env.SBS.predict_associations()
+                global_entity.acquire_local_user_associations(SBS_association)
+                self.condition.wait()

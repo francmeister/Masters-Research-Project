@@ -13,8 +13,9 @@ from sklearn.model_selection import train_test_split
 import torch.nn.functional as F
 
 class SBS():
-    def __init__(self, SBS_label):
+    def __init__(self, SBS_label, num_access_points):
         self.SBS_label = SBS_label
+        self.num_access_points = num_access_points
         #SBS Telecom properties
         self.x_position = 200
         self.y_position = 200
@@ -32,11 +33,31 @@ class SBS():
         self.users = users
         self.embb_users = []
         self.urllc_users = []
-        for user in users:
+        for user in self.users:
             if user.type_of_user_id == 0:
                 self.embb_users.append(user)
             elif user.type_of_user_id == 1:
                 self.urllc_users.append(user)
+
+    def reassociate_users(self,user_association_matrix):
+        self.users.clear()
+        self.embb_users.clear()
+        self.urllc_users.clear
+        for user in self.all_users:
+            count = 0
+            for user1 in user_association_matrix:
+                if user.user_label == count+1:
+                    if user1 == self.SBS_label:
+                        self.users.append(user)
+
+                count+=1
+
+        for user in self.users:
+            if user.type_of_user_id == 0:
+                self.embb_users.append(user)
+            elif user.type_of_user_id == 1:
+                self.urllc_users.append(user)
+    
 
     def initialize_DNN_model(self,global_model):
         self.access_point_model = global_model
@@ -128,18 +149,112 @@ class SBS():
 
         # print('y_pred[0]')
         # print(y_pred[0])
-    def predict_future_association(self):
-        preprocessed_inputs = self.preprocess_model_inputs()
+
+    def preprocess_model_inputs(self, access_point_radius):
+        # input_features.append(user_id)
+
+        # user_distance = random.random()
+        # input_features.append(user_distance)
+
+        # user_channel_gain = random.random()
+        # input_features.append(user_channel_gain)
+
+        user_ids = []
+        user_distances = []
+        user_channel_gains = []
+        associated_users_ids = []
+        for user in self.users:
+            associated_users_ids.append(user.user_label)
+
+        for user in self.all_users:
+            user_ids.append(user.user_label)
+            if user.user_label in associated_users_ids:
+                user_distances.append(user.distance_from_associated_access_point)
+                user_channel_gains.append(user.calculate_user_association_channel_gains())
+            else:
+                user_distances.append(0)
+                user_channel_gains.append(0)
+
+        user_distances_normalized = []
+        for user_distance in user_distances:
+            user_distances_normalized.append(interp(user_distance,[0,access_point_radius],[0,1]))
+
+        user_channel_gains_normalized = []
+        for user_channel_gain in user_channel_gains:
+            user_channel_gains_normalized.append(interp(user_channel_gain,[0,5],[0,1]))
+
+        user_features = [user_ids, user_distances_normalized, user_channel_gains_normalized]
+        user_features = np.array(user_features).transpose()
+        user_features_for_inference = []
+
+        for user_feature in user_features:
+            for feature in user_feature:
+                user_features_for_inference.append(feature)
+        user_features_for_inference = np.array(user_features_for_inference)
+        #print('user_features')
+        #print(user_features_for_inference)
+        return user_features_for_inference
+
+
+        #user_channel_gains.append(self.users[0].calculate_user_association_channel_gains())
+        #Channel gains between 0 and 5
+        #Distances between 0 and access_point_radius
+
+        return user_channel_gains
+
+    def predict_future_association(self, access_point_radius):
+        preprocessed_inputs = self.preprocess_model_inputs(access_point_radius)
         preprocessed_inputs_tensor = torch.Tensor(preprocessed_inputs).to(self.device)
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
-    #     #get the input data
-    #     input_features = []
-    #     for user in self.all_users:
-    #         if user in self.users:
-    #             input_features.append(user.user_label)
-    #             input_features.append(user.distance_from_associated_access_point)
-    #             input_features.append(user.user_association_channel_gain)
-    #             input_features.append(user.)
+        association_prediction = association_prediction.detach().numpy()
+        # print('association_prediction')
+        # print(association_prediction)
+
+        associations_prediction_mapped = []
+        for prediction in association_prediction:
+            associations_prediction_mapped.append(round(interp(prediction,[0,1],[1,self.num_access_points])))
+        # print('associations_prediction_mapped')
+        # print(associations_prediction_mapped)
+
+        associated_users_ids = []
+        for user in self.users:
+            associated_users_ids.append(user.user_label)
+
+        for user in self.all_users:
+            if user.user_label not in associated_users_ids:
+                associations_prediction_mapped[user.user_label-1] = 0
+
+        associations = []
+    
+        for user in self.users:
+            user_access_points_in_radius = []
+            for x in user.access_points_within_radius:
+                user_access_points_in_radius.append(x[0])
+            # print('user_access_points_in_radius')
+            # print(user_access_points_in_radius)
+            # print('associations_prediction_mapped[user.user_label-1]')
+            # print(associations_prediction_mapped[user.user_label-1])
+            if associations_prediction_mapped[user.user_label-1] not in user_access_points_in_radius:
+                associations.append((user.user_label,self.SBS_label))
+            else:
+                associations.append((user.user_label, association_prediction[user.user_label-1]))
+
+        # print('preprocessed_inputs')
+        # print(preprocessed_inputs)
+        # print('associations_prediction_mapped')
+        # print(associations_prediction_mapped)
+        associations_prediction_mapped = np.array(associations_prediction_mapped)
+        #self.buffer_memory.append((preprocessed_inputs, associations_prediction_mapped, 0))
+
+        return associations_prediction_mapped
+    
+    def populate_buffer_memory_sample_with_reward(self,global_reward):
+        if len(self.buffer_memory) > 0:
+            self.buffer_memory[0][2] = global_reward
+
+        elif len(self.buffer_memory) == 0:
+            self.buffer_memory.append()
+
 
     def collect_state_space(self, eMBB_Users,urllc_users):
         self.system_state_space_RB_channel_gains.clear()

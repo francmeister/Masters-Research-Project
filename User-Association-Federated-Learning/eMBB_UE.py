@@ -61,11 +61,12 @@ class eMBB_UE(User_Equipment):
 
         if self.slow_fading_gain_change_timer >=25:
             self.slow_fading_channel_gain = np.random.exponential(1) 
+            self.slow_fading_gain_change_timer = 0
 
         return self.fast_fading_channel_gain*self.slow_fading_channel_gain
 
     def set_properties_eMBB(self):
-        self.distances_from_acccess_point = []
+        self.distances_from_access_point = []
         self.slow_fading_gain_change_timer = 0
         self.fast_fading_channel_gain =  np.random.exponential(1)
         self.slow_fading_channel_gain = np.random.exponential(1)

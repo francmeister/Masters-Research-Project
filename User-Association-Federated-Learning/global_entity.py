@@ -27,6 +27,7 @@ class GLOBAL_ENTITY():
         self.local_models = []
         self.num_clients = num_clients
         self.rounds = 0
+        self.local_associations = []
 
     def initialize_global_model(self,input_features_dim, output_features_dim):
         self.global_model = DNN(input_features_dim,output_features_dim)
@@ -94,12 +95,30 @@ class GLOBAL_ENTITY():
     def aggregate_local_models(self):
         self.rounds+=1
         # Federated averaging
-        with torch.no_grad():
-            new_state_dict = {}
-            for key in self.global_model.state_dict():
-                key_sum = sum(self.local_models[i].state_dict()[key] for i in range(self.num_clients))
-                new_state_dict[key] = key_sum / self.num_clients
-            self.global_model.load_state_dict(new_state_dict)
+        print('len(local_models)')
+        print(len(self.local_models))
+        global_model_state = self.local_models[0].state_dict()
+        for model in self.local_models[1:]:
+            model_state = model.state_dict()
+            for key in global_model_state.keys():
+                global_model_state[key] += model_state[key]  # Accumulate the weights
+        # Calculate the average
+        for key in global_model_state.keys():
+            global_model_state[key] /= len(self.local_models)
+        self.global_model.load_state_dict(global_model_state)
+
+    def acquire_local_user_associations(self, associations):
+        self.local_associations.append(associations)
+
+    def aggregate_user_associations(self):
+        self.local_associations = np.array(self.local_associations)
+        self.local_associations = np.sum(self.local_associations,axis=0)
+        return self.local_associations
+
+    def clear_local_user_associations(self):
+        if len(self.local_associations) > 0:
+            self.local_associations.clear()
+
 
         
 
