@@ -217,6 +217,12 @@ class eMBB_UE(User_Equipment):
         self.puncturing_urllc_users_ = []
         self.occupied_resource_time_blocks = []
         self.achieved_channel_rate_ = 0
+        self.previous_rates = []
+        self.ptr = 0
+        self.task_arrival_rate = 0
+        self.offloading_ratio = 0
+        self.average_packet_size_bits = 0
+        self.max_lc_queue_delay_violation_probability = 0.8
 
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
@@ -1145,6 +1151,102 @@ class eMBB_UE(User_Equipment):
             self.assigned_access_point_label_matrix_integers.append(index+1)
 
         self.assigned_access_point_label_matrix_integers = np.array(self.assigned_access_point_label_matrix_integers)
+
+
+    def new_time_delay_calculation(self):
+        average_task_cycles_per_packet = 0
+        if len(self.local_queue) > 0:
+            for task in self.local_queue:
+                average_task_cycles_per_packet+=task.required_computation_cycles
+            average_task_cycles_per_packet = average_task_cycles_per_packet/len(self.local_queue)
+
+        local_computation_time = average_task_cycles_per_packet/self.max_service_rate_cycles_per_slot
+        local_queueing_time = len(self.local_queue)*local_computation_time
+        local_delay = local_computation_time+local_queueing_time
+
+        average_packet_size_bits = 0
+        if len(self.communication_queue) > 0:
+            for task in self.communication_queue:
+                average_packet_size_bits+=task.slot_task_size
+            average_packet_size_bits =  average_packet_size_bits/len(self.communication_queue)
+
+        expected_rate_over_prev_T_slot = self.embb_rate_expectation_over_prev_T_slot(5,self.achieved_channel_rate)
+        if expected_rate_over_prev_T_slot > 0:
+            offload_queueing_time = average_packet_size_bits/expected_rate_over_prev_T_slot
+        else:
+            offload_queueing_time = 0
+        offloading_delay = offload_queueing_time + 1
+
+        max_delay = max(local_delay,offloading_delay)
+        max_delay_normalized =  interp(max_delay,[0,4],[0,20])
+        return max_delay, max_delay_normalized
+
+    def embb_rate_expectation_over_prev_T_slot(self, T, embb_total_rate):
+        number_of_previous_time_slots = T
+
+        if len(self.previous_rates) == number_of_previous_time_slots:
+            self.previous_rates[int(self.ptr)] = embb_total_rate
+            self.ptr = (self.ptr + 1) % number_of_previous_time_slots
+        else:
+            self.previous_rates.append(embb_total_rate)
+
+        average_rate = sum(self.previous_rates)/len(self.previous_rates)
+        return average_rate
+    
+    def offloading_queue_stability_constraint_reward(self):
+        offload_traffic = 0
+        if self.achieved_channel_rate > 0:
+            offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/self.achieved_channel_rate
+        else:
+            offload_traffic
+        reward = 1-offload_traffic
+        return reward#offload_traffic
+    
+    def local_queue_violation_constraint_reward(self):
+        average_packet_size_bits = 0
+        if len(self.local_queue) > 0:
+            for task in self.local_queue:
+                average_packet_size_bits+=task.slot_task_size
+            average_packet_size_bits =  average_packet_size_bits/len(self.local_queue)
+
+        if average_packet_size_bits > 0:
+            average_service_rate = self.service_rate_bits_per_slot/average_packet_size_bits
+        else:
+            average_service_rate = 0
+
+        if average_service_rate > 0 :
+            G = ((1-self.allocated_offloading_ratio)*self.task_arrival_rate)/average_service_rate
+        else:
+            G = 0
+
+        queue_length = len(self.local_queue)
+        #print('queue_length: ', queue_length)
+        sum_violation_probability = 0
+        for i in range(0,queue_length+1):
+            sum_violation_probability+=self.probabitlity_of_num_packet(i,G)
+
+        sum_violation_probability = 1 - sum_violation_probability
+        max_sum_violation_probability = 0.5
+        min_sum_violation_probability = -12
+
+        sum_violation_probability_norm = interp(sum_violation_probability,[min_sum_violation_probability,max_sum_violation_probability],[0,1])
+        violation_reward = self.max_lc_queue_delay_violation_probability - sum_violation_probability_norm
+        return violation_reward#sum_violation_probability_norm
+
+    def probabitlity_of_num_packet(self,i,G):
+        p1 = 0.5
+        sum_second_term = 0
+        for k in range(2,(i+1)+1):
+            sum_second_term+= (p1*(math.pow(G,(i+k+1)))/math.factorial((i+k+1)))
+            #print(sum_second_term)
+
+        second_term = math.exp(G)*sum_second_term
+        first_term = math.exp(G)*(math.pow(G,i)/math.factorial(i))*p1 
+
+        pi = first_term+second_term
+
+        return pi
+
         
     
 

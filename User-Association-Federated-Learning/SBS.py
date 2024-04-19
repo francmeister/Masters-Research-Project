@@ -11,9 +11,11 @@ import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
 from sklearn.model_selection import train_test_split
 import torch.nn.functional as F
+import copy
+import scipy.stats as stats
 
 class SBS():
-    def __init__(self, SBS_label, num_access_points):
+    def __init__(self, SBS_label, num_access_points, input_dim, output_dim):
         self.SBS_label = SBS_label
         self.num_access_points = num_access_points
         #SBS Telecom properties
@@ -21,16 +23,16 @@ class SBS():
         self.y_position = 200
         self.individual_rewards = []
         self.training_memory = DNN_TRAINING_MEMORY()
-        #self.access_point_model = DNN(input_dim,output_dim)
+        self.access_point_model = DNN(input_dim,output_dim)
         self.buffer_memory = []
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.set_properties()
 
     def get_all_users(self, all_users):
-        self.all_users = all_users
+        self.all_users = copy.deepcopy(all_users)
 
     def associate_users(self, users):
-        self.users = users
+        self.users = copy.deepcopy(users)
         self.embb_users = []
         self.urllc_users = []
         for user in self.users:
@@ -39,10 +41,13 @@ class SBS():
             elif user.type_of_user_id == 1:
                 self.urllc_users.append(user)
 
+
     def reassociate_users(self,user_association_matrix):
+        print(user_association_matrix)
         self.users.clear()
         self.embb_users.clear()
         self.urllc_users.clear
+      
         for user in self.all_users:
             count = 0
             for user1 in user_association_matrix:
@@ -51,16 +56,15 @@ class SBS():
                         self.users.append(user)
 
                 count+=1
-
+    
         for user in self.users:
             if user.type_of_user_id == 0:
                 self.embb_users.append(user)
             elif user.type_of_user_id == 1:
-                self.urllc_users.append(user)
-    
+                self.urllc_users.append(user)    
 
     def initialize_DNN_model(self,global_model):
-        self.access_point_model = global_model
+        self.access_point_model.load_state_dict(global_model.state_dict()) 
 
     def get_SBS_center_pos(self):
         self.x_position = 200
@@ -105,7 +109,7 @@ class SBS():
         #self.access_point_model.to(device)
 
     def acquire_global_memory(self, global_memory):    
-        self.training_memory = global_memory   
+        self.training_memory = copy.deepcopy(global_memory)   
 
     def train_local_dnn(self):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -195,13 +199,6 @@ class SBS():
         #print(user_features_for_inference)
         return user_features_for_inference
 
-
-        #user_channel_gains.append(self.users[0].calculate_user_association_channel_gains())
-        #Channel gains between 0 and 5
-        #Distances between 0 and access_point_radius
-
-        return user_channel_gains
-
     def predict_future_association(self, access_point_radius):
         preprocessed_inputs = self.preprocess_model_inputs(access_point_radius)
         preprocessed_inputs_tensor = torch.Tensor(preprocessed_inputs).to(self.device)
@@ -244,19 +241,26 @@ class SBS():
         # print('associations_prediction_mapped')
         # print(associations_prediction_mapped)
         associations_prediction_mapped = np.array(associations_prediction_mapped)
-        #self.buffer_memory.append((preprocessed_inputs, associations_prediction_mapped, 0))
+        self.buffer_memory.append((preprocessed_inputs, associations_prediction_mapped, 0))
 
         return associations_prediction_mapped
     
     def populate_buffer_memory_sample_with_reward(self,global_reward):
-        if len(self.buffer_memory) > 0:
-            self.buffer_memory[0][2] = global_reward
+        if len(self.buffer_memory) > 1:
+            new_sample = (self.buffer_memory[0][0],self.buffer_memory[0][1],global_reward)
+            self.buffer_memory[0] = new_sample
+            dnn_memory_rewards = []
+            for sample in self.training_memory.storage:
+                dnn_memory_rewards.append(sample[2])
+            max_index = dnn_memory_rewards.index(max(dnn_memory_rewards))
 
-        elif len(self.buffer_memory) == 0:
-            self.buffer_memory.append()
+            if global_reward >= dnn_memory_rewards[max_index]:
+                self.training_memory.add(self.buffer_memory[0])
 
+            self.buffer_memory.pop(0)
 
-    def collect_state_space(self, eMBB_Users,urllc_users):
+    def collect_state_space(self, eMBB_Users,urllc_users, Communication_Channel_1):
+        total_gain = np.zeros(Communication_Channel_1.num_allocate_RBs_upper_bound*2)
         self.system_state_space_RB_channel_gains.clear()
         self.system_state_space_battery_energies.clear()
         channel_gains = []
@@ -267,25 +271,30 @@ class SBS():
         num_arriving_urllc_packets = []
         latency_requirement = []
         local_frequencies = []
-        embb_user_labels = []
-        for embb_user in eMBB_Users:
-            embb_user_labels.append(embb_user.user_id)
-        #reliability_requirement = []
-        #Collect Channel gains
-        self.count_num_arriving_urllc_packets(urllc_users)
+        associated_embb_user_labels = []
+
+        all_embb_users = []
         for user in self.all_users:
-            if user.user_label in embb_user_labels:
+            if user.type_of_user_id == 0:
+                all_embb_users.append(user)
+        for embb_user in eMBB_Users:
+            associated_embb_user_labels.append(embb_user.user_label)
+        #reliability_requirement = []
+        #Collect Channel gains\
+        self.count_num_arriving_urllc_packets(urllc_users)
+        for user in all_embb_users:
+            if user.user_label in associated_embb_user_labels:
                 channel_gains.append(embb_user.user_state_space.channel_gain)
                 battery_energy.append(embb_user.user_state_space.battery_energy)
                 offloading_queue_lengths.append(embb_user.user_state_space.offloading_queue_length)
                 local_queue_lengths.append(embb_user.user_state_space.local_queue_length)
                 num_arriving_urllc_packets.append(self.num_arriving_urllc_packets)
             else:
-                channel_gains.append(0)
+                channel_gains.append(total_gain)
                 battery_energy.append(0)
                 offloading_queue_lengths.append(0)
                 local_queue_lengths.append(0)
-                num_arriving_urllc_packets.append(0)
+                num_arriving_urllc_packets.append(self.num_arriving_urllc_packets)
 
         self.system_state_space_RB_channel_gains.append(channel_gains)
         self.system_state_space_battery_energies.append(battery_energy)
@@ -350,7 +359,7 @@ class SBS():
 
         #print("self.achieved_system_energy_efficiency",self.achieved_system_energy_efficiency)
 
-    def calculate_achieved_system_reward(self, eMBB_Users, communication_channel):
+    def calculate_achieved_system_reward(self, eMBB_Users, urllc_users, communication_channel):
         #print('number of embb users: ', len(eMBB_Users))
         self.achieved_system_reward = 0
         eMBB_User_energy_consumption = 0
@@ -368,7 +377,14 @@ class SBS():
         tasks_dropped = 0
 
         self.individual_rewards.clear()
-
+        self.individual_energy_rewards = []
+        self.individual_channel_rate_rewards = []
+        self.individual_channel_battery_energy_rewards = []
+        self.individual_delay_rewards = []
+        self.individual_queue_delays = []
+        self.individual_tasks_dropped = []
+        self.individual_energy_efficiency = []
+        self.individual_total_reward = []
         total_users_energy_reward = 0
         total_users_throughput_reward = 0
         total_users_battery_energies_reward = 0
@@ -376,8 +392,13 @@ class SBS():
         total_users_delay_times_energy_reward = 0
         total_users_resource_allocation_reward = 0
         overall_users_reward = 0
-
+        total_eMBB_User_delay_normalized = 0
+        total_offload_traffic_reward = 0
+        total_lc_delay_violation_probability = 0
+        urllc_reliability_reward, urllc_reliability_reward_normalized = self.calculate_urllc_reliability_reward(urllc_users)
+        self.urllc_reliability_reward_normalized = urllc_reliability_reward_normalized
         for eMBB_User in eMBB_Users:
+            eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
             eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
             total_energy += eMBB_User_energy_consumption
             eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
@@ -388,7 +409,10 @@ class SBS():
             resource_allocation_reward = eMBB_User.calculate_resource_allocation_reward(communication_channel)
             queue_delay_reward,delay = eMBB_User.calculate_queuing_delays()
             tasks_dropped = eMBB_User.tasks_dropped
+            total_offload_traffic_reward += eMBB_User.offloading_queue_stability_constraint_reward()
+            #total_lc_delay_violation_probability+=eMBB_User.local_queue_violation_constraint_reward()
 
+            total_eMBB_User_delay_normalized+=eMBB_User_delay_normalized
             total_users_energy_reward += eMBB_User_energy_consumption
             total_users_throughput_reward += eMBB_User_channel_rate
             total_users_battery_energies_reward += battery_energy_reward
@@ -403,7 +427,7 @@ class SBS():
             #if eMBB_User_energy_consumption == 0:
             #    individual_reward = 0
             #else:
-            individual_reward = energy_efficiency_reward#*queue_delay_reward #+ battery_energy_reward  
+            individual_reward = energy_efficiency_reward#*queue_delay_reward + battery_energy_reward  
       
             self.achieved_system_reward += individual_reward
             self.individual_rewards.append(individual_reward)
@@ -416,10 +440,19 @@ class SBS():
             self.delays+=delay
             self.tasks_dropped+=tasks_dropped
             self.resource_allocation_rewards += resource_allocation_reward
+            self.individual_energy_rewards.append(eMBB_User_energy_consumption)
+            self.individual_channel_rate_rewards.append(eMBB_User_channel_rate)
+            self.individual_energy_efficiency.append(energy_efficiency_reward)
+            self.individual_total_reward.append(individual_reward)
+            self.individual_channel_battery_energy_rewards.append(battery_energy_reward)
+            self.individual_tasks_dropped.append(tasks_dropped)
+            self.individual_delay_rewards.append(queue_delay_reward)
+            self.individual_queue_delays.append(delay)
+            self.total_reward += energy_efficiency_reward*queue_delay_reward + battery_energy_reward
 
-        #overall_users_reward = 1/total_users_energy_reward#total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
+        self.overall_users_reward = total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
         #overall_users_rewards = [overall_users_reward for _ in range(len(eMBB_Users))]
-       
+        #self.achieved_system_reward += urllc_reliability_reward_normalized
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
         fairness_index_normalized = 0.2*interp(fairness_index,[0,1],[0,1])
@@ -442,8 +475,8 @@ class SBS():
         #print("total_energy: ", total_energy)
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
-  
-        return self.achieved_system_reward, self.individual_rewards , self.energy_rewards,self.throughput_rewards
+        #self.achieved_system_reward
+        return self.achieved_system_reward, self.achieved_system_reward, self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, overall_users_rewards , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
@@ -503,6 +536,25 @@ class SBS():
         self.delay_reward_times_energy_reward = 0
         self.available_resource_time_blocks = []
         self.num_arriving_urllc_packets = 0
+        self.urllc_reliability_constraint_max = 0.04
+        self.K_mean = 0
+        self.K_variance = 3
+        self.outage_probability = 0
+        self.previous_rates = []
+        self.timeslot_counter = 0
+        self.ptr = 0
+        self.urllc_reliability_reward_normalized = 0
+        self.q = 0
+        self.individual_energy_rewards = []
+        self.individual_channel_rate_rewards = []
+        self.individual_channel_battery_energy_rewards = []
+        self.individual_delay_rewards = []
+        self.individual_queue_delays = []
+        self.individual_tasks_dropped = []
+        self.individual_energy_efficiency = []
+        self.individual_total_reward = []
+        self.total_reward = 0
+        self.overall_users_reward = []
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)
@@ -594,6 +646,146 @@ class SBS():
         second_largest_index = sorted_indices[-2]
 
         return largest_index
+    
+    def calculate_urllc_reliability_reward(self, urllc_users):
+        num_arriving_urllc_packets = self.num_arriving_urllc_packets
+        urllc_task_size = 0
+        if len(urllc_users) > 0:
+            urllc_task_size = urllc_users[0].task_size_per_slot_bits    
+
+        urllc_total_rate = 0
+        for urllc_user in urllc_users:
+            urllc_total_rate+=urllc_user.achieved_channel_rate
+
+      
+       
+        K = num_arriving_urllc_packets*urllc_task_size
+        K_mean = (len(urllc_users)/2)*urllc_task_size
+        K_variance = self.K_variance*urllc_task_size
+        K_inv = stats.norm.ppf((1-self.urllc_reliability_constraint_max), loc=K_mean, scale=K_variance)
+        #print('K_inv: ', K_inv)
+        #print('urllc_total_rate: ', urllc_total_rate)
+        # K = num_arriving_urllc_packets*urllc_task_size
+        # self.K_mean = (len(urllc_users)/2)*urllc_task_size
+        # #K_cdf = stats.norm.cdf(K,self.K_mean,self.K_variance)
+        # K_cdf = stats.norm.cdf(K,self.K_mean,self.K_variance)
+        # self.outage_probability = 1 - K_cdf
+
+        # print('self.K_mean: ', self.K_mean)
+        #print('self.K-cdf: ', K_cdf)
+        # print('self.1/K-cdf: ', 1/K_cdf)
+        # print('total urllc rate: ', urllc_total_rate)
+        # print('(1/K_cdf)*(1-self.urllc_reliability_constraint_max): ', (1/K_cdf)*(1-self.urllc_reliability_constraint_max))
+        #print('urllc rate: ', urllc_total_rate)
+        reliability_reward = urllc_total_rate-K_inv
+        average_rate_prev_slots = self.urllc_rate_expectation_over_prev_T_slot(10,urllc_total_rate)
+        #print('self.previous_rates: ', self.previous_rates)
+        variance = urllc_task_size
+
+        self.outage_probability = stats.norm.cdf(K,loc=average_rate_prev_slots,scale=variance)
+        # print('reliability_reward: ', reliability_reward)
+        # print('self.outage_probability: ', self.outage_probability)
+        #print('reliability_reward: ', reliability_reward)
+        reliability_reward_max = 2000
+        reliability_reward_min = -2000
+        reliability_reward_normalized = interp(reliability_reward,[reliability_reward_min,reliability_reward_max],[0,5])
+        return reliability_reward, reliability_reward_normalized
+    
+    def urllc_rate_expectation_over_prev_T_slot(self, T, urllc_total_rate):
+        self.timeslot_counter+=1
+        number_of_previous_time_slots = T
+
+        if len(self.previous_rates) == number_of_previous_time_slots:
+            self.previous_rates[int(self.ptr)] = urllc_total_rate
+            self.ptr = (self.ptr + 1) % number_of_previous_time_slots
+        else:
+            self.previous_rates.append(urllc_total_rate)
+
+        average_rate = sum(self.previous_rates)/len(self.previous_rates)
+        return average_rate
+    
+
+    def reward(self, eMBB_Users, urllc_users, communication_channel):
+        #print('number of embb users: ', len(eMBB_Users))
+        self.achieved_system_reward = 0
+        eMBB_User_energy_consumption = 0
+        eMBB_User_channel_rate = 0
+        eMBB_User_QOS_requirement_revenue_or_penelaty = 0
+        total_energy = 0
+        total_rate = 0
+        total_QOS_revenue = 0
+        self.fairness_index = 0
+        individual_rewards = 0
+        queue_delay_reward = 0
+        delay = 0
+        throughput_reward = 0
+        resource_allocation_reward = 0
+        tasks_dropped = 0
+
+        self.individual_rewards.clear()
+
+        total_users_energy_reward = 0
+        total_users_throughput_reward = 0
+        total_users_battery_energies_reward = 0
+        total_users_delay_rewards = 0
+        total_users_delay_times_energy_reward = 0
+        total_users_resource_allocation_reward = 0
+        overall_users_reward = 0
+        total_eMBB_User_delay_normalized = 0
+        total_offload_traffic_reward = 0
+        total_lc_delay_violation_probability = 0
+        urllc_reliability_reward, urllc_reliability_reward_normalized = self.calculate_urllc_reliability_reward(urllc_users)
+        self.urllc_reliability_reward_normalized = urllc_reliability_reward_normalized
+        for eMBB_User in eMBB_Users:
+            eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
+            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption 
+            total_energy += eMBB_User_energy_consumption
+            eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
+            total_rate += eMBB_User_channel_rate
+            delay_reward = eMBB_User.calculate_delay_penalty()
+            battery_energy_reward = eMBB_User.energy_consumption_reward()
+            energy_efficiency_reward = eMBB_User.calculate_energy_efficiency()
+            resource_allocation_reward = eMBB_User.calculate_resource_allocation_reward(communication_channel)
+            queue_delay_reward,delay = eMBB_User.calculate_queuing_delays()
+            tasks_dropped = eMBB_User.tasks_dropped
+            total_offload_traffic_reward += eMBB_User.offloading_queue_stability_constraint_reward()
+            total_lc_delay_violation_probability+=eMBB_User.local_queue_violation_constraint_reward()
+
+            total_eMBB_User_delay_normalized+=eMBB_User_delay_normalized
+            total_users_energy_reward += eMBB_User_energy_consumption
+            total_users_throughput_reward += eMBB_User_channel_rate
+            total_users_battery_energies_reward += battery_energy_reward
+            total_users_delay_rewards += queue_delay_reward
+            if eMBB_User_energy_consumption == 0:
+                total_users_delay_times_energy_reward = 0
+            else:
+                total_users_delay_times_energy_reward += (queue_delay_reward*(1/eMBB_User_energy_consumption))
+            total_users_resource_allocation_reward += resource_allocation_reward
+
+        
+            #if eMBB_User_energy_consumption == 0:
+            #    individual_reward = 0
+            #else:
+            individual_reward = energy_efficiency_reward#*queue_delay_reward + battery_energy_reward  
+      
+            self.achieved_system_reward += individual_reward
+            self.individual_rewards.append(individual_reward)
+
+            self.energy_efficiency_rewards+=energy_efficiency_reward
+            self.battery_energy_rewards+=battery_energy_reward
+            self.throughput_rewards+=total_rate
+            self.energy_rewards+=total_energy
+            self.delay_rewards+=queue_delay_reward
+            self.delays+=delay
+            self.tasks_dropped+=tasks_dropped
+            self.resource_allocation_rewards += resource_allocation_reward
+
+        
+        self.q = total_users_throughput_reward*total_users_delay_times_energy_reward 
+        reward = total_users_throughput_reward - self.q*total_users_delay_times_energy_reward + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward +total_lc_delay_violation_probability
+        
+        return self.achieved_system_reward, reward , self.energy_rewards,self.throughput_rewards
+
 
 
 

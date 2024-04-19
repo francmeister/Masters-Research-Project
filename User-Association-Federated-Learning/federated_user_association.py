@@ -56,7 +56,7 @@ for x in range(0,num_urllc_users):
    user_count+=1
 
 for x in range(0,num_access_points):
-   access_point = SBS(access_point_count,num_access_points)
+   access_point = SBS(access_point_count,num_access_points,num_input_features,num_output_features)
    access_points.append(access_point)
    access_point_count+=1
 
@@ -120,27 +120,32 @@ for access_point in access_points:
    access_point.associate_users(access_point_users)
 
 channel_gains = []
-#for x in range(0,38):
-for access_point in access_points:
-   access_point.train_local_dnn()
+for x in range(0,3):
+   for access_point in access_points:
+      access_point.train_local_dnn()
 
-for access_point in access_points:
-   global_entity.acquire_local_model(access_point.access_point_model)
+   for access_point in access_points:
+      global_entity.acquire_local_model(access_point.access_point_model)
 
-global_entity.aggregate_local_models()
+   global_entity.aggregate_local_models()
 
-for access_point in access_points:
-   access_point.acquire_global_model(global_entity.global_model)
+   for access_point in access_points:
+      access_point.acquire_global_model(global_entity.global_model)
 
-for access_point in access_points:
-   global_entity.acquire_local_user_associations(access_point.predict_future_association(access_point_radius))
+   for access_point in access_points:
+      global_entity.acquire_local_user_associations(access_point.predict_future_association(access_point_radius))
+      global_entity.calculate_global_reward(20)
 
-user_association = global_entity.aggregate_user_associations()
+   user_association = global_entity.aggregate_user_associations()
 
-for access_point in access_points:
-   access_point.reassociate_users(user_association)
-print('final user association')
-print(user_association)
+   for access_point in access_points:
+      access_point.reassociate_users(user_association)
+      access_point.populate_buffer_memory_sample_with_reward(global_entity.global_reward)
+
+
+   global_entity.clear_local_models_memory()
+   global_entity.clear_local_user_associations()
+   global_entity.reset_global_reward()
 
 
 

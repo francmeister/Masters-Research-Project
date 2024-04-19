@@ -8,6 +8,7 @@ import torch
 import matplotlib.pyplot as plt
 import pygame, sys, time, random
 import pandas as pd
+from SBS import SBS
 
 from numpy import interp
 
@@ -40,6 +41,7 @@ energy_consumed = []
 local_energy = []
 tasks_dropped = []
 
+access_point = SBS(1,1,2,2)
 eMBB_UE_1 = eMBB_UE(1,1,100,600)
 eMBB_UE_2 = eMBB_UE(2,2,100,600)
 eMBB_UE_3 = eMBB_UE(3,3,100,600)
@@ -55,17 +57,27 @@ all_users.append(URLLC_UE_1)
 all_users.append(URLLC_UE_2)
 all_users.append(URLLC_UE_3)
 
-env = NetworkEnv(1,all_users,1)
+access_point.associate_users(all_users)
+access_point.get_all_users(all_users)
+
+env = NetworkEnv(all_users,access_point)
+access_point.reassociate_users(np.array([1,1,1,3,1,4]))
+
 obs = env.reset()
+
 print('obs')
 print(obs)
 #print('observation sample')
 #print(env.observation_space.sample())
 #expl_noise = 0.5
 for timestep in timesteps:
+    access_point.reassociate_users(np.array([1,1,1,3,1,4]))
+
+    obs = env.reset()
     print('----------------------------------------------------------------------------------------------------------------------------------------------------')
     action = env.action_space.sample()
-    action = env.enforce_constraint(action)
+    action = env.apply_resource_allocation_constraint(action)
+    action2, action = env.reshape_action_space_dict(action)
     #print('----------------------------------------------------------------------------------------------------------------------------------------------------')
     #print(action)
     #print('')
@@ -84,7 +96,7 @@ for timestep in timesteps:
     #print(observation)
     throughputs.append(env.eMBB_UE_1.achieved_channel_rate_normalized)
     energies.append(env.total_energy)
-    fiarness_index.append(env.SBS1.fairness_index)
+    fiarness_index.append(env.SBS.fairness_index)
     battery_energies.append(env.eMBB_UE_1.battery_energy_level)
     energies_harvested.append(env.eMBB_UE_1.energy_harvested)
     energy_consumed.append(env.eMBB_UE_1.achieved_total_energy_consumption)
@@ -94,8 +106,8 @@ for timestep in timesteps:
     transmit_energies.append(env.eMBB_UE_1.achieved_transmission_energy_consumption)
     #print('action: ', action)
     #print('reward: ', reward)
-    rewards.append(reward[0])
-    tasks_dropped.append(env.SBS1.tasks_dropped)
+    rewards.append(reward)
+    tasks_dropped.append(env.SBS.tasks_dropped)
     
   
 
@@ -112,11 +124,11 @@ data = {
     'transmit_powers':power_allocations,
     'achieved_throughputs':throughputs
 }
-df = pd.DataFrame(data=data)
-print(df)
-corr = df.corr(method='pearson')
-print(corr)
-print('max reward: ', max(rewards), 'min reward: ', min(rewards))
+#df = pd.DataFrame(data=data)
+#print(df)
+#corr = df.corr(method='pearson')
+#print(corr)
+#print('max reward: ', max(rewards), 'min reward: ', min(rewards))
 #print(energy_consumed)
 #print(rewards)
 #print('total reward after 100 timesteps: ', reward_)

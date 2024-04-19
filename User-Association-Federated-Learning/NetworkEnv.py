@@ -23,22 +23,24 @@ clock = pygame.time.Clock()
 
 class NetworkEnv(gym.Env):
     metadata = {'render.modes': ['human']}
-    def __init__(self,all_users,SBS):
-        #self.access_point_id = access_point_id
-        #self.user_association_epoch_number = user_association_epoch_number
+    def __init__(self, all_users,SBS):
         self.create_objects(SBS)
         self.reset()
+        self.number_of_eMBB_users = 0
+        for user in all_users:
+            if user.type_of_user_id == 0:
+                self.number_of_eMBB_users+=1
         #Action Space Bound Paramaters
         #self.access_point_id = access_point_id
         self.max_offload_decision = 1
         self.min_offload_decision = 0
         self.number_of_eMBB_users = len(self.eMBB_Users)
-        self.number_of_users = len(self.eMBB_Users) 
+        self.number_of_users = self.number_of_eMBB_users
         self.num_allocate_RB_upper_bound = self.Communication_Channel_1.num_allocate_RBs_upper_bound
         self.num_allocate_RB_lower_bound = self.Communication_Channel_1.num_allocate_RBs_lower_bound
         self.time_divisions_per_slot = self.Communication_Channel_1.time_divisions_per_slot
-        self.max_transmit_power_db = self.eMBB_UE_1.max_transmission_power_dBm
-        #self.max_transmit_power_db = 30
+        #self.max_transmit_power_db = 400#self.eMBB_UE_1.max_transmission_power_dBm
+        self.max_transmit_power_db = 30
         self.min_transmit_power_db = 10
         self.offload_decisions_label = 0
         self.allocate_num_RB_label = 4
@@ -70,7 +72,7 @@ class NetworkEnv(gym.Env):
                         [self.min_transmit_power_db for _ in range(self.number_of_users)], [self.min_number_of_URLLC_users_per_RB for _ in range(self.number_of_users)]],dtype=np.float32)'''
         
         action_space_low = np.array([[0 for _ in range(self.number_of_users)], [0 for _ in range(self.number_of_users)]],dtype=np.float32)
-        
+        self.number_of_box_actions = 2
         action_space_high = np.transpose(action_space_high)
         action_space_low = np.transpose(action_space_low)
         
@@ -116,35 +118,86 @@ class NetworkEnv(gym.Env):
         '''
      
         self.box_action_space = spaces.Box(low=action_space_low,high=action_space_high)
+        self.number_of_box_actions = 2
+        self.box_action_space_len = 0
         self.binary_action_space = spaces.MultiBinary(self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
-        self.user_resource_block_allocations = spaces.MultiDiscrete([self.number_of_users+1]*(self.time_divisions_per_slot*self.num_allocate_RB_upper_bound))
+        self.binary_action_space_len = 0
 
         # Combine the action spaces into a dictionary
+        #self.action_space = self.box_action_space
+        
         self.action_space = spaces.Dict({
             'box_actions': self.box_action_space,
-            'binary_actions': self.binary_action_space,
-            'user_resource_block_allocations':self.user_resource_block_allocations
+            'binary_actions': self.binary_action_space
         })
 
         #self.action_space = spaces.Box(low=action_space_low,high=action_space_high)
         self.observation_space = spaces.Box(low=observation_space_low, high=observation_space_high)
         self.total_action_space = []
+        
+        sample_action = self.action_space.sample()
+        sample_observation = self.observation_space.sample()
+        reshaped_action_for_model_training, reshaped_action_for_model_training2 = self.reshape_action_space_dict(sample_action)
+        reshaped_observation_for_model_training = self.reshape_observation_space_for_model(sample_observation)
 
-        self.action_space_dim_1 = self.box_action_space.shape[1] + (self.num_allocate_RB_upper_bound*self.time_divisions_per_slot)
-        #print(self.action_space_dim_1)
+        self.action_space_dim = len(reshaped_action_for_model_training)#self.box_action_space.shape[1] + (self.num_allocate_RB_upper_bound*self.time_divisions_per_slot)
+
+        self.observation_space_dim = len(reshaped_observation_for_model_training)
+      
         self.action_space_high = 1
         self.action_space_low = 0
 
         self.STEP_LIMIT = 30
         self.sleep = 0
         self.steps = 0
+
+    def reshape_observation_space_for_model(self,observation_space):
+        observation_space = np.transpose(observation_space)
+        observation_space = observation_space.reshape(1,len(observation_space)*len(observation_space[0]))
+        observation_space = observation_space.squeeze()
+        return observation_space
        
+    def reshape_action_space_dict(self,action):
+        box_action = np.array(action['box_actions'])
+        binary_actions = np.array(action['binary_actions'])
+
+        len_box_actions = len(box_action) * len(box_action[0])
+        self.box_action_space_len = len_box_actions
+
+        box_action = box_action.reshape(1,len_box_actions)
+        box_action = box_action.squeeze()
+
+        binary_actions = binary_actions.reshape(1,self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
+        binary_actions = binary_actions.squeeze()
+        self.binary_action_space_len = self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound
+        self.total_action_space = np.hstack((box_action,binary_actions))#np.column_stack((box_action,binary_actions))
+        self.total_action_space = np.array(self.total_action_space)
+        self.total_action_space = self.total_action_space.squeeze()
+
+        action_space_dict = {
+            'box_actions': box_action,
+            'binary_actions': binary_actions
+        }
+  
+        return self.total_action_space, action_space_dict
+    
     def reshape_action_space_for_model(self,action):
         box_action = np.array(action['box_actions'])
         binary_actions = np.array(action['binary_actions'])
 
-        binary_actions = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
-        self.total_action_space = np.column_stack((box_action,binary_actions))
+        #len_box_actions = len(box_action) * len(box_action[0])
+        #self.box_action_space_len = len_box_actions
+
+        #box_action = box_action.reshape(1,len_box_actions)
+        #box_action = box_action.squeeze()
+
+        #binary_actions = binary_actions.reshape(1,self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
+        #binary_actions = binary_actions.squeeze()
+        #self.binary_action_space_len = self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound
+        self.total_action_space = np.hstack((box_action,binary_actions))#np.column_stack((box_action,binary_actions))
+        self.total_action_space = np.array(self.total_action_space)
+        self.total_action_space = self.total_action_space.squeeze()
+
   
         return self.total_action_space
 
@@ -153,23 +206,15 @@ class NetworkEnv(gym.Env):
     def reshape_action_space_from_model_to_dict(self,action):
         box_actions = []
         binary_actions = []
-        for user_action in action:
-            box_actions.append(user_action[0:2])
-            binary_actions.append(user_action[2:len(user_action)])
+        box_actions = action[0:self.box_action_space_len]
+        binary_actions = action[self.box_action_space_len:len(action)]
 
         box_actions = np.array(box_actions)
         binary_actions = np.array(binary_actions)
 
-        binary_actions = binary_actions.reshape(1,self.number_of_users * self.num_allocate_RB_upper_bound*self.time_divisions_per_slot).squeeze()
+        #binary_actions = binary_actions.reshape(1,self.number_of_users * self.num_allocate_RB_upper_bound*self.time_divisions_per_slot).squeeze()
         #print(binary_actions)
-        count = 0
-        for binary_action in binary_actions:
-            if binary_action < 0.5:
-                binary_actions[count] = 0
-            elif binary_action >= 0.5:
-                binary_actions[count] = 1
-            
-            count+=1
+ 
         #print(binary_actions)
         action_space_dict = {
             'box_actions': box_actions,
@@ -183,36 +228,149 @@ class NetworkEnv(gym.Env):
         done_sampling = False
         resource_allocation_penalty = 0
         if not np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot):
-            resource_allocation_penalty = -0.02
+            #resource_allocation_penalty = -0.02
             self.resource_allocation_constraint_violation+=1
 
-        return resource_allocation_penalty
+        #return resource_allocation_penalty
 
     def enforce_constraint(self,action):
-       
+        box_actions = action['box_actions']
         binary_actions = action['binary_actions']
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
-        done_sampling = False
-        if not np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot):
-             while not done_sampling:
-                 action = self.action_space.sample()
-                 binary_actions = action['binary_actions']
-                 resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
-                 if np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot) and np.all(np.sum(resource_block_action_matrix,axis=0) <= 1):
-                     done_sampling = True
-                 else:
-                     done_sampling = False
-        binary_actions = action['binary_actions']
-        resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
-        
-        self.resource_block_allocation_matrix.clear()
-        self.resource_block_allocation_matrix.append(resource_block_action_matrix)
-        # print(resource_block_action_matrix)
-        # print('')
-       
-        #print(np.all(np.sum(np.sum(resource_block_action_matrix,axis=0),axis=0) <= self.time_divisions_per_slot))
-        
+        resource_block_action_matrix_size = self.number_of_users*self.time_divisions_per_slot*self.num_allocate_RB_upper_bound
+        #resource_block_action_matrix = resource_block_action_matrix.squeeze()
+        #print(resource_block_action_matrix[:,:,0])
+        for z in range(0,self.num_allocate_RB_upper_bound):
+            index_array = []
+            column_array = resource_block_action_matrix[:,:,z]
+            column_array = column_array.reshape(1,self.number_of_users*self.time_divisions_per_slot)
+            column_array = column_array.squeeze()
+            limit_index_array = len(column_array)
+            index_array = list(range(0, limit_index_array))
+            rand_num = np.random.randint(0, len(index_array), 1)
+            rand_num = rand_num[0]
+            first_num = index_array[rand_num]
+            index_array = np.delete(index_array,rand_num,axis=0)
+            rand_num = np.random.randint(0, len(index_array), 1)
+            rand_num = rand_num[0]
+            second_num = index_array[rand_num]
+            index_first_num = first_num
+            index_second_num = second_num
+            count = 0
+            for x in range(0,self.number_of_users):
+                for y in range(0,(self.time_divisions_per_slot)):
+                    if count == index_first_num or count == index_second_num:
+                        resource_block_action_matrix[x,y,z] = 1
+                    else:
+                        resource_block_action_matrix[x,y,z] = 0
+                    count+=1
+
+        all_embb_users = []
+   
+        for user in self.SBS.all_users:
+            if user.type_of_user_id == 0:
+                all_embb_users.append(user)
+
+        associated_embb_users_ids = []
+        for embb_user in self.eMBB_Users:
+            associated_embb_users_ids.append(embb_user.user_label)
+
+        for user in all_embb_users:
+                x = 0
+                if user.user_label not in associated_embb_users_ids:
+                    for time_block in resource_block_action_matrix[user.user_label-1]:
+                        y = 0
+                        for freq_block in time_block:
+                            resource_block_action_matrix[user.user_label-1][x][y] = 0
+                            y+=1
+                        x+=1
+        for user in all_embb_users:
+            if user.user_label not in associated_embb_users_ids:
+                x = 0
+                for box_action in box_actions[user.user_label-1]:
+                    box_actions[user.user_label-1][x] = 0
+                    x+=1
+
+        resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
+        resource_block_action_matrix = resource_block_action_matrix.squeeze()
+        action_space_dict = {
+            'box_actions': box_actions,
+            'binary_actions': resource_block_action_matrix
+        }
+        #print(resource_block_action_matrix)
+    
         return action
+    
+    def apply_resource_allocation_constraint(self,action):
+        box_actions = action['box_actions']
+        binary_actions = action['binary_actions']
+        #matrix = [[[random.uniform(0, 1) for _ in range(6)] for _ in range(2)] for _ in range(3)]
+        #matrix = np.array(matrix)
+        #print('matrix')
+        #print(matrix)
+        resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
+        resource_block_action_matrix_size = self.number_of_users*self.time_divisions_per_slot*self.num_allocate_RB_upper_bound
+        #resource_block_action_matrix = resource_block_action_matrix.squeeze()
+        #print(resource_block_action_matrix[:,:,0])
+        for z in range(0,self.num_allocate_RB_upper_bound):
+            column_array = resource_block_action_matrix[:,:,z]
+            column_array = column_array.reshape(1,self.number_of_users*self.time_divisions_per_slot)
+            column_array = column_array.squeeze()
+            sorted_column_array = np.sort(column_array)[::-1]
+            first_largest_num = sorted_column_array[0]
+            second_largest_num = sorted_column_array[1]
+            index_first_largest_num = np.where(column_array==first_largest_num)[0][0]
+            index_second_largest_num = np.where(column_array==second_largest_num)[0][0]
+            count = 0
+            for x in range(0,self.number_of_users):
+                for y in range(0,(self.time_divisions_per_slot)):
+                    if count == index_first_largest_num or count == index_second_largest_num:
+                        resource_block_action_matrix[x,y,z] = 1
+                    else:
+                        resource_block_action_matrix[x,y,z] = 0
+                    count+=1
+
+        all_embb_users = []
+   
+        for user in self.SBS.all_users:
+            if user.type_of_user_id == 0:
+                all_embb_users.append(user)
+
+        associated_embb_users_ids = []
+        for embb_user in self.eMBB_Users:
+            associated_embb_users_ids.append(embb_user.user_label)
+
+        for user in all_embb_users:
+                x = 0
+                if user.user_label not in associated_embb_users_ids:
+                    for time_block in resource_block_action_matrix[user.user_label-1]:
+                        y = 0
+                        for freq_block in time_block:
+                            resource_block_action_matrix[user.user_label-1][x][y] = 0
+                            y+=1
+                        x+=1
+        for user in all_embb_users:
+            if user.user_label not in associated_embb_users_ids:
+                x = 0
+                for box_action in box_actions[user.user_label-1]:
+                    box_actions[user.user_label-1][x] = 0
+                    x+=1
+
+        # print('box actions')
+        # print(box_actions)
+
+        # print('resource_block_action_matrix')
+        # print(resource_block_action_matrix)
+
+        resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
+        resource_block_action_matrix = resource_block_action_matrix.squeeze()
+        action_space_dict = {
+            'box_actions': box_actions,
+            'binary_actions': resource_block_action_matrix
+        }
+        #print(resource_block_action_matrix)
+        return action_space_dict
+
 
     def user_binary_resource_allocations(self,user_resource_block_allocations):
         user_id = 0
@@ -220,6 +378,9 @@ class NetworkEnv(gym.Env):
             user_id = eMBB_user.eMBB_UE_label
             
     def step(self,action):
+        #g = self.reshape_action_space_for_model(action)
+        #print('action reshaped')
+        #print(g)
         #.self.selected_actions =
         #print('------------')
         #f = self.reshape_action_space_for_model(action)
@@ -234,7 +395,7 @@ class NetworkEnv(gym.Env):
         #user_resource_block_allocations = user_resource_block_allocations.reshape(self.time_divisions_per_slot,self.num_allocate_RB_upper_bound)
  
 
-        resource_block_allocation_penalty = self.check_resource_block_allocation_constraint(binary_actions)
+        self.check_resource_block_allocation_constraint(binary_actions)
     
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
     
@@ -258,23 +419,27 @@ class NetworkEnv(gym.Env):
         #print(" ")
         #print("Action before interpolation")
         #print(action)
-        box_action = np.transpose(box_action)
+        #box_action = np.transpose(box_action)
         #print("Action before interpolation transposed")
         #print(action)
         reward = 0
+
         #collect offload decisions actions 
-        offload_decisions_actions = box_action[self.offload_decisions_label]
-        offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
+        num_offloading_actions = int(self.box_action_space_len/self.number_of_box_actions)
+
+        num_power_action = num_offloading_actions
+
+        offload_decisions_actions = box_action[0:num_offloading_actions]
+     
+        #offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
 
         offload_decisions_actions_mapped = []
         for offload_decision in offload_decisions_actions:
             offload_decision_mapped = interp(offload_decision,[0,1],[self.min_offload_decision,self.max_offload_decision])
             offload_decisions_actions_mapped.append(offload_decision_mapped)
         
-       
-         #collect trasmit powers allocations actions
-        transmit_power_actions = box_action[self.allocate_transmit_powers_label]
-        transmit_power_actions = transmit_power_actions[0:self.number_of_eMBB_users]
+        transmit_power_actions = box_action[num_offloading_actions:num_offloading_actions*self.number_of_box_actions]
+        #transmit_power_actions = transmit_power_actions[0:self.number_of_eMBB_users]
 
         transmit_power_actions_mapped = []
 
@@ -282,14 +447,19 @@ class NetworkEnv(gym.Env):
             transmit_power_action_mapped = interp(transmit_power_action,[0,1],[self.min_transmit_power_db,self.max_transmit_power_db])
             transmit_power_actions_mapped.append(transmit_power_action_mapped)
 
-        self.selected_powers.append(transmit_power_actions_mapped[0])
+        #self.selected_powers.append(transmit_power_actions_mapped[0])
         
-
+    
         #binary_actions = action['binary_actions']
         #resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
     
         RB_allocation_actions = resource_block_action_matrix 
-      
+        RB_sum_allocations = []
+        for RB_allocation_action in RB_allocation_actions:
+            RB_sum_allocations.append(sum(RB_allocation_action ))
+
+
+        #print(RB_allocation_actions)
         #RB_allocation_actions = RB_allocation_actions[0:self.number_of_eMBB_users]
         #RB_allocation_actions_mapped = []
         #print('RB_allocation_actions', RB_allocation_actions)
@@ -304,12 +474,12 @@ class NetworkEnv(gym.Env):
         #self.selected_actions.append(RB_allocation_actions_mapped)
         
         #self.selected_actions.append(transmit_power_actions_mapped)
+        
         #collect the final action - number of URLLC users per RB
         
         #print('Action after interpolation transposed')
-        #offload_decisions_actions_mapped = [0.9]#[0, 0, 0.5, 0.5, 1, 1, 1]
-        #transmit_power_actions_mapped = [400]#,20,20,20,20,20,20]
-        #transmit_power_actions_mapped = [30]#,20,20,20,20,20,20]
+        #offload_decisions_actions_mapped = [0.]#[0, 0, 0.5, 0.5, 1, 1, 1]
+        #transmit_power_actions_mapped = [50]#,20,20,20,20,20,20]
         #RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
         #print(RB_allocation_actions)
         #RB_allocation_actions_mapped = [6]#,10,15,15,20,20,20]
@@ -324,10 +494,13 @@ class NetworkEnv(gym.Env):
         #print(' ')
         #print("number_URLLC_Users_per_RB_action")
         #print(number_URLLC_Users_per_RB_action_mapped)
-        self.offload_decisions = offload_decision_mapped
+        self.offload_decisions = offload_decisions_actions_mapped
         self.powers = transmit_power_actions_mapped
-        self.subcarriers = sum(RB_allocation_actions[0])
+        self.subcarriers = RB_sum_allocations
         self.RB_allocation_matrix = RB_allocation_actions
+
+        #print('self.offload decisions')
+        #print(offload_decision_mapped)
 
         #Perform Actions
         self.SBS.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
@@ -371,14 +544,14 @@ class NetworkEnv(gym.Env):
         #print('')
        
 
-        self.SBS1.receive_offload_packets(self.eMBB_Users)
-        self.SBS1.calculate_achieved_total_system_energy_consumption(self.eMBB_Users)
-        self.SBS1.calculate_achieved_total_system_processing_delay(self.eMBB_Users)
-        self.SBS1.calculate_achieved_total_rate_eMBB_users(self.eMBB_Users)
-        self.SBS1.calculate_achieved_system_energy_efficiency()
-        system_reward, reward, self.total_energy,self.total_rate = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users,self.Communication_Channel_1)
+        self.SBS.receive_offload_packets(self.eMBB_Users)
+        self.SBS.calculate_achieved_total_system_energy_consumption(self.eMBB_Users)
+        self.SBS.calculate_achieved_total_system_processing_delay(self.eMBB_Users)
+        self.SBS.calculate_achieved_total_rate_eMBB_users(self.eMBB_Users)
+        self.SBS.calculate_achieved_system_energy_efficiency()
+        system_reward, reward, self.total_energy,self.total_rate = self.SBS.calculate_achieved_system_reward(self.eMBB_Users,self.URLLC_Users,self.Communication_Channel_1)
     
-        reward = [x + resource_block_allocation_penalty for x in reward]
+        #reward = [x + resource_block_allocation_penalty for x in reward]
        
         
         #print('Reward')
@@ -387,7 +560,7 @@ class NetworkEnv(gym.Env):
         #mapped_reward = interp(reward,[0,1000],[7200000000,7830000000])
         #Update game state after performing actions
         for eMBB_User in self.eMBB_Users:
-            eMBB_User.calculate_distance_from_SBS(self.SBS1.x_position, self.SBS1.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
+            eMBB_User.calculate_distance_from_SBS(self.SBS.x_position, self.SBS.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
             eMBB_User.calculate_channel_gain(self.Communication_Channel_1)
             eMBB_User.harvest_energy()
             eMBB_User.compute_battery_energy_level()
@@ -399,7 +572,7 @@ class NetworkEnv(gym.Env):
             urllc_user.generate_task(self.Communication_Channel_1)
             urllc_user.split_tasks()
 
-        observation_channel_gains, observation_battery_energies, observation_offloading_queue_lengths, observation_local_queue_lengths, num_urllc_arriving_packets = self.SBS1.collect_state_space(self.eMBB_Users, self.URLLC_Users)
+        observation_channel_gains, observation_battery_energies, observation_offloading_queue_lengths, observation_local_queue_lengths, num_urllc_arriving_packets = self.SBS.collect_state_space(self.eMBB_Users, self.URLLC_Users,  self.Communication_Channel_1)
         
         #observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
         #observation_channel_gains = np.array(observation_channel_gains, dtype=np.float32)
@@ -458,7 +631,7 @@ class NetworkEnv(gym.Env):
         #observation_battery_energies = np.transpose(observation_battery_energies)
         observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,num_urllc_arriving_packets)) #observation_channel_gains.
         #print('observation matrix')
-        
+        observation = self.reshape_observation_space_for_model(observation)
        
 
         done = self.check_timestep()
@@ -468,7 +641,7 @@ class NetworkEnv(gym.Env):
         self.steps+=1
         #print('Timestep: ', self.steps)
         #print('reward: ', reward)
-        self.rewards.append(reward[0])
+        self.rewards.append(reward)
         #print(' ')
         
         penalty_per_RB = -(1/self.num_allocate_RB_upper_bound)
@@ -509,7 +682,9 @@ class NetworkEnv(gym.Env):
         #dones[len(dones)-1] = 1
         #print(reward)
         #print('')
-        return observation,reward,dones,info
+        return observation,reward,done,info
+    
+    
     
     def reset(self):
         self.steps = 0
@@ -538,8 +713,6 @@ class NetworkEnv(gym.Env):
         self.resource_block_allocation_matrix = []
         self.resource_allocation_constraint_violation = 0
 
-        self.eMBB_Users = self.SBS.embb_users
-        self.URLLC_Users = self.SBS.urllc_users
        
         for eMBB_User in self.eMBB_Users:
             #eMBB_User.set_properties_UE()
@@ -550,22 +723,23 @@ class NetworkEnv(gym.Env):
             URLLC_User.set_properties_UE()
             URLLC_User.set_properties_URLLC()
 
-
         #self.eMBB_Users.clear()
         #self.URLLC_Users.clear()
+        self.eMBB_Users = self.SBS.embb_users
+        self.URLLC_Users = self.SBS.urllc_users
         #self.group_users()
 
-        self.SBS1.associate_users(self.eMBB_Users, self.URLLC_Users)
+        #self.SBS.associate_users(self.eMBB_Users, self.URLLC_Users)
         self.Communication_Channel_1.set_properties()
 
-        self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
+        self.Communication_Channel_1.get_SBS_and_Users(self.SBS)
         self.Communication_Channel_1.initiate_RBs()
-        self.SBS1.allocate_resource_blocks_URLLC(self.Communication_Channel_1, self.URLLC_Users)
+        self.SBS.allocate_resource_blocks_URLLC(self.Communication_Channel_1, self.URLLC_Users)
         
         info = {'reward': 0}
         #print('battery enegy: ', self.SBS1.system_state_space[4])
         #observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
-        observation_channel_gains, observation_battery_energies, observation_offloading_queue_lengths, observation_local_queue_lengths, num_urllc_arriving_packets = self.SBS1.collect_state_space(self.eMBB_Users, self.URLLC_Users)
+        observation_channel_gains, observation_battery_energies, observation_offloading_queue_lengths, observation_local_queue_lengths, num_urllc_arriving_packets = self.SBS.collect_state_space(self.eMBB_Users, self.URLLC_Users, self.Communication_Channel_1)
         #observation_channel_gains = np.array(observation_channel_gains, dtype=np.float32)
         #observation_battery_energies = np.array(observation_battery_energies, dtype=np.float32)
         #print('Observation before transpose')
@@ -580,9 +754,8 @@ class NetworkEnv(gym.Env):
         col = 0
         min_value = 0
         max_value = 0
-        #print('observation_channel_gains: ', observation_channel_gains)
+  
         for channel_gains in observation_channel_gains:
-            #print('channel gains: ', channel_gains)
             for channel_gain in channel_gains:
                 observation_channel_gains[row][col] = interp(observation_channel_gains[row][col],[self.channel_gain_min,self.channel_gain_max],[0,1])
                 col+=1
@@ -608,11 +781,11 @@ class NetworkEnv(gym.Env):
         #observation_channel_gains = np.transpose(observation_channel_gains)
         #observation_battery_energies = np.transpose(observation_battery_energies)
         observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,num_urllc_arriving_packets)) #observation_channel_gains.
-       
+        observation = self.reshape_observation_space_for_model(observation)
         reward = 0
         done = 0
         return observation
-
+       
     def render(self, mode='human'):
         pass
 
@@ -629,10 +802,10 @@ class NetworkEnv(gym.Env):
         print('')
         
         #Users
-        #self.eMBB_UE_1 = eMBB_UE(1,2,100,600)
+        self.eMBB_UE_1 = eMBB_UE(1,2,100,600)
 
-        #if len(self.eMBB_Users) == 0:
-        #    self.eMBB_Users.append(self.eMBB_UE_1)
+        if len(self.eMBB_Users) == 0:
+           self.eMBB_Users.append(self.eMBB_UE_1)
         # self.eMBB_UE_2 = eMBB_UE(2,100,600)
         # self.eMBB_UE_3 = eMBB_UE(3,100,600)
 
