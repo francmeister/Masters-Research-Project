@@ -77,6 +77,8 @@ class GLOBAL_ENTITY():
                 user_associations.append(user_association)
 
         input_features = np.array(input_features).reshape(max_samples,num_input_features*num_users)
+        print('input_features.shape')
+        print(input_features.shape)
         user_associations = np.array(user_associations).reshape(max_samples,num_users)
         sample_rewards = np.array(sample_rewards)
         # print(user_associations)
