@@ -41,7 +41,7 @@ class CustomBarrier:
             else:
                 # Wait for aggregation to complete
                 print("Access Point: ", access_point_number, " waiting for reassociations")
-                SBS_association = env.SBS.predict_associations()
+                SBS_association = env.SBS.predict_future_association()
                 global_entity.acquire_local_user_associations(SBS_association)
                 global_entity.calculate_global_reward(episode_reward)
                 self.condition.wait()

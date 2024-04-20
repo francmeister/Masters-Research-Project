@@ -33,6 +33,10 @@ class SBS():
 
     def associate_users(self, users):
         self.users = copy.deepcopy(users)
+        print('SBS_label')
+        print(self.SBS_label)
+        print('number of users')
+        print(self.users)
         self.embb_users = []
         self.urllc_users = []
         for user in self.users:
@@ -56,7 +60,11 @@ class SBS():
                         self.users.append(user)
 
                 count+=1
-    
+
+        print('SBS_label')
+        print(self.SBS_label)
+        print('number of users')
+        print(self.users)
         for user in self.users:
             if user.type_of_user_id == 0:
                 self.embb_users.append(user)
