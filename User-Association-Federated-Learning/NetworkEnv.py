@@ -278,7 +278,7 @@ class NetworkEnv(gym.Env):
         print('resource_block_action_matrix')
         print(resource_block_action_matrix)
         print('len(resource_block_action_matrix)')
-        print(resource_block_action_matrix)
+        print(len(resource_block_action_matrix))
         for user in all_embb_users:
                 x = 0
                 if user.user_label not in associated_embb_users_ids:
