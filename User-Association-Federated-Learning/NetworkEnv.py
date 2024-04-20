@@ -141,8 +141,11 @@ class NetworkEnv(gym.Env):
         reshaped_observation_for_model_training = self.reshape_observation_space_for_model(sample_observation)
 
         self.action_space_dim = len(reshaped_action_for_model_training)#self.box_action_space.shape[1] + (self.num_allocate_RB_upper_bound*self.time_divisions_per_slot)
-
+        print('self.action_space_dim')
+        print(self.action_space_dim)
         self.observation_space_dim = len(reshaped_observation_for_model_training)
+        print('self.observation_space_dim')
+        print(self.observation_space_dim)
       
         self.action_space_high = 1
         self.action_space_low = 0
