@@ -61,15 +61,13 @@ class SBS():
 
                 count+=1
 
-        print('SBS_label----: ', self.SBS_label, ' Number of users----: ', len(self.users))
 
         for user in self.users:
             if user.type_of_user_id == 0:
                 self.embb_users.append(user)
             elif user.type_of_user_id == 1:
                 self.urllc_users.append(user)    
-        print('SBS_label----: ', self.SBS_label, ' Number of embb users----: ', len(self.embb_users))
-        print('SBS_label----: ', self.SBS_label, ' Number of urllc_users----: ', len(self.urllc_users))
+   
 
     def initialize_DNN_model(self,global_model):
         self.access_point_model.load_state_dict(global_model.state_dict()) 
