@@ -260,7 +260,7 @@ class SBS():
             self.buffer_memory.pop(0)
 
     def collect_state_space(self, eMBB_Users,urllc_users, Communication_Channel_1):
-        total_gain = [np.zeros(Communication_Channel_1.num_allocate_RBs_upper_bound*2)]
+        total_gain = np.zeros(Communication_Channel_1.num_allocate_RBs_upper_bound*2)
         self.system_state_space_RB_channel_gains.clear()
         self.system_state_space_battery_energies.clear()
         channel_gains = []
