@@ -616,6 +616,8 @@ class NetworkEnv(gym.Env):
             observation_local_queue_lengths[row] = interp(observation_local_queue_lengths[row],[self.min_lc_queue_length,self.max_lc_queue_length],[0,1])
             row+=1
 
+        print('observation_channel_gains')
+        print(observation_channel_gains)
         observation_channel_gains = np.array(observation_channel_gains).squeeze()
         
         observation_battery_energies = np.array(observation_battery_energies)
