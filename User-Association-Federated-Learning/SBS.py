@@ -61,10 +61,8 @@ class SBS():
 
                 count+=1
 
-        # print('SBS_label')
-        # print(self.SBS_label)
-        # print('number of users')
-        # print(self.users)
+        print('SBS_label----: ', self.SBS_label, ' Number of users----: ', len(self.users))
+
         for user in self.users:
             if user.type_of_user_id == 0:
                 self.embb_users.append(user)
