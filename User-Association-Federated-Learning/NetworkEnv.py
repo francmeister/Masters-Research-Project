@@ -7,6 +7,7 @@ from Communication_Channel import Communication_Channel
 from SBS import SBS
 from numpy import interp
 import pandas as pd
+import copy
 
 pygame.init()
 
@@ -712,8 +713,8 @@ class NetworkEnv(gym.Env):
         self.min_off_queue_length = 0
         self.resource_block_allocation_matrix = []
         self.resource_allocation_constraint_violation = 0
-        self.eMBB_Users = self.SBS.embb_users
-        self.URLLC_Users = self.SBS.urllc_users
+        self.eMBB_Users = copy.deepcopy(self.SBS.embb_users)
+        self.URLLC_Users = copy.deepcopy(self.SBS.urllc_users)
 
         print('SBS: ', self.SBS.SBS_label, 'Number of users: ', len(self.eMBB_Users)+len(self.URLLC_Users))
        

@@ -528,8 +528,8 @@ class SBS():
         self.URLLC_User_reliability_requirement_revenue = 5
         self.clock_frequency = 2
         self.work_load = 0
-        self.eMBB_UEs = []
-        self.URLLC_UEs = []
+        #self.eMBB_UEs = []
+        #self.URLLC_UEs = []
         self.achieved_users_energy_consumption = 0
         self.achieved_users_channel_rate = 0
         self.fairness_index = 0
