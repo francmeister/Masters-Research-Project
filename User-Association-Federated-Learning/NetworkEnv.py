@@ -151,6 +151,7 @@ class NetworkEnv(gym.Env):
         self.STEP_LIMIT = 30
         self.sleep = 0
         self.steps = 0
+        self.episode_reward = 0
 
     def reshape_observation_space_for_model(self,observation_space):
         observation_space = np.transpose(observation_space)
@@ -643,6 +644,7 @@ class NetworkEnv(gym.Env):
         #print('Timestep: ', self.steps)
         #print('reward: ', reward)
         self.rewards.append(reward)
+        self.episode_reward+=reward
         #print(' ')
         
         penalty_per_RB = -(1/self.num_allocate_RB_upper_bound)
@@ -688,6 +690,7 @@ class NetworkEnv(gym.Env):
     
     
     def reset(self):
+        self.episode_reward = 0
         self.steps = 0
         self.SBS.set_properties()
         self.OS_channel_gain_label = 0
