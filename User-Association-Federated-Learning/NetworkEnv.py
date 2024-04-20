@@ -716,7 +716,7 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users = copy.deepcopy(self.SBS.embb_users)
         self.URLLC_Users = copy.deepcopy(self.SBS.urllc_users)
 
-        print('SBS: ', self.SBS.SBS_label, 'Number of users: ', len(self.eMBB_Users)+len(self.URLLC_Users))
+        print('SBS: ', self.SBS.SBS_label, 'Number of users: ', len(self.eMBB_Users)+len(self.URLLC_Users), 'embb users: ',len(self.eMBB_Users), 'urllc users: ', len(self.URLLC_Users))
        
         for eMBB_User in self.eMBB_Users:
             #eMBB_User.set_properties_UE()
