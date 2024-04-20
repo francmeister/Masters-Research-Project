@@ -1,4 +1,5 @@
 import threading
+import numpy as np
 
 class CustomBarrier:
     def __init__(self, num_threads):
@@ -12,7 +13,7 @@ class CustomBarrier:
             if self.count == self.num_threads:
                 # All threads have reached the aggregation point
                 # Perform the aggregation here
-                print("Performing aggregation. Round: ", global_entity.rounds)
+                print("Performing model aggregation. Round: ", global_entity.rounds)
                 global_entity.aggregate_local_models()
                 # Reset the count for the next iteration
                 self.count = 0
@@ -32,9 +33,9 @@ class CustomBarrier:
                 # Perform the aggregation here
                 print("Performing reassociations")
                 user_association = global_entity.aggregate_user_associations()
-                print('aggreagated user_association')
-                print(user_association)
-                env.SBS.reassociate_users(user_association)
+                #print('aggreagated user_association')
+                #print(user_association)
+                env.SBS.reassociate_users(np.array([1,2,3,3,2,1,2,2,3,1,3,2]))
                 env.SBS.populate_buffer_memory_sample_with_reward(global_entity.global_reward)
                 # Reset the count for the next iteration
                 self.count = 0
