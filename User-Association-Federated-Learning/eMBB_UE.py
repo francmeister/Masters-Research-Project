@@ -302,8 +302,6 @@ class eMBB_UE(User_Equipment):
     def collect_state(self):
         #self.cpu_clock_frequency = (random.randint(5,5000))
         offloading_queue_length, local_queue_length = self.calculate_queue_lengths()
-        print('self.total_gain')
-        print(self.total_gain)
         self.user_state_space.collect(self.total_gain.squeeze(),self.previous_slot_battery_energy,offloading_queue_length, local_queue_length)
         #self.user_state_space.collect(self.total_gain,self.communication_queue,self.battery_energy_level,self.communication_queue[0].QOS_requirement,self.cpu_clock_frequency)
         return self.user_state_space

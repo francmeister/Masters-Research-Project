@@ -291,11 +291,6 @@ class NetworkEnv(gym.Env):
                     box_actions[user.user_label-1][x] = 0
                     x+=1
 
-        print('resource_block_action_matrix')
-        print(resource_block_action_matrix)
-        print('len(resource_block_action_matrix)')
-        print(len(resource_block_action_matrix))
-
         resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
         action_space_dict = {
@@ -615,9 +610,7 @@ class NetworkEnv(gym.Env):
         for local_queue_length in observation_local_queue_lengths:
             observation_local_queue_lengths[row] = interp(observation_local_queue_lengths[row],[self.min_lc_queue_length,self.max_lc_queue_length],[0,1])
             row+=1
-
-        print('observation_channel_gains')
-        print(observation_channel_gains)
+    
         observation_channel_gains = np.array(observation_channel_gains).squeeze()
         
         observation_battery_energies = np.array(observation_battery_energies)
