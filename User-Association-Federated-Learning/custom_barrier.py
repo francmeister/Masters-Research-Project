@@ -32,6 +32,8 @@ class CustomBarrier:
                 # Perform the aggregation here
                 print("Performing reassociations")
                 user_association = global_entity.aggregate_user_associations()
+                print('aggreagated user_association')
+                print(user_association)
                 env.SBS.reassociate_users(user_association)
                 env.SBS.populate_buffer_memory_sample_with_reward(global_entity.global_reward)
                 # Reset the count for the next iteration
