@@ -50,7 +50,7 @@ class SBS():
         print(user_association_matrix)
         self.users.clear()
         self.embb_users.clear()
-        self.urllc_users.clear
+        self.urllc_users.clear()
       
         for user in self.all_users:
             count = 0
@@ -69,7 +69,7 @@ class SBS():
             elif user.type_of_user_id == 1:
                 self.urllc_users.append(user)    
         print('SBS_label----: ', self.SBS_label, ' Number of embb users----: ', len(self.embb_users))
-        print('SBS_label----: ', self.SBS_label, ' Number of embb users----: ', len(self.urllc_users))
+        print('SBS_label----: ', self.SBS_label, ' Number of urllc_users----: ', len(self.urllc_users))
 
     def initialize_DNN_model(self,global_model):
         self.access_point_model.load_state_dict(global_model.state_dict()) 
