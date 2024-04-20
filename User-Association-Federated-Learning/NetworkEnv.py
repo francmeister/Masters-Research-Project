@@ -141,11 +141,8 @@ class NetworkEnv(gym.Env):
         reshaped_observation_for_model_training = self.reshape_observation_space_for_model(sample_observation)
 
         self.action_space_dim = len(reshaped_action_for_model_training)#self.box_action_space.shape[1] + (self.num_allocate_RB_upper_bound*self.time_divisions_per_slot)
-        print('self.action_space_dim')
-        print(self.action_space_dim)
         self.observation_space_dim = len(reshaped_observation_for_model_training)
-        print('self.observation_space_dim')
-        print(self.observation_space_dim)
+ 
       
         self.action_space_high = 1
         self.action_space_low = 0
@@ -715,7 +712,10 @@ class NetworkEnv(gym.Env):
         self.min_off_queue_length = 0
         self.resource_block_allocation_matrix = []
         self.resource_allocation_constraint_violation = 0
+        self.eMBB_Users = self.SBS.embb_users
+        self.URLLC_Users = self.SBS.urllc_users
 
+        print('SBS: ', self.SBS.SBS_label, 'Number of users: ', len(self.eMBB_Users)+len(self.URLLC_Users))
        
         for eMBB_User in self.eMBB_Users:
             #eMBB_User.set_properties_UE()
@@ -728,8 +728,6 @@ class NetworkEnv(gym.Env):
 
         #self.eMBB_Users.clear()
         #self.URLLC_Users.clear()
-        self.eMBB_Users = self.SBS.embb_users
-        self.URLLC_Users = self.SBS.urllc_users
         #self.group_users()
 
         #self.SBS.associate_users(self.eMBB_Users, self.URLLC_Users)
