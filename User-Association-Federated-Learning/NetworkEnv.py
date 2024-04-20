@@ -34,7 +34,7 @@ class NetworkEnv(gym.Env):
         #self.access_point_id = access_point_id
         self.max_offload_decision = 1
         self.min_offload_decision = 0
-        self.number_of_eMBB_users = len(self.eMBB_Users)
+        #self.number_of_eMBB_users = len(self.eMBB_Users)
         self.number_of_users = self.number_of_eMBB_users
         self.num_allocate_RB_upper_bound = self.Communication_Channel_1.num_allocate_RBs_upper_bound
         self.num_allocate_RB_lower_bound = self.Communication_Channel_1.num_allocate_RBs_lower_bound
