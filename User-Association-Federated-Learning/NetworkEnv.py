@@ -275,10 +275,6 @@ class NetworkEnv(gym.Env):
         for embb_user in self.eMBB_Users:
             associated_embb_users_ids.append(embb_user.user_label)
 
-        print('resource_block_action_matrix')
-        print(resource_block_action_matrix)
-        print('len(resource_block_action_matrix)')
-        print(len(resource_block_action_matrix))
         for user in all_embb_users:
                 x = 0
                 if user.user_label not in associated_embb_users_ids:
@@ -294,6 +290,11 @@ class NetworkEnv(gym.Env):
                 for box_action in box_actions[user.user_label-1]:
                     box_actions[user.user_label-1][x] = 0
                     x+=1
+
+        print('resource_block_action_matrix')
+        print(resource_block_action_matrix)
+        print('len(resource_block_action_matrix)')
+        print(len(resource_block_action_matrix))
 
         resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
