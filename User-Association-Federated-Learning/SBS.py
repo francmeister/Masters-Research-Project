@@ -412,6 +412,7 @@ class SBS():
             delay_reward = eMBB_User.calculate_delay_penalty()
             battery_energy_reward = eMBB_User.energy_consumption_reward()
             energy_efficiency_reward = eMBB_User.calculate_energy_efficiency()
+            print('SBS: ', self.SBS_label, 'embb user: ',eMBB_User.user_label, 'energy efficiency: ', energy_efficiency_reward )
             resource_allocation_reward = eMBB_User.calculate_resource_allocation_reward(communication_channel)
             queue_delay_reward,delay = eMBB_User.calculate_queuing_delays()
             tasks_dropped = eMBB_User.tasks_dropped
