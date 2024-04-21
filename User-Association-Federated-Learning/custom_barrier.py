@@ -1,5 +1,6 @@
 import threading
 import numpy as np
+import copy
 
 class CustomBarrier:
     def __init__(self, num_threads):
@@ -9,6 +10,7 @@ class CustomBarrier:
         self.count = 0
         self.condition = threading.Condition()
         self.local_associations = []
+        self.reassociations = []
 
     def wait_for_aggregation(self, global_entity, local_model, access_point_number):
         with self.condition:
@@ -50,19 +52,21 @@ class CustomBarrier:
                 self.local_associations = []
                 # print('env.SBS.SBS_label')
                 # print(env.SBS.SBS_label)
-                env.SBS.reassociate_users(user_association)
+                self.reassociations.clear()
+                self.reassociations = copy.deepcopy(user_association)
+                #env.SBS.reassociate_users(user_association)
                 #env.SBS.reassociate_users(np.array([1,2,3,3,2,1,2,2,3,1,3,2]))
-                env.SBS.populate_buffer_memory_sample_with_reward(global_entity.global_reward)
+                #env.SBS.populate_buffer_memory_sample_with_reward(global_entity.global_reward)
                 # Reset the count for the next iteration
                 self.count = 0
                 # Notify all threads that aggregation is complete
                 self.condition.notify_all()
             else:
                 # Wait for aggregation to complete
-                print("Access Point: ", access_point_number, " waiting for reassociations")
+                #print("Access Point: ", access_point_number, " waiting for reassociations")
                 SBS_association = env.SBS.predict_future_association(access_point_radius)
                 self.local_associations.append(SBS_association)
                 global_entity.acquire_local_user_associations(SBS_association)
                 global_entity.calculate_global_reward(episode_reward)
-                print('env.SBS.SBS_label: ', env.SBS.SBS_label)
+                #print('env.SBS.SBS_label: ', env.SBS.SBS_label)
                 self.condition.wait()
