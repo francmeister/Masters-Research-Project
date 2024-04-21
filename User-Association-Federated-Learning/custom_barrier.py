@@ -45,6 +45,8 @@ class CustomBarrier:
                 self.local_associations = np.array(self.local_associations)
                 print('self.local_associations')
                 print(self.local_associations)
+                print('aggregated user_association')
+                print(user_association)
                 self.local_associations = []
                 env.SBS.reassociate_users(user_association)
                 #env.SBS.reassociate_users(np.array([1,2,3,3,2,1,2,2,3,1,3,2]))
