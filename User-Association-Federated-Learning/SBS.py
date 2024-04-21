@@ -47,7 +47,7 @@ class SBS():
 
 
     def reassociate_users(self,user_association_matrix):
-        print(user_association_matrix)
+        #print(user_association_matrix)
         self.users.clear()
         self.embb_users.clear()
         self.urllc_users.clear()
@@ -216,8 +216,8 @@ class SBS():
         associations_prediction_mapped = []
         for prediction in association_prediction:
             associations_prediction_mapped.append(round(interp(prediction,[0,1],[1,self.num_access_points])))
-        # print('associations_prediction_mapped')
-        # print(associations_prediction_mapped)
+        print('associations_prediction_mapped')
+        print(associations_prediction_mapped)
 
         associations_prediction_mapped_for_global_model = copy.deepcopy(associations_prediction_mapped)
         associated_users_ids = []
