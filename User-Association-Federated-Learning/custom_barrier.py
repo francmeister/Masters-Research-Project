@@ -4,6 +4,8 @@ import numpy as np
 class CustomBarrier:
     def __init__(self, num_threads):
         self.num_threads = num_threads
+        print('self.num_threads')
+        print(self.num_threads)
         self.count = 0
         self.condition = threading.Condition()
         self.local_associations = []
@@ -29,7 +31,7 @@ class CustomBarrier:
     def wait_for_reassociations(self, env, global_entity, access_point_number, episode_reward,access_point_radius):
         with self.condition:
             self.count += 1
-            if self.count == self.num_threads:
+            if self.count == self.num_threads+1:
                 # All threads have reached the aggregation point
                 # Perform the aggregation here
                 print("Performing reassociations")
