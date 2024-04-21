@@ -115,6 +115,8 @@ class GLOBAL_ENTITY():
 
     def aggregate_user_associations(self):
         local_associations = np.array(self.local_associations)
+        print('local_associations')
+        print(local_associations)
         local_associations = np.sum(local_associations,axis=0)
         #self.local_associations = local_associations
  
