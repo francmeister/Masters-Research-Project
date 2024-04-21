@@ -20,12 +20,12 @@ from sklearn.model_selection import train_test_split
 import torch.nn.functional as F
 
 class GLOBAL_ENTITY():
-    def __init__(self, num_clients):
+    def __init__(self, num_access_point):
         #User_Equipment.__init__(self)
         self.global_entity_id = 1
         self.global_memory = DNN_TRAINING_MEMORY()
         self.local_models = []
-        self.num_clients = num_clients
+        self.num_access_point = num_access_point
         self.rounds = 0
         self.local_associations = []
         self.global_reward = 0
@@ -124,7 +124,7 @@ class GLOBAL_ENTITY():
         self.local_associations_reset_count+=1
         print('local_associations_reset_count')
         print(self.local_associations_reset_count)
-        if self.local_associations_reset_count >= self.num_clients:
+        if self.local_associations_reset_count >= self.num_access_point:
             print('cleared memory')
             self.local_associations.clear()
             self.local_associations_reset_count = 0
