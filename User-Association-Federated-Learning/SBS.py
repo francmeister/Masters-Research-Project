@@ -251,7 +251,7 @@ class SBS():
         # print(associations_prediction_mapped)
         associations_prediction_mapped = np.array(associations_prediction_mapped)
         self.buffer_memory.append((preprocessed_inputs, associations_prediction_mapped, 0))
-    	print('SBS: ', self.SBS_label, 'associations_prediction_mapped_for_global_model: ', associations_prediction_mapped_for_global_model)
+        print('SBS: ', self.SBS_label, 'associations_prediction_mapped_for_global_model: ', associations_prediction_mapped_for_global_model)
         return associations_prediction_mapped_for_global_model
     
     def populate_buffer_memory_sample_with_reward(self,global_reward):
