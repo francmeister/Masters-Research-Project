@@ -56,7 +56,7 @@ class SBS():
         self.embb_users.clear()
         self.urllc_users.clear()
         associated_users = []
-        print('SBS: ', self.SBS_label, 'user association matrix: ', user_association_matrix)
+        #print('SBS: ', self.SBS_label, 'user association matrix: ', user_association_matrix)
         for user in self.all_users:
             count = 0
             for user1 in user_association_matrix:
@@ -132,7 +132,7 @@ class SBS():
         self.access_point_model.to(device)
         self.criterion = nn.MSELoss()
         self.optimizer = optim.Adam(self.access_point_model.parameters(), lr=0.001)
-        self.num_training_epochs = 500
+        self.num_training_epochs = 1
         x_train, y_train, sample_rewards = self.training_memory.sample(20)
         # print('len(x_train[0]): ', y_train[0])
         #print(len(x_train[0]))
