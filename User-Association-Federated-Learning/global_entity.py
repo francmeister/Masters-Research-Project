@@ -29,6 +29,7 @@ class GLOBAL_ENTITY():
         self.rounds = 0
         self.local_associations = []
         self.global_reward = 0
+        self.aggregate_count = 0
 
     def initialize_global_model(self,input_features_dim, output_features_dim):
         self.global_model = DNN(input_features_dim,output_features_dim)
@@ -94,17 +95,19 @@ class GLOBAL_ENTITY():
             self.local_models.clear()
 
     def aggregate_local_models(self):
-        self.rounds+=1
-        # Federated averaging
-        global_model_state = self.local_models[0].state_dict()
-        for model in self.local_models[1:]:
-            model_state = model.state_dict()
+        if self.aggregate_count == 0:
+            self.rounds+=1
+            # Federated averaging
+            global_model_state = self.local_models[0].state_dict()
+            for model in self.local_models[1:]:
+                model_state = model.state_dict()
+                for key in global_model_state.keys():
+                    global_model_state[key] += model_state[key]  # Accumulate the weights
+            # Calculate the average
             for key in global_model_state.keys():
-                global_model_state[key] += model_state[key]  # Accumulate the weights
-        # Calculate the average
-        for key in global_model_state.keys():
-            global_model_state[key] /= len(self.local_models)
-        self.global_model.load_state_dict(global_model_state)
+                global_model_state[key] /= len(self.local_models)
+            self.global_model.load_state_dict(global_model_state)
+            self.aggregate_count+=1
 
     def acquire_local_user_associations(self, associations):
         self.local_associations.append(associations)
@@ -123,6 +126,7 @@ class GLOBAL_ENTITY():
     def clear_local_user_associations(self):
         if len(self.local_associations) > 0:
             self.local_associations.clear()
+            self.aggregate_count = 0
 
     def calculate_global_reward(self, local_reward):
         self.global_reward+=local_reward
