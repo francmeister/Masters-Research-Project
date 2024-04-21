@@ -39,11 +39,15 @@ class SBS():
         # print(self.users)
         self.embb_users = []
         self.urllc_users = []
+        associated_users = []
         for user in self.users:
             if user.type_of_user_id == 0:
                 self.embb_users.append(user)
+                associated_users.append(user.user_label)
             elif user.type_of_user_id == 1:
                 self.urllc_users.append(user)
+
+        print('SBS: ', self.SBS_label, 'associated users for next time slot: ', associated_users)
 
 
     def reassociate_users(self,user_association_matrix):
@@ -51,6 +55,7 @@ class SBS():
         self.users.clear()
         self.embb_users.clear()
         self.urllc_users.clear()
+        associated_users = []
       
         for user in self.all_users:
             count = 0
@@ -65,8 +70,13 @@ class SBS():
         for user in self.users:
             if user.type_of_user_id == 0:
                 self.embb_users.append(user)
+                associated_users.append(user.user_label)
             elif user.type_of_user_id == 1:
-                self.urllc_users.append(user)    
+                self.urllc_users.append(user)   
+
+        print('SBS: ', self.SBS_label, 'associated users for next time slot: ', associated_users)
+
+         
    
 
     def initialize_DNN_model(self,global_model):

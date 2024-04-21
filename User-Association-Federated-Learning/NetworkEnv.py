@@ -726,7 +726,7 @@ class NetworkEnv(gym.Env):
             eMBB_User.set_properties_eMBB()
             eMBB_User.collect_state()
             associated_users.append(eMBB_User.user_label)
-        print('SBS: ', self.SBS.SBS_label, 'associated users: ', associated_users)
+        #print('SBS: ', self.SBS.SBS_label, 'associated users: ', associated_users)
 
         for URLLC_User in self.URLLC_Users:
             URLLC_User.set_properties_UE()
