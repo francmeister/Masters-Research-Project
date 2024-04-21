@@ -116,7 +116,7 @@ class GLOBAL_ENTITY():
         local_associations = np.sum(local_associations,axis=0)
         print('local_association after summing')
         print(local_associations)
-        return local_associations
+        #return local_associations
 
     def clear_local_user_associations(self):
         if len(self.local_associations) > 0:
