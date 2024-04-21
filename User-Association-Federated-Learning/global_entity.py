@@ -124,7 +124,7 @@ class GLOBAL_ENTITY():
         self.local_associations_reset_count+=1
         print('local_associations_reset_count')
         print(self.local_associations_reset_count)
-        if len(self.local_associations) > 0 and self.local_associations_reset_count >= self.num_clients:
+        if self.local_associations_reset_count >= self.num_clients:
             print('cleared memory')
             self.local_associations.clear()
             self.local_associations_reset_count = 0
