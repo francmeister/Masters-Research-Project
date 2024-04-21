@@ -30,6 +30,8 @@ class GLOBAL_ENTITY():
         self.local_associations = []
         self.global_reward = 0
         self.aggregate_count = 0
+        self.local_associations_reset_count = 0
+        self.global_reward_reset_count = 0
 
     def initialize_global_model(self,input_features_dim, output_features_dim):
         self.global_model = DNN(input_features_dim,output_features_dim)
@@ -119,15 +121,20 @@ class GLOBAL_ENTITY():
         return local_associations
 
     def clear_local_user_associations(self):
-        if len(self.local_associations) > 0:
+        self.local_associations_reset_count+=1
+        if len(self.local_associations) > 0 and self.local_associations_reset_count >= self.num_clients:
             self.local_associations.clear()
+            self.local_associations_reset_count = 0
             
 
     def calculate_global_reward(self, local_reward):
         self.global_reward+=local_reward
 
     def reset_global_reward(self):
-        self.global_reward = 0
+        self.global_reward_reset_count+=1
+        if self.global_reward_reset_count >= self.num_clients:
+            self.global_reward = 0
+            self.global_reward_reset_count = 0
 
 
 
