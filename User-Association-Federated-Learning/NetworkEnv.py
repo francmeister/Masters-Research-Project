@@ -718,13 +718,15 @@ class NetworkEnv(gym.Env):
         self.resource_allocation_constraint_violation = 0
         self.eMBB_Users = copy.deepcopy(self.SBS.embb_users)
         self.URLLC_Users = copy.deepcopy(self.SBS.urllc_users)
-
+        associated_users = []
         #print('SBS: ', self.SBS.SBS_label, 'Number of users: ', len(self.eMBB_Users)+len(self.URLLC_Users), 'embb users: ',len(self.eMBB_Users), 'urllc users: ', len(self.URLLC_Users))
        
         for eMBB_User in self.eMBB_Users:
             #eMBB_User.set_properties_UE()
             eMBB_User.set_properties_eMBB()
             eMBB_User.collect_state()
+            associated_users.append(eMBB_User.user_label)
+        print('SBS: ', self.SBS.SBS_label, 'associated users: ', associated_users)
 
         for URLLC_User in self.URLLC_Users:
             URLLC_User.set_properties_UE()
