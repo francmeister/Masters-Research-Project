@@ -267,31 +267,31 @@ class NetworkEnv(gym.Env):
                         resource_block_action_matrix[x,y,z] = 0
                     count+=1
 
-        all_embb_users = []
+        # all_embb_users = []
    
-        for user in self.SBS.all_users:
-            if user.type_of_user_id == 0:
-                all_embb_users.append(user)
+        # for user in self.SBS.all_users:
+        #     if user.type_of_user_id == 0:
+        #         all_embb_users.append(user)
 
-        associated_embb_users_ids = []
-        for embb_user in self.eMBB_Users:
-            associated_embb_users_ids.append(embb_user.user_label)
+        # associated_embb_users_ids = []
+        # for embb_user in self.eMBB_Users:
+        #     associated_embb_users_ids.append(embb_user.user_label)
 
-        for user in all_embb_users:
-                x = 0
-                if user.user_label not in associated_embb_users_ids:
-                    for time_block in resource_block_action_matrix[user.user_label-1]:
-                        y = 0
-                        for freq_block in time_block:
-                            resource_block_action_matrix[user.user_label-1][x][y] = 0
-                            y+=1
-                        x+=1
-        for user in all_embb_users:
-            if user.user_label not in associated_embb_users_ids:
-                x = 0
-                for box_action in box_actions[user.user_label-1]:
-                    box_actions[user.user_label-1][x] = 0
-                    x+=1
+        # for user in all_embb_users:
+        #         x = 0
+        #         if user.user_label not in associated_embb_users_ids:
+        #             for time_block in resource_block_action_matrix[user.user_label-1]:
+        #                 y = 0
+        #                 for freq_block in time_block:
+        #                     resource_block_action_matrix[user.user_label-1][x][y] = 0
+        #                     y+=1
+        #                 x+=1
+        # for user in all_embb_users:
+        #     if user.user_label not in associated_embb_users_ids:
+        #         x = 0
+        #         for box_action in box_actions[user.user_label-1]:
+        #             box_actions[user.user_label-1][x] = 0
+        #             x+=1
 
         resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
