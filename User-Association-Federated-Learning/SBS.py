@@ -47,7 +47,7 @@ class SBS():
             elif user.type_of_user_id == 1:
                 self.urllc_users.append(user)
 
-        print('SBS: ', self.SBS_label, 'associated users for next time slot: ', associated_users)
+        #print('SBS: ', self.SBS_label, 'associated users for next time slot: ', associated_users)
 
 
     def reassociate_users(self,user_association_matrix):
@@ -56,7 +56,7 @@ class SBS():
         self.embb_users.clear()
         self.urllc_users.clear()
         associated_users = []
-      
+        print('SBS: ', self.SBS_label, 'user association matrix: ', user_association_matrix)
         for user in self.all_users:
             count = 0
             for user1 in user_association_matrix:
@@ -74,7 +74,7 @@ class SBS():
             elif user.type_of_user_id == 1:
                 self.urllc_users.append(user)   
 
-        print('SBS: ', self.SBS_label, 'associated users for next time slot: ', associated_users)
+        #print('SBS: ', self.SBS_label, 'associated users for next time slot: ', associated_users)
 
          
    

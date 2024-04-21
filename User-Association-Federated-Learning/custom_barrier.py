@@ -5,8 +5,6 @@ import copy
 class CustomBarrier:
     def __init__(self, num_threads):
         self.num_threads = num_threads
-        print('self.num_threads')
-        print(self.num_threads)
         self.count = 0
         self.condition = threading.Condition()
         self.local_associations = []
@@ -19,7 +17,7 @@ class CustomBarrier:
                 # All threads have reached the aggregation point
                 # Perform the aggregation here
                 global_entity.acquire_local_model(local_model)
-                print("Performing model aggregation. Round: ", global_entity.rounds)
+                #print("Performing model aggregation. Round: ", global_entity.rounds)
                 global_entity.aggregate_local_models()
                 # Reset the count for the next iteration
                 self.count = 0
@@ -27,7 +25,7 @@ class CustomBarrier:
                 self.condition.notify_all()
             else:
                 # Wait for aggregation to complete
-                print("Access Point: ", access_point_number, " waiting for model aggregation")
+                #print("Access Point: ", access_point_number, " waiting for model aggregation")
                 global_entity.acquire_local_model(local_model)
                 self.condition.wait()
 
@@ -45,9 +43,9 @@ class CustomBarrier:
 
                 #user_association = global_entity.aggregate_user_associations()
                 self.local_associations = np.array(self.local_associations)
-                print('self.local_associations')
-                print(self.local_associations)
-                print('aggregated user_association')
+                # print('self.local_associations')
+                # print(self.local_associations)
+                #print('aggregated user_association')
                 #print(user_association)
                 self.local_associations = []
                 # print('env.SBS.SBS_label')
