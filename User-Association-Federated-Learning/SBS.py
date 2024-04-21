@@ -134,7 +134,7 @@ class SBS():
             x_train_tensor = x_train_tensor.to(self.access_point_model.fc1.weight.dtype)
             y_train_tensor = y_train_tensor.to(self.access_point_model.fc1.weight.dtype)
 
-        print('Starting training of local DNN of Access Point: ', self.SBS_label)
+        #print('Starting training of local DNN of Access Point: ', self.SBS_label)
         for epoch in range(self.num_training_epochs):
             # for i in range(0,len(x_train_tensor)):
             #     y_pred_tensor = self.access_point_model(x_train_tensor[i])
@@ -150,7 +150,7 @@ class SBS():
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
-        print('Finished training local DNN of Access Point: ', self.SBS_label)
+        #print('Finished training local DNN of Access Point: ', self.SBS_label)
         return self.access_point_model
 
         # y_pred = self.access_point_model(x_train_tensor)
@@ -219,13 +219,14 @@ class SBS():
         # print('associations_prediction_mapped')
         # print(associations_prediction_mapped)
 
+        associations_prediction_mapped_for_global_model = copy.deepcopy(associations_prediction_mapped)
         associated_users_ids = []
         for user in self.users:
             associated_users_ids.append(user.user_label)
 
         for user in self.all_users:
             if user.user_label not in associated_users_ids:
-                associations_prediction_mapped[user.user_label-1] = 0
+                associations_prediction_mapped_for_global_model[user.user_label-1] = 0
 
         associations = []
     
@@ -246,10 +247,12 @@ class SBS():
         # print(preprocessed_inputs)
         # print('associations_prediction_mapped')
         # print(associations_prediction_mapped)
+        # print('associations_prediction_mapped')
+        # print(associations_prediction_mapped)
         associations_prediction_mapped = np.array(associations_prediction_mapped)
         self.buffer_memory.append((preprocessed_inputs, associations_prediction_mapped, 0))
 
-        return associations_prediction_mapped
+        return associations_prediction_mapped_for_global_model
     
     def populate_buffer_memory_sample_with_reward(self,global_reward):
         if len(self.buffer_memory) > 1:
