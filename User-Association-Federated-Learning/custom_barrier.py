@@ -12,9 +12,11 @@ class CustomBarrier:
 
     def wait_for_aggregation(self, global_entity, local_model, access_point_number):
         with self.condition:
+            self.count += 1
             if self.count == self.num_threads:
                 # All threads have reached the aggregation point
                 # Perform the aggregation here
+                global_entity.acquire_local_model(local_model)
                 print("Performing model aggregation. Round: ", global_entity.rounds)
                 global_entity.aggregate_local_models()
                 # Reset the count for the next iteration
@@ -25,16 +27,20 @@ class CustomBarrier:
                 # Wait for aggregation to complete
                 print("Access Point: ", access_point_number, " waiting for model aggregation")
                 global_entity.acquire_local_model(local_model)
-                self.count += 1
                 self.condition.wait()
 
                 
     def wait_for_reassociations(self, env, global_entity, access_point_number, episode_reward,access_point_radius):
         with self.condition:
+            self.count += 1
             if self.count == self.num_threads:
                 # All threads have reached the aggregation point
                 # Perform the aggregation here
-                print("Performing reassociations")
+                SBS_association = env.SBS.predict_future_association(access_point_radius)
+                self.local_associations.append(SBS_association)
+                global_entity.acquire_local_user_associations(SBS_association)
+                global_entity.calculate_global_reward(episode_reward)
+
                 user_association = global_entity.aggregate_user_associations()
                 self.local_associations = np.array(self.local_associations)
                 print('self.local_associations')
@@ -54,5 +60,4 @@ class CustomBarrier:
                 self.local_associations.append(SBS_association)
                 global_entity.acquire_local_user_associations(SBS_association)
                 global_entity.calculate_global_reward(episode_reward)
-                self.count += 1
                 self.condition.wait()
