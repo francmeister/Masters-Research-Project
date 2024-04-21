@@ -135,7 +135,7 @@ class GLOBAL_ENTITY():
 
     def reset_global_reward(self):
         self.global_reward_reset_count+=1
-        if self.global_reward_reset_count >= self.num_clients:
+        if self.global_reward_reset_count >= self.num_access_point:
             self.global_reward = 0
             self.global_reward_reset_count = 0
 
