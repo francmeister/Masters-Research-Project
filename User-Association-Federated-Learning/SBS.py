@@ -56,7 +56,7 @@ class SBS():
         self.embb_users.clear()
         self.urllc_users.clear()
         associated_users = []
-        print('SBS: ', self.SBS_label, 'user association matrix: ', user_association_matrix)
+        #print('SBS: ', self.SBS_label, 'user association matrix: ', user_association_matrix)
         for user in self.all_users:
             count = 0
             for user1 in user_association_matrix:
