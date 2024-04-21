@@ -25,9 +25,9 @@ class CustomBarrier:
                 # Wait for aggregation to complete
                 print("Access Point: ", access_point_number, " waiting for model aggregation")
                 global_entity.acquire_local_model(local_model)
+                self.count += 1
                 self.condition.wait()
 
-            self.count += 1
                 
     def wait_for_reassociations(self, env, global_entity, access_point_number, episode_reward,access_point_radius):
         with self.condition:
@@ -54,5 +54,5 @@ class CustomBarrier:
                 self.local_associations.append(SBS_association)
                 global_entity.acquire_local_user_associations(SBS_association)
                 global_entity.calculate_global_reward(episode_reward)
+                self.count += 1
                 self.condition.wait()
-            self.count += 1
