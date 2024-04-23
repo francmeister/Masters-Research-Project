@@ -272,9 +272,10 @@ class SBS():
 
             if global_reward >= dnn_memory_rewards[max_index]:
                 self.training_memory.add(self.buffer_memory[0])
+                print('SBS: ', self.SBS_label, 'Appended')
 
             self.buffer_memory.pop(0)
-        print('SBS: ', self.SBS_label, self.training_memory.storage)
+        #print('SBS: ', self.SBS_label, self.training_memory.storage)
 
     def collect_state_space(self, eMBB_Users,urllc_users, Communication_Channel_1):
         total_gain = np.zeros(Communication_Channel_1.num_allocate_RBs_upper_bound*2)
