@@ -693,7 +693,7 @@ class NetworkEnv(gym.Env):
     
     
     def reset(self):
-        self.user_association_channel_rate_reward
+        self.user_association_channel_rate_reward = 0
         self.episode_reward = 0
         self.steps = 0
         self.SBS.set_properties()
