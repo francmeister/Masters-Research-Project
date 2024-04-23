@@ -24,8 +24,9 @@ clock = pygame.time.Clock()
 
 class NetworkEnv(gym.Env):
     metadata = {'render.modes': ['human']}
-    def __init__(self, all_users,SBS, access_point_coordinates):
+    def __init__(self, all_users,SBS, access_point_coordinates, radius):
         self.access_point_coordinates = access_point_coordinates
+        self.radius = radius
         self.create_objects(SBS)
         self.reset()
         self.number_of_eMBB_users = 0
@@ -731,7 +732,7 @@ class NetworkEnv(gym.Env):
             eMBB_User.set_properties_eMBB()
             eMBB_User.collect_state()
             eMBB_User.current_associated_access_point = self.SBS.SBS_label
-            eMBB_User.calculate_distances_from_access_point(self.access_point_coordinates)
+            eMBB_User.calculate_distances_from_access_point(self.access_point_coordinates, self.radius)
             eMBB_User.calculate_user_association_channel_gains()
             eMBB_User.calculate_distance_from_current_access_point()
         #print('SBS: ', self.SBS.SBS_label, 'associated users: ', associated_users)
@@ -740,7 +741,7 @@ class NetworkEnv(gym.Env):
             URLLC_User.set_properties_UE()
             URLLC_User.set_properties_URLLC()
             URLLC_User.current_associated_access_point = self.SBS.SBS_label
-            eMBB_User.calculate_distances_from_access_point(self.access_point_coordinates)
+            eMBB_User.calculate_distances_from_access_point(self.access_point_coordinates, self.radius)
             URLLC_User.calculate_user_association_channel_gains()
             URLLC_User.calculate_distance_from_current_access_point()
 
