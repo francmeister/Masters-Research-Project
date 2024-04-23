@@ -220,6 +220,9 @@ class SBS():
         preprocessed_inputs_tensor = torch.Tensor(preprocessed_inputs).to(self.device)
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
         association_prediction = association_prediction.detach().numpy()
+        association_prediction = (association_prediction + np.random.normal(0, 0.4))
+        # print('association_prediction')
+        # print(association_prediction)
         # print('association_prediction')
         # print(association_prediction)
 
