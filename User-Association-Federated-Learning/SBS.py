@@ -237,6 +237,13 @@ class SBS():
         for user in self.all_users:
             if user.user_label not in associated_users_ids:
                 associations_prediction_mapped_for_global_model[user.user_label-1] = 0
+                association_prediction[user.user_label-1] = 0
+
+        # print('SBS: ', self.SBS_label)
+        # print('associations_prediction_mapped_for_global_model: ', associations_prediction_mapped_for_global_model)
+        # print('association_prediction: ', association_prediction)
+
+        # print('')
 
         associations = []
     
@@ -244,24 +251,14 @@ class SBS():
             user_access_points_in_radius = []
             for x in user.access_points_within_radius:
                 user_access_points_in_radius.append(x[0])
-            # print('user_access_points_in_radius')
-            # print(user_access_points_in_radius)
-            # print('associations_prediction_mapped[user.user_label-1]')
-            # print(associations_prediction_mapped[user.user_label-1])
             if associations_prediction_mapped[user.user_label-1] not in user_access_points_in_radius:
                 associations.append((user.user_label,self.SBS_label))
+                #associations_prediction_mapped[user.user_label-1] = self.SBS_label
             else:
                 associations.append((user.user_label, association_prediction[user.user_label-1]))
 
-        # print('preprocessed_inputs')
-        # print(preprocessed_inputs)
-        # print('associations_prediction_mapped')
-        # print(associations_prediction_mapped)
-        # print('associations_prediction_mapped')
-        # print(associations_prediction_mapped)
         associations_prediction_mapped = np.array(associations_prediction_mapped)
-        self.buffer_memory.append((preprocessed_inputs, associations_prediction_mapped, 0))
-        #print('SBS: ', self.SBS_label, 'associations_prediction_mapped_for_global_model: ', associations_prediction_mapped_for_global_model)
+        self.buffer_memory.append((preprocessed_inputs, association_prediction, 0))
         return associations_prediction_mapped_for_global_model
     
     def populate_buffer_memory_sample_with_reward(self,global_reward):
@@ -469,6 +466,10 @@ class SBS():
             self.individual_delay_rewards.append(queue_delay_reward)
             self.individual_queue_delays.append(delay)
             self.total_reward += energy_efficiency_reward*queue_delay_reward + battery_energy_reward
+            self.user_association_channel_rate_reward+=eMBB_User.calculate_achieved_user_association_channel_rate()
+
+        for urllc_user in urllc_users:
+            self.user_association_channel_rate_reward+=urllc_user.calculate_achieved_user_association_channel_rate()
 
         self.overall_users_reward = total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
         #overall_users_rewards = [overall_users_reward for _ in range(len(eMBB_Users))]
@@ -496,7 +497,7 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
         #self.achieved_system_reward
-        return self.achieved_system_reward, self.achieved_system_reward, self.energy_rewards,self.throughput_rewards
+        return self.achieved_system_reward, self.achieved_system_reward, self.energy_rewards,self.throughput_rewards, self.user_association_channel_rate_reward
         #return self.achieved_system_reward, overall_users_rewards , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
@@ -521,6 +522,7 @@ class SBS():
     #def perform_timeslot_sequential_events(self,eMBB_Users,URLLC_Users,communication_channel):
 
     def set_properties(self):
+        self.user_association_channel_rate_reward = 0
         self.distance_exponent = -5
         self.associated_users = []
         self.associated_URLLC_users = []

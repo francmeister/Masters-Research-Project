@@ -61,6 +61,7 @@ class NetworkEnv(gym.Env):
         self.RB_allocation_matrix = []
         self.resource_block_allocation_matrix = []
         self.resource_allocation_constraint_violation = 0
+        self.user_association_channel_rate_reward = 0
 
         #Define upper and lower bounds of observation and action spaces
         
@@ -551,8 +552,8 @@ class NetworkEnv(gym.Env):
         self.SBS.calculate_achieved_total_system_processing_delay(self.eMBB_Users)
         self.SBS.calculate_achieved_total_rate_eMBB_users(self.eMBB_Users)
         self.SBS.calculate_achieved_system_energy_efficiency()
-        system_reward, reward, self.total_energy,self.total_rate = self.SBS.calculate_achieved_system_reward(self.eMBB_Users,self.URLLC_Users,self.Communication_Channel_1)
-    
+        system_reward, reward, self.total_energy,self.total_rate,user_association_channel_rate_reward = self.SBS.calculate_achieved_system_reward(self.eMBB_Users,self.URLLC_Users,self.Communication_Channel_1)
+        self.user_association_channel_rate_reward+=user_association_channel_rate_reward
         #reward = [x + resource_block_allocation_penalty for x in reward]
        
         
@@ -564,6 +565,7 @@ class NetworkEnv(gym.Env):
         for eMBB_User in self.eMBB_Users:
             eMBB_User.calculate_distance_from_SBS(self.SBS.x_position, self.SBS.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
             eMBB_User.calculate_channel_gain(self.Communication_Channel_1)
+            eMBB_User.calculate_user_association_channel_gains()
             eMBB_User.harvest_energy()
             eMBB_User.compute_battery_energy_level()
             eMBB_User.generate_task(self.Communication_Channel_1)
@@ -571,6 +573,7 @@ class NetworkEnv(gym.Env):
 
         for urllc_user in self.URLLC_Users:
             urllc_user.calculate_channel_gain_on_all_resource_blocks(self.Communication_Channel_1)
+            urllc_user.calculate_user_association_channel_gains()
             urllc_user.generate_task(self.Communication_Channel_1)
             urllc_user.split_tasks()
 
@@ -690,6 +693,7 @@ class NetworkEnv(gym.Env):
     
     
     def reset(self):
+        self.user_association_channel_rate_reward
         self.episode_reward = 0
         self.steps = 0
         self.SBS.set_properties()
@@ -725,12 +729,17 @@ class NetworkEnv(gym.Env):
             #eMBB_User.set_properties_UE()
             eMBB_User.set_properties_eMBB()
             eMBB_User.collect_state()
-            associated_users.append(eMBB_User.user_label)
+            eMBB_User.current_associated_access_point = self.SBS.SBS_label
+            eMBB_User.calculate_user_association_channel_gains()
+            eMBB_User.calculate_distance_from_current_access_point()
         #print('SBS: ', self.SBS.SBS_label, 'associated users: ', associated_users)
 
         for URLLC_User in self.URLLC_Users:
             URLLC_User.set_properties_UE()
             URLLC_User.set_properties_URLLC()
+            URLLC_User.current_associated_access_point = self.SBS.SBS_label
+            URLLC_User.calculate_user_association_channel_gains()
+            URLLC_User.calculate_distance_from_current_access_point()
 
         #self.eMBB_Users.clear()
         #self.URLLC_Users.clear()

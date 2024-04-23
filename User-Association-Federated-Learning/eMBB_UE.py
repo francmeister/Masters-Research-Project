@@ -26,6 +26,9 @@ class eMBB_UE(User_Equipment):
         self.assigned_access_point = 0
         self.assigned_access_point_label_matrix = []
         self.assigned_access_point_label_matrix_integers = []
+        self.current_associated_access_point = 0
+        self.user_association_channel_rate = 0
+        self.distance_from_associated_access_point = 0
         self.set_properties_eMBB()
 
     def set_coordinates(self, coordinates):
@@ -40,6 +43,9 @@ class eMBB_UE(User_Equipment):
         for access_point_coordinate in access_points_coordinates:
             distance_from_access_point = self.calculate_distance_from_access_point(access_point_coordinate)
             self.distances_from_access_point.append(distance_from_access_point)
+
+        #print('distances_from_access_point: ', self.distances_from_access_point)
+        #print('')
 
         access_point_number = 1
         for distance_from_access_point in self.distances_from_access_point:
@@ -64,14 +70,19 @@ class eMBB_UE(User_Equipment):
             self.slow_fading_gain_change_timer = 0
 
         return self.fast_fading_channel_gain*self.slow_fading_channel_gain
+    
+    def calculate_achieved_user_association_channel_rate(self):
+        self.user_association_channel_rate = math.pow(self.distance_from_associated_access_point,-3)*self.fast_fading_channel_gain*self.slow_fading_channel_gain
+
+    def calculate_distance_from_current_access_point(self):
+        self.distance_from_associated_access_point = self.distances_from_access_point[self.current_associated_access_point-1]
+
 
     def set_properties_eMBB(self):
         self.distances_from_access_point = []
         self.slow_fading_gain_change_timer = 0
         self.fast_fading_channel_gain =  np.random.exponential(1)
         self.slow_fading_channel_gain = np.random.exponential(1)
-        self.current_associated_access_point = 0
-        self.distance_from_associated_access_point = 0
         self.user_association_channel_gain = 0
         #State Space Limits
         self.max_allowable_latency = 2000 #[1,2] s

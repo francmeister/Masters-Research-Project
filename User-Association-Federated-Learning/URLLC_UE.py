@@ -25,6 +25,8 @@ class URLLC_UE(User_Equipment):
         self.assigned_access_point = 0
         self.assigned_access_point_label_matrix = []
         self.assigned_access_point_label_matrix_integers = []
+        self.current_associated_access_point = 0
+        self.distance_from_associated_access_point = 0
         self.set_properties_URLLC()
     
     def set_coordinates(self, coordinates):
@@ -59,9 +61,14 @@ class URLLC_UE(User_Equipment):
 
         return self.fast_fading_channel_gain*self.slow_fading_channel_gain
     
+    def calculate_achieved_user_association_channel_rate(self):
+        self.user_association_channel_rate = math.pow(self.distance_from_associated_access_point,-3)*self.fast_fading_channel_gain*self.slow_fading_channel_gain
+
+    def calculate_distance_from_current_access_point(self):
+        self.distance_from_associated_access_point = self.distances_from_access_point[self.current_associated_access_point-1]
+
+    
     def set_properties_URLLC(self):
-        self.current_associated_access_point = 0
-        self.distance_from_associated_access_point = 0
         self.user_association_channel_gain = 0
         self.max_transmission_power_dBm = 400 # dBm
         self.min_transmission_power_dBm = 0
