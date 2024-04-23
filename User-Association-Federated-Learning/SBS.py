@@ -274,6 +274,7 @@ class SBS():
                 self.training_memory.add(self.buffer_memory[0])
 
             self.buffer_memory.pop(0)
+        print(np.array(self.training_memory))
 
     def collect_state_space(self, eMBB_Users,urllc_users, Communication_Channel_1):
         total_gain = np.zeros(Communication_Channel_1.num_allocate_RBs_upper_bound*2)
