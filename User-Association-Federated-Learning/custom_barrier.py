@@ -36,6 +36,7 @@ class CustomBarrier:
             if self.count == self.num_threads:
                 # All threads have reached the aggregation point
                 # Perform the aggregation here
+                env.SBS.acquire_global_model(global_entity.global_model)
                 SBS_association = env.SBS.predict_future_association(access_point_radius)
                 self.local_associations.append(SBS_association)
                 global_entity.acquire_local_user_associations(SBS_association)
@@ -62,6 +63,7 @@ class CustomBarrier:
             else:
                 # Wait for aggregation to complete
                 #print("Access Point: ", access_point_number, " waiting for reassociations")
+                env.SBS.acquire_global_model(global_entity.global_model)
                 SBS_association = env.SBS.predict_future_association(access_point_radius)
                 self.local_associations.append(SBS_association)
                 global_entity.acquire_local_user_associations(SBS_association)

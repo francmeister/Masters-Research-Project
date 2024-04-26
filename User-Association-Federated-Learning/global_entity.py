@@ -23,7 +23,7 @@ class GLOBAL_ENTITY():
     def __init__(self, num_access_point):
         #User_Equipment.__init__(self)
         self.global_entity_id = 1
-        self.global_memory = DNN_TRAINING_MEMORY()
+        self.global_memory = []#DNN_TRAINING_MEMORY()
         self.local_models = []
         self.num_access_point = num_access_point
         self.rounds = 0
@@ -55,9 +55,13 @@ class GLOBAL_ENTITY():
         input_features = []
         user_associations = []
         sample_rewards = []
+        num_samples = max_samples*num_access_points
+
+        for x in range(0,num_access_points):
+            self.global_memory.append(DNN_TRAINING_MEMORY())
         
         #Random channel gains
-        for x in range(0,max_samples):
+        for x in range(0,num_samples):
 
             for y in range(0,num_users):
 
@@ -74,18 +78,25 @@ class GLOBAL_ENTITY():
 
             
 
-        for x in range(0,max_samples):
+        for x in range(0,num_samples):
             for y in range(0,num_users):
                 user_association = random.random()
                 user_associations.append(user_association)
 
-        input_features = np.array(input_features).reshape(max_samples,num_input_features*num_users)
-        user_associations = np.array(user_associations).reshape(max_samples,num_users)
+        input_features = np.array(input_features).reshape(num_samples,num_input_features*num_users)
+        user_associations = np.array(user_associations).reshape(num_samples,num_users)
         sample_rewards = np.array(sample_rewards)
-        # print(user_associations)
 
-        for x in range(0,max_samples):
-            self.global_memory.add((input_features[x], user_associations[x], sample_rewards[x]))
+        #print('input_features: ', len(sample_rewards))
+
+        batch_size = max_samples
+        for i, memory_obj in enumerate(self.global_memory):
+            start_index = i * batch_size
+            end_index = min(start_index + batch_size, num_samples)
+            batch_data = [(input_features[j], user_associations[j], sample_rewards[j]) for j in range(start_index, end_index)]
+            memory_obj.storage.extend(batch_data)
+
+        #print('len global memory: ', len(self.global_memory[0].storage))
 
         return self.global_memory
     

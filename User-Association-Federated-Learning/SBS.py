@@ -26,6 +26,8 @@ class SBS():
         self.access_point_model = DNN(input_dim,output_dim)
         self.buffer_memory = []
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model_update_tracker = 0
+        self.tau = 0.1
         self.set_properties()
 
     def get_all_users(self, all_users):
@@ -121,11 +123,17 @@ class SBS():
 
     def acquire_global_model(self, global_model):
         #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.access_point_model.load_state_dict(global_model.state_dict())
-        #self.access_point_model.to(device)
+        if self.model_update_tracker == 0:
+            self.access_point_model.load_state_dict(global_model.state_dict())
+            self.model_update_tracker+=1
+        else:
+            # Step 14: Still once every two iterations, we update the weights of the Actor target by polyak averaging
+            for global_model_param, local_model_param in zip(global_model.parameters(), self.access_point_model.parameters()):
+                local_model_param.data.copy_(self.tau * global_model_param.data + (1 - self.tau) * local_model_param.data)
+            #self.access_point_model.to(device)
 
     def acquire_global_memory(self, global_memory):    
-        self.training_memory = copy.deepcopy(global_memory)   
+        self.training_memory = copy.deepcopy(global_memory[self.SBS_label-1])   
 
     def train_local_dnn(self):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -220,11 +228,7 @@ class SBS():
         preprocessed_inputs_tensor = torch.Tensor(preprocessed_inputs).to(self.device)
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
         association_prediction = association_prediction.detach().numpy()
-        association_prediction = (association_prediction + np.random.normal(0, 0.4))
-        # print('association_prediction')
-        # print(association_prediction)
-        # print('association_prediction')
-        # print(association_prediction)
+        #association_prediction = (association_prediction + np.random.normal(0, 0.4))
 
         associations_prediction_mapped = []
         for prediction in association_prediction:
@@ -275,7 +279,7 @@ class SBS():
 
             if global_reward >= dnn_memory_rewards[max_index]:
                 self.training_memory.add(self.buffer_memory[0])
-                print('SBS: ', self.SBS_label, 'Appended')
+                #print('SBS: ', self.SBS_label, 'Appended')
 
             self.buffer_memory.pop(0)
         #print('SBS: ', self.SBS_label, self.training_memory.storage)
