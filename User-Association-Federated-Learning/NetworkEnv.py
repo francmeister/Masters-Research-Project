@@ -169,7 +169,18 @@ class NetworkEnv(gym.Env):
         len_box_actions = len(box_action) * len(box_action[0])
         self.box_action_space_len = len_box_actions
 
-        box_action = box_action.reshape(1,len_box_actions)
+        offload_actions = box_action[:][0]
+        power_actions = box_action[:][1]
+
+        all_box_actions = []
+        all_box_actions.append(offload_actions)
+        all_box_actions.append(power_actions)
+        all_box_actions = np.array(all_box_actions)
+        all_box_actions = all_box_actions.reshape(1,len_box_actions)
+        box_action = all_box_actions
+
+        print('box_action')
+        print(box_action)
         box_action = box_action.squeeze()
 
         binary_actions = binary_actions.reshape(1,self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
@@ -295,8 +306,8 @@ class NetworkEnv(gym.Env):
                 for box_action in box_actions[user.user_label-1]:
                     box_actions[user.user_label-1][x] = 0
                     x+=1
-        print('box_actions')
-        print(box_actions)
+        # print('box_actions')
+        # print(box_actions)
         resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
         action_space_dict = {
