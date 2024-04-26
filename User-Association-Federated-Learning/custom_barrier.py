@@ -41,6 +41,7 @@ class CustomBarrier:
                 self.local_associations.append(SBS_association)
                 global_entity.acquire_local_user_associations(SBS_association)
                 global_entity.calculate_global_reward(episode_reward)
+                np.save("./results/", global_entity.global_reward)
 
                 #user_association = global_entity.aggregate_user_associations()
                 self.local_associations = np.array(self.local_associations)
