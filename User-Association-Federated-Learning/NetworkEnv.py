@@ -726,6 +726,8 @@ class NetworkEnv(gym.Env):
         self.URLLC_Users = copy.deepcopy(self.SBS.urllc_users)
         distances = []
         access_points = []
+
+        print('SBS: ', self.SBS.SBS_label, 'Number of connected users: ', len(self.eMBB_Users))
         #print('SBS: ', self.SBS.SBS_label, 'Number of users: ', len(self.eMBB_Users)+len(self.URLLC_Users), 'embb users: ',len(self.eMBB_Users), 'urllc users: ', len(self.URLLC_Users))
        
         for eMBB_User in self.eMBB_Users:
@@ -742,10 +744,10 @@ class NetworkEnv(gym.Env):
         distances = np.array(distances)
         access_points = np.array(access_points)
 
-        print('distances from associated access points: ', distances)
-        print('associated access points: ', access_points)
-        print('')
-        print('')
+        # print('distances from associated access points: ', distances)
+        # print('associated access points: ', access_points)
+        # print('')
+        # print('')
         #print('SBS: ', self.SBS.SBS_label, 'associated users: ', associated_users)
 
         for URLLC_User in self.URLLC_Users:
