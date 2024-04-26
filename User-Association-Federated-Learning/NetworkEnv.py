@@ -166,28 +166,19 @@ class NetworkEnv(gym.Env):
         box_action = np.array(action['box_actions'])
         binary_actions = np.array(action['binary_actions'])
 
-        print('box_action')
-        print(box_action)
 
         len_box_actions = len(box_action) * len(box_action[0])
         self.box_action_space_len = len_box_actions
 
         offload_actions = box_action[:,0]
         power_actions = box_action[:,1]
-        print('offload_actions')
-        print(offload_actions)
 
         all_box_actions = []
         all_box_actions.append(offload_actions)
         all_box_actions.append(power_actions)
         all_box_actions = np.array(all_box_actions)
-        print('all_box_actions')
-        print(all_box_actions)
         all_box_actions = all_box_actions.reshape(1,len_box_actions)
         box_action = all_box_actions
-
-        print('box_action')
-        print(box_action)
         box_action = box_action.squeeze()
 
         binary_actions = binary_actions.reshape(1,self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
@@ -456,6 +447,8 @@ class NetworkEnv(gym.Env):
         num_power_action = num_offloading_actions
 
         offload_decisions_actions = box_action[0:num_offloading_actions]
+        print('offload_decisions_actions')
+        print(offload_decisions_actions)
      
         #offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
 
@@ -465,6 +458,8 @@ class NetworkEnv(gym.Env):
             offload_decisions_actions_mapped.append(offload_decision_mapped)
         
         transmit_power_actions = box_action[num_offloading_actions:num_offloading_actions*self.number_of_box_actions]
+        print('transmit_power_actions')
+        print(transmit_power_actions)
         #transmit_power_actions = transmit_power_actions[0:self.number_of_eMBB_users]
 
         transmit_power_actions_mapped = []
