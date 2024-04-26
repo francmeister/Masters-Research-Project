@@ -174,6 +174,8 @@ class NetworkEnv(gym.Env):
 
         offload_actions = box_action[:][0]
         power_actions = box_action[:][1]
+        print('offload_actions')
+        print(offload_actions)
 
         all_box_actions = []
         all_box_actions.append(offload_actions)
