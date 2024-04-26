@@ -238,13 +238,6 @@ class SBS():
 
         associations_prediction_mapped_for_global_model = copy.deepcopy(associations_prediction_mapped)
         associated_users_ids = []
-        for user in self.users:
-            associated_users_ids.append(user.user_label)
-
-        for user in self.all_users:
-            if user.user_label not in associated_users_ids:
-                associations_prediction_mapped_for_global_model[user.user_label-1] = 0
-                association_prediction[user.user_label-1] = 0
 
         # print('SBS: ', self.SBS_label)
         # print('associations_prediction_mapped_for_global_model: ', associations_prediction_mapped_for_global_model)
@@ -260,9 +253,18 @@ class SBS():
                 user_access_points_in_radius.append(x[0])
             if associations_prediction_mapped[user.user_label-1] not in user_access_points_in_radius:
                 associations.append((user.user_label,self.SBS_label))
-                #associations_prediction_mapped[user.user_label-1] = self.SBS_label
-            else:
-                associations.append((user.user_label, association_prediction[user.user_label-1]))
+                association_prediction[user.user_label-1] = interp(self.SBS_label,[1,self.num_access_points],[0,1])
+                associations_prediction_mapped[user.user_label-1] = self.SBS_label
+            #else:
+                #association_prediction.append((user.user_label, association_prediction[user.user_label-1]))
+
+        for user in self.users:
+            associated_users_ids.append(user.user_label)
+
+        for user in self.all_users:
+            if user.user_label not in associated_users_ids:
+                associations_prediction_mapped_for_global_model[user.user_label-1] = 0
+                association_prediction[user.user_label-1] = 0
 
         associations_prediction_mapped = np.array(associations_prediction_mapped)
         self.buffer_memory.append((preprocessed_inputs, association_prediction, 0))
