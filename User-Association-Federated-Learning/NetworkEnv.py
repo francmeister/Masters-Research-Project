@@ -746,7 +746,7 @@ class NetworkEnv(gym.Env):
         distances = np.array(distances)
         access_points = np.array(access_points)
 
-        print('SBS: ', self.SBS.SBS_label, 'Users: ', users, 'distances from associated access points: ', distances)
+        #print('SBS: ', self.SBS.SBS_label, 'Users: ', users, 'distances from associated access points: ', distances)
         #print('associated access points: ', access_points)
         # print('')
         # print('')

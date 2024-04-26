@@ -128,6 +128,7 @@ class GLOBAL_ENTITY():
         local_associations = np.array(self.local_associations)
         local_associations = np.sum(local_associations,axis=0)
         #self.local_associations = local_associations
+        local_associations = np.array([3,3,3,3,3,3,3,3,3,3,3,3])
         print('local_associations aggregated: ', local_associations)
         return local_associations
 
