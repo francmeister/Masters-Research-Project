@@ -724,7 +724,8 @@ class NetworkEnv(gym.Env):
         self.resource_allocation_constraint_violation = 0
         self.eMBB_Users = copy.deepcopy(self.SBS.embb_users)
         self.URLLC_Users = copy.deepcopy(self.SBS.urllc_users)
-        associated_users = []
+        distances = []
+        access_points = []
         #print('SBS: ', self.SBS.SBS_label, 'Number of users: ', len(self.eMBB_Users)+len(self.URLLC_Users), 'embb users: ',len(self.eMBB_Users), 'urllc users: ', len(self.URLLC_Users))
        
         for eMBB_User in self.eMBB_Users:
@@ -735,6 +736,16 @@ class NetworkEnv(gym.Env):
             eMBB_User.calculate_distances_from_access_point(self.access_point_coordinates, self.radius)
             eMBB_User.calculate_user_association_channel_gains()
             eMBB_User.calculate_distance_from_current_access_point()
+            distances.append(eMBB_User.distance_from_associated_access_point)
+            access_points.append(eMBB_User.current_associated_access_point)
+
+        distances = np.array(distances)
+        access_points = np.array(access_points)
+
+        print('distances from associated access points: ', distances)
+        print('associated access points: ', access_points)
+        print('')
+        print('')
         #print('SBS: ', self.SBS.SBS_label, 'associated users: ', associated_users)
 
         for URLLC_User in self.URLLC_Users:
