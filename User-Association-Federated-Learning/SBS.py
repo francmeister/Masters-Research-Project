@@ -330,6 +330,8 @@ class SBS():
 
     def allocate_transmit_powers(self,eMBB_Users, action):
         index = 0
+        print('action')
+        print(action)
         for User in eMBB_Users:
             User.assigned_transmit_power_dBm = action[User.user_label-1]
             User.calculate_assigned_transmit_power_W()
