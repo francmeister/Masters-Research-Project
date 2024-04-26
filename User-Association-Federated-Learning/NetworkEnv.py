@@ -172,8 +172,8 @@ class NetworkEnv(gym.Env):
         len_box_actions = len(box_action) * len(box_action[0])
         self.box_action_space_len = len_box_actions
 
-        offload_actions = box_action[:][0]
-        power_actions = box_action[:][1]
+        offload_actions = box_action[:,0]
+        power_actions = box_action[:,1]
         print('offload_actions')
         print(offload_actions)
 
