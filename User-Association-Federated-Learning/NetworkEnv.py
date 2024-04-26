@@ -382,7 +382,7 @@ class NetworkEnv(gym.Env):
         all_box_actions = np.array(all_box_actions)
         all_box_actions = all_box_actions.reshape(1,self.number_of_box_actions*self.number_of_users)
         box_actions = all_box_actions
-        box_actions = box_action.squeeze()
+        box_actions = box_actions.squeeze()
 
         # print('box_action')
         # print(box_action)
