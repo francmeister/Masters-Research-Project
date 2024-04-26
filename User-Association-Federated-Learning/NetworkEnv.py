@@ -354,7 +354,7 @@ class NetworkEnv(gym.Env):
                             resource_block_action_matrix[user.user_label-1][x][y] = 0
                             y+=1
                         x+=1
-        box_actions = box_actions.reshape(self.number_of_users,2)
+        box_actions = box_actions.reshape(self.number_of_users,self.number_of_box_actions)
         for user in all_embb_users:
             if user.user_label not in associated_embb_users_ids:
                 x = 0
@@ -362,8 +362,7 @@ class NetworkEnv(gym.Env):
                     box_actions[user.user_label-1][x] = 0
                     x+=1
 
-        print('box actions')
-        print(box_actions)
+        box_actions = box_actions.reshape(1,self.number_of_box_actions*self.number_of_users)
 
         # print('resource_block_action_matrix')
         # print(resource_block_action_matrix)
@@ -396,6 +395,8 @@ class NetworkEnv(gym.Env):
         #self.reshape_action_space_for_model(action)
         #action = self.enforce_constraint(action)
         box_action = np.array(action['box_actions'])
+        print('box_action')
+        print(box_action)
         binary_actions = action['binary_actions']
         #user_resource_block_allocations = action['user_resource_block_allocations']
         #user_resource_block_allocations = user_resource_block_allocations.reshape(self.time_divisions_per_slot,self.num_allocate_RB_upper_bound)
