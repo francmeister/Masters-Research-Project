@@ -295,7 +295,8 @@ class NetworkEnv(gym.Env):
                 for box_action in box_actions[user.user_label-1]:
                     box_actions[user.user_label-1][x] = 0
                     x+=1
-
+        print('box_actions')
+        print(box_actions)
         resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
         action_space_dict = {
@@ -395,8 +396,8 @@ class NetworkEnv(gym.Env):
         #self.reshape_action_space_for_model(action)
         #action = self.enforce_constraint(action)
         box_action = np.array(action['box_actions'])
-        print('box_action')
-        print(box_action)
+        # print('box_action')
+        # print(box_action)
         binary_actions = action['binary_actions']
         #user_resource_block_allocations = action['user_resource_block_allocations']
         #user_resource_block_allocations = user_resource_block_allocations.reshape(self.time_divisions_per_slot,self.num_allocate_RB_upper_bound)
