@@ -176,6 +176,8 @@ class NetworkEnv(gym.Env):
         all_box_actions.append(offload_actions)
         all_box_actions.append(power_actions)
         all_box_actions = np.array(all_box_actions)
+        print('all_box_actions')
+        print(all_box_actions)
         all_box_actions = all_box_actions.reshape(1,len_box_actions)
         box_action = all_box_actions
 
