@@ -354,8 +354,7 @@ class NetworkEnv(gym.Env):
                             resource_block_action_matrix[user.user_label-1][x][y] = 0
                             y+=1
                         x+=1
-        print('box_actions:')
-        print(box_actions)
+        box_actions = box_actions.reshape(self.number_of_users,2)
         for user in all_embb_users:
             if user.user_label not in associated_embb_users_ids:
                 x = 0
@@ -363,8 +362,8 @@ class NetworkEnv(gym.Env):
                     box_actions[user.user_label-1][x] = 0
                     x+=1
 
-        # print('box actions')
-        # print(box_actions)
+        print('box actions')
+        print(box_actions)
 
         # print('resource_block_action_matrix')
         # print(resource_block_action_matrix)
