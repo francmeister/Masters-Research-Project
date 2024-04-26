@@ -384,8 +384,8 @@ class NetworkEnv(gym.Env):
         box_action = all_box_actions
         box_action = box_action.squeeze()
 
-        print('box_action')
-        print(box_action)
+        # print('box_action')
+        # print(box_action)
 
         # print('resource_block_action_matrix')
         # print(resource_block_action_matrix)
@@ -418,7 +418,7 @@ class NetworkEnv(gym.Env):
         #self.reshape_action_space_for_model(action)
         #action = self.enforce_constraint(action)
         box_action = np.array(action['box_actions'])
-        print('box_action')
+        print('box_action in step')
         print(box_action)
         binary_actions = action['binary_actions']
         #user_resource_block_allocations = action['user_resource_block_allocations']
