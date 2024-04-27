@@ -28,6 +28,7 @@ class SBS():
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model_update_tracker = 0
         self.tau = 0.1
+        self.timestep_counter = 0
         self.set_properties()
 
     def get_all_users(self, all_users):
@@ -223,12 +224,13 @@ class SBS():
         #print(user_features_for_inference)
         return user_features_for_inference
 
-    def predict_future_association(self, access_point_radius):
+    def predict_future_association(self, access_point_radius, timestep_counter):
         preprocessed_inputs = self.preprocess_model_inputs(access_point_radius)
         preprocessed_inputs_tensor = torch.Tensor(preprocessed_inputs).to(self.device)
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
         association_prediction = association_prediction.detach().numpy()
-        #association_prediction = (association_prediction + np.random.normal(0, 0.4))
+        if timestep_counter < 5000:
+            association_prediction = (association_prediction + np.random.normal(0, 0.4))
 
         associations_prediction_mapped = []
         for prediction in association_prediction:

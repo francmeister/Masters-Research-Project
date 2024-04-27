@@ -30,14 +30,14 @@ class CustomBarrier:
                 self.condition.wait()
 
                 
-    def wait_for_reassociations(self, env, global_entity, access_point_number, episode_reward,access_point_radius):
+    def wait_for_reassociations(self, env, global_entity, timestep_counter, episode_reward,access_point_radius):
         with self.condition:
             self.count += 1
             if self.count == self.num_threads:
                 # All threads have reached the aggregation point
                 # Perform the aggregation here
                 env.SBS.acquire_global_model(global_entity.global_model)
-                SBS_association = env.SBS.predict_future_association(access_point_radius)
+                SBS_association = env.SBS.predict_future_association(access_point_radius, timestep_counter)
                 self.local_associations.append(SBS_association)
                 global_entity.acquire_local_user_associations(SBS_association)
                 global_entity.calculate_global_reward(episode_reward)
