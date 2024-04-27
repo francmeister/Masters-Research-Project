@@ -72,7 +72,7 @@ class eMBB_UE(User_Equipment):
         return self.fast_fading_channel_gain*self.slow_fading_channel_gain
     
     def calculate_achieved_user_association_channel_rate(self):
-        self.user_association_channel_rate = math.pow(self.distance_from_associated_access_point,-3)*self.fast_fading_channel_gain*self.slow_fading_channel_gain
+        self.user_association_channel_rate = math.pow(self.distance_from_associated_access_point,-3)#*self.fast_fading_channel_gain*self.slow_fading_channel_gain
         return self.user_association_channel_rate*100
 
     def calculate_distance_from_current_access_point(self):
