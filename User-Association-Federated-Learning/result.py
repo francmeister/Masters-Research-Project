@@ -1,9 +1,15 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
-result = np.load('sum_allocations_per_RB_matrix.npy')
+global_reward = np.load('global_reward.npy')
 timesteps = np.load('TD3_NetworkEnv-v0_0.npy')
 
-print(len(result))
-print(len(timesteps))
+print(global_reward)
 
-print(result)
+timesteps = len(global_reward)
+
+
+plt.plot(timesteps, global_reward, color ="blue")
+
+plt.show()
+
