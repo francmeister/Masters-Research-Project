@@ -232,6 +232,10 @@ class SBS():
         if timestep_counter < 5000:
             association_prediction = (association_prediction + np.random.normal(0, 0.4))
 
+        elif timestep_counter >= 5000:
+            association_prediction = (association_prediction + np.random.normal(0, 0.2))
+
+
         associations_prediction_mapped = []
         for prediction in association_prediction:
             associations_prediction_mapped.append(round(interp(prediction,[0,1],[1,self.num_access_points])))
