@@ -80,7 +80,7 @@ class eMBB_UE(User_Equipment):
         channel_rate_numerator = self.max_transmission_power_dBm*RB_channel_gain*math.pow(self.distance_from_associated_access_point,-1)
         channel_rate_denominator = noise_spectral_density#*RB_bandwidth
         channel_rate = RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
-        self.user_association_channel_rate = channel_rate/1000
+        self.user_association_channel_rate = channel_rate/1000000
 
         #print('embb: ', self.user_label, 'user association channel rate: ', self.user_association_channel_rate)
         return self.user_association_channel_rate
