@@ -71,8 +71,21 @@ class eMBB_UE(User_Equipment):
 
         return self.fast_fading_channel_gain*self.slow_fading_channel_gain
     
-    def calculate_achieved_user_association_channel_rate(self):
-        self.user_association_channel_rate = math.pow(self.distance_from_associated_access_point,-3)#*self.fast_fading_channel_gain*self.slow_fading_channel_gain
+    def calculate_achieved_user_association_channel_rate(self, communication_channel):
+        #self.user_association_channel_rate = math.pow(self.distance_from_associated_access_point,-1)#*self.fast_fading_channel_gain*self.slow_fading_channel_gain
+
+        RB_channel_gain = self.fast_fading_channel_gain*self.slow_fading_channel_gain
+        RB_bandwidth = communication_channel.system_bandwidth_Hz
+        noise_spectral_density = communication_channel.noise_spectral_density_W
+        channel_rate_numerator = self.max_transmission_power_dBm*RB_channel_gain
+        channel_rate_denominator = noise_spectral_density#*RB_bandwidth
+        channel_rate = RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
+        self.user_association_channel_rate = channel_rate/1000
+
+        print('embb: ', self.user_label, 'user association channel rate: ', self.user_association_channel_rate)
+        return self.user_association_channel_rate
+    
+
         return self.user_association_channel_rate*100
 
     def calculate_distance_from_current_access_point(self):
