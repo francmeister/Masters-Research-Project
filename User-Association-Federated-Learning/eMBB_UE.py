@@ -82,7 +82,7 @@ class eMBB_UE(User_Equipment):
         channel_rate = RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
         self.user_association_channel_rate = channel_rate/1000
 
-        print('embb: ', self.user_label, 'user association channel rate: ', self.user_association_channel_rate)
+        #print('embb: ', self.user_label, 'user association channel rate: ', self.user_association_channel_rate)
         return self.user_association_channel_rate
     
 
