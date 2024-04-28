@@ -481,7 +481,7 @@ class SBS():
             self.individual_delay_rewards.append(queue_delay_reward)
             self.individual_queue_delays.append(delay)
             self.total_reward += energy_efficiency_reward*queue_delay_reward + battery_energy_reward
-            self.user_association_channel_rate_reward+=eMBB_User.calculate_achieved_user_association_channel_rate()
+            self.user_association_channel_rate_reward+=eMBB_User.calculate_achieved_user_association_channel_rate(communication_channel)
 
         for urllc_user in urllc_users:
             self.user_association_channel_rate_reward+=urllc_user.calculate_achieved_user_association_channel_rate()
