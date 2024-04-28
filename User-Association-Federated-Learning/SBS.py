@@ -29,6 +29,7 @@ class SBS():
         self.model_update_tracker = 0
         self.tau = 0.1
         self.timestep_counter = 0
+        self.average_reward_in_memory = 0
         self.set_properties()
 
     def get_all_users(self, all_users):
@@ -277,6 +278,7 @@ class SBS():
         return associations_prediction_mapped_for_global_model
     
     def populate_buffer_memory_sample_with_reward(self,global_reward):
+        rewards_in_memory = []
         if len(self.buffer_memory) > 1:
             new_sample = (self.buffer_memory[0][0],self.buffer_memory[0][1],global_reward)
             self.buffer_memory[0] = new_sample
@@ -290,6 +292,10 @@ class SBS():
                 #print('SBS: ', self.SBS_label, 'Appended')
 
             self.buffer_memory.pop(0)
+        for sample in self.training_memory.storage:
+            rewards_in_memory.append(sample[2])
+        
+        self.average_reward_in_memory = sum(rewards_in_memory)/len(rewards_in_memory)
         #print('SBS: ', self.SBS_label, self.training_memory.storage)
 
     def collect_state_space(self, eMBB_Users,urllc_users, Communication_Channel_1):
