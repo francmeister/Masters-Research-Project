@@ -30,6 +30,7 @@ class SBS():
         self.tau = 0.1
         self.timestep_counter = 0
         self.average_reward_in_memory = 0
+        self.training_loss = []
         self.set_properties()
 
     def get_all_users(self, all_users):
@@ -166,6 +167,7 @@ class SBS():
 
             y_pred_tensor = self.access_point_model(x_train_tensor)
             loss = self.criterion(y_pred_tensor, y_train_tensor)
+            self.training_loss.append(loss)
             #print(loss)
             self.optimizer.zero_grad()
             loss.backward()
@@ -230,10 +232,10 @@ class SBS():
         preprocessed_inputs_tensor = torch.Tensor(preprocessed_inputs).to(self.device)
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
         association_prediction = association_prediction.detach().numpy()
-        if timestep_counter < 20000:
+        if timestep_counter < 5000:
             association_prediction = (association_prediction + np.random.normal(0, 0.4))
 
-        elif timestep_counter >= 20000:
+        elif timestep_counter >= 5000:
             association_prediction = (association_prediction + np.random.normal(0, 0.2))
 
 
