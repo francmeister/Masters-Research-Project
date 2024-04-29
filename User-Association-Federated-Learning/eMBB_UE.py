@@ -81,9 +81,10 @@ class eMBB_UE(User_Equipment):
         channel_rate_denominator = noise_spectral_density#*RB_bandwidth
         channel_rate = RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
         self.user_association_channel_rate = channel_rate/100000000
+        random_value = 0.0001*random.random()
 
         #print('embb: ', self.user_label, 'user association channel rate: ', self.user_association_channel_rate)
-        return math.pow(self.distance_from_associated_access_point,-1)#self.user_association_channel_rate
+        return random_value*math.pow(self.distance_from_associated_access_point,-1)#self.user_association_channel_rate
     
 
        # return self.user_association_channel_rate*100
