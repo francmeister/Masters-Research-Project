@@ -84,7 +84,7 @@ class eMBB_UE(User_Equipment):
         random_value = 0.0001*random.random()
 
         #print('embb: ', self.user_label, 'user association channel rate: ', self.user_association_channel_rate)
-        return random_value*math.pow(self.distance_from_associated_access_point,-1)#self.user_association_channel_rate
+        return random_value*math.pow(self.distance_from_associated_access_point,-1)*10000#self.user_association_channel_rate
     
 
        # return self.user_association_channel_rate*100
