@@ -237,8 +237,8 @@ class SBS():
         if timestep_counter < 1000:
             association_prediction = (association_prediction + np.random.normal(0, 0.2))
 
-        elif timestep_counter >= 1000:
-            association_prediction = (association_prediction + np.random.normal(0, 0.1))
+        #elif timestep_counter >= 1000:
+            #association_prediction = (association_prediction + np.random.normal(0, 0.1))
 
 
         associations_prediction_mapped = []
