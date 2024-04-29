@@ -173,8 +173,8 @@ class SBS():
             loss.backward()
             self.optimizer.step()
         #print('Finished training local DNN of Access Point: ', self.SBS_label)
-        if self.SBS_label == 1:
-            print(self.training_loss)
+        # if self.SBS_label == 1:
+        #     print(self.training_loss)
         return self.access_point_model
 
         # y_pred = self.access_point_model(x_train_tensor)
