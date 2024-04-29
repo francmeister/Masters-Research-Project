@@ -215,7 +215,7 @@ class SBS():
 
         user_channel_gains_normalized = []
         for user_channel_gain in user_channel_gains:
-            user_channel_gains_normalized.append(interp(user_channel_gain,[0,5],[0,01]))
+            user_channel_gains_normalized.append(interp(user_channel_gain,[0,5],[0,0.005]))
 
         user_features = [user_ids, user_distances_normalized, user_channel_gains_normalized]
         user_features = np.array(user_features).transpose()
