@@ -275,7 +275,7 @@ class SBS():
         for user in self.all_users:
             if user.user_label not in associated_users_ids:
                 associations_prediction_mapped_for_global_model[user.user_label-1] = 0
-                #association_prediction[user.user_label-1] = 0
+                association_prediction[user.user_label-1] = 0
 
         associations_prediction_mapped = np.array(associations_prediction_mapped)
         self.buffer_memory.append((preprocessed_inputs, association_prediction, 0))
