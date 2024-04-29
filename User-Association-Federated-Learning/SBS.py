@@ -167,14 +167,14 @@ class SBS():
 
             y_pred_tensor = self.access_point_model(x_train_tensor)
             loss = self.criterion(y_pred_tensor, y_train_tensor)
-            if self.SBS_label == 1:
-                print(loss)
             self.training_loss.append(loss.detach().numpy())
             #print(loss)
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
         #print('Finished training local DNN of Access Point: ', self.SBS_label)
+        if self.SBS_label == 1:
+            print(self.training_loss)
         return self.access_point_model
 
         # y_pred = self.access_point_model(x_train_tensor)
