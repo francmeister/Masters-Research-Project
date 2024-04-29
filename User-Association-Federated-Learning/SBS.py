@@ -143,7 +143,7 @@ class SBS():
         self.access_point_model.to(device)
         self.criterion = nn.MSELoss()
         self.optimizer = optim.Adam(self.access_point_model.parameters(), lr=0.001)
-        self.num_training_epochs = 100
+        self.num_training_epochs = 300
         x_train, y_train, sample_rewards = self.training_memory.sample(20)
         # print('len(x_train[0]): ', y_train[0])
         #print(len(x_train[0]))
@@ -234,7 +234,7 @@ class SBS():
         preprocessed_inputs_tensor = torch.Tensor(preprocessed_inputs).to(self.device)
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
         association_prediction = association_prediction.detach().numpy()
-        if timestep_counter < 1000:
+        if timestep_counter < 30000:
             association_prediction = (association_prediction + np.random.normal(0, 0.2))
 
         #elif timestep_counter >= 1000:
