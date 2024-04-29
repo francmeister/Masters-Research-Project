@@ -83,7 +83,7 @@ class eMBB_UE(User_Equipment):
         self.user_association_channel_rate = channel_rate/100000000
 
         #print('embb: ', self.user_label, 'user association channel rate: ', self.user_association_channel_rate)
-        return self.user_association_channel_rate
+        return math.pow(self.distance_from_associated_access_point,-1)#self.user_association_channel_rate
     
 
        # return self.user_association_channel_rate*100
