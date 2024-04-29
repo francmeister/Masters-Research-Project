@@ -211,11 +211,11 @@ class SBS():
 
         user_distances_normalized = []
         for user_distance in user_distances:
-            user_distances_normalized.append(interp(user_distance,[0,access_point_radius],[0,1]))
+            user_distances_normalized.append(interp(user_distance,[0,access_point_radius],[0,10]))
 
         user_channel_gains_normalized = []
         for user_channel_gain in user_channel_gains:
-            user_channel_gains_normalized.append(interp(user_channel_gain,[0,5],[0,1]))
+            user_channel_gains_normalized.append(interp(user_channel_gain,[0,5],[0,01]))
 
         user_features = [user_ids, user_distances_normalized, user_channel_gains_normalized]
         user_features = np.array(user_features).transpose()
@@ -234,7 +234,7 @@ class SBS():
         preprocessed_inputs_tensor = torch.Tensor(preprocessed_inputs).to(self.device)
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
         association_prediction = association_prediction.detach().numpy()
-        if timestep_counter < 30000:
+        if timestep_counter < 5000:
             association_prediction = (association_prediction + np.random.normal(0, 0.2))
 
         #elif timestep_counter >= 1000:

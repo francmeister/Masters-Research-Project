@@ -74,7 +74,7 @@ class eMBB_UE(User_Equipment):
     def calculate_achieved_user_association_channel_rate(self, communication_channel):
         #self.user_association_channel_rate = math.pow(self.distance_from_associated_access_point,-1)#*self.fast_fading_channel_gain*self.slow_fading_channel_gain
 
-        RB_channel_gain = self.fast_fading_channel_gain*self.slow_fading_channel_gain
+        RB_channel_gain = self.slow_fading_channel_gain#*self.fast_fading_channel_gain
         RB_bandwidth = communication_channel.system_bandwidth_Hz
         noise_spectral_density = communication_channel.noise_spectral_density_W
         channel_rate_numerator = self.max_transmission_power_dBm*math.pow(self.distance_from_associated_access_point,-1)*RB_channel_gain
