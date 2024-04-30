@@ -254,7 +254,7 @@ class SBS():
         preprocessed_inputs_tensor = torch.Tensor(preprocessed_inputs).to(self.device)
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
         association_prediction = association_prediction.detach().numpy()
-        if timestep_counter < 5000:
+        if timestep_counter < 50000:
             association_prediction = (association_prediction + np.random.normal(0, 0.2))
 
         #elif timestep_counter >= 1000:
@@ -263,7 +263,17 @@ class SBS():
 
         associations_prediction_mapped = []
         for prediction in association_prediction:
-            associations_prediction_mapped.append(round(interp(prediction,[0,1],[1,self.num_access_points])))
+            associations_prediction_mapped.append(round(prediction))
+
+        x=0
+        for prediction in associations_prediction_mapped:
+            if prediction < 1:
+                associations_prediction_mapped[x] = 0
+            elif prediction > self.num_access_points:
+                associations_prediction_mapped[x] = self.num_access_points
+
+            x+=1
+        
         #print('associations_prediction_mapped')
         #print(associations_prediction_mapped)
 
@@ -278,14 +288,14 @@ class SBS():
 
         associations = []
     
-        for user in self.users:
-            user_access_points_in_radius = []
-            for x in user.access_points_within_radius:
-                user_access_points_in_radius.append(x[0])
-            if associations_prediction_mapped[user.user_label-1] not in user_access_points_in_radius:
-                associations.append((user.user_label,self.SBS_label))
-                association_prediction[user.user_label-1] = interp(self.SBS_label,[1,self.num_access_points],[0,1])
-                associations_prediction_mapped[user.user_label-1] = self.SBS_label
+        # for user in self.users:
+        #     user_access_points_in_radius = []
+        #     for x in user.access_points_within_radius:
+        #         user_access_points_in_radius.append(x[0])
+        #     if associations_prediction_mapped[user.user_label-1] not in user_access_points_in_radius:
+        #         associations.append((user.user_label,self.SBS_label))
+        #         association_prediction[user.user_label-1] = self.SBS_label
+        #         associations_prediction_mapped[user.user_label-1] = self.SBS_label
             #else:
                 #association_prediction.append((user.user_label, association_prediction[user.user_label-1]))
 

@@ -14,10 +14,10 @@ class DNN(nn.Module):
          self.relu = nn.ReLU()
          self.fc2 = nn.Linear(100, 100)
          self.fc3 = nn.Linear(100, output_dim)
-         self.sigmoid = nn.Sigmoid()
+         #self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
         x = self.relu(self.fc1(x))
         x = self.relu(self.fc2(x))
-        x = self.sigmoid(self.fc3(x))
+        x = self.relu(self.fc3(x))
         return x
