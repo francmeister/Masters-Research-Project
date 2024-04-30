@@ -268,7 +268,7 @@ class SBS():
         x=0
         for prediction in associations_prediction_mapped:
             if prediction < 1:
-                associations_prediction_mapped[x] = 0
+                associations_prediction_mapped[x] = 1
             elif prediction > self.num_access_points:
                 associations_prediction_mapped[x] = self.num_access_points
 
