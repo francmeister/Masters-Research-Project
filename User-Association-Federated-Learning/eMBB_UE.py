@@ -36,6 +36,17 @@ class eMBB_UE(User_Equipment):
         self.x_coordinate = coordinates[0]
         self.y_coordinate = coordinates[1]
 
+    def generate_unique_numbers(self,limit):
+        numbers  = list(range(0, limit))
+        random_numbers = []
+        for _ in range(3):
+            # Shuffle the remaining numbers
+            random.shuffle(numbers)
+            # Select the first number
+            number = numbers.pop()
+            random_numbers.append(number)
+        return random_numbers
+
     def calculate_distances_from_access_point(self,access_points_coordinates, radius):
         self.distances_from_access_point = []
         self.access_points_within_radius = []
@@ -44,9 +55,19 @@ class eMBB_UE(User_Equipment):
             distance_from_access_point = self.calculate_distance_from_access_point(access_point_coordinate)
             self.distances_from_access_point.append(distance_from_access_point)
 
+        num_access_points = len(self.distances_from_access_point)
+        random_nums = self.generate_unique_numbers(num_access_points)
+
+        first_rand_num = random_nums[0]
+        second_rand_num = random_nums[1]
+        third_rand_num = random_nums[2]
+
+        self.distances_from_access_point[first_rand_num] = self.distances_from_access_point[first_rand_num]/10000000000
+        self.distances_from_access_point[second_rand_num] = self.distances_from_access_point[second_rand_num]/100000
+        self.distances_from_access_point[third_rand_num] = self.distances_from_access_point[third_rand_num]*10000
         #print('distances_from_access_point: ', self.distances_from_access_point)
         #print('')
-
+        #print('user: ', self.user_label, 'self.distances_from_access_point: ', self.distances_from_access_point)
         access_point_number = 1
         for distance_from_access_point in self.distances_from_access_point:
             if distance_from_access_point <= radius:
@@ -74,17 +95,17 @@ class eMBB_UE(User_Equipment):
     def calculate_achieved_user_association_channel_rate(self, communication_channel):
         #self.user_association_channel_rate = math.pow(self.distance_from_associated_access_point,-1)#*self.fast_fading_channel_gain*self.slow_fading_channel_gain
 
-        RB_channel_gain = self.slow_fading_channel_gain#*self.fast_fading_channel_gain
-        RB_bandwidth = communication_channel.system_bandwidth_Hz
+        RB_channel_gain = self.slow_fading_channel_gain*self.fast_fading_channel_gain
+        RB_bandwidth = communication_channel.system_bandwidth_Hz_user_association
         noise_spectral_density = communication_channel.noise_spectral_density_W
         channel_rate_numerator = self.max_transmission_power_dBm*math.pow(self.distance_from_associated_access_point,-1)*RB_channel_gain
         channel_rate_denominator = noise_spectral_density#*RB_bandwidth
         channel_rate = RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
-        self.user_association_channel_rate = channel_rate/100000000
-        random_value = 0.0001*random.random()
+        self.user_association_channel_rate = channel_rate/1000
+        #random_value = 0.0001*random.random()
 
         #print('embb: ', self.user_label, 'user association channel rate: ', self.user_association_channel_rate)
-        return random_value*math.pow(self.distance_from_associated_access_point,-1)*10000#self.user_association_channel_rate
+        return self.user_association_channel_rate#random_value*math.pow(self.distance_from_associated_access_point,-1)*10000#self.user_association_channel_rate
     
 
        # return self.user_association_channel_rate*100

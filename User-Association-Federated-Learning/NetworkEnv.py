@@ -749,6 +749,7 @@ class NetworkEnv(gym.Env):
         self.resource_allocation_constraint_violation = 0
         self.eMBB_Users = copy.deepcopy(self.SBS.embb_users)
         self.URLLC_Users = copy.deepcopy(self.SBS.urllc_users)
+        self.users = []
         distances = []
         access_points = []
         users = []

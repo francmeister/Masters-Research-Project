@@ -55,6 +55,7 @@ class GLOBAL_ENTITY():
         input_features = []
         user_associations = []
         sample_rewards = []
+
         num_samples = max_samples*num_access_points
 
         for x in range(0,num_access_points):
@@ -68,11 +69,14 @@ class GLOBAL_ENTITY():
                 user_id = y+1
                 input_features.append(user_id)
 
-                user_distance = random.random()
-                input_features.append(user_distance)
+                user_channel_rate = random.random()
+                input_features.append(user_channel_rate)
 
-                user_channel_gain = random.random()
-                input_features.append(user_channel_gain)
+                # user_distance = random.random()
+                # input_features.append(user_distance)
+
+                # user_channel_gain = random.random()
+                # input_features.append(user_channel_gain)
 
             sample_rewards.append(random.randint(0,5))
 

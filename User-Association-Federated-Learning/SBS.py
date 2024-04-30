@@ -13,6 +13,7 @@ from sklearn.model_selection import train_test_split
 import torch.nn.functional as F
 import copy
 import scipy.stats as stats
+import math
 
 class SBS():
     def __init__(self, SBS_label, num_access_points, input_dim, output_dim):
@@ -184,7 +185,7 @@ class SBS():
         # print('y_pred[0]')
         # print(y_pred[0])
 
-    def preprocess_model_inputs(self, access_point_radius):
+    def preprocess_model_inputs(self, access_point_radius, embb_users, urllc_users):
         # input_features.append(user_id)
 
         # user_distance = random.random()
@@ -197,17 +198,33 @@ class SBS():
         user_distances = []
         user_channel_gains = []
         associated_users_ids = []
+        user_channel_rates = []
         for user in self.users:
             associated_users_ids.append(user.user_label)
+
+        for user in self.all_users:
+            for embb_user in embb_users:
+                if user.user_id == embb_user.user_id:
+                    user.user_association_channel_rate = embb_user.user_association_channel_rate
+
+        for user in self.all_users:
+            for urllc_user in urllc_users:
+                if user.user_id == urllc_user.user_id:
+                    user.user_association_channel_rate = urllc_user.user_association_channel_rate
+
+            
 
         for user in self.all_users:
             user_ids.append(user.user_label)
             if user.user_label in associated_users_ids:
                 user_distances.append(user.distance_from_associated_access_point)
                 user_channel_gains.append(user.calculate_user_association_channel_gains())
+                user_channel_rates.append(user.user_association_channel_rate)
+                print('user: ', user.user_label, 'distance: ', user.distance_from_associated_access_point,'channel rate: ', user.user_association_channel_rate)
             else:
                 user_distances.append(0)
                 user_channel_gains.append(0)
+                user_channel_rates.append(0)
 
         user_distances_normalized = []
         for user_distance in user_distances:
@@ -217,7 +234,8 @@ class SBS():
         for user_channel_gain in user_channel_gains:
             user_channel_gains_normalized.append(interp(user_channel_gain,[0,5],[0,0.005]))
 
-        user_features = [user_ids, user_distances_normalized, user_channel_gains_normalized]
+        #user_features = [user_ids, user_distances_normalized, user_channel_gains_normalized]
+        user_features = [user_ids, user_channel_rates]
         user_features = np.array(user_features).transpose()
         user_features_for_inference = []
 
@@ -229,8 +247,8 @@ class SBS():
         #print(user_features_for_inference)
         return user_features_for_inference
 
-    def predict_future_association(self, access_point_radius, timestep_counter):
-        preprocessed_inputs = self.preprocess_model_inputs(access_point_radius)
+    def predict_future_association(self, access_point_radius, timestep_counter, embb_users, urllc_users):
+        preprocessed_inputs = self.preprocess_model_inputs(access_point_radius, embb_users, urllc_users)
         preprocessed_inputs_tensor = torch.Tensor(preprocessed_inputs).to(self.device)
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
         association_prediction = association_prediction.detach().numpy()
@@ -299,7 +317,7 @@ class SBS():
         for sample in self.training_memory.storage:
             rewards_in_memory.append(sample[2])
         
-        self.average_reward_in_memory = sum(rewards_in_memory)/len(rewards_in_memory)
+        self.average_reward_in_memory = sum(rewards_in_memory)/len(rewards_in_memory) + random.random()
         #print('SBS: ', self.SBS_label, self.training_memory.storage)
 
     def collect_state_space(self, eMBB_Users,urllc_users, Communication_Channel_1):
