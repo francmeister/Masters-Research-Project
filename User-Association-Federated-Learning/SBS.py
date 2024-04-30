@@ -255,7 +255,8 @@ class SBS():
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
         association_prediction = association_prediction.detach().numpy()
         if timestep_counter < 50000:
-            association_prediction = (association_prediction + np.random.normal(0, 0.2))
+            end = random.random()
+            association_prediction = (association_prediction + np.random.normal(0, end))
 
         #elif timestep_counter >= 1000:
             #association_prediction = (association_prediction + np.random.normal(0, 0.1))
