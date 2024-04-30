@@ -206,11 +206,13 @@ class SBS():
             for embb_user in embb_users:
                 if user.user_label == embb_user.user_label:
                     user.user_association_channel_rate = embb_user.user_association_channel_rate
+                    user.distance_from_associated_access_point = embb_user.distance_from_associated_access_point
 
         for user in self.all_users:
             for urllc_user in urllc_users:
                 if user.user_label == urllc_user.user_label:
                     user.user_association_channel_rate = urllc_user.user_association_channel_rate
+                    user.distance_from_associated_access_point = urllc_user.distance_from_associated_access_point
 
             
 
