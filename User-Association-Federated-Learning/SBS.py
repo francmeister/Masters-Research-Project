@@ -255,8 +255,12 @@ class SBS():
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
         association_prediction = association_prediction.detach().numpy()
         if timestep_counter < 50000:
-            end = random.random()
-            association_prediction = (association_prediction + np.random.normal(0, end))
+            association_prediction = []
+            #end = random.random()
+            #association_prediction = (association_prediction + np.random.normal(0, end))
+            for user in self.all_users:
+                association_prediction.append(random.randint(1,self.num_access_points)) 
+            association_prediction = np.array(association_prediction)
 
         #elif timestep_counter >= 1000:
             #association_prediction = (association_prediction + np.random.normal(0, 0.1))
