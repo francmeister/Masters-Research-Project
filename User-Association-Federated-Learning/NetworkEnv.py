@@ -27,6 +27,7 @@ class NetworkEnv(gym.Env):
     def __init__(self, all_users,SBS, access_point_coordinates, radius):
         self.access_point_coordinates = access_point_coordinates
         self.radius = radius
+        self.timestep = 0
         self.create_objects(SBS)
         self.reset()
         self.number_of_eMBB_users = 0
@@ -155,7 +156,6 @@ class NetworkEnv(gym.Env):
         self.sleep = 0
         self.steps = 0
         self.episode_reward = 0
-        self.timestep = 0
 
     def reshape_observation_space_for_model(self,observation_space):
         observation_space = np.transpose(observation_space)
