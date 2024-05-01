@@ -764,7 +764,7 @@ class NetworkEnv(gym.Env):
             eMBB_User.set_properties_eMBB()
             eMBB_User.collect_state()
             eMBB_User.current_associated_access_point = self.SBS.SBS_label
-            #eMBB_User.calculate_distances_from_access_point(self.access_point_coordinates, self.radius)
+            eMBB_User.calculate_distances_from_access_point(self.access_point_coordinates, self.radius)
             eMBB_User.calculate_user_association_channel_gains()
             eMBB_User.calculate_distance_from_current_access_point()
             distances.append(eMBB_User.distance_from_associated_access_point)
