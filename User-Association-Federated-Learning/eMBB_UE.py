@@ -112,7 +112,7 @@ class eMBB_UE(User_Equipment):
 
     def calculate_distance_from_current_access_point(self):
         #print('embb user: ', self.user_label, 'current_associated_access_point: ', self.current_associated_access_point, 'distances_from_access_point: ', self.distances_from_access_point)
-        self.distance_from_associated_access_point = self.distances_from_access_point[self.current_associated_access_point-1]
+        self.distance_from_associated_access_point = max(self.distances_from_access_point)#self.distances_from_access_point[self.current_associated_access_point-1]
         #print('embb user: ', self.eMBB_UE_label, 'distance from associated AP: ', self.distance_from_associated_access_point)
 
 

@@ -750,6 +750,7 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users = copy.deepcopy(self.SBS.embb_users)
         self.URLLC_Users = copy.deepcopy(self.SBS.urllc_users)
         self.users = []
+
         distances = []
         access_points = []
         users = []
@@ -758,11 +759,12 @@ class NetworkEnv(gym.Env):
         #print('SBS: ', self.SBS.SBS_label, 'Number of users: ', len(self.eMBB_Users)+len(self.URLLC_Users), 'embb users: ',len(self.eMBB_Users), 'urllc users: ', len(self.URLLC_Users))
        
         for eMBB_User in self.eMBB_Users:
+            self.users.append(eMBB_User)
             #eMBB_User.set_properties_UE()
             eMBB_User.set_properties_eMBB()
             eMBB_User.collect_state()
             eMBB_User.current_associated_access_point = self.SBS.SBS_label
-            eMBB_User.calculate_distances_from_access_point(self.access_point_coordinates, self.radius)
+            #eMBB_User.calculate_distances_from_access_point(self.access_point_coordinates, self.radius)
             eMBB_User.calculate_user_association_channel_gains()
             eMBB_User.calculate_distance_from_current_access_point()
             distances.append(eMBB_User.distance_from_associated_access_point)
@@ -779,6 +781,7 @@ class NetworkEnv(gym.Env):
         #print('SBS: ', self.SBS.SBS_label, 'associated users: ', associated_users)
 
         for URLLC_User in self.URLLC_Users:
+            self.users.append(eMBB_User)
             URLLC_User.set_properties_UE()
             URLLC_User.set_properties_URLLC()
             URLLC_User.current_associated_access_point = self.SBS.SBS_label

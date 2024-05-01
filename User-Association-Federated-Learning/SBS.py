@@ -222,7 +222,7 @@ class SBS():
                 user_distances.append(user.distance_from_associated_access_point)
                 user_channel_gains.append(user.calculate_user_association_channel_gains())
                 user_channel_rates.append(user.user_association_channel_rate)
-                #print('user: ', user.user_label, 'distance: ', user.distance_from_associated_access_point,'channel rate: ', user.user_association_channel_rate)
+                print('user: ', user.user_label, 'distance: ', user.distance_from_associated_access_point,'channel rate: ', user.user_association_channel_rate)
             else:
                 user_distances.append(0)
                 user_channel_gains.append(0)
