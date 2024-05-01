@@ -114,20 +114,20 @@ class eMBB_UE(User_Equipment):
         #print('embb user: ', self.user_label, 'current_associated_access_point: ', self.current_associated_access_point, 'distances_from_access_point: ', self.distances_from_access_point)
         #print(self.distances_from_access_point)
         if timestep < 8000:
-            self.distance_from_associated_access_point = min(self.distances_from_access_point)
+            self.distance_from_associated_access_point = max(self.distances_from_access_point)
 
         elif timestep >= 8000 and timestep < 10000:
-            self.distances_from_access_point.sort(reverse=True)
-            rand_num = random.random(1,2)
-            self.distance_from_associated_access_point = self.distances_from_access_point[rand_num]
-
-        elif timestep >= 10000 and timestep < 12000:
             self.distances_from_access_point.sort(reverse=True)
             rand_num = random.random(0,1)
             self.distance_from_associated_access_point = self.distances_from_access_point[rand_num]
 
+        elif timestep >= 10000 and timestep < 12000:
+            self.distances_from_access_point.sort(reverse=True)
+            rand_num = random.random(1,2)
+            self.distance_from_associated_access_point = self.distances_from_access_point[rand_num]
+
         elif timestep >= 12000:
-            self.distance_from_associated_access_point = max(self.distances_from_access_point)
+            self.distance_from_associated_access_point = min(self.distances_from_access_point)
 
 
 
