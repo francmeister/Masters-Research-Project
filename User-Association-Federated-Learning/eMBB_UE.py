@@ -118,12 +118,12 @@ class eMBB_UE(User_Equipment):
 
         elif timestep >= 8000 and timestep < 10000:
             self.distances_from_access_point.sort(reverse=True)
-            rand_num = random.random(0,1)
+            rand_num = random.randint(0,1)
             self.distance_from_associated_access_point = self.distances_from_access_point[rand_num]
 
         elif timestep >= 10000 and timestep < 12000:
             self.distances_from_access_point.sort(reverse=True)
-            rand_num = random.random(1,2)
+            rand_num = random.randint(1,2)
             self.distance_from_associated_access_point = self.distances_from_access_point[rand_num]
 
         elif timestep >= 12000:
