@@ -155,6 +155,7 @@ class NetworkEnv(gym.Env):
         self.sleep = 0
         self.steps = 0
         self.episode_reward = 0
+        self.timestep = 0
 
     def reshape_observation_space_for_model(self,observation_space):
         observation_space = np.transpose(observation_space)
@@ -406,6 +407,7 @@ class NetworkEnv(gym.Env):
             user_id = eMBB_user.eMBB_UE_label
             
     def step(self,action):
+        self.timestep+=1
         #g = self.reshape_action_space_for_model(action)
         #print('action reshaped')
         #print(g)
