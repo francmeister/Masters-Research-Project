@@ -208,7 +208,8 @@ class SBS():
             self.individual_queue_delays.append(delay)
             self.total_reward += energy_efficiency_reward*queue_delay_reward + battery_energy_reward
 
-        self.overall_users_reward = total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
+        #self.overall_users_reward = total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
+        self.overall_users_reward = self.throughput_rewards/self.energy_rewards
         #overall_users_rewards = [overall_users_reward for _ in range(len(eMBB_Users))]
         #self.achieved_system_reward += urllc_reliability_reward_normalized
         fairness_index = self.calculate_fairness(eMBB_Users)

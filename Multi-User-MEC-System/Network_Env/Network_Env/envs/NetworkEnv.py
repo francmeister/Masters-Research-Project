@@ -366,7 +366,11 @@ class NetworkEnv(gym.Env):
 
         num_power_action = num_offloading_actions
 
+        # print('box_action')
+        # print(box_action)
         offload_decisions_actions = box_action[0:num_offloading_actions]
+        # print('offload_decisions_actions')
+        # print(offload_decisions_actions)
      
         #offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
 
@@ -763,8 +767,8 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        #self.eMBB_Users.append(self.eMBB_UE_2)
-        #self.eMBB_Users.append(self.eMBB_UE_3)
+        self.eMBB_Users.append(self.eMBB_UE_2)
+        self.eMBB_Users.append(self.eMBB_UE_3)
         #self.eMBB_Users.append(self.eMBB_UE_4)
         #self.eMBB_Users.append(self.eMBB_UE_5)
         #self.eMBB_Users.append(self.eMBB_UE_6)
