@@ -107,16 +107,16 @@ for i in range(0,len(evaluations)):
     evaluation_timesteps.append(i)
 # plt.plot(evaluation_timesteps, evaluations, color ="blue")
 # plt.title('Evaluations')
-plt.plot(evaluation_timesteps, evaluations_TD3, color="blue", label='TD3')
-plt.plot(evaluation_timesteps, evaluations_DDPG, color="green", label="DDPG")
-plt.legend()
+# plt.plot(evaluation_timesteps, evaluations_TD3, color="blue", label='TD3')
+# plt.plot(evaluation_timesteps, evaluations_DDPG, color="green", label="DDPG")
+# plt.legend()
 # plt.title('Individual Total Reward')
 #plt.plot(timesteps,energies,color = "blue")
 #plt.plot(timesteps,throughputs,color = "green")
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-#figure, axis = plt.subplots(2,1)
+figure, axis = plt.subplots(2,1)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
@@ -205,11 +205,22 @@ axis[5].scatter(timesteps_, RBs_actions_)
 axis[5].set_title('RB allocation actions')
 '''
 
+def moving_average(data, window_size):
+    """Compute the moving average of data."""
+    weights = np.repeat(1.0, window_size) / window_size
+    return np.convolve(data, weights, 'valid')
 
+window_size = 1000
 
+TD3_smooth = moving_average(rewards_TD3, window_size)
 
+axis[0].plot(timesteps_TD3, rewards_TD3)
+axis[0].set_title('TD3 Reward')
 
+axis[1].plot(timesteps_TD3[window_size-1:], TD3_smooth)
+axis[1].set_title('TD3 Smoothened Reward')
 
+# plt.plot(timesteps_TD3[window_size-1:], TD3_smooth, color="blue", label='TD3')
 
 plt.tight_layout()
 
