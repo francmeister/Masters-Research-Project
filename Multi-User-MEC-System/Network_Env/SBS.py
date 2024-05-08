@@ -154,7 +154,7 @@ class SBS():
         total_offload_traffic_reward = 0
         total_lc_delay_violation_probability = 0
         urllc_reliability_reward, urllc_reliability_reward_normalized = self.calculate_urllc_reliability_reward(urllc_users)
-        print('q_action: ', q_action)
+        #d
         self.q_action = q_action[0]
         self.urllc_reliability_reward_normalized = urllc_reliability_reward_normalized
         for eMBB_User in eMBB_Users:

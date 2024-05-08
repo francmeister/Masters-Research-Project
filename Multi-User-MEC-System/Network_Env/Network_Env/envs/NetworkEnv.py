@@ -343,6 +343,7 @@ class NetworkEnv(gym.Env):
         box_action = np.array(action['box_actions'])
         binary_actions = action['binary_actions']
         q_action = action['q_action']
+        print('q_action: ', q_action)
         #print('action')
         #print(action)
         #user_resource_block_allocations = action['user_resource_block_allocations']
