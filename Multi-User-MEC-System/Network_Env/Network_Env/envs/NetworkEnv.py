@@ -173,6 +173,7 @@ class NetworkEnv(gym.Env):
         self.total_action_space = np.hstack((box_action,binary_actions))#np.column_stack((box_action,binary_actions))
         self.total_action_space = np.array(self.total_action_space)
         self.total_action_space = self.total_action_space.squeeze()
+        self.total_action_space = np.append(self.total_action_space,q_action)
 
         action_space_dict = {
             'box_actions': box_action,
