@@ -218,7 +218,7 @@ TD3_smooth = moving_average(rewards, window_size)
 axis[0].plot(timesteps, rewards)
 axis[0].set_title('Total Reward')
 
-axis[1].plot(timesteps[0:25646], q_action)
+axis[1].plot(timesteps, throughputs)
 axis[1].set_title('q_action')
 
 #plt.plot(timesteps_TD3[window_size-1:], TD3_smooth, color="blue", label='TD3')
