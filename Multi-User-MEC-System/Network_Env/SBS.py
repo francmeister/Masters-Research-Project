@@ -154,7 +154,7 @@ class SBS():
         total_offload_traffic_reward = 0
         total_lc_delay_violation_probability = 0
         urllc_reliability_reward, urllc_reliability_reward_normalized = self.calculate_urllc_reliability_reward(urllc_users)
-        self.q_action = q_action
+        self.q_action = q_action[0]
         self.urllc_reliability_reward_normalized = urllc_reliability_reward_normalized
         for eMBB_User in eMBB_Users:
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
@@ -212,12 +212,11 @@ class SBS():
             self.total_reward += energy_efficiency_reward*queue_delay_reward + battery_energy_reward
 
         #self.overall_users_reward = total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
-        print('q_action:', q_action)
         if self.energy_rewards > 0 and self.throughput_rewards > 0:
-            self.overall_users_reward = self.throughput_rewards - q_action*self.energy_rewards
+            self.overall_users_reward = self.throughput_rewards - self.q_action*self.energy_rewards
         else:
             self.overall_users_reward = 0
-        print('overall_users_reward: ', self.overall_users_reward)
+        #print('overall_users_reward: ', self.overall_users_reward)
         #overall_users_rewards = [overall_users_reward for _ in range(len(eMBB_Users))]
         #self.achieved_system_reward += urllc_reliability_reward_normalized
         fairness_index = self.calculate_fairness(eMBB_Users)
