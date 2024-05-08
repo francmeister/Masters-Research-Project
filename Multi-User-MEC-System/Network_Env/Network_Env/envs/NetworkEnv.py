@@ -343,8 +343,8 @@ class NetworkEnv(gym.Env):
         box_action = np.array(action['box_actions'])
         binary_actions = action['binary_actions']
         q_action = action['q_action']
-        print('action')
-        print(action)
+        #print('action')
+        #print(action)
         #user_resource_block_allocations = action['user_resource_block_allocations']
         #user_resource_block_allocations = user_resource_block_allocations.reshape(self.time_divisions_per_slot,self.num_allocate_RB_upper_bound)
  
@@ -508,7 +508,7 @@ class NetworkEnv(gym.Env):
         self.SBS1.calculate_achieved_total_system_processing_delay(self.eMBB_Users)
         self.SBS1.calculate_achieved_total_rate_eMBB_users(self.eMBB_Users)
         self.SBS1.calculate_achieved_system_energy_efficiency()
-        system_reward, reward, self.total_energy,self.total_rate = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users,self.URLLC_Users,self.Communication_Channel_1)
+        system_reward, reward, self.total_energy,self.total_rate = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users,self.URLLC_Users,self.Communication_Channel_1, q_action)
     
         #reward = [x + resource_block_allocation_penalty for x in reward]
        

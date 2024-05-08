@@ -117,7 +117,7 @@ class SBS():
 
         #print("self.achieved_system_energy_efficiency",self.achieved_system_energy_efficiency)
 
-    def calculate_achieved_system_reward(self, eMBB_Users, urllc_users, communication_channel):
+    def calculate_achieved_system_reward(self, eMBB_Users, urllc_users, communication_channel, q_action):
         #print('number of embb users: ', len(eMBB_Users))
         self.achieved_system_reward = 0
         eMBB_User_energy_consumption = 0
@@ -154,12 +154,15 @@ class SBS():
         total_offload_traffic_reward = 0
         total_lc_delay_violation_probability = 0
         urllc_reliability_reward, urllc_reliability_reward_normalized = self.calculate_urllc_reliability_reward(urllc_users)
+        self.q_action = q_action
         self.urllc_reliability_reward_normalized = urllc_reliability_reward_normalized
         for eMBB_User in eMBB_Users:
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
-            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
+            #eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
+            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption
             total_energy += eMBB_User_energy_consumption
-            eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
+            #eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
+            eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
             total_rate += eMBB_User_channel_rate
             delay_reward = eMBB_User.calculate_delay_penalty()
             battery_energy_reward = eMBB_User.energy_consumption_reward()
@@ -209,8 +212,8 @@ class SBS():
             self.total_reward += energy_efficiency_reward*queue_delay_reward + battery_energy_reward
 
         #self.overall_users_reward = total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
-        if self.energy_rewards > 0:
-            self.overall_users_reward = self.throughput_rewards/self.energy_rewards
+        if self.energy_rewards > 0 and self.throughput_rewards > 0:
+            self.overall_users_reward = self.throughput_rewards - q_action*self.energy_rewards
         else:
             self.overall_users_reward = 0
         #overall_users_rewards = [overall_users_reward for _ in range(len(eMBB_Users))]
@@ -263,6 +266,7 @@ class SBS():
     #def perform_timeslot_sequential_events(self,eMBB_Users,URLLC_Users,communication_channel):
 
     def set_properties(self):
+        self.q_action = 0
         self.associated_users = []
         self.associated_URLLC_users = []
         self.associated_eMBB_users = []
