@@ -212,6 +212,7 @@ class SBS():
             self.total_reward += energy_efficiency_reward*queue_delay_reward + battery_energy_reward
 
         #self.overall_users_reward = total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
+        print('q_action:', q_action)
         if self.energy_rewards > 0 and self.throughput_rewards > 0:
             self.overall_users_reward = self.throughput_rewards - q_action*self.energy_rewards
         else:
