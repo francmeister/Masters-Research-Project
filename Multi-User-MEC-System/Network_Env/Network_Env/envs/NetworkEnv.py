@@ -118,7 +118,10 @@ class NetworkEnv(gym.Env):
         self.box_action_space_len = 0
         self.binary_action_space = spaces.MultiBinary(self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         self.binary_action_space_len = 0
-        self.q_action_space = spaces.Box(low=0,high=1)
+
+        q_action_low = 0  # Lower bound for each dimension
+        q_action_high = float('inf')  # Upper bound for each dimension
+        self.q_action_space = spaces.Box(low=q_action_low,high=q_action_high)
 
         # Combine the action spaces into a dictionary
         #self.action_space = self.box_action_space

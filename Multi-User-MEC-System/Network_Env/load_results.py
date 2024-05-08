@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 #a_load = np.load('TD3_NetworkEnv-v0_0.npy')
 offload_actions = np.load('offloading_actions.npy')
 power_actions = np.load('power_actions.npy')
+q_action = np.load('q_action.npy')
 RBs_actions = np.load('subcarrier_actions.npy')
 rewards_throughput_energy = np.load('timestep_rewards_energy_throughput.npy')
 rewards_throughput_energy_TD3 = np.load('timestep_rewards_energy_throughput_TD3.npy')
@@ -215,12 +216,12 @@ window_size = 1000
 TD3_smooth = moving_average(rewards, window_size)
 
 axis[0].plot(timesteps, rewards)
-axis[0].set_title('TD3 Reward')
+axis[0].set_title('Total Reward')
 
-axis[1].plot(timesteps[window_size-1:], TD3_smooth)
-axis[1].set_title('TD3 Smoothened Reward')
+axis[1].plot(timesteps[0:25646], q_action)
+axis[1].set_title('q_action')
 
-# plt.plot(timesteps_TD3[window_size-1:], TD3_smooth, color="blue", label='TD3')
+#plt.plot(timesteps_TD3[window_size-1:], TD3_smooth, color="blue", label='TD3')
 
 plt.tight_layout()
 
