@@ -320,7 +320,7 @@ class SBS():
         self.individual_energy_efficiency = []
         self.individual_total_reward = []
         self.total_reward = 0
-        self.overall_users_reward = []
+        self.overall_users_reward = 0
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)
