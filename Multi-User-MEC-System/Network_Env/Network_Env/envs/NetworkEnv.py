@@ -210,6 +210,7 @@ class NetworkEnv(gym.Env):
     def reshape_action_space_from_model_to_dict(self,action):
         box_actions = []
         binary_actions = []
+        q_action = []
         box_actions = action[0:self.box_action_space_len]
         binary_actions = action[self.box_action_space_len:len(action)-1]
         q_action = action[len(action)-1]
