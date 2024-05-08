@@ -216,6 +216,7 @@ class SBS():
             self.overall_users_reward = self.throughput_rewards - q_action*self.energy_rewards
         else:
             self.overall_users_reward = 0
+        print('overall_users_reward: ', self.overall_users_reward)
         #overall_users_rewards = [overall_users_reward for _ in range(len(eMBB_Users))]
         #self.achieved_system_reward += urllc_reliability_reward_normalized
         fairness_index = self.calculate_fairness(eMBB_Users)
