@@ -136,7 +136,7 @@ class NetworkEnv(gym.Env):
         sample_action = self.action_space.sample()
         sample_observation = self.observation_space.sample()
         reshaped_action_for_model_training, reshaped_action_for_model_training2 = self.reshape_action_space_dict(sample_action)
-        print('reshaped_action_for_model_training: ', reshaped_action_for_model_training)
+        #print('reshaped_action_for_model_training: ', reshaped_action_for_model_training)
         reshaped_observation_for_model_training = self.reshape_observation_space_for_model(sample_observation)
 
         self.action_space_dim = len(reshaped_action_for_model_training)#self.box_action_space.shape[1] + (self.num_allocate_RB_upper_bound*self.time_divisions_per_slot)
@@ -186,6 +186,7 @@ class NetworkEnv(gym.Env):
     def reshape_action_space_for_model(self,action):
         box_action = np.array(action['box_actions'])
         binary_actions = np.array(action['binary_actions'])
+        q_action = np.array(action['q_action'])
 
         #len_box_actions = len(box_action) * len(box_action[0])
         #self.box_action_space_len = len_box_actions
@@ -199,6 +200,7 @@ class NetworkEnv(gym.Env):
         self.total_action_space = np.hstack((box_action,binary_actions))#np.column_stack((box_action,binary_actions))
         self.total_action_space = np.array(self.total_action_space)
         self.total_action_space = self.total_action_space.squeeze()
+        self.total_action_space = np.append(self.total_action_space,q_action)
 
   
         return self.total_action_space
@@ -209,7 +211,8 @@ class NetworkEnv(gym.Env):
         box_actions = []
         binary_actions = []
         box_actions = action[0:self.box_action_space_len]
-        binary_actions = action[self.box_action_space_len:len(action)]
+        binary_actions = action[self.box_action_space_len:len(action)-1]
+        q_action = action[len(action)-1]
 
         box_actions = np.array(box_actions)
         binary_actions = np.array(binary_actions)
@@ -220,7 +223,8 @@ class NetworkEnv(gym.Env):
         #print(binary_actions)
         action_space_dict = {
             'box_actions': box_actions,
-            'binary_actions': binary_actions
+            'binary_actions': binary_actions,
+            'q_action': q_action
         }
 
         return action_space_dict
@@ -238,6 +242,7 @@ class NetworkEnv(gym.Env):
     def enforce_constraint(self,action):
         box_actions = action['box_actions']
         binary_actions = action['binary_actions']
+        q_action = action['q_action']
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
         resource_block_action_matrix_size = self.number_of_users*self.time_divisions_per_slot*self.num_allocate_RB_upper_bound
         #resource_block_action_matrix = resource_block_action_matrix.squeeze()
@@ -270,7 +275,8 @@ class NetworkEnv(gym.Env):
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
         action_space_dict = {
             'box_actions': box_actions,
-            'binary_actions': resource_block_action_matrix
+            'binary_actions': resource_block_action_matrix,
+            'q_action': q_action
         }
         #print(resource_block_action_matrix)
     
@@ -279,6 +285,7 @@ class NetworkEnv(gym.Env):
     def apply_resource_allocation_constraint(self,action):
         box_actions = action['box_actions']
         binary_actions = action['binary_actions']
+        q_action = action['q_action']
         #matrix = [[[random.uniform(0, 1) for _ in range(6)] for _ in range(2)] for _ in range(3)]
         #matrix = np.array(matrix)
         #print('matrix')
@@ -309,7 +316,8 @@ class NetworkEnv(gym.Env):
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
         action_space_dict = {
             'box_actions': box_actions,
-            'binary_actions': resource_block_action_matrix
+            'binary_actions': resource_block_action_matrix,
+            'q_action': q_action
         }
         #print(resource_block_action_matrix)
         return action_space_dict
@@ -334,6 +342,9 @@ class NetworkEnv(gym.Env):
         #action = self.enforce_constraint(action)
         box_action = np.array(action['box_actions'])
         binary_actions = action['binary_actions']
+        q_action = action['q_action']
+        print('action')
+        print(action)
         #user_resource_block_allocations = action['user_resource_block_allocations']
         #user_resource_block_allocations = user_resource_block_allocations.reshape(self.time_divisions_per_slot,self.num_allocate_RB_upper_bound)
  
