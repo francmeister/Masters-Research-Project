@@ -118,13 +118,15 @@ class NetworkEnv(gym.Env):
         self.box_action_space_len = 0
         self.binary_action_space = spaces.MultiBinary(self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         self.binary_action_space_len = 0
+        self.q_action_space = spaces.Box(low=0,high=1)
 
         # Combine the action spaces into a dictionary
         #self.action_space = self.box_action_space
         
         self.action_space = spaces.Dict({
             'box_actions': self.box_action_space,
-            'binary_actions': self.binary_action_space
+            'binary_actions': self.binary_action_space,
+            'q_action': self.q_action_space
         })
 
         #self.action_space = spaces.Box(low=action_space_low,high=action_space_high)
@@ -134,6 +136,7 @@ class NetworkEnv(gym.Env):
         sample_action = self.action_space.sample()
         sample_observation = self.observation_space.sample()
         reshaped_action_for_model_training, reshaped_action_for_model_training2 = self.reshape_action_space_dict(sample_action)
+        print('reshaped_action_for_model_training: ', reshaped_action_for_model_training)
         reshaped_observation_for_model_training = self.reshape_observation_space_for_model(sample_observation)
 
         self.action_space_dim = len(reshaped_action_for_model_training)#self.box_action_space.shape[1] + (self.num_allocate_RB_upper_bound*self.time_divisions_per_slot)
@@ -156,6 +159,7 @@ class NetworkEnv(gym.Env):
     def reshape_action_space_dict(self,action):
         box_action = np.array(action['box_actions'])
         binary_actions = np.array(action['binary_actions'])
+        q_action = np.array(action['q_action'])
 
         len_box_actions = len(box_action) * len(box_action[0])
         self.box_action_space_len = len_box_actions
@@ -172,7 +176,8 @@ class NetworkEnv(gym.Env):
 
         action_space_dict = {
             'box_actions': box_action,
-            'binary_actions': binary_actions
+            'binary_actions': binary_actions,
+            'q_action': q_action
         }
   
         return self.total_action_space, action_space_dict

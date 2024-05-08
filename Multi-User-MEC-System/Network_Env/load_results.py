@@ -212,12 +212,12 @@ def moving_average(data, window_size):
 
 window_size = 1000
 
-TD3_smooth = moving_average(rewards_TD3, window_size)
+TD3_smooth = moving_average(rewards, window_size)
 
-axis[0].plot(timesteps_TD3, rewards_TD3)
+axis[0].plot(timesteps, rewards)
 axis[0].set_title('TD3 Reward')
 
-axis[1].plot(timesteps_TD3[window_size-1:], TD3_smooth)
+axis[1].plot(timesteps[window_size-1:], TD3_smooth)
 axis[1].set_title('TD3 Smoothened Reward')
 
 # plt.plot(timesteps_TD3[window_size-1:], TD3_smooth, color="blue", label='TD3')
