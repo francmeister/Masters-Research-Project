@@ -213,7 +213,7 @@ class NetworkEnv(gym.Env):
         q_action = []
         box_actions = action[0:self.box_action_space_len]
         binary_actions = action[self.box_action_space_len:len(action)-1]
-        q_action = action[len(action)-1]
+        q_action.append(action[len(action)-1])
 
         box_actions = np.array(box_actions)
         binary_actions = np.array(binary_actions)
