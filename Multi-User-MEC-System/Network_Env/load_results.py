@@ -124,11 +124,11 @@ figure, axis = plt.subplots(2,1)
 # axis[0].plot(timesteps, battery_energy_rewards)
 # axis[0].set_title('battery energies reward')
 
-# axis[0].plot(timesteps_TD3, rewards_TD3)
-# axis[0].set_title('TD3 Reward')
+axis[0].plot(timesteps_TD3, rewards_TD3)
+axis[0].set_title('TD3 Reward')
 
-# axis[1].plot(timesteps_DDPG, rewards_DDPG)
-# axis[1].set_title('DDPG Reward')
+axis[1].plot(timesteps_DDPG, rewards_DDPG)
+axis[1].set_title('DDPG Reward')
 
 # axis[2].plot(timesteps, RBs_actions)
 # axis[2].set_title('RB allocation actions')
@@ -213,13 +213,19 @@ def moving_average(data, window_size):
 
 window_size = 1000
 
-TD3_smooth = moving_average(rewards, window_size)
+TD3_smooth = moving_average(energy_efficiency_rewards, window_size)
 
-axis[0].plot(timesteps, rewards)
-axis[0].set_title('Total Reward')
+evaluation_timesteps1 = []
+for i in range(0,len(energy_efficiency_rewards)):
+    evaluation_timesteps1.append(i)
 
-axis[1].plot(timesteps, energies)
-axis[1].set_title('q_action')
+
+# axis[0].plot(evaluation_timesteps1, energy_efficiency_rewards)
+# axis[0].set_title('Energy Efficiency')
+
+
+# axis[1].plot(evaluation_timesteps1[window_size-1:], TD3_smooth)
+# axis[1].set_title('Energy Efficiency')
 
 #plt.plot(timesteps_TD3[window_size-1:], TD3_smooth, color="blue", label='TD3')
 

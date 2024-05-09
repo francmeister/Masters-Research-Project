@@ -11,7 +11,7 @@ env = gym.make('NetworkEnv-v0')
 env.reset()
 max_capacity = 4000
 action = env.action_space.sample()
-action = env.reshape_action_space_for_model(action)
+#action = env.reshape_action_space_for_model(action)
 print('sample action space: ', action)
 observation = env.observation_space.sample()
 print("Observation Space dim: ", env.observation_space_dim)
