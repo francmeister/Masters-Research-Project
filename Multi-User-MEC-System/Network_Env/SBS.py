@@ -159,11 +159,11 @@ class SBS():
         self.urllc_reliability_reward_normalized = urllc_reliability_reward_normalized
         for eMBB_User in eMBB_Users:
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
-            #eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
-            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption
+            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
+            #eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption
             total_energy += eMBB_User_energy_consumption
-            #eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
-            eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
+            eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
+            #eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
             total_rate += eMBB_User_channel_rate
             delay_reward = eMBB_User.calculate_delay_penalty()
             battery_energy_reward = eMBB_User.energy_consumption_reward()
