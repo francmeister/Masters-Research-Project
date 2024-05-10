@@ -1,0 +1,1 @@
+Discount factor = 0.75

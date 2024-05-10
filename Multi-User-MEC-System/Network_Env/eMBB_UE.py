@@ -212,7 +212,7 @@ class eMBB_UE(User_Equipment):
         self.previous_arrival_rate = self.task_arrival_rate_tasks_per_second
         self.current_arrival_rate = self.task_arrival_rate_tasks_per_second
         qeueu_timer = 0
-
+    
 
         if len(self.task_queue) >= self.max_queue_length_number:
             for x in range(0,self.task_arrival_rate_tasks_per_second):

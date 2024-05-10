@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy import interp
 
 #a_load = np.load('TD3_NetworkEnv-v0_0.npy')
 offload_actions = np.load('offloading_actions.npy')
@@ -9,7 +10,8 @@ RBs_actions = np.load('subcarrier_actions.npy')
 rewards_throughput_energy = np.load('timestep_rewards_energy_throughput.npy')
 rewards_throughput_energy_TD3 = np.load('timestep_rewards_energy_throughput_TD3.npy')
 rewards_throughput_energy_DDPG = np.load('timestep_rewards_energy_throughput_DDPG.npy')
-evaluations = np.load('TD3_NetworkEnv-v0_0.npy')
+#evaluations = np.load('TD3_NetworkEnv-v0_0.npy')
+TD3_rewards_throughput_energy = np.load('TD3_NetworkEnv-v0_0.npy')
 evaluations_TD3 = np.load('TD3_NetworkEnv-v0_0_TD3.npy')
 evaluations_DDPG = np.load('TD3_NetworkEnv-v0_0_DDPG.npy')
 rewards_throughput_energy_ = np.load('TD3_NetworkEnv-v0_0_.npy')
@@ -62,10 +64,15 @@ rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
 throughputs = rewards_throughput_energy[:,3]
 
-timesteps_TD3 = rewards_throughput_energy_TD3[:,0]
-timesteps_DDPG = rewards_throughput_energy_DDPG[:,0]
-rewards_TD3 = rewards_throughput_energy_TD3[:,1]
-rewards_DDPG = rewards_throughput_energy_DDPG[:,1]
+#timesteps_TD3 = rewards_throughput_energy_TD3[:,0]
+timesteps_TD3 =TD3_rewards_throughput_energy[:,0]
+#timesteps_DDPG = rewards_throughput_energy_DDPG[:,0]
+timesteps_DDPG = timesteps
+
+#rewards_TD3 = rewards_throughput_energy_TD3[:,1]
+rewards_TD3 = TD3_rewards_throughput_energy[:,1]
+#rewards_DDPG = rewards_throughput_energy_DDPG[:,1]
+rewards_DDPG = rewards
 
 timesteps_1_ = rewards_throughput_energy_[:,0]
 rewards_1_ = rewards_throughput_energy_[:,1]
@@ -103,9 +110,9 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.title("Line graph")
 #plt.xlabel("X axis")
 #plt.ylabel("Y axis")
-evaluation_timesteps = []
-for i in range(0,len(evaluations)):
-    evaluation_timesteps.append(i)
+# evaluation_timesteps = []
+# for i in range(0,len(evaluations)):
+#     evaluation_timesteps.append(i)
 # plt.plot(evaluation_timesteps, evaluations, color ="blue")
 # plt.title('Evaluations')
 # plt.plot(evaluation_timesteps, evaluations_TD3, color="blue", label='TD3')
@@ -117,18 +124,40 @@ for i in range(0,len(evaluations)):
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-figure, axis = plt.subplots(2,1)
+#figure, axis = plt.subplots(2,1)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
 # axis[0].plot(timesteps, battery_energy_rewards)
 # axis[0].set_title('battery energies reward')
 
-axis[0].plot(timesteps_TD3, rewards_TD3)
-axis[0].set_title('TD3 Reward')
+# axis[0].plot(timesteps_DDPG, rewards_DDPG)
+# axis[0].set_title('DDPG Reward DF = 0.99')
 
-axis[1].plot(timesteps_DDPG, rewards_DDPG)
-axis[1].set_title('DDPG Reward')
+# axis[1].plot(timesteps, rewards)
+# axis[1].set_title('DDPG Reward DF = 0.75')
+
+normalized_rewards_DDPG = []
+
+for x in rewards_DDPG:
+    normalized_rewards_DDPG.append(interp(x,[0,max(rewards_DDPG)],[0,300]))
+
+def moving_average(data, window_size):
+    """Compute the moving average of data."""
+    weights = np.repeat(1.0, window_size) / window_size
+    return np.convolve(data, weights, 'valid')
+
+window_size = 100
+
+TD3_smooth = moving_average(rewards_TD3, window_size)
+DDPG_smooth = moving_average(normalized_rewards_DDPG, window_size)
+
+plt.plot(timesteps_TD3[window_size-1:], TD3_smooth, color="green", label="TD3")
+plt.plot(timesteps_DDPG[window_size-1:], DDPG_smooth, color="blue", label='DDPG')
+plt.xlabel("Timestep(t)")
+plt.ylabel("System Reward($\mathcal{R}$)")
+plt.legend(["TD3","DDPG"], loc="upper left")
+plt.grid()
 
 # axis[2].plot(timesteps, RBs_actions)
 # axis[2].set_title('RB allocation actions')
@@ -206,14 +235,14 @@ axis[5].scatter(timesteps_, RBs_actions_)
 axis[5].set_title('RB allocation actions')
 '''
 
-def moving_average(data, window_size):
-    """Compute the moving average of data."""
-    weights = np.repeat(1.0, window_size) / window_size
-    return np.convolve(data, weights, 'valid')
+# def moving_average(data, window_size):
+#     """Compute the moving average of data."""
+#     weights = np.repeat(1.0, window_size) / window_size
+#     return np.convolve(data, weights, 'valid')
 
-window_size = 1000
+# window_size = 1000
 
-TD3_smooth = moving_average(energy_efficiency_rewards, window_size)
+# TD3_smooth = moving_average(energy_efficiency_rewards, window_size)
 
 evaluation_timesteps1 = []
 for i in range(0,len(energy_efficiency_rewards)):
