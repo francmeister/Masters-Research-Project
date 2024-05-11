@@ -26,6 +26,7 @@ class eMBB_UE(User_Equipment):
         self.assigned_access_point = 0
         self.assigned_access_point_label_matrix = []
         self.assigned_access_point_label_matrix_integers = []
+        self.timestep_counter = 0
         self.set_properties_eMBB()
 
     def set_properties_eMBB(self):
@@ -375,6 +376,7 @@ class eMBB_UE(User_Equipment):
        
 
     def transmit_to_SBS(self, communication_channel, URLLC_users):
+        self.timestep_counter+=1
         #Calculate the bandwidth achieved on each RB
         achieved_RB_channel_rates = []
         # achieved_RB_channel_rates_ = []
@@ -413,7 +415,10 @@ class eMBB_UE(User_Equipment):
             #self.achieved_channel_rate_ = sum(achieved_RB_channel_rates_)
             self.previous_channel_rate = self.achieved_channel_rate
             min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
-            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,1]) 
+            if self.timeslot_counter >= 500000:
+                self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,10]) 
+            else:
+                self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,1]) 
             #self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,56000],[0,1]) 
         # print('achieved channel rate: ', self.achieved_channel_rate)
         # print('achieved channel rate_: ', self.achieved_channel_rate_)

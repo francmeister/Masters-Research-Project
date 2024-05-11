@@ -9,6 +9,8 @@ rewards_throughput_energy_3_user = np.load('timestep_rewards_energy_throughput_3
 rewards_throughput_energy_7_user = np.load('timestep_rewards_energy_throughput_7_Users.npy')
 rewards_throughput_energy_9_user = np.load('timestep_rewards_energy_throughput_9_Users.npy')
 
+fairness_index = np.load('fairnes_index.npy')
+
 
 
 

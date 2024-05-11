@@ -154,6 +154,7 @@ class NetworkEnv(gym.Env):
         self.sleep = 0
         self.steps = 0
         self.initial_RB_bandwidth = self.Communication_Channel_1.RB_bandwidth_Hz
+        self.RB_bandwidth = self.initial_RB_bandwidth
 
     def reshape_observation_space_for_model(self,observation_space):
         observation_space = np.transpose(observation_space)
@@ -650,6 +651,7 @@ class NetworkEnv(gym.Env):
         #print(reward)
         #print('')
         self.timestep_counter+=1
+        self.RB_bandwidth = self.Communication_Channel_1.RB_bandwidth_Hz
         return observation,reward,done,info
     
     def reset(self):
