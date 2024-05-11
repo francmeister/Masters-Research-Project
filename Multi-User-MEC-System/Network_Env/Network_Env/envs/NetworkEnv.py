@@ -152,6 +152,8 @@ class NetworkEnv(gym.Env):
         self.STEP_LIMIT = 30
         self.sleep = 0
         self.steps = 0
+        self.timestep_counter = 0
+        self.initial_RB_bandwidth = self.Communication_Channel_1.RB_bandwidth_Hz
 
     def reshape_observation_space_for_model(self,observation_space):
         observation_space = np.transpose(observation_space)
@@ -647,6 +649,7 @@ class NetworkEnv(gym.Env):
         #dones[len(dones)-1] = 1
         #print(reward)
         #print('')
+        self.timestep_counter+=1
         return observation,reward,done,info
     
     def reset(self):
@@ -675,6 +678,8 @@ class NetworkEnv(gym.Env):
         self.min_off_queue_length = 0
         self.resource_block_allocation_matrix = []
         self.resource_allocation_constraint_violation = 0
+        if self.timestep_counter >= 500000:
+            self.Communication_Channel_1.RB_bandwidth_Hz = 10*self.initial_RB_bandwidth
        
         for eMBB_User in self.eMBB_Users:
             #eMBB_User.set_properties_UE()
@@ -792,12 +797,12 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        self.eMBB_Users.append(self.eMBB_UE_2)
-        self.eMBB_Users.append(self.eMBB_UE_3)
-        self.eMBB_Users.append(self.eMBB_UE_4)
-        self.eMBB_Users.append(self.eMBB_UE_5)
-        self.eMBB_Users.append(self.eMBB_UE_6)
-        self.eMBB_Users.append(self.eMBB_UE_7)
+        #self.eMBB_Users.append(self.eMBB_UE_2)
+        #self.eMBB_Users.append(self.eMBB_UE_3)
+        #self.eMBB_Users.append(self.eMBB_UE_4)
+        #self.eMBB_Users.append(self.eMBB_UE_5)
+        #self.eMBB_Users.append(self.eMBB_UE_6)
+        #self.eMBB_Users.append(self.eMBB_UE_7)
         #self.eMBB_Users.append(self.eMBB_UE_8)
         #self.eMBB_Users.append(self.eMBB_UE_9)
         #self.eMBB_Users.append(self.eMBB_UE_10)
