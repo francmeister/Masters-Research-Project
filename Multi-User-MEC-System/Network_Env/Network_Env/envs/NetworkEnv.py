@@ -24,6 +24,7 @@ clock = pygame.time.Clock()
 class NetworkEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     def __init__(self):
+        self.timestep_counter = 0
         self.create_objects()
         self.reset()
         #Action Space Bound Paramaters
@@ -152,7 +153,6 @@ class NetworkEnv(gym.Env):
         self.STEP_LIMIT = 30
         self.sleep = 0
         self.steps = 0
-        self.timestep_counter = 0
         self.initial_RB_bandwidth = self.Communication_Channel_1.RB_bandwidth_Hz
 
     def reshape_observation_space_for_model(self,observation_space):
