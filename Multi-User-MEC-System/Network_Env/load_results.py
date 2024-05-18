@@ -64,15 +64,15 @@ rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
 throughputs = rewards_throughput_energy[:,3]
 
-#timesteps_TD3 = rewards_throughput_energy_TD3[:,0]
-timesteps_TD3 =TD3_rewards_throughput_energy[:,0]
+timesteps_TD3 = rewards_throughput_energy_TD3[:,0]
+#timesteps_TD3 =TD3_rewards_throughput_energy[:,0]
+timesteps_DDPG = rewards_throughput_energy_DDPG[:,0]
 #timesteps_DDPG = rewards_throughput_energy_DDPG[:,0]
-timesteps_DDPG = timesteps
 
-#rewards_TD3 = rewards_throughput_energy_TD3[:,1]
-rewards_TD3 = TD3_rewards_throughput_energy[:,1]
-#rewards_DDPG = rewards_throughput_energy_DDPG[:,1]
-rewards_DDPG = rewards
+rewards_TD3 = rewards_throughput_energy_TD3[:,1]
+#rewards_TD3 = TD3_rewards_throughput_energy[:,1]
+rewards_DDPG = rewards_throughput_energy_DDPG[:,1]
+#rewards_DDPG = rewards
 
 timesteps_1_ = rewards_throughput_energy_[:,0]
 rewards_1_ = rewards_throughput_energy_[:,1]

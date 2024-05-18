@@ -4,6 +4,7 @@ import math
 import numpy as np
 from numpy import interp
 import scipy.stats as stats
+import statistics
 
 class SBS():
     def __init__(self, SBS_label):
@@ -243,7 +244,8 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
         #self.achieved_system_reward
-        return self.achieved_system_reward, self.achieved_system_reward, self.energy_rewards,self.throughput_rewards
+        return self.achieved_system_reward, urllc_reliability_reward, self.energy_rewards,self.throughput_rewards
+        #return self.achieved_system_reward, self.achieved_system_reward, self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, self.overall_users_reward , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
@@ -308,8 +310,10 @@ class SBS():
         self.K_variance = 3
         self.outage_probability = 0
         self.previous_rates = []
+        self.previous_Ks = []
         self.timeslot_counter = 0
         self.ptr = 0
+        self.Kptr = 0
         self.urllc_reliability_reward_normalized = 0
         self.q = 0
         self.individual_energy_rewards = []
@@ -421,35 +425,37 @@ class SBS():
             urllc_task_size = urllc_users[0].task_size_per_slot_bits    
 
         urllc_total_rate = 0
+        rates = []
         for urllc_user in urllc_users:
             urllc_total_rate+=urllc_user.achieved_channel_rate
+            rates.append(urllc_user.achieved_channel_rate)
 
       
        
         K = num_arriving_urllc_packets*urllc_task_size
-        K_mean = (len(urllc_users)/2)*urllc_task_size
-        K_variance = self.K_variance*urllc_task_size
-        K_inv = stats.norm.ppf((1-self.urllc_reliability_constraint_max), loc=K_mean, scale=K_variance)
-        #print('K_inv: ', K_inv)
-        #print('urllc_total_rate: ', urllc_total_rate)
-        # K = num_arriving_urllc_packets*urllc_task_size
-        # self.K_mean = (len(urllc_users)/2)*urllc_task_size
-        # #K_cdf = stats.norm.cdf(K,self.K_mean,self.K_variance)
-        # K_cdf = stats.norm.cdf(K,self.K_mean,self.K_variance)
-        # self.outage_probability = 1 - K_cdf
+        K_mean = self.K_expectation_over_prev_T_slot(10,K)
+        if len(urllc_users > 3):
+            K_variance = (len(urllc_users)-2)*urllc_task_size
+        else:
+            K_variance = (1)*urllc_task_size
+        #K_inv = stats.norm.ppf(K, loc=K_mean, scale=K_variance)
+     
 
-        # print('self.K_mean: ', self.K_mean)
-        #print('self.K-cdf: ', K_cdf)
-        # print('self.1/K-cdf: ', 1/K_cdf)
-        # print('total urllc rate: ', urllc_total_rate)
-        # print('(1/K_cdf)*(1-self.urllc_reliability_constraint_max): ', (1/K_cdf)*(1-self.urllc_reliability_constraint_max))
-        #print('urllc rate: ', urllc_total_rate)
-        reliability_reward = urllc_total_rate-K_inv
-        average_rate_prev_slots = self.urllc_rate_expectation_over_prev_T_slot(10,urllc_total_rate)
+
+        reliability_reward = urllc_total_rate-K*(1-self.urllc_reliability_constraint_max)
+        if reliability_reward < 0:
+            reliability_reward = 0
+        else:
+            reliability_reward = reliability_reward
+        #average_rate_prev_slots = self.urllc_rate_expectation_over_prev_T_slot(10,urllc_total_rate)
+        average_rate = urllc_total_rate/len(urllc_users)
+        variance_rate = statistics.pvariance(rates)
+        std_rate = math.sqrt(variance_rate)
+     
         #print('self.previous_rates: ', self.previous_rates)
-        variance = urllc_task_size
+        #variance = urllc_task_size
 
-        self.outage_probability = stats.norm.cdf(K,loc=average_rate_prev_slots,scale=variance)
+        self.outage_probability = stats.norm.cdf(K,loc=average_rate,scale=std_rate)
         # print('reliability_reward: ', reliability_reward)
         # print('self.outage_probability: ', self.outage_probability)
         #print('reliability_reward: ', reliability_reward)
@@ -470,6 +476,19 @@ class SBS():
 
         average_rate = sum(self.previous_rates)/len(self.previous_rates)
         return average_rate
+    
+    def K_expectation_over_prev_T_slot(self, T, K):
+        self.timeslot_counter+=1
+        number_of_previous_time_slots = T
+
+        if len(self.previous_Ks) == number_of_previous_time_slots:
+            self.previous_Ks[int(self.Kptr)] = K
+            self.self.Kptr = (self.Kptr + 1) % number_of_previous_time_slots
+        else:
+            self.previous_Ks.append(K)
+
+        average_K = sum(self.previous_Ks)/len(self.previous_Ks)
+        return average_K
     
 
     def reward(self, eMBB_Users, urllc_users, communication_channel):
