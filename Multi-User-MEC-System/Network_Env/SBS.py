@@ -434,7 +434,7 @@ class SBS():
        
         K = num_arriving_urllc_packets*urllc_task_size
         K_mean = self.K_expectation_over_prev_T_slot(10,K)
-        if len(urllc_users > 3):
+        if len(urllc_users) > 3:
             K_variance = (len(urllc_users)-2)*urllc_task_size
         else:
             K_variance = (1)*urllc_task_size
