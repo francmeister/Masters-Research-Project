@@ -483,7 +483,7 @@ class SBS():
 
         if len(self.previous_Ks) == number_of_previous_time_slots:
             self.previous_Ks[int(self.Kptr)] = K
-            self.self.Kptr = (self.Kptr + 1) % number_of_previous_time_slots
+            self.Kptr = (self.Kptr + 1) % number_of_previous_time_slots
         else:
             self.previous_Ks.append(K)
 
