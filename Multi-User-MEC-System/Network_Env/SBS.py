@@ -244,7 +244,7 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
         #self.achieved_system_reward
-        return self.achieved_system_reward, urllc_reliability_reward, self.energy_rewards,self.throughput_rewards
+        return self.achieved_system_reward, urllc_reliability_reward_normalized, self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, self.achieved_system_reward, self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, self.overall_users_reward , self.energy_rewards,self.throughput_rewards
 
@@ -459,8 +459,8 @@ class SBS():
         # print('reliability_reward: ', reliability_reward)
         # print('self.outage_probability: ', self.outage_probability)
         #print('reliability_reward: ', reliability_reward)
-        reliability_reward_max = 2000
-        reliability_reward_min = -2000
+        reliability_reward_max = 4000
+        reliability_reward_min = 0
         reliability_reward_normalized = interp(reliability_reward,[reliability_reward_min,reliability_reward_max],[0,5])
         return reliability_reward, reliability_reward_normalized
     

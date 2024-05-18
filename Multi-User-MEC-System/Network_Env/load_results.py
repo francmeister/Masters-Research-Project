@@ -152,8 +152,9 @@ window_size = 100
 TD3_smooth = moving_average(rewards_TD3, window_size)
 DDPG_smooth = moving_average(normalized_rewards_DDPG, window_size)
 
-plt.plot(timesteps_TD3[window_size-1:], TD3_smooth, color="green", label="TD3")
-plt.plot(timesteps_DDPG[window_size-1:], DDPG_smooth, color="blue", label='DDPG')
+plt.plot(timesteps, rewards, color="green", label="TD3")
+#plt.plot(timesteps_TD3[window_size-1:], TD3_smooth, color="green", label="TD3")
+#plt.plot(timesteps_DDPG[window_size-1:], DDPG_smooth, color="blue", label='DDPG')
 plt.xlabel("Timestep(t)")
 plt.ylabel("System Reward($\mathcal{R}$)")
 plt.legend(["TD3","DDPG"], loc="upper left")
