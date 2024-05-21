@@ -244,7 +244,7 @@ class SBS():
         #print("total_rate: ", total_rate)
         #print("total_QOS_revenue: ", total_QOS_revenue)
         #self.achieved_system_reward
-        self.achieved_system_reward = 0.8*self.achieved_system_reward + 0.2*fairness_index
+        self.achieved_system_reward = self.achieved_system_reward + fairness_index
         #return self.achieved_system_reward, urllc_reliability_reward_normalized, self.energy_rewards,self.throughput_rewards
         return self.achieved_system_reward, self.achieved_system_reward, self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, self.overall_users_reward , self.energy_rewards,self.throughput_rewards
