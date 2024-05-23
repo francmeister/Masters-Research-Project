@@ -155,6 +155,7 @@ class SBS():
         total_offload_traffic_reward = 0
         total_lc_delay_violation_probability = 0
         urllc_reliability_reward, urllc_reliability_reward_normalized = self.calculate_urllc_reliability_reward(urllc_users)
+        users_channel_rates = []
         #d
         self.q_action = q_action[0]
         self.urllc_reliability_reward_normalized = urllc_reliability_reward_normalized
@@ -164,6 +165,7 @@ class SBS():
             #eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption
             total_energy += eMBB_User_energy_consumption
             eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
+            users_channel_rates.append(eMBB_User_channel_rate)
             #eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
             total_rate += eMBB_User_channel_rate
             delay_reward = eMBB_User.calculate_delay_penalty()
@@ -223,7 +225,7 @@ class SBS():
         #self.achieved_system_reward += urllc_reliability_reward_normalized
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
-        fairness_index_normalized = 0.2*interp(fairness_index,[0,1],[0,1])
+        fairness_index_normalized = interp(fairness_index,[0,1],[0,3])
         #print('fairness index: ', fairness_index_normalized)
         #print(' ')
         #fairness_penalty = self.calculate_fairness_(eMBB_Users, communication_channel)
@@ -232,19 +234,10 @@ class SBS():
         #print(' ')
         self.fairness_index = fairness_index
         new_individual_rewards = [x + fairness_index_normalized for x in self.individual_rewards]
-        #print('individual rewards: ', new_individual_rewards)
-        #print('new individual rewards: ', new_inidividual_rewards)
-        #print(' ')
-        #print(' ')
-        #print('new rewards')
-        #new_inidividual_rewards = [fairness_index_normalized for _ in range(len(eMBB_Users))]
-        #print(new_inidividual_rewards)
-
-        #print("total_energy: ", total_energy)
-        #print("total_rate: ", total_rate)
-        #print("total_QOS_revenue: ", total_QOS_revenue)
-        #self.achieved_system_reward
-        self.achieved_system_reward = self.achieved_system_reward + 5*fairness_index
+        self.users_rate_variance = statistics.pvariance(users_channel_rates)
+        self.users_rate_variance_sum+=statistics.pvariance(users_channel_rates)
+      
+        self.achieved_system_reward = self.achieved_system_reward + fairness_index_normalized
         #return self.achieved_system_reward, urllc_reliability_reward_normalized, self.energy_rewards,self.throughput_rewards
         #print('self.achieved_system_reward: ', self.achieved_system_reward)
         return self.achieved_system_reward, self.achieved_system_reward, self.energy_rewards,self.throughput_rewards
@@ -272,6 +265,8 @@ class SBS():
     #def perform_timeslot_sequential_events(self,eMBB_Users,URLLC_Users,communication_channel):
 
     def set_properties(self):
+        self.users_rate_variance = 0
+        self.users_rate_variance_sum = 0
         self.q_action = 0
         self.associated_users = []
         self.associated_URLLC_users = []
