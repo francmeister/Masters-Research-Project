@@ -225,7 +225,7 @@ class SBS():
         #self.achieved_system_reward += urllc_reliability_reward_normalized
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
-        fairness_index_normalized = interp(fairness_index,[0,1],[0,6])
+        fairness_index_normalized = interp(fairness_index,[0,1],[0,1])
         #print('fairness index: ', fairness_index_normalized)
         #print(' ')
         #fairness_penalty = self.calculate_fairness_(eMBB_Users, communication_channel)
