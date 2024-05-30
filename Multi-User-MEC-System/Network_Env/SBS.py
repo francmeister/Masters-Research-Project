@@ -165,6 +165,7 @@ class SBS():
             #eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption
             total_energy += eMBB_User_energy_consumption
             eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
+            #eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
             users_channel_rates.append(eMBB_User_channel_rate)
             #eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
             total_rate += eMBB_User_channel_rate
@@ -237,7 +238,8 @@ class SBS():
         self.users_rate_variance = statistics.pvariance(users_channel_rates)
         self.users_rate_variance_sum+=statistics.pvariance(users_channel_rates)
       
-        self.achieved_system_reward = self.achieved_system_reward + fairness_index_normalized
+        #self.achieved_system_reward = self.achieved_system_reward + fairness_index_normalized
+        self.achieved_system_reward = fairness_index_normalized
         #return self.achieved_system_reward, urllc_reliability_reward_normalized, self.energy_rewards,self.throughput_rewards
         #print('self.achieved_system_reward: ', self.achieved_system_reward)
         return self.achieved_system_reward, self.achieved_system_reward, self.energy_rewards,self.throughput_rewards
