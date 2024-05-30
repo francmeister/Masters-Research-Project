@@ -415,10 +415,10 @@ class eMBB_UE(User_Equipment):
             #self.achieved_channel_rate_ = sum(achieved_RB_channel_rates_)
             self.previous_channel_rate = self.achieved_channel_rate
             min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
-            if self.timeslot_counter >= 500000:
-                self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,10]) 
-            else:
-                self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,1]) 
+            #if self.timeslot_counter >= 500000:
+            #    self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,10]) 
+            #else:
+            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,1]) 
             #self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,56000],[0,1]) 
         # print('achieved channel rate: ', self.achieved_channel_rate)
         # print('achieved channel rate_: ', self.achieved_channel_rate_)
