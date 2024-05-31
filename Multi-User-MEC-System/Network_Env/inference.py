@@ -85,7 +85,7 @@ axis[1,0].plot(users, fairness_1_FI, '--', marker='*',ms = 10,color="green")
 axis[1,0].plot(users, fairness_7_FI, '--', marker='*',ms = 10,color="blue")
 axis[1,0].plot(users, fairness_13_FI, '--', marker='*',ms = 10,color="red")
 axis[1,0].set_title('Fairness Index')
-axis[1,0].legend(["FI=1","FI=7","FI=13"], loc="upper left")
+axis[1,0].legend(["FI=1","FI=7","FI=13"], loc="upper right")
 axis[1,0].grid()
 
 # axis[0,0].set_title('Total Reward')
