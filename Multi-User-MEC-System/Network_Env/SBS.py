@@ -162,6 +162,8 @@ class SBS():
         for eMBB_User in eMBB_Users:
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
             eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
+            self.total_users_energy_not_normalized+=eMBB_User.achieved_total_energy_consumption
+            self.total_users_throughput_not_normalized+=eMBB_User.achieved_channel_rate
             #eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption
             total_energy += eMBB_User_energy_consumption
             eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
@@ -267,6 +269,8 @@ class SBS():
     #def perform_timeslot_sequential_events(self,eMBB_Users,URLLC_Users,communication_channel):
 
     def set_properties(self):
+        self.total_users_energy_not_normalized = 0
+        self.total_users_throughput_not_normalized = 0
         self.users_rate_variance = 0
         self.users_rate_variance_sum = 0
         self.q_action = 0
