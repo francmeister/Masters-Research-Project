@@ -238,7 +238,7 @@ class SBS():
         self.users_rate_variance = statistics.pvariance(users_channel_rates)
         self.users_rate_variance_sum+=statistics.pvariance(users_channel_rates)
       
-        self.achieved_system_reward = self.achieved_system_reward + fairness_index_normalized
+        #self.achieved_system_reward = self.achieved_system_reward + fairness_index_normalized
         #self.achieved_system_reward = fairness_index_normalized
         #return self.achieved_system_reward, urllc_reliability_reward_normalized, self.energy_rewards,self.throughput_rewards
         #print('self.achieved_system_reward: ', self.achieved_system_reward)
