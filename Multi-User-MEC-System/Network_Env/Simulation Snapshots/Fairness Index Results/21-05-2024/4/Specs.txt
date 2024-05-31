@@ -1,0 +1,2 @@
+System reward = 0.8
+fairness index = 0.2

@@ -193,7 +193,7 @@ class SBS():
             #if eMBB_User_energy_consumption == 0:
             #    individual_reward = 0
             #else:
-            individual_reward = eMBB_User_channel_rate#energy_efficiency_reward#*queue_delay_reward + battery_energy_reward  
+            individual_reward = energy_efficiency_reward#*queue_delay_reward + battery_energy_reward  
       
             self.achieved_system_reward += individual_reward
             self.individual_rewards.append(individual_reward)
@@ -226,7 +226,7 @@ class SBS():
         #self.achieved_system_reward += urllc_reliability_reward_normalized
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
-        fairness_index_normalized = interp(fairness_index,[0,1],[0,20])
+        fairness_index_normalized = interp(fairness_index,[0,1],[0,3])
         #print('fairness index: ', fairness_index_normalized)
         #print(' ')
         #fairness_penalty = self.calculate_fairness_(eMBB_Users, communication_channel)
@@ -238,7 +238,7 @@ class SBS():
         self.users_rate_variance = statistics.pvariance(users_channel_rates)
         self.users_rate_variance_sum+=statistics.pvariance(users_channel_rates)
       
-        #self.achieved_system_reward = self.achieved_system_reward + fairness_index_normalized
+        self.achieved_system_reward = self.achieved_system_reward + fairness_index_normalized
         #self.achieved_system_reward = fairness_index_normalized
         #return self.achieved_system_reward, urllc_reliability_reward_normalized, self.energy_rewards,self.throughput_rewards
         #print('self.achieved_system_reward: ', self.achieved_system_reward)

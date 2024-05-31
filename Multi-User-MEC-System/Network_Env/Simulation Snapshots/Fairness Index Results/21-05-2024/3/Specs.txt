@@ -1,0 +1,2 @@
+system reward = 1
+fairness index = 1

@@ -1,0 +1,3 @@
+reward = throughput + fairness index
+5 users
+FI=1,3,5,7,13
