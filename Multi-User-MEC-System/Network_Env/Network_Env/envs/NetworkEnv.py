@@ -473,7 +473,8 @@ class NetworkEnv(gym.Env):
         #Perform Actions
         self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
         #self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions)
-        #offload_decisions_actions_mapped = [1]
+        #offload_decisions_actions_mapped = [0,0,0]
+        #offload_decisions_actions_mapped = np.array(offload_decisions_actions_mapped)
         #print('offload_decisions_actions_mapped: ', offload_decisions_actions_mapped)
         self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions_mapped)
         #self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions)
