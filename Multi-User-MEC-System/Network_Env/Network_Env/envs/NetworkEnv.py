@@ -473,9 +473,9 @@ class NetworkEnv(gym.Env):
         #Perform Actions
         self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
         #self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions)
-        #offload_decisions_actions_mapped = [0,0,0]
-        #offload_decisions_actions_mapped = np.array(offload_decisions_actions_mapped)
-        #print('offload_decisions_actions_mapped: ', offload_decisions_actions_mapped)
+        offload_decisions_actions_mapped = [1]
+        offload_decisions_actions_mapped = np.array(offload_decisions_actions_mapped)
+        print('offload_decisions_actions_mapped: ', offload_decisions_actions_mapped)
         self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions_mapped)
         #self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions)
 
@@ -808,11 +808,11 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.append(self.eMBB_UE_2)
         self.eMBB_Users.append(self.eMBB_UE_3)
         self.eMBB_Users.append(self.eMBB_UE_4)
-        self.eMBB_Users.append(self.eMBB_UE_5)
-        self.eMBB_Users.append(self.eMBB_UE_6)
-        self.eMBB_Users.append(self.eMBB_UE_7)
-        self.eMBB_Users.append(self.eMBB_UE_8)
-        self.eMBB_Users.append(self.eMBB_UE_9)
+        #self.eMBB_Users.append(self.eMBB_UE_5)
+        #self.eMBB_Users.append(self.eMBB_UE_6)
+        #self.eMBB_Users.append(self.eMBB_UE_7)
+        #self.eMBB_Users.append(self.eMBB_UE_8)
+        #self.eMBB_Users.append(self.eMBB_UE_9)
         #self.eMBB_Users.append(self.eMBB_UE_10)
         #self.eMBB_Users.append(self.eMBB_UE_11)
 

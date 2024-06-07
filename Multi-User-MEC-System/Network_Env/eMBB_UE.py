@@ -27,6 +27,10 @@ class eMBB_UE(User_Equipment):
         self.assigned_access_point_label_matrix = []
         self.assigned_access_point_label_matrix_integers = []
         self.timestep_counter = 0
+        self.cycles_per_byte = 330
+        self.cycles_per_bit = self.cycles_per_byte/8
+        self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
+        self.service_rate_bits_per_slot = (self.max_service_rate_cycles_per_slot/self.cycles_per_byte)*8
         self.set_properties_eMBB()
 
     def set_properties_eMBB(self):
@@ -73,10 +77,6 @@ class eMBB_UE(User_Equipment):
 
         self.battery_energy_level = 20000#(random.randint(15000,25000))
         self.energy_harvesting_constant = 300
-        self.cycles_per_byte = 330
-        self.cycles_per_bit = self.cycles_per_byte/8
-        self.max_service_rate_cycles_per_slot = 620000
-        self.service_rate_bits_per_slot = (self.max_service_rate_cycles_per_slot/self.cycles_per_byte)*8
         
 
         #self.QOS_requirement = QOS_requirement()
