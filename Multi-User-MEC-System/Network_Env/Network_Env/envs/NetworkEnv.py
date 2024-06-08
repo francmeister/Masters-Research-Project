@@ -514,7 +514,7 @@ class NetworkEnv(gym.Env):
         #print('Action after interpolation transposed')
         #offload_decisions_actions_mapped = [0.]#[0, 0, 0.5, 0.5, 1, 1, 1]
         #transmit_power_actions_mapped = [50]#,20,20,20,20,20,20]
-        RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
+        #RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
         #print(RB_allocation_actions)
         #RB_allocation_actions_mapped = [6]#,10,15,15,20,20,20]
         #number_URLLC_Users_per_RB_action_mapped = 3
@@ -871,8 +871,8 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        self.eMBB_Users.append(self.eMBB_UE_2)
-        self.eMBB_Users.append(self.eMBB_UE_3)
+        #self.eMBB_Users.append(self.eMBB_UE_2)
+        #self.eMBB_Users.append(self.eMBB_UE_3)
         #self.eMBB_Users.append(self.eMBB_UE_4)
         #self.eMBB_Users.append(self.eMBB_UE_5)
         #self.eMBB_Users.append(self.eMBB_UE_6)
