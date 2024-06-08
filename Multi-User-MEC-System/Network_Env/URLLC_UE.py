@@ -69,7 +69,7 @@ class URLLC_UE(User_Equipment):
 
         #Specify slot task size, computation cycles and latency requirement
         #self.task_arrival_rate_tasks_per_second = random.randint(self.min_task_arrival_rate_tasks_per_second,self.max_task_arrival_rate_tasks_per_second)
-        self.task_arrival_rate_tasks_per_slot = np.random.binomial(size=1,n=1,p=0.5)#np.random.poisson(5,1)
+        self.task_arrival_rate_tasks_per_slot = np.random.binomial(size=1,n=1,p=0.2)#np.random.poisson(5,1)
         self.task_arrival_rate_tasks_per_slot = self.task_arrival_rate_tasks_per_slot[0]
         #self.task_size_per_slot_bits = 10#10 bits per task in slot 
         qeueu_timer = 0
@@ -120,10 +120,11 @@ class URLLC_UE(User_Equipment):
         #self.total_gain = self.small_scale_gain*self.large_scale_gain
 
     def split_tasks(self):
-        if self.small_scale_gain_on_allocated_rb < self.small_scale_channel_gain_threshold and len(self.task_queue) > 0:
-            self.local_task_queue.append(self.task_queue[0])
-            self.task_queue.clear()
-        elif self.small_scale_gain_on_allocated_rb > self.small_scale_channel_gain_threshold and len(self.task_queue) > 0:
+        # if self.small_scale_gain_on_allocated_rb < self.small_scale_channel_gain_threshold and len(self.task_queue) > 0:
+        #     self.local_task_queue.append(self.task_queue[0])
+        #     self.task_queue.clear()
+        # elif self.small_scale_gain_on_allocated_rb > self.small_scale_channel_gain_threshold and len(self.task_queue) > 0:
+        if len(self.task_queue) > 0:
             self.offload_task_queue.append(self.task_queue[0])
             self.has_transmitted_this_time_slot = True
             self.task_queue.clear()
@@ -132,28 +133,57 @@ class URLLC_UE(User_Equipment):
         self.puncturing_embb_user_transmit_power = 0
         self.puncturing_embb_user_small_scale_gain = 0
         self.puncturing_embb_user_large_scale_gain = 0
+        punturing_embb_user = 0
 
         for eMBB_user in eMBB_users:
             for allocated_rb in eMBB_user.allocated_resource_blocks_numbered:
-                for time_blocks in eMBB_user.time_matrix:
-                    if time_blocks == 1 or time_blocks == 2:
-                        if allocated_rb == self.assigned_resource_block and self.assigned_time_block == time_blocks:
+                if allocated_rb == self.assigned_resource_block:
+                    if eMBB_user.time_matrix[allocated_rb-1] == 1 or eMBB_user.time_matrix[allocated_rb-1] == 2:
+                        if eMBB_user.time_matrix[allocated_rb-1] == self.assigned_time_block:
+                            #print('self.assigned_resource_block: ', self.assigned_resource_block, "self.assigned_time_block: ", self.assigned_time_block)
+                            #print('eMBB_user.eMBB_UE_label: ', eMBB_user.eMBB_UE_label, 'eMBB_user.time_matrix: ', eMBB_user.time_matrix, "allocated_rb: ", allocated_rb, "time_blocks: ", eMBB_user.time_matrix[allocated_rb-1])
+                            self.puncturing_embb_user_transmit_power = eMBB_user.assigned_transmit_power_W
+                            punturing_embb_user = eMBB_user.eMBB_UE_label
+                            # print('self.assigned_resource_block: ', self.assigned_resource_block)
+                            # print('eMBB_user.small_scale_gain: ', eMBB_user.small_scale_gain)
+                            self.puncturing_embb_user_small_scale_gain = eMBB_user.small_scale_gain[0][(self.assigned_resource_block-1)]
+                            self.puncturing_embb_user_large_scale_gain = eMBB_user.large_scale_gain[0][(self.assigned_resource_block-1)]
+                            break
+                    elif eMBB_user.time_matrix[allocated_rb-1] == (1,2):
+                        if eMBB_user.time_matrix[allocated_rb-1][0] == self.assigned_time_block or eMBB_user.time_matrix[allocated_rb-1][1] == self.assigned_time_block:
+                            #print('self.assigned_resource_block: ', self.assigned_resource_block, "self.assigned_time_block: ", self.assigned_time_block)
+                            #print('eMBB_user.eMBB_UE_label: ', eMBB_user.eMBB_UE_label, 'eMBB_user.time_matrix: ', eMBB_user.time_matrix, "allocated_rb: ", allocated_rb, "time_blocks: ", eMBB_user.time_matrix[allocated_rb-1])
                             self.puncturing_embb_user_transmit_power = eMBB_user.assigned_transmit_power_W
                             # print('self.assigned_resource_block: ', self.assigned_resource_block)
                             # print('eMBB_user.small_scale_gain: ', eMBB_user.small_scale_gain)
                             self.puncturing_embb_user_small_scale_gain = eMBB_user.small_scale_gain[0][(self.assigned_resource_block-1)]
                             self.puncturing_embb_user_large_scale_gain = eMBB_user.large_scale_gain[0][(self.assigned_resource_block-1)]
                             break
-                    elif time_blocks == (1,2):
-                        for time_block in time_blocks:
-                            if allocated_rb == self.assigned_resource_block and self.assigned_time_block == time_block:
-                                self.puncturing_embb_user_transmit_power = eMBB_user.assigned_transmit_power_W
-                                # print('self.assigned_resource_block: ', self.assigned_resource_block)
-                                # print('eMBB_user.small_scale_gain: ', eMBB_user.small_scale_gain)
-                                self.puncturing_embb_user_small_scale_gain = eMBB_user.small_scale_gain[0][(self.assigned_resource_block-1)]
-                                self.puncturing_embb_user_large_scale_gain = eMBB_user.large_scale_gain[0][(self.assigned_resource_block-1)]
-                                break
-        
+                # for time_blocks in eMBB_user.time_matrix:
+                #     if time_blocks == 1 or time_blocks == 2:
+                #         if allocated_rb == self.assigned_resource_block and self.assigned_time_block == time_blocks:
+                #             print('self.assigned_resource_block: ', self.assigned_resource_block, "self.assigned_time_block: ", self.assigned_time_block)
+                #             print('eMBB_user.eMBB_UE_label: ', eMBB_user.eMBB_UE_label, 'eMBB_user.time_matrix: ', eMBB_user.time_matrix, "allocated_rb: ", allocated_rb, "time_blocks: ", time_blocks)
+                #             self.puncturing_embb_user_transmit_power = eMBB_user.assigned_transmit_power_W
+                #             punturing_embb_user = eMBB_user.eMBB_UE_label
+                #             # print('self.assigned_resource_block: ', self.assigned_resource_block)
+                #             # print('eMBB_user.small_scale_gain: ', eMBB_user.small_scale_gain)
+                #             self.puncturing_embb_user_small_scale_gain = eMBB_user.small_scale_gain[0][(self.assigned_resource_block-1)]
+                #             self.puncturing_embb_user_large_scale_gain = eMBB_user.large_scale_gain[0][(self.assigned_resource_block-1)]
+                #             break
+                #     elif time_blocks == (1,2):
+                #         for time_block in time_blocks:
+                #             if allocated_rb == self.assigned_resource_block and self.assigned_time_block == time_block:
+                #                 print('self.assigned_resource_block: ', self.assigned_resource_block, "self.assigned_time_block: ", self.assigned_time_block)
+                #                 print('eMBB_user.eMBB_UE_label: ', eMBB_user.eMBB_UE_label, 'eMBB_user.time_matrix: ', eMBB_user.time_matrix, "allocated_rb: ", allocated_rb, "time_blocks: ", time_blocks)
+                #                 self.puncturing_embb_user_transmit_power = eMBB_user.assigned_transmit_power_W
+                #                 # print('self.assigned_resource_block: ', self.assigned_resource_block)
+                #                 # print('eMBB_user.small_scale_gain: ', eMBB_user.small_scale_gain)
+                #                 self.puncturing_embb_user_small_scale_gain = eMBB_user.small_scale_gain[0][(self.assigned_resource_block-1)]
+                #                 self.puncturing_embb_user_large_scale_gain = eMBB_user.large_scale_gain[0][(self.assigned_resource_block-1)]
+                #                 break
+        #print('urllc user: ', self.URLLC_UE_label, "puncturing embb: ", punturing_embb_user, "self.assigned_resource_block: ", self.assigned_resource_block, "self.assigned_time_block: ", self.assigned_time_block)
+        #print('')
         # print('------------------------------------')
         # print('URLLC user: ', self.URLLC_UE_label, 'assigned RB: ', self.assigned_resource_block)
         # print('URLLC user: ', self.URLLC_UE_label, 'assigned time block: ', self.assigned_time_block)
@@ -177,7 +207,8 @@ class URLLC_UE(User_Equipment):
         numerator = self.small_scale_gain[0][self.assigned_resource_block-1]*self.large_scale_gain[0][self.assigned_resource_block-1]*self.transmit_power
         denominator = self.puncturing_embb_user_large_scale_gain*self.puncturing_embb_user_small_scale_gain*self.puncturing_embb_user_transmit_power + communication_channel.noise_spectral_density_W 
         channel_rate = communication_channel.RB_bandwidth_Hz*(1/communication_channel.num_of_mini_slots)*math.log2((1+numerator/denominator))
-        self.achieved_channel_rate = channel_rate/500
+        #self.achieved_channel_rate = channel_rate/500
+        self.achieved_channel_rate = channel_rate/1000
         #print('urllc user id: ', self.URLLC_UE_label, 'achieved channel rate: ', self.achieved_channel_rate)
 
 

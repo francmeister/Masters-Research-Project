@@ -29,7 +29,8 @@ class eMBB_UE(User_Equipment):
         self.timestep_counter = 0
         self.cycles_per_byte = 330
         self.cycles_per_bit = self.cycles_per_byte/8
-        self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
+        #self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
+        self.max_service_rate_cycles_per_slot = 620000
         self.service_rate_bits_per_slot = (self.max_service_rate_cycles_per_slot/self.cycles_per_byte)*8
         self.set_properties_eMBB()
 
@@ -383,6 +384,8 @@ class eMBB_UE(User_Equipment):
         #print('number of allocated RBs: ', len(self.allocate(d_RBs))
         count = 0
         self.find_puncturing_users(communication_channel,URLLC_users)
+        #print('embb user: ', self.eMBB_UE_label, "puncturing urllc users: ", self.puncturing_urllc_users_)
+        #print('')
         #print('allocated RBs')
         #print(self.allocated_RBs)
         reshaped_allocated_RBs = np.array(self.allocated_RBs)
@@ -420,34 +423,7 @@ class eMBB_UE(User_Equipment):
             #else:
             self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,1]) 
             #self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,56000],[0,1]) 
-        # print('achieved channel rate: ', self.achieved_channel_rate)
-        # print('achieved channel rate_: ', self.achieved_channel_rate_)
-        # print('')  
-                        
-
-
-
-
-
-
-
-        # if self.battery_energy_level > 0 and self.has_transmitted_this_time_slot == True:
-        #      for RB_indicator in self.allocated_RBs:
-        #          RB_channel_gain = self.total_gain[0][count]
-        #          achieved_RB_channel_rate = self.calculate_channel_rate(communication_channel,RB_indicator,RB_channel_gain)
-        #          achieved_RB_channel_rates.append(achieved_RB_channel_rate)
-        #          count += 1
-        #      self.achieved_channel_rate = sum(achieved_RB_channel_rates)
-        #      self.previous_channel_rate = self.achieved_channel_rate
-        #      min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
-        #      self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,1])   
-        # # 
-         
-
-        
-
-        #print('achieved channel rate: ', self.achieved_channel_rate)
-        #print(' ')
+       
 
     def calculate_channel_rate(self, communication_channel,RB_indicator,RB_channel_gain,current_rb_occupied):
         RB_bandwidth = communication_channel.RB_bandwidth_Hz
@@ -459,7 +435,7 @@ class eMBB_UE(User_Equipment):
             channel_rate = RB_indicator*(RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator)))
         elif current_rb_occupied == True:
             channel_rate = RB_indicator*RB_bandwidth*(1-(1/half_num_mini_slots_per_rb))*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
-        return (channel_rate/1000)
+        return (channel_rate/500)
     
     # def calculate_channel_rate_(self, communication_channel,RB_indicator,RB_channel_gain,current_rb_occupied):
     #     RB_bandwidth = communication_channel.RB_bandwidth_Hz
@@ -996,6 +972,7 @@ class eMBB_UE(User_Equipment):
         reshaped_allocated_RBs = np.array(self.allocated_RBs)
         reshaped_allocated_RBs = reshaped_allocated_RBs.squeeze()#.reshape(1,communication_channel.time_divisions_per_slot*communication_channel.num_allocate_RBs_upper_bound)
         reshaped_allocated_RBs = reshaped_allocated_RBs.reshape(communication_channel.time_divisions_per_slot,communication_channel.num_allocate_RBs_upper_bound)
+        #print("reshaped_allocated_RBs")
         #print(reshaped_allocated_RBs)
         sum_matrix = np.sum(reshaped_allocated_RBs,axis=0)
         # print('sum_matrix')
@@ -1034,7 +1011,8 @@ class eMBB_UE(User_Equipment):
                 self.time_matrix.append((self.time_allocators[0],self.time_allocators[1]))
             elif len(self.time_allocators) == 0:
                 self.time_matrix.append((0))
-       
+        # print('self.time_matrix')
+        # print(self.time_matrix)
         self.puncturing_urllc_users(URLLC_users)
 
     def puncturing_urllc_users(self,urllc_users):
@@ -1046,6 +1024,7 @@ class eMBB_UE(User_Equipment):
             if time_blocks_at_this_rb == 1 or time_blocks_at_this_rb == 2:
                 for urllc_user in urllc_users:
                     if urllc_user.assigned_resource_block == allocated_resource_block and urllc_user.assigned_time_block == time_blocks_at_this_rb:
+                        #print('urllc_user.assigned_resource_block: ', urllc_user.assigned_resource_block, 'urllc_user.assigned_time_block: ', urllc_user.assigned_time_block)
                         self.puncturing_urllc_users_.append(urllc_user.URLLC_UE_label)
                         if urllc_user.has_transmitted_this_time_slot == True:
                             self.occupied_resource_time_blocks.append((time_blocks_at_this_rb,allocated_resource_block,1))
@@ -1057,12 +1036,15 @@ class eMBB_UE(User_Equipment):
                 for time_block_at_this_rb in time_blocks_at_this_rb:
                     for urllc_user in urllc_users:
                         if urllc_user.assigned_resource_block == allocated_resource_block and urllc_user.assigned_time_block == time_block_at_this_rb:
+                            #print('urllc_user.assigned_resource_block: ', urllc_user.assigned_resource_block, 'urllc_user.assigned_time_block: ', urllc_user.assigned_time_block)
                             self.puncturing_urllc_users_.append(urllc_user.URLLC_UE_label)
                             if urllc_user.has_transmitted_this_time_slot == True:
                                 self.occupied_resource_time_blocks.append((time_block_at_this_rb,allocated_resource_block,1))
                             elif urllc_user.has_transmitted_this_time_slot == False:
                                 self.occupied_resource_time_blocks.append((time_block_at_this_rb,allocated_resource_block,0))
 
+        # print('occupied_resource_time_blocks')
+        # print(self.occupied_resource_time_blocks)
         # print('émbb user id: ', self.eMBB_UE_label, 'allocated rb: ', self.allocated_resource_blocks_numbered)
         # print('allocated time blocks: ', self.time_matrix)
         # print('')

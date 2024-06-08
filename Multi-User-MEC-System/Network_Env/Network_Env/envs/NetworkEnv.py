@@ -253,32 +253,80 @@ class NetworkEnv(gym.Env):
         q_action = action['q_action']
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
         resource_block_action_matrix_size = self.number_of_users*self.time_divisions_per_slot*self.num_allocate_RB_upper_bound
-        #resource_block_action_matrix = resource_block_action_matrix.squeeze()
-        #print(resource_block_action_matrix[:,:,0])
+
+        # main_column_array = resource_block_action_matrix[:,:,0]
+        # #column_array = column_array.reshape(1,self.number_of_users*self.time_divisions_per_slot)
+        # first_column_array = main_column_array[:,0]
+        # second_column_array = main_column_array[:,1]
+        # limit_index_array_1 = len(first_column_array)
+        # limit_index_array_2 = len(second_column_array)
+        # index_array_1 = list(range(0, limit_index_array_1))
+        # index_array_2 = list(range(0, limit_index_array_2))
+        # rand_num_1 = np.random.randint(0, len(index_array_1), 1)
+        # rand_num_2 = np.random.randint(0, len(index_array_2), 1)
+        # rand_num_1 = rand_num_1[0]
+        # rand_num_2 = rand_num_2[0]
+        # first_num = index_array_1[rand_num_1]
+        # #index_array_1 = np.delete(index_array_1,rand_num,axis=0)
+        # # rand_num = np.random.randint(0, len(index_array), 1)
+        # # rand_num = rand_num[0]
+        # second_num = index_array_2[rand_num_2]
+        # index_first_num = first_num
+        # index_second_num = second_num
+        # main_column_array = [[0 for _ in range(self.time_divisions_per_slot)] for _ in range(limit_index_array_1)]
+        # main_column_array[index_first_num][0] = 1
+        # main_column_array[index_second_num][1] = 1
+        # main_column_array = np.array(main_column_array)
+        # resource_block_action_matrix[:,:,0] = main_column_array
+        # print('resource_block_action_matrix')
+        # print(resource_block_action_matrix)
+        # #resource_block_action_matrix = resource_block_action_matrix.squeeze()
+        # print(resource_block_action_matrix[:,:,0])
+        # print('main_column_array')
+        # print(main_column_array)
+        # print('first_column_array')
+        # print(first_column_array)
+        # print('second_column_array')
+        # print(second_column_array)
+        # print('index_first_num: ', index_first_num)
+        # print('index_second_num: ', index_second_num)
+        # print('****************************************************')
         for z in range(0,self.num_allocate_RB_upper_bound):
-            index_array = []
-            column_array = resource_block_action_matrix[:,:,z]
-            column_array = column_array.reshape(1,self.number_of_users*self.time_divisions_per_slot)
-            column_array = column_array.squeeze()
-            limit_index_array = len(column_array)
-            index_array = list(range(0, limit_index_array))
-            rand_num = np.random.randint(0, len(index_array), 1)
-            rand_num = rand_num[0]
-            first_num = index_array[rand_num]
-            index_array = np.delete(index_array,rand_num,axis=0)
-            rand_num = np.random.randint(0, len(index_array), 1)
-            rand_num = rand_num[0]
-            second_num = index_array[rand_num]
+            main_column_array = resource_block_action_matrix[:,:,z]
+            #column_array = column_array.reshape(1,self.number_of_users*self.time_divisions_per_slot)
+            first_column_array = main_column_array[:,0]
+            second_column_array = main_column_array[:,1]
+            limit_index_array_1 = len(first_column_array)
+            limit_index_array_2 = len(second_column_array)
+            index_array_1 = list(range(0, limit_index_array_1))
+            index_array_2 = list(range(0, limit_index_array_2))
+            rand_num_1 = np.random.randint(0, len(index_array_1), 1)
+            rand_num_2 = np.random.randint(0, len(index_array_2), 1)
+            rand_num_1 = rand_num_1[0]
+            rand_num_2 = rand_num_2[0]
+            first_num = index_array_1[rand_num_1]
+            #index_array_1 = np.delete(index_array_1,rand_num,axis=0)
+            # rand_num = np.random.randint(0, len(index_array), 1)
+            # rand_num = rand_num[0]
+            second_num = index_array_2[rand_num_2]
             index_first_num = first_num
             index_second_num = second_num
-            count = 0
-            for x in range(0,self.number_of_users):
-                for y in range(0,(self.time_divisions_per_slot)):
-                    if count == index_first_num or count == index_second_num:
-                        resource_block_action_matrix[x,y,z] = 1
-                    else:
-                        resource_block_action_matrix[x,y,z] = 0
-                    count+=1
+            main_column_array = [[0 for _ in range(self.time_divisions_per_slot)] for _ in range(limit_index_array_1)]
+            main_column_array[index_first_num][0] = 1
+            main_column_array[index_second_num][1] = 1
+            main_column_array = np.array(main_column_array)
+            resource_block_action_matrix[:,:,z] = main_column_array
+            # count = 0
+            # for x in range(0,self.number_of_users):
+            #     for y in range(0,(self.time_divisions_per_slot)):
+            #         if count == index_first_num or count == index_second_num:
+            #             resource_block_action_matrix[x,y,z] = 1
+            #         else:
+            #             resource_block_action_matrix[x,y,z] = 0
+            #         count+=1
+        # print('****************************************************')
+        # print('resource_block_action_matrix')
+        # print(resource_block_action_matrix)
         resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
         action_space_dict = {
@@ -303,22 +351,40 @@ class NetworkEnv(gym.Env):
         #resource_block_action_matrix = resource_block_action_matrix.squeeze()
         #print(resource_block_action_matrix[:,:,0])
         for z in range(0,self.num_allocate_RB_upper_bound):
-            column_array = resource_block_action_matrix[:,:,z]
-            column_array = column_array.reshape(1,self.number_of_users*self.time_divisions_per_slot)
-            column_array = column_array.squeeze()
-            sorted_column_array = np.sort(column_array)[::-1]
-            first_largest_num = sorted_column_array[0]
-            second_largest_num = sorted_column_array[1]
-            index_first_largest_num = np.where(column_array==first_largest_num)[0][0]
-            index_second_largest_num = np.where(column_array==second_largest_num)[0][0]
+            main_column_array = resource_block_action_matrix[:,:,z]
+            first_column_array = main_column_array[:,0]
+            second_column_array = main_column_array[:,1]
+            limit_index_array_1 = len(first_column_array)
+            # column_array = column_array.reshape(1,self.number_of_users*self.time_divisions_per_slot)
+            # column_array = column_array.squeeze()
+            sorted_column_array_1 = np.sort(first_column_array)[::-1]
+            sorted_column_array_2 = np.sort(second_column_array)[::-1]
+            first_largest_num = sorted_column_array_1[0]
+            second_largest_num = sorted_column_array_2[0]
+            index_first_largest_num = np.where(first_column_array==first_largest_num)[0][0]
+            index_second_largest_num = np.where(second_column_array==second_largest_num)[0][0]
+            main_column_array = [[0 for _ in range(self.time_divisions_per_slot)] for _ in range(limit_index_array_1)]
+            main_column_array[index_first_largest_num][0] = 1
+            main_column_array[index_second_largest_num][1] = 1
+            main_column_array = np.array(main_column_array)
+            resource_block_action_matrix[:,:,z] = main_column_array
             count = 0
-            for x in range(0,self.number_of_users):
-                for y in range(0,(self.time_divisions_per_slot)):
-                    if count == index_first_largest_num or count == index_second_largest_num:
-                        resource_block_action_matrix[x,y,z] = 1
-                    else:
-                        resource_block_action_matrix[x,y,z] = 0
-                    count+=1
+            # column_array = resource_block_action_matrix[:,:,z]
+            # column_array = column_array.reshape(1,self.number_of_users*self.time_divisions_per_slot)
+            # column_array = column_array.squeeze()
+            # sorted_column_array = np.sort(column_array)[::-1]
+            # first_largest_num = sorted_column_array[0]
+            # second_largest_num = sorted_column_array[1]
+            # index_first_largest_num = np.where(column_array==first_largest_num)[0][0]
+            # index_second_largest_num = np.where(column_array==second_largest_num)[0][0]
+            # count = 0
+            # for x in range(0,self.number_of_users):
+            #     for y in range(0,(self.time_divisions_per_slot)):
+            #         if count == index_first_largest_num or count == index_second_largest_num:
+            #             resource_block_action_matrix[x,y,z] = 1
+            #         else:
+            #             resource_block_action_matrix[x,y,z] = 0
+            #         count+=1
 
         resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
@@ -448,7 +514,7 @@ class NetworkEnv(gym.Env):
         #print('Action after interpolation transposed')
         #offload_decisions_actions_mapped = [0.]#[0, 0, 0.5, 0.5, 1, 1, 1]
         #transmit_power_actions_mapped = [50]#,20,20,20,20,20,20]
-        #RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
+        RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
         #print(RB_allocation_actions)
         #RB_allocation_actions_mapped = [6]#,10,15,15,20,20,20]
         #number_URLLC_Users_per_RB_action_mapped = 3
@@ -805,9 +871,9 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        self.eMBB_Users.append(self.eMBB_UE_2)
-        self.eMBB_Users.append(self.eMBB_UE_3)
-        self.eMBB_Users.append(self.eMBB_UE_4)
+        #self.eMBB_Users.append(self.eMBB_UE_2)
+        #self.eMBB_Users.append(self.eMBB_UE_3)
+        #self.eMBB_Users.append(self.eMBB_UE_4)
         #self.eMBB_Users.append(self.eMBB_UE_5)
         #self.eMBB_Users.append(self.eMBB_UE_6)
         #self.eMBB_Users.append(self.eMBB_UE_7)
@@ -817,11 +883,11 @@ class NetworkEnv(gym.Env):
         #self.eMBB_Users.append(self.eMBB_UE_11)
 
         self.URLLC_Users.append(self.URLLC_UE_1)
-        #self.URLLC_Users.append(self.URLLC_UE_2)
-        #self.URLLC_Users.append(self.URLLC_UE_3)
-        #self.URLLC_Users.append(self.URLLC_UE_4)
-        #self.URLLC_Users.append(self.URLLC_UE_5)
-        #self.URLLC_Users.append(self.URLLC_UE_6)
+        self.URLLC_Users.append(self.URLLC_UE_2)
+        self.URLLC_Users.append(self.URLLC_UE_3)
+        self.URLLC_Users.append(self.URLLC_UE_4)
+        self.URLLC_Users.append(self.URLLC_UE_5)
+        self.URLLC_Users.append(self.URLLC_UE_6)
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:
