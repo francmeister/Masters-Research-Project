@@ -5,12 +5,13 @@ from numpy import interp
 
 inf_throughput_0_2 = np.load('inf_throughput_0_2.npy')
 inf_throughput_0_4 = np.load('inf_throughput_0_4.npy')
+inf_throughput_0_6 = np.load('inf_throughput_0_6.npy')
 inf_throughput_0_8 = np.load('inf_throughput_0_8.npy')
 inf_throughput_1 = np.load('inf_throughput_1.npy')
 
 
-p = [0.2,0.4,0.8,1]
-throughputs = [inf_throughput_0_2,inf_throughput_0_4,inf_throughput_0_8,inf_throughput_1]
+p = [0.2,0.4,0.6,0.8,1]
+throughputs = [inf_throughput_0_2,inf_throughput_0_4,inf_throughput_0_6,inf_throughput_0_8,inf_throughput_1]
 
 plt.plot(p,throughputs,'--', marker='*', ms = 10,color="green")
 
