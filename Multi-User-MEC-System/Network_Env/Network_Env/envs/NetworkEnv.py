@@ -883,8 +883,8 @@ class NetworkEnv(gym.Env):
         #self.eMBB_Users.append(self.eMBB_UE_11)
 
         self.URLLC_Users.append(self.URLLC_UE_1)
-        self.URLLC_Users.append(self.URLLC_UE_2)
-        self.URLLC_Users.append(self.URLLC_UE_3)
+        #self.URLLC_Users.append(self.URLLC_UE_2)
+        #self.URLLC_Users.append(self.URLLC_UE_3)
         #self.URLLC_Users.append(self.URLLC_UE_4)
         #self.URLLC_Users.append(self.URLLC_UE_5)
         #self.URLLC_Users.append(self.URLLC_UE_6)
