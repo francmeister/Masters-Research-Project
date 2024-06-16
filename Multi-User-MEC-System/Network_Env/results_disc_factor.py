@@ -49,15 +49,22 @@ rewards_0_65_smooth = moving_average(rewards_0_65, window_size)
 rewards_9_users_smooth = moving_average(rewards_9_users, window_size)
 rewards_11_users_smooth = moving_average(rewards_11_users, window_size)
 
-plt.plot(timesteps_0_15[window_size-1:], rewards_0_15_smooth, color="green", label="0.15")
-plt.plot(timesteps_0_35[window_size-1:], rewards_0_35_smooth, color="brown", label="0.35")
+
+new_timesteps = []
+count = 0
+for timestep in timesteps_0_15:
+    new_timesteps.append(count)
+    count+=1
+
+plt.plot(new_timesteps[window_size-1:], rewards_0_15_smooth, color="green", label="0.15")
+plt.plot(new_timesteps[window_size-1:], rewards_0_35_smooth, color="brown", label="0.35")
 #plt.plot(timesteps_0_45[window_size-1:], rewards_0_45_smooth, color="brown", label='0.45')
-plt.plot(timesteps_0_65[window_size-1:], rewards_0_65_smooth, color="blue", label='0.65')
-plt.plot(timesteps_0_99[window_size-1:], rewards_0_99_smooth, color="red", label='0.99')
+plt.plot(new_timesteps[window_size-1:], rewards_0_65_smooth, color="blue", label='0.65')
+plt.plot(new_timesteps[window_size-1:], rewards_0_99_smooth, color="red", label='0.99')
 #plt.plot(timesteps_9_users[window_size-1:], rewards_9_users_smooth, color="red", label='9 Users')
 #plt.plot(timesteps_11_users[window_size-1:], rewards_11_users_smooth, color="black", label='11 Users')
 
-plt.xlabel("Timestep(t)")
+plt.xlabel("Episodes")
 plt.ylabel("System Reward($\mathcal{R}$)")
 plt.legend(["$\epsilon$ = 0.15", "$\epsilon$ = 0.35", "$\epsilon$ = 0.65", "$\epsilon$ = 0.99"], loc="upper left")
 plt.grid()

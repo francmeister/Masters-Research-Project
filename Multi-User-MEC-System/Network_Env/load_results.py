@@ -152,10 +152,16 @@ window_size = 100
 TD3_smooth = moving_average(rewards_TD3, window_size)
 DDPG_smooth = moving_average(normalized_rewards_DDPG, window_size)
 
-plt.plot(timesteps, rewards, color="green", label="TD3")
-#plt.plot(timesteps_TD3[window_size-1:], TD3_smooth, color="green", label="TD3")
-#plt.plot(timesteps_DDPG[window_size-1:], DDPG_smooth, color="blue", label='DDPG')
-plt.xlabel("Timestep(t)")
+print(len(timesteps_TD3))
+new_timesteps_TD3 = []
+count = 0
+for timestep in timesteps_TD3:
+    new_timesteps_TD3.append(count)
+    count+=1
+#plt.plot(timesteps, rewards, color="green", label="TD3")
+plt.plot(new_timesteps_TD3[window_size-1:], TD3_smooth, color="green", label="TD3")
+plt.plot(new_timesteps_TD3[window_size-1:], DDPG_smooth, color="blue", label='DDPG')
+plt.xlabel("Episodes")
 plt.ylabel("System Reward($\mathcal{R}$)")
 plt.legend(["TD3","DDPG"], loc="upper left")
 plt.grid()
