@@ -155,6 +155,7 @@ class NetworkEnv(gym.Env):
         self.steps = 0
         self.initial_RB_bandwidth = self.Communication_Channel_1.RB_bandwidth_Hz
         self.RB_bandwidth = self.initial_RB_bandwidth
+        self.num_RBs_allocated = 0
 
     def reshape_observation_space_for_model(self,observation_space):
         observation_space = np.transpose(observation_space)
@@ -555,6 +556,7 @@ class NetworkEnv(gym.Env):
         # print('RB_allocation_actions')
         # print(RB_allocation_actions)
         # print('')
+        self.num_RBs_allocated = sum(RB_allocation_actions)
         self.Communication_Channel_1.allocate_RBs_eMBB(self.eMBB_Users,RB_allocation_actions)
         #self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users,subcarrier_allocation_actions)
         #self.Communication_Channel_1.create_resource_blocks_URLLC()
@@ -871,13 +873,13 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        #self.eMBB_Users.append(self.eMBB_UE_2)
-        #self.eMBB_Users.append(self.eMBB_UE_3)
-        #self.eMBB_Users.append(self.eMBB_UE_4)
-        #self.eMBB_Users.append(self.eMBB_UE_5)
-        #self.eMBB_Users.append(self.eMBB_UE_6)
-        #self.eMBB_Users.append(self.eMBB_UE_7)
-        #self.eMBB_Users.append(self.eMBB_UE_8)
+        # self.eMBB_Users.append(self.eMBB_UE_2)
+        # self.eMBB_Users.append(self.eMBB_UE_3)
+        # self.eMBB_Users.append(self.eMBB_UE_4)
+        # self.eMBB_Users.append(self.eMBB_UE_5)
+        # self.eMBB_Users.append(self.eMBB_UE_6)
+        # self.eMBB_Users.append(self.eMBB_UE_7)
+        # self.eMBB_Users.append(self.eMBB_UE_8)
         #self.eMBB_Users.append(self.eMBB_UE_9)
         #self.eMBB_Users.append(self.eMBB_UE_10)
         #self.eMBB_Users.append(self.eMBB_UE_11)

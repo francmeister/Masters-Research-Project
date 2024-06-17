@@ -9,14 +9,15 @@ embb_users = [1,3,5,7,9]
 
 #embb_users = np.array([1,3,5,7,9])
 
-throughputs_0_2 = []
-throughputs_0_4 = []
-throughputs_0_6 = []
-throughputs_0_8 = []
-throughputs_1 = []
-random_actions_6_urllc_users = []
+throughputs_0_2 = [11.938769,23.179472,46.643599,82.467801,101.967332]
+throughputs_0_4 = [11.905622,22.511795,45.267431,80.296416,99.374557]
+throughputs_0_6 = [11.834773,21.797246,44.439722,78.262687,96.254796]
+throughputs_0_8 = [11.773056,21.129006,43.048654,76.014374,93.573598]
+throughputs_1 = [10.466878,20.470109,41.679597,73.845885,91.101242]
 
-all_throughput = np.array([throughputs_0_2,throughputs_0_4,throughputs_0_6,throughputs_0_8,throughputs_1,random_actions_6_urllc_users])
+random_actions_1 = [10.962542470271405, 22.33687042972403, 33.6112789077141, 45.07090661316891, 56.49095765763066]
+
+all_throughput = np.array([throughputs_0_2,throughputs_0_4,throughputs_0_6,throughputs_0_8,throughputs_1])
 print(all_throughput)
 # embb_users_ = np.linspace(embb_users.min(), embb_users.max(), 200) 
 
@@ -35,50 +36,50 @@ for r in range(0,len(all_throughput[:,0])):
 
 print(all_throughput)        
 count = 0
-for t in throughputs_1_urllc_users:
-    throughputs_1_urllc_users[count] = interp(t,[min_t,max_t],[3,15]) 
+for t in throughputs_0_2:
+    throughputs_0_2[count] = interp(t,[min_t,max_t],[3,15]) 
     count+=1
 
 count = 0
-for t in throughputs_2_urllc_users:
-    throughputs_2_urllc_users[count] = interp(t,[min_t,max_t],[3,15]) 
+for t in throughputs_0_4:
+    throughputs_0_4[count] = interp(t,[min_t,max_t],[3,15]) 
     count+=1
 
 
 
 count = 0
-for t in throughputs_3_urllc_users:
-    throughputs_3_urllc_users[count] = interp(t,[min_t,max_t],[3,15]) 
+for t in throughputs_0_6:
+    throughputs_0_6[count] = interp(t,[min_t,max_t],[3,15]) 
     count+=1
 
 count = 0
-for t in throughputs_4_urllc_users:
-    throughputs_4_urllc_users[count] = interp(t,[min_t,max_t],[3,15]) 
+for t in throughputs_0_8:
+    throughputs_0_8[count] = interp(t,[min_t,max_t],[3,15]) 
     count+=1
 
 count = 0
-for t in throughputs_5_urllc_users:
-    throughputs_5_urllc_users[count] = interp(t,[min_t,max_t],[3,15]) 
+for t in throughputs_1:
+    throughputs_1[count] = interp(t,[min_t,max_t],[3,15]) 
     count+=1
 
+
+# count = 0
+# for t in throughputs_1:
+#     throughputs_0_2[count] = interp(t,[min_t,max_t],[3,15]) 
+#     count+=1
 
 count = 0
-for t in throughputs_6_urllc_users:
-    throughputs_6_urllc_users[count] = interp(t,[min_t,max_t],[3,15]) 
+for t in random_actions_1:
+    random_actions_1[count] = interp(t,[min_t,max_t],[3,15]) 
     count+=1
 
-count = 0
-for t in random_actions_6_urllc_users:
-    random_actions_6_urllc_users[count] = interp(t,[min_t,max_t],[3,15]) 
-    count+=1
-
-# plt.plot(embb_users,throughputs_1_urllc_users,'--', marker='*', ms = 10,color="green")
-# plt.plot(embb_users,throughputs_2_urllc_users,'--', marker='*', ms = 10,color="blue")
-# plt.plot(embb_users,throughputs_3_urllc_users,'--', marker='*', ms = 10,color="red")
-# plt.plot(embb_users,throughputs_4_urllc_users,'--', marker='*', ms = 10,color="black")
-# plt.plot(embb_users,throughputs_5_urllc_users,'--', marker='*', ms = 10,color="grey")
-plt.plot(embb_users,throughputs_6_urllc_users,'--', marker='*', ms = 10,color="brown")
-plt.plot(embb_users,random_actions_6_urllc_users,'--', marker='s', ms = 10,color="green")
+# plt.plot(embb_users,throughputs_0_2,'--', marker='*', ms = 10,color="green")
+# plt.plot(embb_users,throughputs_0_4,'--', marker='*', ms = 10,color="blue")
+# plt.plot(embb_users,throughputs_0_6,'--', marker='*', ms = 10,color="red")
+# plt.plot(embb_users,throughputs_0_8,'--', marker='*', ms = 10,color="black")
+# plt.plot(embb_users,throughputs_1,'--', marker='*', ms = 10,color="grey")
+plt.plot(embb_users,throughputs_1,'--', marker='*', ms = 10,color="brown")
+plt.plot(embb_users,random_actions_1,'--', marker='s', ms = 10,color="green")
 # #plt.plot(embb_users_,throughputs_6_urllc_users_,'--', ms = 10,color="brown", linestyle='-')
 
 # urllc_users = [1,2,3,4,5,6]
@@ -92,11 +93,11 @@ plt.plot(embb_users,random_actions_6_urllc_users,'--', marker='s', ms = 10,color
 
 plt.xlabel("Number of eMBB Users")
 plt.ylabel("eMBB Users Sum Data Rate (Mbps)")
-plt.legend(["TD3-based Action Generation with 6 URLLC Users","Random Action Generation with 6 URLLC Users"], loc="upper left")
+plt.legend(["p = 1, TD3-based Action Generation","p = 1, Random Action Generation"], loc="upper left")
 
-# plt.xlabel("Number of URLLC Users")
+# plt.xlabel("Number of eMBB Users")
 # plt.ylabel("eMBB Users Sum Data Rate (Mbps)")
-# plt.legend(["1 eMBB User","3 eMBB Users","5 eMBB Users", "7 eMBB Users", "9 eMBB Users"], loc="upper left")
+# plt.legend(["p = 0.2","p = 0.4","p = 0.6", "p = 0.8", "p = 1"], loc="upper left")
 plt.grid()
 
 plt.tight_layout()
