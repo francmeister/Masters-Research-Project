@@ -42,6 +42,7 @@ delays = []
 
 av_throughput = []
 arriving_urllc_packets = []
+av_num_RBs_allocated = []
 run = 10
 for _ in range(0,run):
     obs = env.reset()
@@ -95,6 +96,7 @@ for _ in range(0,run):
         local_energies.append(env.eMBB_UE_1.achieved_local_energy_consumption)
         transmit_energies.append(env.eMBB_UE_1.achieved_transmission_energy_consumption)
         delays.append(env.SBS1.delays)
+        av_num_RBs_allocated.append(env.num_RBs_allocated)
         #print('action: ', action)
         #print('reward: ', reward)
         rewards.append(reward)
@@ -110,6 +112,7 @@ for _ in range(0,run):
         #throughputs.append(reward[0])
 av_throughput = sum(av_throughput)/len(throughputs)
 av_arriving_urllc_packets = sum(arriving_urllc_packets)/len(arriving_urllc_packets)
+av_num_RBs_allocated = sum(av_num_RBs_allocated)/len(av_num_RBs_allocated)
 print('av_throughput: ', av_throughput)
 print('av_arriving_urllc_packets: ', av_arriving_urllc_packets)
 # throughputs = np.roll(throughputs,-1)

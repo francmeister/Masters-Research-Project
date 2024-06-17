@@ -7,13 +7,13 @@ from scipy.interpolate import make_interp_spline, BSpline
 
 embb_users = [1,3,5,7,9]
 
-num_RBs_allocated = []
+num_RBs_allocated_TD3 = []
 # plt.plot(embb_users,throughputs_0_2,'--', marker='*', ms = 10,color="green")
 # plt.plot(embb_users,throughputs_0_4,'--', marker='*', ms = 10,color="blue")
 # plt.plot(embb_users,throughputs_0_6,'--', marker='*', ms = 10,color="red")
 # plt.plot(embb_users,throughputs_0_8,'--', marker='*', ms = 10,color="black")
 # plt.plot(embb_users,throughputs_1,'--', marker='*', ms = 10,color="grey")
-plt.plot(embb_users,throughputs_1,'--', marker='*', ms = 10,color="brown")
+plt.plot(embb_users,num_RBs_allocated_TD3,'--', marker='*', ms = 10,color="brown")
 plt.plot(embb_users,random_actions_1,'--', marker='s', ms = 10,color="green")
 # #plt.plot(embb_users_,throughputs_6_urllc_users_,'--', ms = 10,color="brown", linestyle='-')
 

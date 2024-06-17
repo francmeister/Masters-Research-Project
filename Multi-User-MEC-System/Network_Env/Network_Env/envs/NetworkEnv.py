@@ -556,7 +556,7 @@ class NetworkEnv(gym.Env):
         # print('RB_allocation_actions')
         # print(RB_allocation_actions)
         # print('')
-        self.num_RBs_allocated = sum(RB_allocation_actions)
+        self.num_RBs_allocated = sum(RB_allocation_actions[0])
         self.Communication_Channel_1.allocate_RBs_eMBB(self.eMBB_Users,RB_allocation_actions)
         #self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users,subcarrier_allocation_actions)
         #self.Communication_Channel_1.create_resource_blocks_URLLC()
