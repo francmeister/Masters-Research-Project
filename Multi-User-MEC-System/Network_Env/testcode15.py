@@ -110,8 +110,8 @@ for _ in range(0,run):
         #throughputs.append(reward[0])
 av_throughput = sum(av_throughput)/len(throughputs)
 av_arriving_urllc_packets = sum(arriving_urllc_packets)/len(arriving_urllc_packets)
-#print('av_throughput: ', av_throughput)
-#print('av_arriving_urllc_packets: ', av_arriving_urllc_packets)
+print('av_throughput: ', av_throughput)
+print('av_arriving_urllc_packets: ', av_arriving_urllc_packets)
 # throughputs = np.roll(throughputs,-1)
 # power_allocations = np.roll(power_allocations,-1)
 # data = {
