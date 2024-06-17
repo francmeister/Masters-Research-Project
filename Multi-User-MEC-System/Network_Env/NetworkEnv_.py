@@ -21,7 +21,7 @@ ENV_HEIGHT_METRES = 400
 clock = pygame.time.Clock()
 #screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
-class NetworkEnv(gym.Env):
+class NetworkEnv_(gym.Env):
     metadata = {'render.modes': ['human']}
     def __init__(self):
         self.timestep_counter = 0
