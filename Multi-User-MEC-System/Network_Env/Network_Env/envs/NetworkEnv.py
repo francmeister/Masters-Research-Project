@@ -36,8 +36,8 @@ class NetworkEnv(gym.Env):
         self.num_allocate_RB_upper_bound = self.Communication_Channel_1.num_allocate_RBs_upper_bound
         self.num_allocate_RB_lower_bound = self.Communication_Channel_1.num_allocate_RBs_lower_bound
         self.time_divisions_per_slot = self.Communication_Channel_1.time_divisions_per_slot
-        #self.max_transmit_power_db = 400#self.eMBB_UE_1.max_transmission_power_dBm
-        self.max_transmit_power_db = 30
+        self.max_transmit_power_db = 1000#self.eMBB_UE_1.max_transmission_power_dBm
+        #self.max_transmit_power_db = 30
         self.min_transmit_power_db = 10
         self.offload_decisions_label = 0
         self.allocate_num_RB_label = 4
@@ -873,7 +873,7 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        # self.eMBB_Users.append(self.eMBB_UE_2)
+        self.eMBB_Users.append(self.eMBB_UE_2)
         # self.eMBB_Users.append(self.eMBB_UE_3)
         # self.eMBB_Users.append(self.eMBB_UE_4)
         # self.eMBB_Users.append(self.eMBB_UE_5)
@@ -888,8 +888,8 @@ class NetworkEnv(gym.Env):
         self.URLLC_Users.append(self.URLLC_UE_2)
         self.URLLC_Users.append(self.URLLC_UE_3)
         self.URLLC_Users.append(self.URLLC_UE_4)
-        self.URLLC_Users.append(self.URLLC_UE_5)
-        self.URLLC_Users.append(self.URLLC_UE_6)
+        #self.URLLC_Users.append(self.URLLC_UE_5)
+        #self.URLLC_Users.append(self.URLLC_UE_6)
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:

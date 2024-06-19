@@ -329,6 +329,7 @@ class SBS():
         self.individual_total_reward = []
         self.total_reward = 0
         self.overall_users_reward = 0
+        self.average_rate_prev_slots = 0
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)
@@ -423,6 +424,7 @@ class SBS():
     
     def calculate_urllc_reliability_reward(self, urllc_users):
         num_arriving_urllc_packets = self.num_arriving_urllc_packets
+        #print('num_arriving_urllc_packets: ', num_arriving_urllc_packets)
         urllc_task_size = 0
         if len(urllc_users) > 0:
             urllc_task_size = urllc_users[0].task_size_per_slot_bits    
@@ -432,8 +434,6 @@ class SBS():
         for urllc_user in urllc_users:
             urllc_total_rate+=urllc_user.achieved_channel_rate
             rates.append(urllc_user.achieved_channel_rate)
-
-      
        
         K = num_arriving_urllc_packets*urllc_task_size
         K_mean = self.K_expectation_over_prev_T_slot(10,K)
@@ -444,21 +444,28 @@ class SBS():
         #K_inv = stats.norm.ppf(K, loc=K_mean, scale=K_variance)
      
 
-
+        #K = K - 300
         reliability_reward = urllc_total_rate-K*(1-self.urllc_reliability_constraint_max)
+        #print('urllc_total_rate: ', urllc_total_rate)
+        #print('K*(1-self.urllc_reliability_constraint_max): ', K*(1-self.urllc_reliability_constraint_max))
         if reliability_reward < 0:
             reliability_reward = 0
         else:
             reliability_reward = reliability_reward
-        #average_rate_prev_slots = self.urllc_rate_expectation_over_prev_T_slot(10,urllc_total_rate)
-        average_rate = urllc_total_rate/len(urllc_users)
-        variance_rate = statistics.pvariance(rates)
-        std_rate = math.sqrt(variance_rate)
+        average_rate_prev_slots, std_rate = self.urllc_rate_expectation_over_prev_T_slot(10,urllc_total_rate)
+        self.average_rate_prev_slots = average_rate_prev_slots
+        #print('average_rate_prev_slots: ', average_rate_prev_slots, 'std_rate: ', std_rate)
+        #print('K: ', K)
+        #average_rate = urllc_total_rate/len(urllc_users)
+        # variance_rate = statistics.pvariance(rates)
+        # std_rate = math.sqrt(variance_rate)
      
         #print('self.previous_rates: ', self.previous_rates)
         #variance = urllc_task_size
-
-        self.outage_probability = stats.norm.cdf(K,loc=average_rate,scale=std_rate)
+        #average_rate = 300
+        #self.outage_probability = stats.norm.cdf(K,loc=average_rate,scale=std_rate)
+        self.outage_probability = stats.norm.cdf(K,loc=average_rate_prev_slots,scale=std_rate)
+        #print('self.outage_probability: ', self.outage_probability )
         # print('reliability_reward: ', reliability_reward)
         # print('self.outage_probability: ', self.outage_probability)
         #print('reliability_reward: ', reliability_reward)
@@ -478,7 +485,10 @@ class SBS():
             self.previous_rates.append(urllc_total_rate)
 
         average_rate = sum(self.previous_rates)/len(self.previous_rates)
-        return average_rate
+        variance_rate = statistics.pvariance(self.previous_rates)
+        std_rate = math.sqrt(variance_rate)
+
+        return average_rate, std_rate
     
     def K_expectation_over_prev_T_slot(self, T, K):
         self.timeslot_counter+=1
