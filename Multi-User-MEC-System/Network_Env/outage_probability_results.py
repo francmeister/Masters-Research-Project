@@ -5,12 +5,13 @@ from numpy import interp
 
 outage_prabability = np.load('outage_probabilties.npy')
 reliability_reward = np.load('urllc_reliability_reward_normalized.npy')
+power_actions = np.load('power_actions.npy')
 
-print(outage_prabability)
+#print(outage_prabability)
 
-timestep_rewards_energy_throughput_1 = np.load('timestep_rewards_energy_throughput_1.npy')
+timestep_rewards_energy_throughput = np.load('timestep_rewards_energy_throughput.npy')
 
-timesteps = timestep_rewards_energy_throughput_1[:,0]
+timesteps = timestep_rewards_energy_throughput[:,0]
 
 
 
@@ -33,13 +34,16 @@ reliability_reward_smooth = moving_average(reliability_reward, window_size)
 # plt.plot(timesteps_9_users[window_size-1:], fairnes_index_9_Users_smooth, color="grey", label='9 Users')
 # plt.plot(timesteps_11_users[window_size-1:], fairnes_index_11_Users_smooth, color="black", label='11 Users')
 
-figure, axis = plt.subplots(2,1)
+figure, axis = plt.subplots(3,1)
 
 axis[0].plot(timesteps, outage_prabability)
 axis[0].set_title('Outage Probability')
 
 axis[1].plot(timesteps, reliability_reward)
 axis[1].set_title('Reliability Reward')
+
+axis[2].plot(timesteps, power_actions)
+axis[2].set_title('Power Actions')
 
 #plt.xlabel("Timestep(t)")
 #plt.ylabel("Fairness Index")

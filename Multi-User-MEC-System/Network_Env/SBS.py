@@ -244,8 +244,8 @@ class SBS():
         #self.achieved_system_reward = fairness_index_normalized
         #return self.achieved_system_reward, urllc_reliability_reward_normalized, self.energy_rewards,self.throughput_rewards
         #print('self.achieved_system_reward: ', self.achieved_system_reward)
-        return self.achieved_system_reward, self.achieved_system_reward, self.energy_rewards,self.throughput_rewards
-        #return self.achieved_system_reward, self.overall_users_reward , self.energy_rewards,self.throughput_rewards
+        #return self.achieved_system_reward, self.achieved_system_reward, self.energy_rewards,self.throughput_rewards
+        return self.achieved_system_reward, urllc_reliability_reward_normalized , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
         processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency
