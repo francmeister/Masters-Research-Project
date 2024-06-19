@@ -436,11 +436,12 @@ class SBS():
             rates.append(urllc_user.achieved_channel_rate)
        
         K = num_arriving_urllc_packets*urllc_task_size
-        K_mean = self.K_expectation_over_prev_T_slot(10,K)
-        if len(urllc_users) > 3:
-            K_variance = (len(urllc_users)-2)*urllc_task_size
-        else:
-            K_variance = (1)*urllc_task_size
+        K_mean, std_K = self.K_expectation_over_prev_T_slot(10,K)
+        #inverse_cdf_K = stats.norm.ppf(p, loc=mu, scale=sigma)
+        # if len(urllc_users) > 3:
+        #     K_variance = (len(urllc_users)-2)*urllc_task_size
+        # else:
+        #     K_variance = (1)*urllc_task_size
         #K_inv = stats.norm.ppf(K, loc=K_mean, scale=K_variance)
      
 
@@ -501,7 +502,9 @@ class SBS():
             self.previous_Ks.append(K)
 
         average_K = sum(self.previous_Ks)/len(self.previous_Ks)
-        return average_K
+        variance_K = statistics.pvariance(self.previous_Ks)
+        std_K = math.sqrt(variance_K)
+        return average_K, std_K
     
 
     def reward(self, eMBB_Users, urllc_users, communication_channel):
