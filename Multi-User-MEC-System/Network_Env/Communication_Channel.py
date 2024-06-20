@@ -60,7 +60,8 @@ class Communication_Channel():
 
     def set_properties(self):
         self.system_bandwidth_Hz = 120*math.pow(10,6)
-        self.subcarrier_bandwidth_Hz = 15*math.pow(10,3) # 15kHz
+        #self.subcarrier_bandwidth_Hz = 15*math.pow(10,3) # 15kHz
+        self.subcarrier_bandwidth_Hz = 30*math.pow(10,3)
         self.num_subcarriers_per_RB = 12
         self.num_subcarriers_per_RB = 20
         self.RB_bandwidth_Hz = self.subcarrier_bandwidth_Hz*self.num_subcarriers_per_RB

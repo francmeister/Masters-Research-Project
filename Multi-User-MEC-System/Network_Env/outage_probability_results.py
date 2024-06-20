@@ -22,7 +22,7 @@ def moving_average(data, window_size):
     weights = np.repeat(1.0, window_size) / window_size
     return np.convolve(data, weights, 'valid')
 
-window_size = 1000
+window_size = 100
 
 outage_prabability_smooth = moving_average(outage_prabability, window_size)
 reliability_reward_smooth = moving_average(reliability_reward, window_size)
@@ -35,19 +35,20 @@ reliability_reward_smooth = moving_average(reliability_reward, window_size)
 # plt.plot(timesteps_9_users[window_size-1:], fairnes_index_9_Users_smooth, color="grey", label='9 Users')
 # plt.plot(timesteps_11_users[window_size-1:], fairnes_index_11_Users_smooth, color="black", label='11 Users')
 
-figure, axis = plt.subplots(4,1)
+plt.plot(timesteps[window_size-1:], outage_prabability_smooth)
+# figure, axis = plt.subplots(4,1)
 
-axis[0].plot(timesteps, outage_prabability)
-axis[0].set_title('Outage Probability')
+# axis[0].plot(timesteps[window_size-1:], outage_prabability_smooth)
+# axis[0].set_title('Outage Probability')
 
-axis[1].plot(timesteps, reliability_reward)
-axis[1].set_title('Reliability Reward')
+# axis[1].plot(timesteps, reliability_reward)
+# axis[1].set_title('Reliability Reward')
 
-axis[2].plot(timesteps, power_actions)
-axis[2].set_title('Power Actions')
+# axis[2].plot(timesteps, power_actions)
+# axis[2].set_title('Power Actions')
 
-axis[3].plot(timesteps, urllc_avg_rate)
-axis[3].set_title('URLLC avg rate')
+# axis[3].plot(timesteps, urllc_avg_rate)
+# axis[3].set_title('URLLC avg rate')
 
 #plt.xlabel("Timestep(t)")
 #plt.ylabel("Fairness Index")
