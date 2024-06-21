@@ -308,7 +308,7 @@ class SBS():
         self.delay_reward_times_energy_reward = 0
         self.available_resource_time_blocks = []
         self.num_arriving_urllc_packets = 0
-        self.urllc_reliability_constraint_max = 0.5
+        self.urllc_reliability_constraint_max = 0.1
         self.K_mean = 0
         self.K_variance = 3
         self.outage_probability = 0
