@@ -14,7 +14,13 @@ timestep_rewards_energy_throughput = np.load('timestep_rewards_energy_throughput
 
 timesteps = timestep_rewards_energy_throughput[:,0]
 
+outage_constraint_matrix = []
+outage_constraint = 0.05
+for i in range(0,len(timesteps)):
+    outage_constraint_matrix.append(outage_constraint)
 
+
+print(outage_constraint_matrix)
 
 
 def moving_average(data, window_size):
@@ -22,7 +28,7 @@ def moving_average(data, window_size):
     weights = np.repeat(1.0, window_size) / window_size
     return np.convolve(data, weights, 'valid')
 
-window_size = 100
+window_size = 200
 
 outage_prabability_smooth = moving_average(outage_prabability, window_size)
 reliability_reward_smooth = moving_average(reliability_reward, window_size)
@@ -35,7 +41,18 @@ reliability_reward_smooth = moving_average(reliability_reward, window_size)
 # plt.plot(timesteps_9_users[window_size-1:], fairnes_index_9_Users_smooth, color="grey", label='9 Users')
 # plt.plot(timesteps_11_users[window_size-1:], fairnes_index_11_Users_smooth, color="black", label='11 Users')
 
-plt.plot(timesteps[window_size-1:], outage_prabability_smooth)
+new_timesteps = []
+count = 0
+for timestep in timesteps:
+    new_timesteps.append(count)
+    count+=1
+
+plt.plot(new_timesteps[window_size-1:], outage_prabability_smooth, color='black')
+plt.plot(new_timesteps,outage_constraint_matrix, '--', color='red', linewidth = 2.5)
+
+plt.xlabel("Episodes")
+plt.ylabel("URLLC Users Outage Probability ($\phi$)")
+plt.legend(["$\phi$", "$\phi^{max}$"], loc="upper right")
 # figure, axis = plt.subplots(4,1)
 
 # axis[0].plot(timesteps[window_size-1:], outage_prabability_smooth)
