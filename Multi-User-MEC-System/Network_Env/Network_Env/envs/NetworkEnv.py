@@ -879,8 +879,8 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.append(self.eMBB_UE_5)
         self.eMBB_Users.append(self.eMBB_UE_6)
         self.eMBB_Users.append(self.eMBB_UE_7)
-        self.eMBB_Users.append(self.eMBB_UE_8)
-        self.eMBB_Users.append(self.eMBB_UE_9)
+        #self.eMBB_Users.append(self.eMBB_UE_8)
+        #self.eMBB_Users.append(self.eMBB_UE_9)
         #self.eMBB_Users.append(self.eMBB_UE_10)
         #self.eMBB_Users.append(self.eMBB_UE_11)
 
