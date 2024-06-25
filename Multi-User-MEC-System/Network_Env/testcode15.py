@@ -6,6 +6,7 @@ import torch
 import matplotlib.pyplot as plt
 import pygame, sys, time, random
 import pandas as pd
+import math
 
 from numpy import interp
 
@@ -43,6 +44,7 @@ delays = []
 av_throughput = []
 arriving_urllc_packets = []
 av_num_RBs_allocated = []
+av_outage_probability = []
 run = 10
 for _ in range(0,run):
     obs = env.reset()
@@ -102,6 +104,7 @@ for _ in range(0,run):
         rewards.append(reward)
         tasks_dropped.append(env.SBS1.tasks_dropped)
         arriving_urllc_packets.append(env.SBS1.num_arriving_urllc_packets)
+        av_outage_probability.append(env.SBS1.outage_probability)
         
     
 
@@ -113,8 +116,11 @@ for _ in range(0,run):
 av_throughput = sum(av_throughput)/len(throughputs)
 av_arriving_urllc_packets = sum(arriving_urllc_packets)/len(arriving_urllc_packets)
 av_num_RBs_allocated = sum(av_num_RBs_allocated)/len(av_num_RBs_allocated)
+av_outage_probability = [0 if math.isnan(x) else x for x in av_outage_probability]
+av_outage_probability = sum(av_outage_probability)/len(av_outage_probability)
 print('av_throughput: ', av_throughput)
 print('av_arriving_urllc_packets: ', av_arriving_urllc_packets)
+print('av_outage_probability: ', av_outage_probability)
 # throughputs = np.roll(throughputs,-1)
 # power_allocations = np.roll(power_allocations,-1)
 # data = {
