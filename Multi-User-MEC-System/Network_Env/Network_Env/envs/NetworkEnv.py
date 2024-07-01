@@ -36,8 +36,8 @@ class NetworkEnv(gym.Env):
         self.num_allocate_RB_upper_bound = self.Communication_Channel_1.num_allocate_RBs_upper_bound
         self.num_allocate_RB_lower_bound = self.Communication_Channel_1.num_allocate_RBs_lower_bound
         self.time_divisions_per_slot = self.Communication_Channel_1.time_divisions_per_slot
-        self.max_transmit_power_db = 2000#self.eMBB_UE_1.max_transmission_power_dBm
-        #self.max_transmit_power_db = 30
+        #self.max_transmit_power_db = 100#self.eMBB_UE_1.max_transmission_power_dBm
+        self.max_transmit_power_db = 40
         self.min_transmit_power_db = 10
         self.offload_decisions_label = 0
         self.allocate_num_RB_label = 4
@@ -156,6 +156,7 @@ class NetworkEnv(gym.Env):
         self.initial_RB_bandwidth = self.Communication_Channel_1.RB_bandwidth_Hz
         self.RB_bandwidth = self.initial_RB_bandwidth
         self.num_RBs_allocated = 0
+        self.q_actions = 0
 
     def reshape_observation_space_for_model(self,observation_space):
         observation_space = np.transpose(observation_space)
@@ -418,6 +419,7 @@ class NetworkEnv(gym.Env):
         box_action = np.array(action['box_actions'])
         binary_actions = action['binary_actions']
         q_action = action['q_action']
+        self.q_actions = q_action
         #print('q_action: ', q_action)
         #print('action')
         #print(action)
@@ -491,7 +493,7 @@ class NetworkEnv(gym.Env):
         RB_allocation_actions = resource_block_action_matrix 
         RB_sum_allocations = []
         for RB_allocation_action in RB_allocation_actions:
-            RB_sum_allocations.append(sum(RB_allocation_action ))
+            RB_sum_allocations.append(sum(RB_allocation_action))
 
 
         #print(RB_allocation_actions)
@@ -513,9 +515,9 @@ class NetworkEnv(gym.Env):
         #collect the final action - number of URLLC users per RB
         
         #print('Action after interpolation transposed')
-        #offload_decisions_actions_mapped = [0.]#[0, 0, 0.5, 0.5, 1, 1, 1]
-        #transmit_power_actions_mapped = [50]#,20,20,20,20,20,20]
-        #RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
+        #offload_decisions_actions_mapped = [0.5]#[0, 0, 0.5, 0.5, 1, 1, 1]
+        #transmit_power_actions_mapped = [20]#,20,20,20,20,20,20]
+        #RB_allocation_actions = np.array([[1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]])
         #print(RB_allocation_actions)
         #RB_allocation_actions_mapped = [6]#,10,15,15,20,20,20]
         #number_URLLC_Users_per_RB_action_mapped = 3
@@ -557,6 +559,7 @@ class NetworkEnv(gym.Env):
         # print(RB_allocation_actions)
         # print('')
         self.num_RBs_allocated = sum(RB_allocation_actions[0])
+        #print("RB_allocation_actions: ", RB_allocation_actions)
         self.Communication_Channel_1.allocate_RBs_eMBB(self.eMBB_Users,RB_allocation_actions)
         #self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users,subcarrier_allocation_actions)
         #self.Communication_Channel_1.create_resource_blocks_URLLC()
@@ -885,11 +888,11 @@ class NetworkEnv(gym.Env):
         #self.eMBB_Users.append(self.eMBB_UE_11)
 
         self.URLLC_Users.append(self.URLLC_UE_1)
-        self.URLLC_Users.append(self.URLLC_UE_2)
-        self.URLLC_Users.append(self.URLLC_UE_3)
-        self.URLLC_Users.append(self.URLLC_UE_4)
-        self.URLLC_Users.append(self.URLLC_UE_5)
-        self.URLLC_Users.append(self.URLLC_UE_6)
+        #self.URLLC_Users.append(self.URLLC_UE_2)
+        #self.URLLC_Users.append(self.URLLC_UE_3)
+        #self.URLLC_Users.append(self.URLLC_UE_4)
+        #self.URLLC_Users.append(self.URLLC_UE_5)
+        #self.URLLC_Users.append(self.URLLC_UE_6)
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:

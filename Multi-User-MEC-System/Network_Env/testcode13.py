@@ -1,7 +1,7 @@
-def policy(discount=0.99):
-    d = discount
-    print(d)
+import math
 
 
-discount=7
-policy(discount)
+noise_spectral_density_dbm = -174 # -174dBM/Hz
+noise_spectral_density_W = (math.pow(10,(noise_spectral_density_dbm/10)))/1000
+
+print(noise_spectral_density_W)

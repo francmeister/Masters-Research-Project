@@ -30,8 +30,15 @@ class eMBB_UE(User_Equipment):
         self.cycles_per_byte = 330
         self.cycles_per_bit = self.cycles_per_byte/8
         #self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
-        self.max_service_rate_cycles_per_slot = 620000
+        #self.max_service_rate_cycles_per_slot = 620000
+        self.max_service_rate_cycles_per_slot = 105000
         self.service_rate_bits_per_slot = (self.max_service_rate_cycles_per_slot/self.cycles_per_byte)*8
+        self.local_queue_length = 0
+        self.offload_queue_length = 0
+
+        self.local_queue_delay =0
+        self.offload_queue_delay = 0
+
         self.set_properties_eMBB()
 
     def set_properties_eMBB(self):
@@ -100,7 +107,7 @@ class eMBB_UE(User_Equipment):
         self.has_transmitted_this_time_slot = False
         self.communication_queue = []
         #self.energy_consumption_coefficient = math.pow(10,-12.3)
-        self.energy_consumption_coefficient = math.pow(10,-13.8)
+        self.energy_consumption_coefficient = math.pow(10,-15)
         self.achieved_transmission_energy_consumption = 0
         self.achieved_local_processing_delay = 0
         self.achieved_total_energy_consumption = 0
@@ -183,6 +190,27 @@ class eMBB_UE(User_Equipment):
         self.average_packet_size_bits = 0
         self.max_lc_queue_delay_violation_probability = 0.8
 
+        self.local_queue_lengths = []
+        self.offload_queue_lengths = []
+
+        self.local_queue_delays = []
+        self.offload_queue_delays = []
+
+        self.ptr_local_queue_lengths = 0
+
+
+        self.ptr_offload_queue_length = 0
+
+        self.local_delays = []
+        self.ptr_local_delay = 0
+
+        self.offload_delays = []
+        self.ptr_offload_delay = 0
+        self.average_local_queue_length=0
+        self.average_offload_queue_length=0
+        self.average_local_delays=0
+        self.average_offload_delays=0
+
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
         self.x_position = random.randint(self.xpos_move_lower_bound,self.xpos_move_upper_bound)
@@ -208,7 +236,7 @@ class eMBB_UE(User_Equipment):
 
         #Specify slot task size, computation cycles and latency requirement
         #self.task_arrival_rate_tasks_per_second = random.randint(self.min_task_arrival_rate_tasks_per_second,self.max_task_arrival_rate_tasks_per_second)
-        self.task_arrival_rate_tasks_per_second = np.random.poisson(25,1)#np.random.poisson(5,1)
+        self.task_arrival_rate_tasks_per_second = np.random.poisson(25,1)#np.random.poisson(25,1)#np.random.poisson(5,1)
         self.task_arrival_rate_tasks_per_second = self.task_arrival_rate_tasks_per_second[0]
         self.task_arrival_rate = self.task_arrival_rate_tasks_per_second
         self.previous_arrival_rate = self.task_arrival_rate_tasks_per_second
@@ -267,7 +295,10 @@ class eMBB_UE(User_Equipment):
         return self.user_state_space
 
     def split_tasks(self):
+        
         if len(self.task_queue) > 0:
+            local_bits = 0
+            offloading_bits = 0
             task_identities = []
             task_sizes_bits = []
             required_cycles = []
@@ -303,6 +334,8 @@ class eMBB_UE(User_Equipment):
                 packet_size = len(packet_bin)
                 self.packet_offload_size_bits = int(self.allocated_offloading_ratio*packet_size)
                 self.packet_local_size_bits = int((1-self.allocated_offloading_ratio)*packet_size)
+                local_bits+=self.packet_local_size_bits
+                offloading_bits+=self.packet_local_size_bits
 
                 if self.packet_local_size_bits > 0:
                     local_task = Task(330,self.packet_local_size_bits,self.task_queue[x].QOS_requirement,self.task_queue[x].queue_timer,self.task_queue[x].task_identifier)
@@ -345,6 +378,7 @@ class eMBB_UE(User_Equipment):
                 'Latency requirement':local_latency_requirements
             }
 
+           # print('local queue arrival rate: ',local_bits*1000, ' bits/s')
             df = pd.DataFrame(data=local_data)
             # print('local queue data')
             # print(df)
@@ -368,7 +402,7 @@ class eMBB_UE(User_Equipment):
                 #'Required Cycles':offload_required_cycles,
                 'Latency requirement':offload_latency_requirements
             }
-
+          #  print('offload queue arrival rate: ', offloading_bits*1000, ' bits/s')
             df = pd.DataFrame(data=offload_data)
             # print('offload queue data')
             # print(df)
@@ -415,6 +449,7 @@ class eMBB_UE(User_Equipment):
                     #achieved_RB_channel_rates_.append(achieved_RB_channel_rate_)
 
             self.achieved_channel_rate = sum(achieved_RB_channel_rates)
+         #   print('offload queue service rate: ', self.achieved_channel_rate, ' bits/s')
             #self.achieved_channel_rate_ = sum(achieved_RB_channel_rates_)
             self.previous_channel_rate = self.achieved_channel_rate
             min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
@@ -435,7 +470,8 @@ class eMBB_UE(User_Equipment):
             channel_rate = RB_indicator*(RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator)))
         elif current_rb_occupied == True:
             channel_rate = RB_indicator*RB_bandwidth*(1-(1/half_num_mini_slots_per_rb))*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
-        return (channel_rate/500)
+        #return (channel_rate/500)
+        return (channel_rate)
     
     # def calculate_channel_rate_(self, communication_channel,RB_indicator,RB_channel_gain,current_rb_occupied):
     #     RB_bandwidth = communication_channel.RB_bandwidth_Hz
@@ -454,7 +490,7 @@ class eMBB_UE(User_Equipment):
         self.dequeued_local_tasks.clear()
         used_cpu_cycles = 0
         counter = 0
-
+        #print('local queue service rate: ', (self.max_service_rate_cycles_per_slot/330)*8*1000, ' bits/s')
         for local_task in self.local_queue:
             #print('cycles left: ', cpu_cycles_left)
             #print('local_task.required_computation_cycles: ', local_task.required_computation_cycles)
@@ -541,7 +577,8 @@ class eMBB_UE(User_Equipment):
         if self.achieved_channel_rate == 0:
             self.achieved_transmission_delay = 0
         else:
-            left_bits = communication_channel.long_TTI*self.achieved_channel_rate
+            #left_bits = communication_channel.long_TTI*self.achieved_channel_rate
+            left_bits = 0.001*self.achieved_channel_rate
             for offloading_task in self.communication_queue:
                 if offloading_task.slot_task_size < left_bits:
                     offloading_bits += offloading_task.slot_task_size
@@ -671,6 +708,7 @@ class eMBB_UE(User_Equipment):
         #print(self.battery_energy_level)
         if self.battery_energy_level >  self.achieved_total_energy_consumption:
             self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
+            #print('self.achieved_total_energy_consumption: ', self.achieved_total_energy_consumption, " J")
             self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,5500],[0,1])
             #self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,46000],[0,1])
             self.battery_energy_level = self.battery_energy_level - self.achieved_total_energy_consumption
@@ -717,7 +755,8 @@ class eMBB_UE(User_Equipment):
         #    self.total_gain = 0.1
 
     def calculate_assigned_transmit_power_W(self):
-        self.assigned_transmit_power_W = self.assigned_transmit_power_dBm#(math.pow(10,(self.assigned_transmit_power_dBm/10)))/1000
+        #self.assigned_transmit_power_W = self.assigned_transmit_power_dBm#(math.pow(10,(self.assigned_transmit_power_dBm/10)))/1000
+        self.assigned_transmit_power_W = (math.pow(10,(self.assigned_transmit_power_dBm/10)))/1000
 
     def dequeue_packet(self):
         if len(self.communication_queue) > 0:
@@ -841,12 +880,12 @@ class eMBB_UE(User_Equipment):
         min_energy_reward = -10000
 
         #energy_reward_normalized = 0
-        #if energy_reward >= 0:
-        energy_reward_normalized = interp(energy_reward,[min_energy_reward,max_energy_reward],[0,1])
-        #else:
-        #    energy_reward_normalized = -0.2
+        if energy_reward >= 0:
+            energy_reward = 100
+        else:
+            energy_reward = energy_reward
 
-        return energy_reward_normalized
+        return energy_reward
     
     def increment_task_queue_timers(self):
         if len(self.task_queue) > 0:
@@ -1109,18 +1148,40 @@ class eMBB_UE(User_Equipment):
         local_delay = local_computation_time+local_queueing_time
 
         average_packet_size_bits = 0
+        #print(len(self.communication_queue))
         if len(self.communication_queue) > 0:
             for task in self.communication_queue:
                 average_packet_size_bits+=task.slot_task_size
             average_packet_size_bits =  average_packet_size_bits/len(self.communication_queue)
 
         expected_rate_over_prev_T_slot = self.embb_rate_expectation_over_prev_T_slot(5,self.achieved_channel_rate)
-        if expected_rate_over_prev_T_slot > 0:
-            offload_queueing_time = average_packet_size_bits/expected_rate_over_prev_T_slot
+        expected_rate_over_prev_T_slot_ms = expected_rate_over_prev_T_slot/1000
+        #print('expected_rate_over_prev_T_slot_ms: ', expected_rate_over_prev_T_slot_ms)
+        #print('average_packet_size_bits: ', average_packet_size_bits)
+
+        if expected_rate_over_prev_T_slot_ms > 0:
+            offload_queueing_time = (average_packet_size_bits/expected_rate_over_prev_T_slot_ms)*len(self.communication_queue)
         else:
             offload_queueing_time = 0
         offloading_delay = offload_queueing_time + 1
 
+        self.local_queue_length = len(self.local_queue)
+        self.offload_queue_length = len(self.communication_queue)
+
+        # self.local_queue_delay = local_delay
+        # self.offload_queue_delay = offloading_delay
+
+        # self.local_queue_lengths.append(len(self.local_queue))
+        # self.offload_queue_lengths.append(len(self.communication_queue))
+
+        # self.local_queue_delays.append(local_delay)
+        # self.offload_queue_delays.append(offloading_delay)
+        self.average_local_queue_length, self.average_offload_queue_length, self.average_local_delays, self.average_offload_delays = self.avg_queue_length_delays_over_T_slots(5, self.local_queue_length, self.offload_queue_length, local_delay, offloading_delay)
+
+        # print('local_delay: ', local_delay)
+        # print('local queue length: ', self.local_queue_length)
+        # print('offloading_delay: ', offloading_delay)
+        # print('offload queue length: ', self.offload_queue_length)
         max_delay = max(local_delay,offloading_delay)
         max_delay_normalized =  interp(max_delay,[0,4],[0,20])
         return max_delay, max_delay_normalized
@@ -1144,6 +1205,11 @@ class eMBB_UE(User_Equipment):
         else:
             offload_traffic
         reward = 1-offload_traffic
+
+        if reward < 0:
+            reward = reward
+        else:
+            reward = 100
         return reward#offload_traffic
     
     def local_queue_violation_constraint_reward(self):
@@ -1190,6 +1256,49 @@ class eMBB_UE(User_Equipment):
         pi = first_term+second_term
 
         return pi
+    
+
+    def avg_queue_length_delays_over_T_slots(self, T, local_queue_length, offload_queue_length, local_delay, offload_delay):
+        self.timeslot_counter+=1
+        number_of_previous_time_slots = T
+
+        if len(self.local_queue_lengths) == number_of_previous_time_slots:
+            self.local_queue_lengths[int(self.ptr)] = local_queue_length
+            self.ptr_local_queue_lengths = (self.ptr_local_queue_lengths + 1) % number_of_previous_time_slots
+        else:
+            self.local_queue_lengths.append(local_queue_length)
+
+        average_local_queue_length = sum(self.local_queue_lengths)/len(self.local_queue_lengths)
+
+        ################################################################################################################
+        if len(self.offload_queue_lengths) == number_of_previous_time_slots:
+            self.offload_queue_lengths[int(self.ptr)] = offload_queue_length
+            self.ptr_offload_queue_length = (self.ptr_offload_queue_length + 1) % number_of_previous_time_slots
+        else:
+            self.offload_queue_lengths.append(offload_queue_length)
+
+        average_offload_queue_length = sum(self.offload_queue_lengths)/len(self.offload_queue_lengths)
+
+        ################################################################################################################
+        if len(self.local_delays) == number_of_previous_time_slots:
+            self.local_delays[int(self.ptr)] = local_delay
+            self.ptr_local_delay = (self.ptr_local_delay + 1) % number_of_previous_time_slots
+        else:
+            self.local_delays.append(local_delay)
+
+        average_local_delays = sum(self.local_delays)/len(self.local_delays)
+
+        ################################################################################################################
+        if len(self.offload_delays) == number_of_previous_time_slots:
+            self.offload_delays[int(self.ptr)] = offload_delay
+            self.ptr_offload_delay = (self.ptr_offload_delay + 1) % number_of_previous_time_slots
+        else:
+            self.offload_delays.append(offload_delay)
+
+        average_offload_delays = sum(self.offload_delays)/len(self.offload_delays)
+
+
+        return average_local_queue_length, average_offload_queue_length, average_local_delays, average_offload_delays
 
 
 

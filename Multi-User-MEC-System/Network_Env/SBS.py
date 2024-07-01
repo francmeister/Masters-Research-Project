@@ -144,6 +144,13 @@ class SBS():
         self.individual_tasks_dropped = []
         self.individual_energy_efficiency = []
         self.individual_total_reward = []
+
+        self.individual_local_queue_delays = []
+        self.individual_offload_queue_delays = []
+        self.individual_local_queue_lengths = []
+        self.individual_offload_queue_lengths = []
+
+
         total_users_energy_reward = 0
         total_users_throughput_reward = 0
         total_users_battery_energies_reward = 0
@@ -162,13 +169,14 @@ class SBS():
         individual_channel_rates = []
         for eMBB_User in eMBB_Users:
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
-            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
+            self.total_delay += eMBB_User_delay 
+            #eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
             self.total_users_energy_not_normalized+=eMBB_User.achieved_total_energy_consumption
             self.total_users_throughput_not_normalized+=eMBB_User.achieved_channel_rate
-            #eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption
+            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption
             total_energy += eMBB_User_energy_consumption
-            eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
-            #eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
+            #eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
+            eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
             users_channel_rates.append(eMBB_User_channel_rate)
             #eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
             total_rate += eMBB_User_channel_rate
@@ -185,7 +193,7 @@ class SBS():
             total_users_energy_reward += eMBB_User_energy_consumption
             total_users_throughput_reward += eMBB_User_channel_rate
             total_users_battery_energies_reward += battery_energy_reward
-            total_users_delay_rewards += queue_delay_reward
+            total_users_delay_rewards += eMBB_User_delay
             if eMBB_User_energy_consumption == 0:
                 total_users_delay_times_energy_reward = 0
             else:
@@ -212,20 +220,26 @@ class SBS():
             self.individual_energy_rewards.append(eMBB_User_energy_consumption)
             self.individual_channel_rate_rewards.append(eMBB_User_channel_rate)
             individual_channel_rates.append(eMBB_User.achieved_channel_rate)
+            self.individual_channel_rates_.append(eMBB_User.achieved_channel_rate)
             self.individual_energy_efficiency.append(energy_efficiency_reward)
             self.individual_total_reward.append(individual_reward)
             self.individual_channel_battery_energy_rewards.append(battery_energy_reward)
             self.individual_tasks_dropped.append(tasks_dropped)
             self.individual_delay_rewards.append(queue_delay_reward)
-            self.individual_queue_delays.append(delay)
+            self.individual_queue_delays.append(eMBB_User_delay)
             self.total_reward += energy_efficiency_reward*queue_delay_reward + battery_energy_reward
 
+            self.individual_local_queue_delays.append(eMBB_User.average_local_delays) 
+            self.individual_offload_queue_delays.append(eMBB_User.average_offload_delays) 
+            self.individual_local_queue_lengths.append(eMBB_User.average_offload_queue_length) 
+            self.individual_offload_queue_lengths.append(eMBB_User.average_local_queue_length) 
+
         self.individual_channel_rates.append(individual_channel_rates)
-        #self.overall_users_reward = total_users_throughput_reward*total_users_delay_times_energy_reward + total_users_battery_energies_reward
-        if self.energy_rewards > 0 and self.throughput_rewards > 0:
-            self.overall_users_reward = self.throughput_rewards - self.q_action*self.energy_rewards
-        else:
-            self.overall_users_reward = 0
+        self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------
+        # if self.energy_rewards > 0 and self.throughput_rewards > 0:
+        #     self.overall_users_reward = self.throughput_rewards - self.q_action*self.energy_rewards
+        # else:
+        #     self.overall_users_reward = 0
         #print('overall_users_reward: ', self.overall_users_reward)
         #overall_users_rewards = [overall_users_reward for _ in range(len(eMBB_Users))]
         #self.achieved_system_reward += urllc_reliability_reward_normalized
@@ -248,7 +262,7 @@ class SBS():
         #return self.achieved_system_reward, urllc_reliability_reward_normalized, self.energy_rewards,self.throughput_rewards
         #print('self.achieved_system_reward: ', self.achieved_system_reward)
         #return self.achieved_system_reward, self.achieved_system_reward, self.energy_rewards,self.throughput_rewards
-        return self.achieved_system_reward, urllc_reliability_reward_normalized , self.energy_rewards,self.throughput_rewards
+        return self.achieved_system_reward, self.overall_users_reward , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
         processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency
@@ -306,6 +320,7 @@ class SBS():
         self.delay_rewards = 0
         self.battery_energy_rewards = 0
         self.delays = 0
+        self.total_delay = 0
         self.tasks_dropped = 0
         self.resource_allocation_rewards = 0
         self.delay_reward_times_energy_reward = 0
@@ -331,6 +346,11 @@ class SBS():
         self.individual_tasks_dropped = []
         self.individual_energy_efficiency = []
         self.individual_total_reward = []
+        self.individual_channel_rates_ = []
+        self.individual_local_queue_delays = []
+        self.individual_offload_queue_delays = []
+        self.individual_local_queue_lengths = []
+        self.individual_offload_queue_lengths = []
         self.total_reward = 0
         self.overall_users_reward = 0
         self.average_rate_prev_slots = 0
@@ -455,9 +475,9 @@ class SBS():
         #print('urllc_total_rate: ', urllc_total_rate)
         #print('K*(1-self.urllc_reliability_constraint_max): ', K*(1-self.urllc_reliability_constraint_max))
         if reliability_reward < 0:
-            reliability_reward = 0
-        else:
             reliability_reward = reliability_reward
+        else:
+            reliability_reward = 100
         average_rate_prev_slots, std_rate = self.urllc_rate_expectation_over_prev_T_slot(10,urllc_total_rate)
         self.average_rate_prev_slots = average_rate_prev_slots
         #print('average_rate_prev_slots: ', average_rate_prev_slots, 'std_rate: ', std_rate)

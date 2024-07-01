@@ -102,6 +102,12 @@ for timestep in timesteps:
 
     #throughputs.append(reward[0])
 
+# individual_local_queue_delays
+# individual_offload_queue_delays
+# individual_local_queue_lengths
+# individual_offload_queue_lengths
+print('env.SBS1.individual_local_queue_delays')
+print(env.SBS1.individual_local_queue_delays)
 throughputs = np.roll(throughputs,-1)
 power_allocations = np.roll(power_allocations,-1)
 data = {
