@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy import interp
+import math
 
 #a_load = np.load('TD3_NetworkEnv-v0_0.npy')
 offload_actions = np.load('offloading_actions.npy')
@@ -34,6 +35,12 @@ individual_delay_rewards = np.load('individual_delay_rewards.npy')
 individual_battery_energy_rewards = np.load('individual_channel_battery_energy_rewards.npy')
 individual_total_reward = np.load('individual_total_reward.npy')
 
+individual_local_queue_delays = np.load('individual_local_queue_delays.npy')
+individual_offload_queue_delays = np.load('individual_offload_queue_delays.npy')
+individual_local_queue_lengths = np.load('individual_local_queue_lengths.npy')
+individual_offload_queue_lengths = np.load('individual_offload_queue_lengths.npy')
+
+
 
 
 
@@ -63,6 +70,7 @@ timesteps = rewards_throughput_energy[:,0]
 rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
 throughputs = rewards_throughput_energy[:,3]
+delays = rewards_throughput_energy[:,4]
 
 timesteps_TD3 = rewards_throughput_energy_TD3[:,0]
 #timesteps_TD3 =TD3_rewards_throughput_energy[:,0]
@@ -124,7 +132,7 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-#figure, axis = plt.subplots(2,1)
+figure, axis = plt.subplots(2,2)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
@@ -137,34 +145,34 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 # axis[1].plot(timesteps, rewards)
 # axis[1].set_title('DDPG Reward DF = 0.75')
 
-normalized_rewards_DDPG = []
+# normalized_rewards_DDPG = []
 
-for x in rewards_DDPG:
-    normalized_rewards_DDPG.append(interp(x,[0,max(rewards_DDPG)],[0,300]))
+# for x in rewards_DDPG:
+#     normalized_rewards_DDPG.append(interp(x,[0,max(rewards_DDPG)],[0,300]))
 
-def moving_average(data, window_size):
-    """Compute the moving average of data."""
-    weights = np.repeat(1.0, window_size) / window_size
-    return np.convolve(data, weights, 'valid')
+# def moving_average(data, window_size):
+#     """Compute the moving average of data."""
+#     weights = np.repeat(1.0, window_size) / window_size
+#     return np.convolve(data, weights, 'valid')
 
-window_size = 100
+# window_size = 100
 
-TD3_smooth = moving_average(rewards_TD3, window_size)
-DDPG_smooth = moving_average(normalized_rewards_DDPG, window_size)
+# TD3_smooth = moving_average(rewards_TD3, window_size)
+# DDPG_smooth = moving_average(normalized_rewards_DDPG, window_size)
 
-print(len(timesteps_TD3))
-new_timesteps_TD3 = []
-count = 0
-for timestep in timesteps_TD3:
-    new_timesteps_TD3.append(count)
-    count+=1
-#plt.plot(timesteps, rewards, color="green", label="TD3")
-plt.plot(new_timesteps_TD3[window_size-1:], TD3_smooth, color="green", label="TD3")
-plt.plot(new_timesteps_TD3[window_size-1:], DDPG_smooth, color="blue", label='DDPG')
-plt.xlabel("Episodes")
-plt.ylabel("System Reward($\mathcal{R}$)")
-plt.legend(["TD3","DDPG"], loc="upper left")
-plt.grid()
+# print(len(timesteps_TD3))
+# new_timesteps_TD3 = []
+# count = 0
+# for timestep in timesteps_TD3:
+#     new_timesteps_TD3.append(count)
+#     count+=1
+# #plt.plot(timesteps, rewards, color="green", label="TD3")
+# plt.plot(new_timesteps_TD3[window_size-1:], TD3_smooth, color="green", label="TD3")
+# plt.plot(new_timesteps_TD3[window_size-1:], DDPG_smooth, color="blue", label='DDPG')
+# plt.xlabel("Episodes")
+# plt.ylabel("System Reward($\mathcal{R}$)")
+# plt.legend(["TD3","DDPG"], loc="upper left")
+# plt.grid()
 
 # axis[2].plot(timesteps, RBs_actions)
 # axis[2].set_title('RB allocation actions')
@@ -218,15 +226,106 @@ plt.grid()
 # axis[4].set_title('RB allocation actions')
 
 
+def moving_average(data, window_size):
+    """Compute the moving average of data."""
+    weights = np.repeat(1.0, window_size) / window_size
+    return np.convolve(data, weights, 'valid')
 
-# axis[0].plot(timesteps, energies)
-# axis[0].set_title('energies reward')
+window_size = 100
 
-# axis[1].plot(timesteps, throughputs)
-# axis[1].set_title('throughputs reward')
+# rewards_smooth = moving_average(rewards, window_size)
+# energies_smooth = moving_average(energies, window_size)
+# throughputs_smooth = moving_average(throughputs, window_size)
+# delays_smooth = moving_average(delays, window_size)
 
-# axis[2].plot(timesteps, rewards)
-# axis[2].set_title('total reward')
+# q_action_smooth = moving_average(q_action, window_size)
+# offload_actions_smooth = moving_average(offload_actions, window_size)
+# power_actions_smooth = moving_average(power_actions, window_size)
+# RBs_smooth = moving_average(RBs_actions, window_size)
+
+# axis[0,0].plot(timesteps[window_size-1:], rewards_smooth)
+# axis[0,0].set_title('total reward')
+# axis[0,0].grid()
+
+# axis[1,0].plot(timesteps[window_size-1:], energies_smooth)
+# axis[1,0].set_title('energies reward')
+# axis[1,0].set_xlabel('Timestep')
+# axis[1,0].set_ylabel('Sum energy (J)')
+# axis[1,0].grid()
+
+# axis[0,1].plot(timesteps[window_size-1:], throughputs_smooth)
+# axis[0,1].set_title('throughputs reward')
+# axis[0,1].set_xlabel('Timestep')
+# axis[0,1].set_ylabel('Data Rate (bits/s)')
+# axis[0,1].grid()
+
+# axis[1,1].plot(timesteps[window_size-1:], delays_smooth)
+# axis[1,1].set_title('Sum delays')
+# axis[1,1].set_xlabel('Timestep')
+# axis[1,1].set_ylabel('Delay (ms)')
+# axis[1,1].grid()
+
+# axis[0,0].plot(timesteps, offload_actions)
+# axis[0,0].set_title('Offloading Actions')
+# axis[1,0].set_xlabel('Timestep')
+# axis[1,0].set_ylabel('Offloading Ratio')
+# axis[0,0].grid()
+# print(power_actions)
+# power_actions_new = []
+# count = 0
+# for p in power_actions:
+#     p = (math.pow(10,(p/10)))/1000
+#     power_actions_new.append(p)
+
+# print(power_actions)
+# axis[1,0].plot(timesteps, power_actions)
+# axis[1,0].set_title('Power Allocation Actions')
+# axis[1,0].set_xlabel('Timestep')
+# axis[1,0].set_ylabel('dbm')
+# axis[1,0].grid()
+
+# axis[0,1].plot(timesteps, RBs_actions)
+# axis[0,1].set_title('Resource Block Actions')
+# axis[0,1].set_xlabel('Timestep')
+# axis[0,1].set_ylabel('Number of RBs Allocated')
+# axis[0,1].grid()
+
+# timesteps_q_action = []
+
+# for x in range(0,len(q_action)):
+#     timesteps_q_action.append(x)
+# axis[1,1].plot(timesteps_q_action, q_action)
+# axis[1,1].set_title('q_action')
+# axis[1,1].set_xlabel('Timestep')
+# axis[1,1].set_ylabel('q value')
+# axis[1,1].grid()
+
+print(individual_local_queue_lengths)
+axis[0,0].plot(timesteps, individual_local_queue_lengths)
+axis[0,0].set_title('Local Queue Length')
+axis[1,0].set_xlabel('Timestep')
+axis[1,0].set_ylabel('Number of tasks')
+axis[0,0].grid()
+
+
+
+axis[1,0].plot(timesteps, individual_local_queue_delays)
+axis[1,0].set_title('Local Queueing Delay')
+axis[1,0].set_xlabel('Timestep')
+axis[1,0].set_ylabel('Delay (ms)')
+axis[1,0].grid()
+
+axis[0,1].plot(timesteps, individual_offload_queue_lengths)
+axis[0,1].set_title('Offload Queue Length')
+axis[0,1].set_xlabel('Timestep')
+axis[0,1].set_ylabel('Number of tasks')
+axis[0,1].grid()
+
+axis[1,1].plot(timesteps, individual_offload_queue_delays)
+axis[1,1].set_title('Offloading Queue Delay')
+axis[1,1].set_xlabel('Timestep')
+axis[1,1].set_ylabel('Delay (ms)')
+axis[1,1].grid()
 
 # axis[3].plot(timesteps, fairness_index)
 # axis[3].set_title('fairness index')

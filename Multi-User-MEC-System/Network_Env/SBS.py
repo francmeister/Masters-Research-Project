@@ -229,6 +229,7 @@ class SBS():
             self.individual_queue_delays.append(eMBB_User_delay)
             self.total_reward += energy_efficiency_reward*queue_delay_reward + battery_energy_reward
 
+           # print('eMBB_User.average_local_delays: ', eMBB_User.average_local_delays)
             self.individual_local_queue_delays.append(eMBB_User.average_local_delays) 
             self.individual_offload_queue_delays.append(eMBB_User.average_offload_delays) 
             self.individual_local_queue_lengths.append(eMBB_User.average_offload_queue_length) 
