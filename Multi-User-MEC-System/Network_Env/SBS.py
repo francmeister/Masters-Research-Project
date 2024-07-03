@@ -167,6 +167,18 @@ class SBS():
         self.q_action = q_action[0]
         self.urllc_reliability_reward_normalized = urllc_reliability_reward_normalized
         individual_channel_rates = []
+
+
+        self.energy_efficiency_rewards = 0
+        self.battery_energy_rewards = 0
+        self.throughput_rewards = 0
+        self.total_delay = 0
+        self.energy_rewards = 0
+        self.delay_rewards = 0
+        self.delays+=delay
+        self.tasks_dropped = 0
+        self.resource_allocation_rewards = 0
+        
         for eMBB_User in eMBB_Users:
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
             self.total_delay += eMBB_User_delay 
@@ -237,6 +249,10 @@ class SBS():
 
         self.individual_channel_rates.append(individual_channel_rates)
         self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------
+        if total_users_energy_reward > 0:
+            self.energy_efficiency_rewards = total_users_throughput_reward/total_users_energy_reward
+        else:
+            self.energy_efficiency_rewards = 0
         # if self.energy_rewards > 0 and self.throughput_rewards > 0:
         #     self.overall_users_reward = self.throughput_rewards - self.q_action*self.energy_rewards
         # else:
