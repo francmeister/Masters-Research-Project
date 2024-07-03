@@ -232,8 +232,8 @@ class SBS():
            # print('eMBB_User.average_local_delays: ', eMBB_User.average_local_delays)
             self.individual_local_queue_delays.append(eMBB_User.average_local_delays) 
             self.individual_offload_queue_delays.append(eMBB_User.average_offload_delays) 
-            self.individual_local_queue_lengths.append(eMBB_User.average_offload_queue_length) 
-            self.individual_offload_queue_lengths.append(eMBB_User.average_local_queue_length) 
+            self.individual_local_queue_lengths.append(eMBB_User.average_local_queue_length) 
+            self.individual_offload_queue_lengths.append(eMBB_User.average_offload_queue_length) 
 
         self.individual_channel_rates.append(individual_channel_rates)
         self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------

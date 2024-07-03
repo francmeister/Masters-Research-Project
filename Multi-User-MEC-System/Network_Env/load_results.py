@@ -233,10 +233,10 @@ def moving_average(data, window_size):
 
 window_size = 100
 
-# rewards_smooth = moving_average(rewards, window_size)
-# energies_smooth = moving_average(energies, window_size)
-# throughputs_smooth = moving_average(throughputs, window_size)
-# delays_smooth = moving_average(delays, window_size)
+rewards_smooth = moving_average(rewards, window_size)
+energies_smooth = moving_average(energies, window_size)
+throughputs_smooth = moving_average(throughputs, window_size)
+delays_smooth = moving_average(delays, window_size)
 
 # q_action_smooth = moving_average(q_action, window_size)
 # offload_actions_smooth = moving_average(offload_actions, window_size)
@@ -301,13 +301,17 @@ window_size = 100
 # axis[1,1].grid()
 
 print(individual_local_queue_lengths)
-axis[0,0].plot(timesteps, individual_local_queue_lengths)
+axis[0,0].plot(timesteps, individual_offload_queue_lengths)
 axis[0,0].set_title('Local Queue Length')
-axis[1,0].set_xlabel('Timestep')
-axis[1,0].set_ylabel('Number of tasks')
+axis[0,0].set_xlabel('Timestep')
+axis[0,0].set_ylabel('Number of tasks')
 axis[0,0].grid()
 
-
+axis[1,1].plot(timesteps, individual_offload_queue_delays)
+axis[1,1].set_title('Offloading Queue Delay')
+axis[1,1].set_xlabel('Timestep')
+axis[1,1].set_ylabel('Delay (ms)')
+axis[1,1].grid()
 
 axis[1,0].plot(timesteps, individual_local_queue_delays)
 axis[1,0].set_title('Local Queueing Delay')
@@ -315,17 +319,13 @@ axis[1,0].set_xlabel('Timestep')
 axis[1,0].set_ylabel('Delay (ms)')
 axis[1,0].grid()
 
-axis[0,1].plot(timesteps, individual_offload_queue_lengths)
-axis[0,1].set_title('Offload Queue Length')
+axis[0,1].plot(timesteps, individual_local_queue_lengths)
+axis[0,1].set_title('Offloading Queue Length')
 axis[0,1].set_xlabel('Timestep')
 axis[0,1].set_ylabel('Number of tasks')
 axis[0,1].grid()
 
-axis[1,1].plot(timesteps, individual_offload_queue_delays)
-axis[1,1].set_title('Offloading Queue Delay')
-axis[1,1].set_xlabel('Timestep')
-axis[1,1].set_ylabel('Delay (ms)')
-axis[1,1].grid()
+
 
 # axis[3].plot(timesteps, fairness_index)
 # axis[3].set_title('fairness index')
