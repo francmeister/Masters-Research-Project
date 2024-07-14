@@ -27,6 +27,11 @@ individual_delay_rewards = np.load('individual_delay_rewards.npy')
 individual_battery_energy_rewards = np.load('individual_channel_battery_energy_rewards.npy')
 individual_total_reward = np.load('individual_total_reward.npy')
 
+individual_local_queue_delays = np.load('individual_local_queue_delays.npy')
+individual_offload_queue_delays = np.load('individual_offload_queue_delays.npy')
+individual_local_queue_lengths = np.load('individual_local_queue_lengths.npy')
+individual_offload_queue_lengths = np.load('individual_offload_queue_lengths.npy')
+
 timesteps = rewards_throughput_energy[:,0]
 rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
@@ -66,36 +71,48 @@ def individual_sub_plots(numbers_users, timesteps, reward_component, string_rewa
     plt.show()
 
 
-def individual_user_subplots(user_num, timesteps, total_rewards, energy_rewards, throughput_rewards, battery_energy_rewards, delay_rewards, offload_actions, power_actions, RB_actions):
+def individual_user_subplots(user_num, timesteps, energy_rewards, throughput_rewards, delay_rewards, offload_actions, power_actions, local_queue_length, local_queue_delay,offload_queue_length,offload_queue_delay):
     row = 3
     col = 3
 
     figure, axis = plt.subplots(row,col)
     axis = axis.flatten()
 
-    axis[0].plot(timesteps, total_rewards[:,user_num])
-    axis[0].set_title('user num: '+ str(user_num) + ' total reward')
+    # axis[0].plot(timesteps, total_rewards[:,user_num])
+    # axis[0].set_title('user num: '+ str(user_num) + ' total reward')
 
-    axis[1].plot(timesteps, energy_rewards[:,user_num])
-    axis[1].set_title('user num: '+ str(user_num) + ' energy_rewards')
+    axis[0].plot(timesteps, energy_rewards[:,user_num])
+    axis[0].set_title('user num: '+ str(user_num) + ' energy_rewards')
 
-    axis[2].plot(timesteps, throughput_rewards[:,user_num])
-    axis[2].set_title('user num: '+ str(user_num) + ' throughput_rewards')
+    axis[1].plot(timesteps, throughput_rewards[:,user_num])
+    axis[1].set_title('user num: '+ str(user_num) + ' throughput_rewards')
 
-    axis[3].plot(timesteps, battery_energy_rewards[:,user_num])
-    axis[3].set_title('user num: '+ str(user_num) + ' battery_energy_rewards')
+    # axis[3].plot(timesteps, battery_energy_rewards[:,user_num])
+    # axis[3].set_title('user num: '+ str(user_num) + ' battery_energy_rewards')
 
-    axis[4].plot(timesteps, delay_rewards[:,user_num])
-    axis[4].set_title('user num: '+ str(user_num) + ' delay_rewards')
+    axis[2].plot(timesteps, delay_rewards[:,user_num])
+    axis[2].set_title('user num: '+ str(user_num) + ' delay_rewards')
 
-    axis[5].plot(timesteps, offload_actions[:,user_num])
-    axis[5].set_title('user num: '+ str(user_num) + ' offload_actions')
+    axis[3].plot(timesteps, offload_actions[:,user_num])
+    axis[3].set_title('user num: '+ str(user_num) + ' offload_actions')
 
-    axis[6].plot(timesteps, power_actions[:,user_num])
-    axis[6].set_title('user num: '+ str(user_num) + ' power actions')
+    axis[4].plot(timesteps, power_actions[:,user_num])
+    axis[4].set_title('user num: '+ str(user_num) + ' power actions')
 
-    axis[7].plot(timesteps, RB_actions[:,user_num])
-    axis[7].set_title('user num: '+ str(user_num) + ' RB allocation action')
+    # axis[7].plot(timesteps, RB_actions[:,user_num])
+    # axis[7].set_title('user num: '+ str(user_num) + ' RB allocation action')
+
+    axis[5].plot(timesteps, local_queue_length[:,user_num])
+    axis[5].set_title('user num: '+ str(user_num) + ' local_queue_length')
+
+    axis[6].plot(timesteps, local_queue_delay[:,user_num])
+    axis[6].set_title('user num: '+ str(user_num) + ' local_queue_delay')
+
+    axis[7].plot(timesteps, offload_queue_length[:,user_num])
+    axis[7].set_title('user num: '+ str(user_num) + ' offload_queue_length')
+
+    axis[8].plot(timesteps, offload_queue_delay[:,user_num])
+    axis[8].set_title('user num: '+ str(user_num) + ' offload_queue_delay')
 
     plt.tight_layout()
     plt.show()
@@ -104,5 +121,6 @@ def individual_user_subplots(user_num, timesteps, total_rewards, energy_rewards,
 string_reward_component = 'RB allocations'
 #individual_sub_plots(numbers_users=len(RBs_actions[0]),timesteps=timesteps,reward_component=RBs_actions,string_reward_component=string_reward_component)
 
-user_num = 1
-individual_user_subplots(user_num, timesteps, individual_total_reward, individual_energies, individual_channel_rates, individual_battery_energy_rewards, individual_delay_rewards, offload_actions, power_actions, RBs_actions)
+user_num =3
+individual_user_subplots(user_num, timesteps, individual_energies, individual_channel_rates, individual_queue_delays, offload_actions, power_actions,individual_local_queue_lengths, individual_local_queue_delays, individual_offload_queue_lengths, individual_offload_queue_delays)
+

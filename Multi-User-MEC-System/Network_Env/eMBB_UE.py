@@ -236,7 +236,8 @@ class eMBB_UE(User_Equipment):
 
         #Specify slot task size, computation cycles and latency requirement
         #self.task_arrival_rate_tasks_per_second = random.randint(self.min_task_arrival_rate_tasks_per_second,self.max_task_arrival_rate_tasks_per_second)
-        self.task_arrival_rate_tasks_per_second = np.random.poisson(25,1)#np.random.poisson(25,1)#np.random.poisson(5,1)
+        #self.task_arrival_rate_tasks_per_second = np.random.poisson(25,1)#np.random.poisson(25,1)#np.random.poisson(5,1)
+        self.task_arrival_rate_tasks_per_second = np.random.poisson(5,1)#np.random.poisson(25,1)#np.random.poisson(5,1)
         self.task_arrival_rate_tasks_per_second = self.task_arrival_rate_tasks_per_second[0]
         self.task_arrival_rate = self.task_arrival_rate_tasks_per_second
         self.previous_arrival_rate = self.task_arrival_rate_tasks_per_second
@@ -1167,6 +1168,10 @@ class eMBB_UE(User_Equipment):
 
         self.local_queue_length = len(self.local_queue)
         self.offload_queue_length = len(self.communication_queue)
+        # print('self.local_queue_length: ', self.local_queue_length)
+        # print('self.offload_queue_length: ', self.offload_queue_length)
+        # print('local_delay: ', local_delay)
+        # print('offloading_delay: ', offloading_delay)
 
         # self.local_queue_delay = local_delay
         # self.offload_queue_delay = offloading_delay

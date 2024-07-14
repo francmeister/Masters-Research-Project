@@ -267,8 +267,8 @@ axis[1,1].grid()
 
 # axis[0,0].plot(timesteps, offload_actions)
 # axis[0,0].set_title('Offloading Actions')
-# axis[1,0].set_xlabel('Timestep')
-# axis[1,0].set_ylabel('Offloading Ratio')
+# axis[0,0].set_xlabel('Timestep')
+# axis[0,0].set_ylabel('Offloading Ratio')
 # axis[0,0].grid()
 # print(power_actions)
 # power_actions_new = []
