@@ -165,7 +165,7 @@ class SBS():
         users_channel_rates = []
         #d
         self.q_action = q_action[0]
-        self.q_action = 10^5
+        #self.q_action = 10^5
         self.urllc_reliability_reward_normalized = urllc_reliability_reward_normalized
         individual_channel_rates = []
 
