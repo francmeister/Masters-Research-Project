@@ -265,30 +265,30 @@ delays_smooth = moving_average(delays, window_size)
 # axis[1,1].set_ylabel('Delay (ms)')
 # axis[1,1].grid()
 
-# axis[0,0].plot(timesteps, offload_actions)
-# axis[0,0].set_title('Offloading Actions')
-# axis[0,0].set_xlabel('Timestep')
-# axis[0,0].set_ylabel('Offloading Ratio')
-# axis[0,0].grid()
-# print(power_actions)
-# power_actions_new = []
-# count = 0
-# for p in power_actions:
-#     p = (math.pow(10,(p/10)))/1000
-#     power_actions_new.append(p)
+axis[0,0].plot(timesteps, offload_actions)
+axis[0,0].set_title('Offloading Actions')
+axis[0,0].set_xlabel('Timestep')
+axis[0,0].set_ylabel('Offloading Ratio')
+axis[0,0].grid()
+print(power_actions)
+power_actions_new = []
+count = 0
+for p in power_actions:
+    p = (math.pow(10,(p/10)))/1000
+    power_actions_new.append(p)
 
-# print(power_actions)
-# axis[1,0].plot(timesteps, power_actions)
-# axis[1,0].set_title('Power Allocation Actions')
-# axis[1,0].set_xlabel('Timestep')
-# axis[1,0].set_ylabel('dbm')
-# axis[1,0].grid()
+print(power_actions)
+axis[1,0].plot(timesteps, power_actions)
+axis[1,0].set_title('Power Allocation Actions')
+axis[1,0].set_xlabel('Timestep')
+axis[1,0].set_ylabel('dbm')
+axis[1,0].grid()
 
-# axis[0,1].plot(timesteps, RBs_actions)
-# axis[0,1].set_title('Resource Block Actions')
-# axis[0,1].set_xlabel('Timestep')
-# axis[0,1].set_ylabel('Number of RBs Allocated')
-# axis[0,1].grid()
+axis[0,1].plot(timesteps, RBs_actions)
+axis[0,1].set_title('Resource Block Actions')
+axis[0,1].set_xlabel('Timestep')
+axis[0,1].set_ylabel('Number of RBs Allocated')
+axis[0,1].grid()
 
 # timesteps_q_action = []
 
@@ -300,30 +300,30 @@ delays_smooth = moving_average(delays, window_size)
 # axis[1,1].set_ylabel('q value')
 # axis[1,1].grid()
 
-print(individual_local_queue_lengths)
-axis[0,0].plot(timesteps, individual_offload_queue_lengths)
-axis[0,0].set_title('Local Queue Length')
-axis[0,0].set_xlabel('Timestep')
-axis[0,0].set_ylabel('Number of tasks')
-axis[0,0].grid()
+# print(individual_local_queue_lengths)
+# axis[0,0].plot(timesteps, individual_offload_queue_lengths)
+# axis[0,0].set_title('Local Queue Length')
+# axis[0,0].set_xlabel('Timestep')
+# axis[0,0].set_ylabel('Number of tasks')
+# axis[0,0].grid()
 
-axis[1,1].plot(timesteps, individual_offload_queue_delays)
-axis[1,1].set_title('Offloading Queue Delay')
-axis[1,1].set_xlabel('Timestep')
-axis[1,1].set_ylabel('Delay (ms)')
-axis[1,1].grid()
+# axis[1,1].plot(timesteps, individual_offload_queue_delays)
+# axis[1,1].set_title('Offloading Queue Delay')
+# axis[1,1].set_xlabel('Timestep')
+# axis[1,1].set_ylabel('Delay (ms)')
+# axis[1,1].grid()
 
-axis[1,0].plot(timesteps, individual_local_queue_delays)
-axis[1,0].set_title('Local Queueing Delay')
-axis[1,0].set_xlabel('Timestep')
-axis[1,0].set_ylabel('Delay (ms)')
-axis[1,0].grid()
+# axis[1,0].plot(timesteps, individual_local_queue_delays)
+# axis[1,0].set_title('Local Queueing Delay')
+# axis[1,0].set_xlabel('Timestep')
+# axis[1,0].set_ylabel('Delay (ms)')
+# axis[1,0].grid()
 
-axis[0,1].plot(timesteps, individual_local_queue_lengths)
-axis[0,1].set_title('Offloading Queue Length')
-axis[0,1].set_xlabel('Timestep')
-axis[0,1].set_ylabel('Number of tasks')
-axis[0,1].grid()
+# axis[0,1].plot(timesteps, individual_local_queue_lengths)
+# axis[0,1].set_title('Offloading Queue Length')
+# axis[0,1].set_xlabel('Timestep')
+# axis[0,1].set_ylabel('Number of tasks')
+# axis[0,1].grid()
 
 
 
