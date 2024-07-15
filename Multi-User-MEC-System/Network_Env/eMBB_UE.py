@@ -31,8 +31,11 @@ class eMBB_UE(User_Equipment):
         self.cycles_per_bit = self.cycles_per_byte/8
         #self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
         #self.max_service_rate_cycles_per_slot = 620000
-        self.max_service_rate_cycles_per_slot = 105000
-        self.service_rate_bits_per_slot = (self.max_service_rate_cycles_per_slot/self.cycles_per_byte)*8
+        self.service_rate_bits_per_second = 2500000 #2.5MB/s
+        self.service_rate_bits_per_slot = self.service_rate_bits_per_second/1000 
+        self.max_service_rate_cycles_per_slot = self.service_rate_bits_per_slot*self.cycles_per_bit
+        #print('self.max_service_rate_cycles_per_slot: ', self.max_service_rate_cycles_per_slot)
+        #self.service_rate_bits_per_slot = (self.max_service_rate_cycles_per_slot/self.cycles_per_byte)*8
         self.local_queue_length = 0
         self.offload_queue_length = 0
 
@@ -1181,8 +1184,12 @@ class eMBB_UE(User_Equipment):
 
         # self.local_queue_delays.append(local_delay)
         # self.offload_queue_delays.append(offloading_delay)
-        self.average_local_queue_length, self.average_offload_queue_length, self.average_local_delays, self.average_offload_delays = self.avg_queue_length_delays_over_T_slots(5, self.local_queue_length, self.offload_queue_length, local_delay, offloading_delay)
+        #self.average_local_queue_length, self.average_offload_queue_length, self.average_local_delays, self.average_offload_delays = self.avg_queue_length_delays_over_T_slots(5, self.local_queue_length, self.offload_queue_length, local_delay, offloading_delay)
 
+        self.average_local_queue_length = self.local_queue_length 
+        self.average_offload_queue_length = self.offload_queue_length
+        self.average_local_delays = local_delay
+        self.average_offload_delays = offloading_delay
         # print('local_delay: ', local_delay)
         # print('local queue length: ', self.local_queue_length)
         # print('offloading_delay: ', offloading_delay)
