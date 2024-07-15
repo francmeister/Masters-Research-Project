@@ -183,6 +183,7 @@ class SBS():
         for eMBB_User in eMBB_Users:
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
             self.total_delay += eMBB_User_delay 
+            #print('self.total_delay: ', self.total_delay)
             #eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
             self.total_users_energy_not_normalized+=eMBB_User.achieved_total_energy_consumption
             self.total_users_throughput_not_normalized+=eMBB_User.achieved_channel_rate
