@@ -248,13 +248,16 @@ class SBS():
             self.individual_local_queue_lengths.append(eMBB_User.average_local_queue_length) 
             self.individual_offload_queue_lengths.append(eMBB_User.average_offload_queue_length) 
 
-        self.q_action = 10**6
+        self.q_action = 10**5
+        #print('total_users_delay_rewards*total_users_energy_reward: ', total_users_delay_rewards*total_users_energy_reward)
         self.individual_channel_rates.append(individual_channel_rates)
         self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------
         if total_users_energy_reward > 0:
             self.energy_efficiency_rewards = total_users_throughput_reward/total_users_energy_reward
         else:
             self.energy_efficiency_rewards = 0
+
+        #print('self.overall_users_reward: ', self.overall_users_reward)
         # if self.energy_rewards > 0 and self.throughput_rewards > 0:
         #     self.overall_users_reward = self.throughput_rewards - self.q_action*self.energy_rewards
         # else:
