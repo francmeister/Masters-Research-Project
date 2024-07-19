@@ -235,7 +235,7 @@ window_size = 100
 
 rewards_smooth = moving_average(rewards, window_size)
 energies_smooth = moving_average(energies, window_size)
-throughputs_smooth = moving_average(throughputs, window_size)
+throughputs_smooth = throughputs#moving_average(throughputs, window_size)
 delays_smooth = delays#moving_average(delays, window_size)
 
 # q_action_smooth = moving_average(q_action, window_size)
@@ -247,35 +247,35 @@ delays_smooth = delays#moving_average(delays, window_size)
 # axis[0,0].set_title('total reward')
 # axis[0,0].grid()
 
-# axis[1,0].plot(timesteps[window_size-1:], energies_smooth)
-# axis[1,0].set_title('energies reward')
-# axis[1,0].set_xlabel('Timestep')
-# axis[1,0].set_ylabel('Sum energy (J)')
-# axis[1,0].grid()
+axis[1,0].plot(timesteps[window_size-1:], energies_smooth)
+axis[1,0].set_title('energies reward')
+axis[1,0].set_xlabel('Timestep')
+axis[1,0].set_ylabel('Sum energy (J)')
+axis[1,0].grid()
 
-# axis[0,1].plot(timesteps[window_size-1:], throughputs_smooth)
-# axis[0,1].set_title('throughputs reward')
-# axis[0,1].set_xlabel('Timestep')
-# axis[0,1].set_ylabel('Data Rate (bits/s)')
-# axis[0,1].grid()
+axis[0,1].plot(timesteps, throughputs_smooth)
+axis[0,1].set_title('throughputs reward')
+axis[0,1].set_xlabel('Timestep')
+axis[0,1].set_ylabel('Data Rate (bits/s)')
+axis[0,1].grid()
 
-# axis[1,1].plot(timesteps, delays_smooth)
-# axis[1,1].set_title('Sum delays')
-# axis[1,1].set_xlabel('Timestep')
-# axis[1,1].set_ylabel('Delay (ms)')
-# axis[1,1].grid()
+axis[1,1].plot(timesteps, delays_smooth)
+axis[1,1].set_title('Sum delays')
+axis[1,1].set_xlabel('Timestep')
+axis[1,1].set_ylabel('Delay (ms)')
+axis[1,1].grid()
 
-# axis[0,0].plot(timesteps, offload_actions)
-# axis[0,0].set_title('Offloading Actions')
-# axis[0,0].set_xlabel('Timestep')
-# axis[0,0].set_ylabel('Offloading Ratio')
-# axis[0,0].grid()
-# print(power_actions)
-# power_actions_new = []
-# count = 0
-# for p in power_actions:
-#     p = (math.pow(10,(p/10)))/1000
-#     power_actions_new.append(p)
+axis[0,0].plot(timesteps, offload_actions)
+axis[0,0].set_title('Offloading Actions')
+axis[0,0].set_xlabel('Timestep')
+axis[0,0].set_ylabel('Offloading Ratio')
+axis[0,0].grid()
+print(power_actions)
+power_actions_new = []
+count = 0
+for p in power_actions:
+    p = (math.pow(10,(p/10)))/1000
+    power_actions_new.append(p)
 
 # print(power_actions)
 # axis[1,0].plot(timesteps, power_actions)

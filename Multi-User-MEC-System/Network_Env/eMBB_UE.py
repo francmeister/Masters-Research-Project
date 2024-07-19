@@ -41,6 +41,7 @@ class eMBB_UE(User_Equipment):
 
         self.local_queue_delay =0
         self.offload_queue_delay = 0
+        self.channel_gain_scaling_factor = 1
 
         self.set_properties_eMBB()
 
@@ -53,10 +54,10 @@ class eMBB_UE(User_Equipment):
         self.max_allowable_reliability = 0
 
         self.min_communication_qeueu_size = 0
-        self.max_communication_qeueu_size = 50
+        self.max_communication_qeueu_size = 100
 
-        self.min_channel_gain = math.pow(10,-5)
-        self.max_channel_gain = 10
+        self.min_channel_gain = math.pow(10,-8)
+        self.max_channel_gain = 25
 
         self.min_energy_harvested = 0
         self.max_energy_harvested = 150
@@ -80,8 +81,8 @@ class eMBB_UE(User_Equipment):
         #print('self.max_queue_length_number: ', self.max_queue_length_number)
         self.min_queue_length = 0
 
-        self.max_lc_queue_length = 50
-        self.max_off_queue_length = 400
+        self.max_lc_queue_length = 100
+        self.max_off_queue_length = 100
 
         self.min_lc_queue_length = 0
         self.min_off_queue_length = 0
@@ -137,7 +138,7 @@ class eMBB_UE(User_Equipment):
         self.ypos_move_upper_bound = self.y_position + self.single_side_standard_deviation_pos
         self.allocated_RBs = []
 
-        self.max_transmission_power_dBm = 70 # dBm
+        self.max_transmission_power_dBm = 40 # dBm
         self.min_transmission_power_dBm = 0
         self.max_transmission_power_W =  (math.pow(10,(self.max_transmission_power_dBm/10)))/1000# Watts
         self.min_transmission_power_W =  (math.pow(10,(self.min_transmission_power_dBm/10)))/1000# Watts
@@ -464,10 +465,13 @@ class eMBB_UE(User_Equipment):
             #self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,56000],[0,1]) 
        
 
+    def set_channel_gain_scaling_factor(self,channel_gain_scaling_factor):
+        self.channel_gain_scaling_factor = channel_gain_scaling_factor
+
     def calculate_channel_rate(self, communication_channel,RB_indicator,RB_channel_gain,current_rb_occupied):
         RB_bandwidth = communication_channel.RB_bandwidth_Hz
         noise_spectral_density = communication_channel.noise_spectral_density_W
-        channel_rate_numerator = self.assigned_transmit_power_W*RB_channel_gain
+        channel_rate_numerator = self.assigned_transmit_power_W*RB_channel_gain*self.channel_gain_scaling_factor
         channel_rate_denominator = noise_spectral_density#*RB_bandwidth
         half_num_mini_slots_per_rb = communication_channel.num_of_mini_slots/2
         if current_rb_occupied == False:
