@@ -860,8 +860,8 @@ class NetworkEnv(gym.Env):
         self.URLLC_UE_6 = URLLC_UE(6,9,100,600)
 
         # Set channel gain scaling factorsS
-        self.eMBB_UE_4.set_channel_gain_scaling_factor(40)
-        self.eMBB_UE_4.set_channel_gain_scaling_factor(20)
+        #self.eMBB_UE_4.set_channel_gain_scaling_factor(40)
+        #self.eMBB_UE_4.set_channel_gain_scaling_factor(20)
 
 
         #Communication Channel
@@ -883,7 +883,7 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.append(self.eMBB_UE_1)
         self.eMBB_Users.append(self.eMBB_UE_2)
         self.eMBB_Users.append(self.eMBB_UE_3)
-        self.eMBB_Users.append(self.eMBB_UE_4)
+        #self.eMBB_Users.append(self.eMBB_UE_4)
         #self.eMBB_Users.append(self.eMBB_UE_5)
         #self.eMBB_Users.append(self.eMBB_UE_6)
         #self.eMBB_Users.append(self.eMBB_UE_7)

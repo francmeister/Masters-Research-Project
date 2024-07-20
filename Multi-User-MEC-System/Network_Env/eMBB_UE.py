@@ -1170,7 +1170,7 @@ class eMBB_UE(User_Equipment):
         if expected_rate_over_prev_T_slot_ms > 0:
             offload_queueing_time = (average_packet_size_bits/expected_rate_over_prev_T_slot_ms)*len(self.communication_queue)
         else:
-            offload_queueing_time = 0
+            offload_queueing_time = (average_packet_size_bits)*len(self.communication_queue)
         offloading_delay = offload_queueing_time + 1
 
         self.local_queue_length = len(self.local_queue)
