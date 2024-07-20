@@ -31,8 +31,8 @@ class eMBB_UE(User_Equipment):
         self.cycles_per_bit = self.cycles_per_byte/8
         #self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
         #self.max_service_rate_cycles_per_slot = 620000
-        #self.service_rate_bits_per_second = 2500000 #2.5MB/s(random.randint(5,5000))
-        self.service_rate_bits_per_second = random.randint(1000000,4000000)
+        self.service_rate_bits_per_second = 2500000 #2.5MB/s(random.randint(5,5000))
+        #self.service_rate_bits_per_second = random.randint(1000000,4000000)
         self.service_rate_bits_per_slot = self.service_rate_bits_per_second/1000 
         self.max_service_rate_cycles_per_slot = self.service_rate_bits_per_slot*self.cycles_per_bit
         #print('self.max_service_rate_cycles_per_slot: ', self.max_service_rate_cycles_per_slot)
@@ -462,7 +462,7 @@ class eMBB_UE(User_Equipment):
             #if self.timeslot_counter >= 500000:
             #    self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,10]) 
             #else:
-            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,1]) 
+            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,20000000],[0,1]) 
             #self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,56000],[0,1]) 
        
 
@@ -718,7 +718,7 @@ class eMBB_UE(User_Equipment):
         if self.battery_energy_level >  self.achieved_total_energy_consumption:
             self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
             #print('self.achieved_total_energy_consumption: ', self.achieved_total_energy_consumption, " J")
-            self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,5500],[0,1])
+            self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,65],[0,1])
             #self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,46000],[0,1])
             self.battery_energy_level = self.battery_energy_level - self.achieved_total_energy_consumption
         else:
