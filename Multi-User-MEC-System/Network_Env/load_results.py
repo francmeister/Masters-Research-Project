@@ -132,7 +132,7 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-figure, axis = plt.subplots(2,2)
+figure, axis = plt.subplots(3,2)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
@@ -264,6 +264,12 @@ axis[1,1].set_title('Sum delays')
 axis[1,1].set_xlabel('Timestep')
 axis[1,1].set_ylabel('Delay (ms)')
 axis[1,1].grid()
+
+axis[2,0].plot(timesteps, fairness_index)
+axis[2,0].set_title('Fairness Index')
+axis[2,0].set_xlabel('Timestep')
+axis[2,0].set_ylabel('FI value')
+axis[2,0].grid()
 
 # axis[0,0].plot(timesteps, offload_actions)
 # axis[0,0].set_title('Offloading Actions')

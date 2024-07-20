@@ -13,6 +13,7 @@ class SBS():
         self.x_position = 200
         self.y_position = 200
         self.individual_rewards = []
+        self.users_lc_service_rates = []
         self.set_properties()
 
     def associate_users(self, eMBB_Users, URLLC_users):
@@ -179,8 +180,9 @@ class SBS():
         self.delays+=delay
         self.tasks_dropped = 0
         self.resource_allocation_rewards = 0
-        
+        self.users_lc_service_rates = []
         for eMBB_User in eMBB_Users:
+            self.users_lc_service_rates.append(eMBB_User.service_rate_bits_per_second)
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
             self.total_delay += eMBB_User_delay 
             #print('self.total_delay: ', self.total_delay)
