@@ -181,6 +181,8 @@ class SBS():
         self.tasks_dropped = 0
         self.resource_allocation_rewards = 0
         self.users_lc_service_rates = []
+        self.total_users_energy_not_normalized = 0
+        self.total_users_throughput_not_normalized = 0
         for eMBB_User in eMBB_Users:
             self.users_lc_service_rates.append(eMBB_User.service_rate_bits_per_second)
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
@@ -291,6 +293,7 @@ class SBS():
         #print('self.achieved_system_reward: ', self.achieved_system_reward)
         #return self.achieved_system_reward, self.achieved_system_reward, self.energy_rewards,self.throughput_rewards
         return self.achieved_system_reward, self.overall_users_reward , self.energy_rewards,self.throughput_rewards
+        #return self.achieved_system_reward, self.total_users_energy_not_normalized , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
         processing_delay_requirement = eMBB_User.QOS_requirement_for_transmission.max_allowable_latency

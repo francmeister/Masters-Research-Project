@@ -32,7 +32,7 @@ class eMBB_UE(User_Equipment):
         #self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
         #self.max_service_rate_cycles_per_slot = 620000
         #self.service_rate_bits_per_second = 2500000 #2.5MB/s(random.randint(5,5000))
-        self.service_rate_bits_per_second = random.randint(1000000,400000)
+        self.service_rate_bits_per_second = random.randint(1000000,4000000)
         self.service_rate_bits_per_slot = self.service_rate_bits_per_second/1000 
         self.max_service_rate_cycles_per_slot = self.service_rate_bits_per_slot*self.cycles_per_bit
         #print('self.max_service_rate_cycles_per_slot: ', self.max_service_rate_cycles_per_slot)
@@ -839,7 +839,7 @@ class eMBB_UE(User_Equipment):
         if self.achieved_total_energy_consumption == 0:
             energy_efficiency = 0
         else:
-            energy_efficiency = self.achieved_channel_rate/self.achieved_total_energy_consumption#self.achieved_channel_rate#/self.achieved_total_energy_consumption #0.4*self.achieved_channel_rate_normalized/0.6*self.achieved_total_energy_consumption_normalized
+            energy_efficiency = self.achieved_channel_rate_normalized/self.achieved_total_energy_consumption_normalized#self.achieved_channel_rate#/self.achieved_total_energy_consumption #0.4*self.achieved_channel_rate_normalized/0.6*self.achieved_total_energy_consumption_normalized
             #energy_efficiency = 1/self.achieved_total_energy_consumption_normalized#self.achieved_channel_rate#/self.achieved_total_energy_consumption #0.4*self.achieved_channel_rate_normalized/0.6*self.achieved_total_energy_consumption_normalized  
             
             #energy_efficiency = self.achieved_total_energy_consumption_normalized 
