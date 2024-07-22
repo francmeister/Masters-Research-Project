@@ -157,6 +157,7 @@ class NetworkEnv(gym.Env):
         self.RB_bandwidth = self.initial_RB_bandwidth
         self.num_RBs_allocated = 0
         self.q_actions = 0
+        self.resource_block_action_matrix = []
 
     def reshape_observation_space_for_model(self,observation_space):
         observation_space = np.transpose(observation_space)
@@ -387,6 +388,7 @@ class NetworkEnv(gym.Env):
             #         else:
             #             resource_block_action_matrix[x,y,z] = 0
             #         count+=1
+        self.resource_block_action_matrix = resource_block_action_matrix
         resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
         action_space_dict = {
