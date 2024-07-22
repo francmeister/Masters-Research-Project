@@ -472,7 +472,7 @@ class eMBB_UE(User_Equipment):
     def calculate_channel_rate(self, communication_channel,RB_indicator,RB_channel_gain,current_rb_occupied):
         RB_bandwidth = communication_channel.RB_bandwidth_Hz
         noise_spectral_density = communication_channel.noise_spectral_density_W
-        channel_rate_numerator = self.assigned_transmit_power_W*RB_channel_gain*self.channel_gain_scaling_factor
+        channel_rate_numerator = self.assigned_transmit_power_W*RB_channel_gain#*self.channel_gain_scaling_factor
         channel_rate_denominator = noise_spectral_density#*RB_bandwidth
         half_num_mini_slots_per_rb = communication_channel.num_of_mini_slots/2
         if current_rb_occupied == False:

@@ -59,13 +59,13 @@ class Communication_Channel():
         '''
 
     def set_properties(self):
-        self.system_bandwidth_Hz = 120*math.pow(10,6)
         self.subcarrier_bandwidth_Hz = 15*math.pow(10,3) # 15kHz
         #self.subcarrier_bandwidth_Hz = 60*math.pow(10,3)
         self.num_subcarriers_per_RB = 12
         #self.num_subcarriers_per_RB = 20
         self.RB_bandwidth_Hz = self.subcarrier_bandwidth_Hz*self.num_subcarriers_per_RB
         self.num_RB = 6#int(self.system_bandwidth_Hz/self.RB_bandwidth_Hz)
+        self.system_bandwidth_Hz = self.RB_bandwidth_Hz*self.num_RB*2
         self.long_TTI = 1 #1ms
         self.noise_spectral_density_dbm = 0.00122077763#-174 # -174dBM/Hz
         self.noise_spectral_density_W = 0.00122077763#(math.pow(10,(self.noise_spectral_density_dbm/10)))/1000

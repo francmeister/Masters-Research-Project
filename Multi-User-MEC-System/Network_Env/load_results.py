@@ -44,6 +44,7 @@ individual_offload_queue_lengths = np.load('individual_offload_queue_lengths.npy
 
 
 
+
 # rewards_throughput_energy_access_point_1 = np.load('timestep_rewards_energy_throughput (3).npy')
 # rewards_throughput_energy_access_point_2 = np.load('timestep_rewards_energy_throughput (4).npy')
 # rewards_throughput_energy_access_point_3 = np.load('timestep_rewards_energy_throughput (5).npy')
@@ -237,7 +238,9 @@ rewards_smooth = moving_average(rewards, window_size)
 energies_smooth = moving_average(energies, window_size)
 throughputs_smooth = moving_average(throughputs, window_size)
 delays_smooth = delays#moving_average(delays, window_size)
-
+energy_efficiency_smooth = moving_average(energy_efficiency_rewards, window_size)
+fairness_index_smooth = moving_average(fairness_index, window_size)
+print(energy_efficiency_rewards)
 # q_action_smooth = moving_average(q_action, window_size)
 # offload_actions_smooth = moving_average(offload_actions, window_size)
 # power_actions_smooth = moving_average(power_actions, window_size)
@@ -265,11 +268,17 @@ axis[1,1].set_xlabel('Timestep')
 axis[1,1].set_ylabel('Delay (ms)')
 axis[1,1].grid()
 
-axis[2,0].plot(timesteps, fairness_index)
+axis[2,0].plot(timesteps[window_size-1:], fairness_index_smooth)
 axis[2,0].set_title('Fairness Index')
 axis[2,0].set_xlabel('Timestep')
 axis[2,0].set_ylabel('FI value')
 axis[2,0].grid()
+
+axis[2,1].plot(timesteps[window_size-1:], energy_efficiency_smooth)
+axis[2,1].set_title('Energy Efficiency')
+axis[2,1].set_xlabel('Timestep')
+axis[2,1].set_ylabel('EE Value')
+axis[2,1].grid()
 
 # axis[0,0].plot(timesteps, offload_actions)
 # axis[0,0].set_title('Offloading Actions')

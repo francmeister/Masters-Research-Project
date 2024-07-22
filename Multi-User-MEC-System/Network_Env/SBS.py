@@ -121,6 +121,9 @@ class SBS():
 
     def calculate_achieved_system_reward(self, eMBB_Users, urllc_users, communication_channel, q_action):
         #print('number of embb users: ', len(eMBB_Users))
+    
+        max_channel_rate = communication_channel.system_bandwidth_Hz*math.log2(1+((5*1)/communication_channel.noise_spectral_density_W))
+        r_min = max_channel_rate/len(eMBB_Users)
         self.achieved_system_reward = 0
         eMBB_User_energy_consumption = 0
         eMBB_User_channel_rate = 0
@@ -210,7 +213,7 @@ class SBS():
             total_eMBB_User_delay_normalized+=eMBB_User_delay_normalized
             total_users_energy_reward += eMBB_User_energy_consumption
             #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
-            total_users_throughput_reward += (eMBB_User_channel_rate-5000000)
+            total_users_throughput_reward += (eMBB_User_channel_rate-r_min)
             total_users_battery_energies_reward += battery_energy_reward
             total_users_delay_rewards += eMBB_User_delay
             if eMBB_User_energy_consumption == 0:
@@ -262,7 +265,7 @@ class SBS():
         self.individual_channel_rates.append(individual_channel_rates)
         self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------
         if total_users_energy_reward > 0:
-            self.energy_efficiency_rewards = total_users_throughput_reward/total_users_energy_reward
+            self.energy_efficiency_rewards = self.throughput_rewards/total_users_energy_reward
         else:
             self.energy_efficiency_rewards = 0
 
