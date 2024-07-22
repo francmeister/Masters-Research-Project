@@ -209,7 +209,8 @@ class SBS():
 
             total_eMBB_User_delay_normalized+=eMBB_User_delay_normalized
             total_users_energy_reward += eMBB_User_energy_consumption
-            total_users_throughput_reward += (eMBB_User_channel_rate-9000000)
+            #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
+            total_users_throughput_reward += (eMBB_User_channel_rate-5000000)
             total_users_battery_energies_reward += battery_energy_reward
             total_users_delay_rewards += eMBB_User_delay
             if eMBB_User_energy_consumption == 0:
