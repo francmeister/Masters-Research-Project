@@ -264,8 +264,8 @@ class SBS():
         #print('total_users_delay_rewards*total_users_energy_reward: ', total_users_delay_rewards*total_users_energy_reward)
         self.individual_channel_rates.append(individual_channel_rates)
         self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------
-        if total_users_energy_reward > 0:
-            self.energy_efficiency_rewards = self.throughput_rewards/total_users_energy_reward
+        if self.energy_rewards > 0:
+            self.energy_efficiency_rewards = self.throughput_rewards/self.energy_rewards
         else:
             self.energy_efficiency_rewards = 0
 
