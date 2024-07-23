@@ -32,6 +32,9 @@ individual_offload_queue_delays = np.load('individual_offload_queue_delays.npy')
 individual_local_queue_lengths = np.load('individual_local_queue_lengths.npy')
 individual_offload_queue_lengths = np.load('individual_offload_queue_lengths.npy')
 
+users_lc_service_rates = np.load('users_lc_service_rates.npy')
+print(users_lc_service_rates)
+
 timesteps = rewards_throughput_energy[:,0]
 rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
