@@ -261,9 +261,12 @@ class SBS():
         #print('fairness index: ', fairness_index)
         fairness_index_normalized = interp(fairness_index,[0,1],[0,1])
         self.q_action = 10**1
+        q_delay = 10**1
+        q_energy = 10**3
         #print('total_users_delay_rewards*total_users_energy_reward: ', total_users_delay_rewards*total_users_energy_reward)
         self.individual_channel_rates.append(individual_channel_rates)
-        self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------
+        #self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------
+        self.overall_users_reward = total_users_throughput_reward - (q_delay*total_users_delay_rewards* q_energy*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward
         if self.energy_rewards > 0:
             self.energy_efficiency_rewards = self.throughput_rewards/self.energy_rewards
         else:
