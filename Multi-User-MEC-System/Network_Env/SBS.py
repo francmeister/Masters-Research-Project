@@ -186,6 +186,7 @@ class SBS():
         self.users_lc_service_rates = []
         self.total_users_energy_not_normalized = 0
         self.total_users_throughput_not_normalized = 0
+        throughput_log_reward = 0
         for eMBB_User in eMBB_Users:
             self.users_lc_service_rates.append(eMBB_User.service_rate_bits_per_second)
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
@@ -213,7 +214,9 @@ class SBS():
             total_eMBB_User_delay_normalized+=eMBB_User_delay_normalized
             total_users_energy_reward += eMBB_User_energy_consumption
             #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
-            total_users_throughput_reward += (eMBB_User_channel_rate-r_min)
+            #total_users_throughput_reward += (eMBB_User_channel_rate-r_min)
+            total_users_throughput_reward += (eMBB_User_channel_rate)
+            throughput_log_reward += (math.log2(eMBB_User_channel_rate/r_min))
             total_users_battery_energies_reward += battery_energy_reward
             total_users_delay_rewards += eMBB_User_delay
             if eMBB_User_energy_consumption == 0:
@@ -266,7 +269,7 @@ class SBS():
         #print('total_users_delay_rewards*total_users_energy_reward: ', total_users_delay_rewards*total_users_energy_reward)
         self.individual_channel_rates.append(individual_channel_rates)
         #self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------
-        self.overall_users_reward = total_users_throughput_reward - (q_delay*total_users_delay_rewards* q_energy*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward
+        self.overall_users_reward = total_users_throughput_reward - (q_delay*total_users_delay_rewards* q_energy*total_users_energy_reward) + throughput_log_reward + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward
         if self.energy_rewards > 0:
             self.energy_efficiency_rewards = self.throughput_rewards/self.energy_rewards
         else:
