@@ -204,6 +204,7 @@ class SBS():
             total_rate += eMBB_User_channel_rate
             delay_reward = eMBB_User.calculate_delay_penalty()
             battery_energy_reward = eMBB_User.energy_consumption_reward()
+            # print('battery_energy_reward: ', battery_energy_reward)
             energy_efficiency_reward = eMBB_User.calculate_energy_efficiency()
             resource_allocation_reward = eMBB_User.calculate_resource_allocation_reward(communication_channel)
             queue_delay_reward,delay = eMBB_User.calculate_queuing_delays()
@@ -214,14 +215,14 @@ class SBS():
             total_eMBB_User_delay_normalized+=eMBB_User_delay_normalized
             total_users_energy_reward += eMBB_User_energy_consumption
             #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
-            total_users_throughput_reward += (eMBB_User_channel_rate-r_min)
-            #total_users_throughput_reward += (eMBB_User_channel_rate)
+            #total_users_throughput_reward += (eMBB_User_channel_rate-r_min)
+            total_users_throughput_reward += (eMBB_User_channel_rate)
             #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
             #print('r_min: ', r_min)
-            #if eMBB_User_channel_rate > 0:
-             #   throughput_log_reward += (math.log2(eMBB_User_channel_rate/r_min))
-            #else:
-                #throughput_log_reward += (math.log2(1/r_min))
+            if eMBB_User_channel_rate > 0:
+               throughput_log_reward += (math.log2(eMBB_User_channel_rate/r_min))
+            else:
+                throughput_log_reward += (math.log2(1/r_min))
             total_users_battery_energies_reward += battery_energy_reward
             total_users_delay_rewards += eMBB_User_delay
             if eMBB_User_energy_consumption == 0:
@@ -271,14 +272,24 @@ class SBS():
         self.q_action = 10**1
         q_delay = 10**0
         q_energy = 10**4
+        q_total_users_battery_energies_reward = 10**4
+        q_urllc_reliability_reward = 10**0
+        q_total_offload_traffic_reward = 10**0
+        q_throughput_log_reward = 10**4
         #print('total_users_delay_rewards*total_users_energy_reward: ', total_users_delay_rewards*total_users_energy_reward)
         self.individual_channel_rates.append(individual_channel_rates)
         #self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------
-        self.overall_users_reward = total_users_throughput_reward - (q_delay*total_users_delay_rewards* q_energy*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward
+        self.overall_users_reward = total_users_throughput_reward - (q_delay*total_users_delay_rewards* q_energy*total_users_energy_reward) + q_throughput_log_reward*throughput_log_reward + q_total_users_battery_energies_reward*total_users_battery_energies_reward + q_urllc_reliability_reward*urllc_reliability_reward + q_total_offload_traffic_reward*total_offload_traffic_reward
         if self.energy_rewards > 0:
             self.energy_efficiency_rewards = self.throughput_rewards/self.energy_rewards
         else:
             self.energy_efficiency_rewards = 0
+
+        #print('total_users_throughput_reward: ', total_users_throughput_reward)
+        #print('q_delay*total_users_delay_rewards: ', q_delay*total_users_delay_rewards)
+        #print('q_energy*total_users_energy_reward: ', q_energy*total_users_energy_reward)
+        #print('q_throughput_log_reward*throughput_log_reward: ', q_throughput_log_reward*throughput_log_reward)
+        #print('q_total_users_battery_energies_reward*total_users_battery_energies_reward: ', q_total_users_battery_energies_reward*total_users_battery_energies_reward)
 
         #print('self.overall_users_reward: ', self.overall_users_reward)
         # if self.energy_rewards > 0 and self.throughput_rewards > 0:
@@ -400,6 +411,7 @@ class SBS():
         self.total_reward = 0
         self.overall_users_reward = 0
         self.average_rate_prev_slots = 0
+        
 
     def calculate_fairness(self,eMBB_Users):
         number_of_users = len(eMBB_Users)

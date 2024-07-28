@@ -63,7 +63,7 @@ class eMBB_UE(User_Equipment):
         self.min_energy_harvested = 0
         self.max_energy_harvested = 150
 
-        self.max_battery_energy = 2000#22000
+        self.max_battery_energy = 2500#22000
         self.min_battery_energy = 0
 
         self.max_cpu_frequency = 5000
@@ -88,8 +88,8 @@ class eMBB_UE(User_Equipment):
         self.min_lc_queue_length = 0
         self.min_off_queue_length = 0
 
-        self.battery_energy_level = 20000#(random.randint(15000,25000))
-        self.energy_harvesting_constant = 300
+        self.battery_energy_level = 100#(random.randint(15000,25000))
+        self.energy_harvesting_constant = 5
         
 
         #self.QOS_requirement = QOS_requirement()
@@ -215,6 +215,7 @@ class eMBB_UE(User_Equipment):
         self.average_offload_queue_length=0
         self.average_local_delays=0
         self.average_offload_delays=0
+        self.episode_energy = 0
 
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
@@ -720,6 +721,9 @@ class eMBB_UE(User_Equipment):
             #print('self.achieved_total_energy_consumption: ', self.achieved_total_energy_consumption, " J")
             self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,65],[0,1])
             #self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,46000],[0,1])
+            self.episode_energy+=self.achieved_total_energy_consumption
+            #print('embb user: ', self.UE_label, "self.achieved_total_energy_consumption: ", self.achieved_total_energy_consumption)
+            #print('self.achieved_total_energy_consumption: ', self.achieved_total_energy_consumption)
             self.battery_energy_level = self.battery_energy_level - self.achieved_total_energy_consumption
         else:
             self.achieved_total_energy_consumption = 0
@@ -873,6 +877,7 @@ class eMBB_UE(User_Equipment):
     def compute_battery_energy_level(self):
         self.previous_slot_battery_energy = self.battery_energy_level
         self.battery_energy_level = self.battery_energy_level + self.energy_harvested
+        #print('self.battery_energy_level: ', self.battery_energy_level)
 
     def harvest_energy(self):
         self.energy_harvested = np.random.exponential(250)#random.randint(0,2000)
@@ -880,6 +885,7 @@ class eMBB_UE(User_Equipment):
         large_scale_gain = self.large_scale_gain[0]
         total_gain = sum(small_scale_gain*large_scale_gain)
         self.energy_harvested = self.energy_harvesting_constant*total_gain
+        #print('self.energy_harvested: ', self.energy_harvested)
 
 
     def energy_consumption_reward(self):
@@ -890,7 +896,7 @@ class eMBB_UE(User_Equipment):
 
         #energy_reward_normalized = 0
         if energy_reward >= 0:
-            energy_reward = 100
+            energy_reward = 10
         else:
             energy_reward = energy_reward
 
