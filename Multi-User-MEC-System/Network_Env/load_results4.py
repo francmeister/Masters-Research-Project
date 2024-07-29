@@ -19,6 +19,20 @@ urllc_reliability_reward = np.load('urllc_reliability_reward_normalized.npy')
 resource_allocation_matrix = np.load('resource_allocation_matrix.npy',allow_pickle=True)
 resource_allocation_constraint_violation_count = np.load('resource_allocation_constraint_violation_count.npy',allow_pickle=True)
 resource_allocation_matrix = np.array(resource_allocation_matrix)
+
+# 2D Matrices below. individual_energies has energy results for each user. Each column represents a user
+# Each row represents energy values for all users in a time slot
+# Same goes for the other individual matrices
+
+# print(individual_energies)
+# [[1.99847734 2.73725381 0.83975129 ... 1.6791527  0.40350153 2.32592202]
+#  [1.66163198 1.18464085 1.06151078 ... 5.4206672  0.43677021 2.25944429]
+#  [1.87265394 0.45064082 5.04641513 ... 1.29379751 0.4562806  5.12412495]
+#  ...
+#  [1.85947439 0.2297878  0.85704297 ... 1.45300654 0.24951508 1.18069556]
+#  [1.55156814 0.4136556  0.98747191 ... 1.82424129 0.42132404 1.25065084]
+#  [1.94428997 0.05607016 0.75602795 ... 1.92813701 0.         1.21327016]]
+
 individual_energies = np.load('individual_energy_rewards.npy')
 individual_channel_rates = np.load('individual_channel_rate_rewards.npy')
 individual_queue_delays = np.load('individual_queue_delays.npy')
@@ -40,11 +54,11 @@ rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
 throughputs = rewards_throughput_energy[:,3]
 
-user_1_offload_delay = individual_offload_queue_delays[:,1]
-user_1_throughput = individual_channel_rates[:,1]
-user_1_offload_queue_length = individual_offload_queue_lengths[:,1]
-index_of_max = np.argmax(user_1_throughput)
-print(user_1_throughput[index_of_max])
+# user_1_offload_delay = individual_offload_queue_delays[:,1]
+# user_1_throughput = individual_channel_rates[:,1]
+# user_1_offload_queue_length = individual_offload_queue_lengths[:,1]
+# index_of_max = np.argmax(user_1_throughput)
+# print(user_1_throughput[index_of_max])
 
 def individual_sub_plots(numbers_users, timesteps, reward_component, string_reward_component):
     row = 0
@@ -129,7 +143,7 @@ def individual_user_subplots(user_num, timesteps, energy_rewards, throughput_rew
     plt.show()
 
 
-string_reward_component = 'RB allocations'
+#string_reward_component = 'RB allocations'
 #individual_sub_plots(numbers_users=len(RBs_actions[0]),timesteps=timesteps,reward_component=RBs_actions,string_reward_component=string_reward_component)
 
 user_num =8
