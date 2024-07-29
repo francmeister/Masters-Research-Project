@@ -19,6 +19,8 @@ urllc_reliability_reward = np.load('urllc_reliability_reward_normalized.npy')
 resource_allocation_matrix = np.load('resource_allocation_matrix.npy',allow_pickle=True)
 resource_allocation_constraint_violation_count = np.load('resource_allocation_constraint_violation_count.npy',allow_pickle=True)
 resource_allocation_matrix = np.array(resource_allocation_matrix)
+individual_average_task_size_offload_queue = np.load('individual_average_task_size_offload_queue.npy')
+individual_expected_rate_over_prev_T_slot = np.load('individual_expected_rate_over_prev_T_slot.npy')
 
 # 2D Matrices below. individual_energies has energy results for each user. Each column represents a user
 # Each row represents energy values for all users in a time slot
@@ -93,8 +95,8 @@ def individual_sub_plots(numbers_users, timesteps, reward_component, string_rewa
     plt.show()
 
 
-def individual_user_subplots(user_num, timesteps, energy_rewards, throughput_rewards, delay_rewards, offload_actions, power_actions, local_queue_length, local_queue_delay,offload_queue_length,offload_queue_delay, RBs_actions):
-    row = 3
+def individual_user_subplots(user_num, timesteps, energy_rewards, throughput_rewards, delay_rewards, offload_actions, power_actions, local_queue_length, local_queue_delay,offload_queue_length,offload_queue_delay, RBs_actions,individual_average_task_size_offload_queue,individual_expected_rate_over_prev_T_slot):
+    row = 4
     col = 3
 
     figure, axis = plt.subplots(row,col)
@@ -139,6 +141,15 @@ def individual_user_subplots(user_num, timesteps, energy_rewards, throughput_rew
     axis[8].plot(timesteps, offload_queue_delay[:,user_num])
     axis[8].set_title('user num: '+ str(user_num) + ' offload_queue_delay')
 
+    axis[9].plot(timesteps, individual_average_task_size_offload_queue[:,user_num])
+    axis[9].set_title('user num: '+ str(user_num) + ' Average Task Size (Offload Queue)')
+
+    axis[10].plot(timesteps, individual_expected_rate_over_prev_T_slot[:,user_num])
+    axis[10].set_title('user num: '+ str(user_num) + ' Average Rate over previous T slots')
+
+    axis[11].plot(timesteps, RBs_actions[:,user_num])
+    axis[11].set_title('user num: '+ str(user_num) + ' RB allocation action')
+
     plt.tight_layout()
     plt.show()
 
@@ -147,5 +158,5 @@ def individual_user_subplots(user_num, timesteps, energy_rewards, throughput_rew
 #individual_sub_plots(numbers_users=len(RBs_actions[0]),timesteps=timesteps,reward_component=RBs_actions,string_reward_component=string_reward_component)
 
 user_num =8
-individual_user_subplots(user_num, timesteps, individual_energies, individual_channel_rates, individual_queue_delays, offload_actions, power_actions,individual_local_queue_lengths, individual_local_queue_delays, individual_offload_queue_lengths, individual_offload_queue_delays, RBs_actions)
+individual_user_subplots(user_num, timesteps, individual_energies, individual_channel_rates, individual_queue_delays, offload_actions, power_actions,individual_local_queue_lengths, individual_local_queue_delays, individual_offload_queue_lengths, individual_offload_queue_delays, RBs_actions,individual_average_task_size_offload_queue,individual_expected_rate_over_prev_T_slot)
 

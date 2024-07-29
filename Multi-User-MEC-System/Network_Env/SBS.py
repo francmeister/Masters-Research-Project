@@ -153,6 +153,8 @@ class SBS():
         self.individual_offload_queue_delays = []
         self.individual_local_queue_lengths = []
         self.individual_offload_queue_lengths = []
+        self.individual_expected_rate_over_prev_T_slot = []
+        self.individual_average_task_size_offload_queue = []
 
 
         total_users_energy_reward = 0
@@ -268,6 +270,8 @@ class SBS():
 
             self.individual_expected_rate_over_prev_T_slot.append(eMBB_User.expected_rate_over_prev_T_slot)
             self.individual_average_task_size_offload_queue.append(eMBB_User.average_task_size_offload_queue)
+            # print('eMBB_User.expected_rate_over_prev_T_slot: ', eMBB_User.expected_rate_over_prev_T_slot)
+            #print('eMBB_User.average_task_size_offload_queue: ', eMBB_User.average_task_size_offload_queue)
 
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
