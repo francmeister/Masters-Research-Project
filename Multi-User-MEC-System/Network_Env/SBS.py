@@ -274,7 +274,7 @@ class SBS():
         fairness_index_normalized = interp(fairness_index,[0,1],[0,1])
         self.q_action = 10**1
         q_delay = 10**0
-        q_energy = 10**2
+        q_energy = 10**1
         q_total_users_battery_energies_reward = 10**4
         q_urllc_reliability_reward = 10**0
         q_total_offload_traffic_reward = 10**0
