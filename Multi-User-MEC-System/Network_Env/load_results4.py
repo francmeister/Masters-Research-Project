@@ -21,6 +21,7 @@ resource_allocation_constraint_violation_count = np.load('resource_allocation_co
 resource_allocation_matrix = np.array(resource_allocation_matrix)
 individual_average_task_size_offload_queue = np.load('individual_average_task_size_offload_queue.npy')
 individual_expected_rate_over_prev_T_slot = np.load('individual_expected_rate_over_prev_T_slot.npy')
+#print(individual_expected_rate_over_prev_T_slot[0,:])
 
 # 2D Matrices below. individual_energies has energy results for each user. Each column represents a user
 # Each row represents energy values for all users in a time slot
@@ -47,9 +48,10 @@ individual_local_queue_delays = np.load('individual_local_queue_delays.npy')
 individual_offload_queue_delays = np.load('individual_offload_queue_delays.npy')
 individual_local_queue_lengths = np.load('individual_local_queue_lengths.npy')
 individual_offload_queue_lengths = np.load('individual_offload_queue_lengths.npy')
+print(individual_offload_queue_lengths[0,:])
 
 users_lc_service_rates = np.load('users_lc_service_rates.npy')
-print(users_lc_service_rates)
+#print(users_lc_service_rates)
 
 timesteps = rewards_throughput_energy[:,0]
 rewards = rewards_throughput_energy[:,1]
