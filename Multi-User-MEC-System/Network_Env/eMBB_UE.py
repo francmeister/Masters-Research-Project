@@ -97,6 +97,8 @@ class eMBB_UE(User_Equipment):
         #self.user_task = Task(330)
         #self.local_task = Task(330)
         #self.offload_task = Task(330)
+        self.expected_rate_over_prev_T_slot = 0
+        self.average_task_size_offload_queue = 0
         self.local_computation_delay_seconds = 0
         self.achieved_local_energy_consumption = 0
         self.offload_transmission_energy = 0
@@ -1163,14 +1165,19 @@ class eMBB_UE(User_Equipment):
         local_delay = local_computation_time+local_queueing_time
 
         average_packet_size_bits = 0
+        total_packet_size_bits = 0
         #print(len(self.communication_queue))
         if len(self.communication_queue) > 0:
             for task in self.communication_queue:
-                average_packet_size_bits+=task.slot_task_size
-            average_packet_size_bits =  average_packet_size_bits/len(self.communication_queue)
+                total_packet_size_bits+=task.slot_task_size
 
+            average_packet_size_bits =  total_packet_size_bits/len(self.communication_queue)
+
+        self.average_task_size_offload_queue = average_packet_size_bits
         expected_rate_over_prev_T_slot = self.embb_rate_expectation_over_prev_T_slot(5,self.achieved_channel_rate)
         expected_rate_over_prev_T_slot_ms = expected_rate_over_prev_T_slot/1000
+        self.expected_rate_over_prev_T_slot = expected_rate_over_prev_T_slot_ms
+        
         #print('expected_rate_over_prev_T_slot_ms: ', expected_rate_over_prev_T_slot_ms)
         #print('average_packet_size_bits: ', average_packet_size_bits)
 
