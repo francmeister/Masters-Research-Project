@@ -19,9 +19,7 @@ urllc_reliability_reward = np.load('urllc_reliability_reward_normalized.npy')
 resource_allocation_matrix = np.load('resource_allocation_matrix.npy',allow_pickle=True)
 resource_allocation_constraint_violation_count = np.load('resource_allocation_constraint_violation_count.npy',allow_pickle=True)
 resource_allocation_matrix = np.array(resource_allocation_matrix)
-individual_average_task_size_offload_queue = np.load('individual_average_task_size_offload_queue.npy')
-individual_expected_rate_over_prev_T_slot = np.load('individual_expected_rate_over_prev_T_slot.npy')
-#print(individual_expected_rate_over_prev_T_slot[0,:])
+#print(individual_expected_rate_over_prev_T_slot[:,0])
 
 # 2D Matrices below. individual_energies has energy results for each user. Each column represents a user
 # Each row represents energy values for all users in a time slot
@@ -48,7 +46,9 @@ individual_local_queue_delays = np.load('individual_local_queue_delays.npy')
 individual_offload_queue_delays = np.load('individual_offload_queue_delays.npy')
 individual_local_queue_lengths = np.load('individual_local_queue_lengths.npy')
 individual_offload_queue_lengths = np.load('individual_offload_queue_lengths.npy')
-print(individual_offload_queue_lengths[0,:])
+individual_average_task_size_offload_queue = np.load('individual_average_task_size_offload_queue.npy')
+individual_expected_rate_over_prev_T_slot = np.load('individual_expected_rate_over_prev_T_slot.npy')
+#print(individual_offload_queue_lengths[0,:])
 
 users_lc_service_rates = np.load('users_lc_service_rates.npy')
 #print(users_lc_service_rates)
@@ -58,11 +58,23 @@ rewards = rewards_throughput_energy[:,1]
 energies = rewards_throughput_energy[:,2]
 throughputs = rewards_throughput_energy[:,3]
 
-# user_1_offload_delay = individual_offload_queue_delays[:,1]
-# user_1_throughput = individual_channel_rates[:,1]
-# user_1_offload_queue_length = individual_offload_queue_lengths[:,1]
-# index_of_max = np.argmax(user_1_throughput)
-# print(user_1_throughput[index_of_max])
+user_1_individual_average_task_size_offload_queue = individual_average_task_size_offload_queue[:,0]
+user_1_individual_expected_rate_over_prev_T_slot = individual_expected_rate_over_prev_T_slot[:,0]
+
+user_1_offload_delay = individual_offload_queue_delays[:,0]
+user_1_throughput = individual_channel_rates[:,0]
+user_1_offload_queue_length = individual_offload_queue_lengths[:,0]
+
+print('len(user_1_offload_delay): ', len(user_1_offload_delay))
+print('len(user_1_throughput): ',len(user_1_throughput))
+print('len(user_1_offload_queue_length): ',len(user_1_offload_queue_length))
+print('len(user_1_individual_expected_rate_over_prev_T_slot): ',len(user_1_individual_expected_rate_over_prev_T_slot))
+print('len(user_1_individual_average_task_size_offload_queue): ',len(user_1_individual_average_task_size_offload_queue))
+index_of_max = np.argmax(user_1_offload_delay)
+print('max delay: ', user_1_offload_delay[index_of_max])
+print('offload queue length at max delay: ', user_1_offload_queue_length[index_of_max])
+print("user's average throughput where delay is max: ", user_1_individual_expected_rate_over_prev_T_slot[index_of_max])
+print("user's average task size on offload queue where delay is max: ", user_1_individual_average_task_size_offload_queue[index_of_max])
 
 def individual_sub_plots(numbers_users, timesteps, reward_component, string_reward_component):
     row = 0
@@ -159,6 +171,6 @@ def individual_user_subplots(user_num, timesteps, energy_rewards, throughput_rew
 #string_reward_component = 'RB allocations'
 #individual_sub_plots(numbers_users=len(RBs_actions[0]),timesteps=timesteps,reward_component=RBs_actions,string_reward_component=string_reward_component)
 
-user_num =8
+user_num =1
 individual_user_subplots(user_num, timesteps, individual_energies, individual_channel_rates, individual_queue_delays, offload_actions, power_actions,individual_local_queue_lengths, individual_local_queue_delays, individual_offload_queue_lengths, individual_offload_queue_delays, RBs_actions,individual_average_task_size_offload_queue,individual_expected_rate_over_prev_T_slot)
 

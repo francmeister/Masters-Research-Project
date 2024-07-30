@@ -90,6 +90,9 @@ class eMBB_UE(User_Equipment):
 
         self.battery_energy_level = 100#(random.randint(15000,25000))
         self.energy_harvesting_constant = 5
+
+        self.battery_energy_level_sim = self.battery_energy_level
+        self.energy_harvested_sim = 0
         
 
         #self.QOS_requirement = QOS_requirement()
@@ -887,11 +890,14 @@ class eMBB_UE(User_Equipment):
         large_scale_gain = self.large_scale_gain[0]
         total_gain = sum(small_scale_gain*large_scale_gain)
         self.energy_harvested = self.energy_harvesting_constant*total_gain
+
+        self.energy_harvested_sim = self.energy_harvested
         #print('self.energy_harvested: ', self.energy_harvested)
 
 
     def energy_consumption_reward(self):
         energy_reward = self.battery_energy_level #+ self.energy_harversted 
+        self.battery_energy_level_sim = self.battery_energy_level
 
         max_energy_reward = 40000
         min_energy_reward = -10000
@@ -1180,13 +1186,15 @@ class eMBB_UE(User_Equipment):
         
         #print('expected_rate_over_prev_T_slot_ms: ', expected_rate_over_prev_T_slot_ms)
         #print('average_packet_size_bits: ', average_packet_size_bits)
+        #print('len(self.communication_queue): ', len(self.communication_queue))
 
         if expected_rate_over_prev_T_slot_ms > 0:
             offload_queueing_time = (average_packet_size_bits/expected_rate_over_prev_T_slot_ms)*len(self.communication_queue)
         else:
             offload_queueing_time = (average_packet_size_bits)*len(self.communication_queue)
-        offloading_delay = offload_queueing_time + 1
+        offloading_delay = offload_queueing_time #+ 1
 
+        #print('offload_queueing_time: ', offload_queueing_time)
         self.local_queue_length = len(self.local_queue)
         self.offload_queue_length = len(self.communication_queue)
         # print('self.local_queue_length: ', self.local_queue_length)
