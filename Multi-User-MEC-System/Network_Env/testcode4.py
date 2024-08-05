@@ -85,7 +85,7 @@ for timestep in timesteps:
     battery_energies.append(env.eMBB_UE_1.battery_energy_level)
     energies_harvested.append(env.eMBB_UE_1.energy_harvested)
     energy_consumed.append(env.eMBB_UE_1.achieved_total_energy_consumption)
-    channel_gains.append(sum(env.eMBB_UE_1.total_gain[0]))
+    channel_gains.append(sum(env.eMBB_UE_1.total_gain_[0]))
     power_allocations.append(env.eMBB_UE_1.assigned_transmit_power_W)
     local_energies.append(env.eMBB_UE_1.achieved_local_energy_consumption)
     transmit_energies.append(env.eMBB_UE_1.achieved_transmission_energy_consumption)

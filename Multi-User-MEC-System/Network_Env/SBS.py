@@ -41,7 +41,7 @@ class SBS():
         #Collect Channel gains
         self.count_num_arriving_urllc_packets(urllc_users)
         for embb_user in eMBB_Users:
-            channel_gains.append(embb_user.user_state_space.channel_gain)
+            channel_gains.append(embb_user.user_state_space.channel_gain.copy())
             #communication_queue_size.append(user.user_state_space.calculate_communication_queue_size())
             battery_energy.append(embb_user.user_state_space.battery_energy)
             offloading_queue_lengths.append(embb_user.user_state_space.offloading_queue_length)
@@ -286,7 +286,7 @@ class SBS():
         fairness_index_normalized = interp(fairness_index,[0,1],[0,1])
         self.q_action = 10**1
         q_delay = 10**0
-        q_energy = 10**1
+        q_energy = 10**5
         q_total_users_battery_energies_reward = 10**4
         q_urllc_reliability_reward = 10**0
         q_total_offload_traffic_reward = 10**0
@@ -294,15 +294,16 @@ class SBS():
         #print('total_users_delay_rewards*total_users_energy_reward: ', total_users_delay_rewards*total_users_energy_reward)
         self.individual_channel_rates.append(individual_channel_rates)
         #self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------
-        self.overall_users_reward = math.pow(10,-4)*total_users_throughput_reward - q_energy*total_users_energy_reward#(q_delay*total_users_delay_rewards* q_energy*total_users_energy_reward) #+ q_throughput_log_reward*throughput_log_reward #+ q_total_users_battery_energies_reward*total_users_battery_energies_reward + q_urllc_reliability_reward*urllc_reliability_reward + q_total_offload_traffic_reward*total_offload_traffic_reward
+        self.overall_users_reward = total_users_throughput_reward - q_energy*total_users_energy_reward#(q_delay*total_users_delay_rewards* q_energy*total_users_energy_reward) #+ q_throughput_log_reward*throughput_log_reward #+ q_total_users_battery_energies_reward*total_users_battery_energies_reward + q_urllc_reliability_reward*urllc_reliability_reward + q_total_offload_traffic_reward*total_offload_traffic_reward
         if self.energy_rewards > 0:
             self.energy_efficiency_rewards = self.throughput_rewards/self.energy_rewards
         else:
             self.energy_efficiency_rewards = 0
 
-        #print('total_users_throughput_reward: ', total_users_throughput_reward)
-        #print('q_delay*total_users_delay_rewards: ', q_delay*total_users_delay_rewards)
-        #print('q_energy*total_users_energy_reward: ', q_energy*total_users_energy_reward)
+        # print('total_users_throughput_reward: ', total_users_throughput_reward)
+        # print('total_users_delay_rewards: ', total_users_delay_rewards)
+        # print('total_users_energy_reward: ', total_users_energy_reward)
+        # print('total reward: ', self.overall_users_reward)
         #print('q_throughput_log_reward*throughput_log_reward: ', q_throughput_log_reward*throughput_log_reward)
         #print('q_total_users_battery_energies_reward*total_users_battery_energies_reward: ', q_total_users_battery_energies_reward*total_users_battery_energies_reward)
 

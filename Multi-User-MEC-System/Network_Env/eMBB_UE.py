@@ -32,7 +32,7 @@ class eMBB_UE(User_Equipment):
         #self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
         #self.max_service_rate_cycles_per_slot = 620000
         #self.service_rate_bits_per_second = 2500000 #2.5MB/s(random.randint(5,5000))
-        self.service_rate_bits_per_second = random.randint(1000000,4000000)
+        self.service_rate_bits_per_second = random.randint(2000000,7000000)
         self.service_rate_bits_per_slot = self.service_rate_bits_per_second/1000 
         self.max_service_rate_cycles_per_slot = self.service_rate_bits_per_slot*self.cycles_per_bit
         #print('self.max_service_rate_cycles_per_slot: ', self.max_service_rate_cycles_per_slot)
@@ -43,12 +43,15 @@ class eMBB_UE(User_Equipment):
         self.local_queue_delay =0
         self.offload_queue_delay = 0
         self.channel_gain_scaling_factor = 1
+        self.distance_from_SBS_ = np.random.uniform(low=30, high=100)
+
 
         self.set_properties_eMBB()
 
     def set_properties_eMBB(self):
 
         #State Space Limits
+        self.timestep_counter_ = 0
         self.max_allowable_latency = 2000 #[1,2] s
         self.min_allowable_latency = 1000
 
@@ -82,8 +85,8 @@ class eMBB_UE(User_Equipment):
         #print('self.max_queue_length_number: ', self.max_queue_length_number)
         self.min_queue_length = 0
 
-        self.max_lc_queue_length = 100
-        self.max_off_queue_length = 100
+        self.max_lc_queue_length = 300
+        self.max_off_queue_length = 300
 
         self.min_lc_queue_length = 0
         self.min_off_queue_length = 0
@@ -165,6 +168,7 @@ class eMBB_UE(User_Equipment):
         self.previous_slot_battery_energy = 0
 
         self.total_gain = np.zeros(self.communication_channel.num_allocate_RBs_upper_bound*2)
+        self.total_gain_ = np.zeros(self.communication_channel.num_allocate_RBs_upper_bound*2)
         self.previous_arrival_rate = 0
         self.previous_arrival_rate_off = 0
         self.previous_arrival_rate_lc = 0
@@ -221,6 +225,17 @@ class eMBB_UE(User_Equipment):
         self.average_local_delays=0
         self.average_offload_delays=0
         self.episode_energy = 0
+        self.times_to_generate_tasks = []
+        self.energy_conversion_efficiency = 1
+        self.BS_transmit_power = 5 # 5W
+        self.pathloss_coefficient = 1.5
+        self.antenna_gain = 10 # 10dB
+        self.slot_time_ms = 10**(-3)
+        self.max_battery_capacity = 50
+        self.battery_energy_level = self.max_battery_capacity#(random.randint(15000,25000))
+        self.energy_harvesting_constant = 5
+    
+  
 
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):
@@ -248,47 +263,57 @@ class eMBB_UE(User_Equipment):
         #Specify slot task size, computation cycles and latency requirement
         #self.task_arrival_rate_tasks_per_second = random.randint(self.min_task_arrival_rate_tasks_per_second,self.max_task_arrival_rate_tasks_per_second)
         #self.task_arrival_rate_tasks_per_second = np.random.poisson(25,1)#np.random.poisson(25,1)#np.random.poisson(5,1)
-        self.task_arrival_rate_tasks_per_second = np.random.poisson(5,1)#np.random.poisson(25,1)#np.random.poisson(5,1)
-        self.task_arrival_rate_tasks_per_second = self.task_arrival_rate_tasks_per_second[0]
-        self.task_arrival_rate = self.task_arrival_rate_tasks_per_second
-        self.previous_arrival_rate = self.task_arrival_rate_tasks_per_second
-        self.current_arrival_rate = self.task_arrival_rate_tasks_per_second
+        #self.task_arrival_rate_tasks_per_second = np.random.poisson(5,1)#np.random.poisson(25,1)#np.random.poisson(5,1)
+        #self.times_to_generate_tasks = []
         qeueu_timer = 0
+        if self.timeslot_counter == 1:
+            self.task_arrival_rate_tasks_per_second = np.random.poisson(20,1)
+            self.task_arrival_rate_tasks_per_second = self.task_arrival_rate_tasks_per_second[0]
+            self.task_arrival_rate = self.task_arrival_rate_tasks_per_second
+            self.previous_arrival_rate = self.task_arrival_rate_tasks_per_second
+            self.current_arrival_rate = self.task_arrival_rate_tasks_per_second
+
+            for x in range(0,self.task_arrival_rate_tasks_per_second):
+                self.times_to_generate_tasks.append(np.random.randint(1,1000))
+            
+
     
+        #print('self.times_to_generate_tasks: ', self.times_to_generate_tasks)
+        # if len(self.task_queue) >= self.max_queue_length_number:
+        #     for x in range(0,self.task_arrival_rate_tasks_per_second):
+        #         #np.random.poisson(10)
+        #         #task_size_per_second_kilobytes = random.randint(self.min_task_size_KB_per_second,self.max_task_size_KB_per_second) #choose between 50 and 100 kilobytes
+        #         #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
+        #         #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
+        #         task_size_per_slot_bits = int(np.random.uniform(500,1500))#Average of 1000 bits per task in slot #int(task_size_per_slot_kilobytes*8000) #8000 bits in a KB----------
+        #         self.previous_task_size_bits = task_size_per_slot_bits
+        #         #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
+        #         latency_requirement = 10#latency required is 10 ms for every task#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
+        #         reliability_requirement = 0
+        #         QOS_requirement_ = QOS_requirement(latency_requirement,reliability_requirement)
+        #         user_task = Task(330,task_size_per_slot_bits,QOS_requirement_,qeueu_timer,self.task_identifier)
+        #         self.task_identifier+=1
+        #         #print('task identifier: ', self.task_identifier)
 
-        if len(self.task_queue) >= self.max_queue_length_number:
-            for x in range(0,self.task_arrival_rate_tasks_per_second):
-                #np.random.poisson(10)
-                #task_size_per_second_kilobytes = random.randint(self.min_task_size_KB_per_second,self.max_task_size_KB_per_second) #choose between 50 and 100 kilobytes
-                #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
-                #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
-                task_size_per_slot_bits = int(np.random.uniform(500,1500))#Average of 1000 bits per task in slot #int(task_size_per_slot_kilobytes*8000) #8000 bits in a KB----------
-                self.previous_task_size_bits = task_size_per_slot_bits
-                #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
-                latency_requirement = 10#latency required is 10 ms for every task#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
-                reliability_requirement = 0
-                QOS_requirement_ = QOS_requirement(latency_requirement,reliability_requirement)
-                user_task = Task(330,task_size_per_slot_bits,QOS_requirement_,qeueu_timer,self.task_identifier)
-                self.task_identifier+=1
-                #print('task identifier: ', self.task_identifier)
-
-                self.storage[int(self.ptr)] = user_task
-                self.ptr = (self.ptr + 1) % self.max_queue_length_number
-        else:
-            for x in range(0,self.task_arrival_rate_tasks_per_second):
-                #task_size_per_second_kilobytes = random.randint(self.min_task_size_KB_per_second,self.max_task_size_KB_per_second) #choose between 50 and 100 kilobytes
-                #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
-                #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
-                task_size_per_slot_bits = int(np.random.uniform(500,1500)) #8000 bits in a KB----------
-                self.previous_task_size_bits = task_size_per_slot_bits
-                #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
-                latency_requirement = 10#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
-                reliability_requirement = 0
-                QOS_requirement_ = QOS_requirement(latency_requirement,reliability_requirement)
-                user_task = Task(330,task_size_per_slot_bits,QOS_requirement_,qeueu_timer,self.task_identifier)
-                self.task_identifier+=1
-                #print('task identifier: ', self.task_identifier)
-                self.task_queue.append(user_task)
+        #         self.storage[int(self.ptr)] = user_task
+        #         self.ptr = (self.ptr + 1) % self.max_queue_length_number
+        # else:
+        #for x in range(0,self.task_arrival_rate_tasks_per_second):
+        if self.timeslot_counter in self.times_to_generate_tasks:
+            #print('self.timeslot_counter: ', self.timeslot_counter)
+            #task_size_per_second_kilobytes = random.randint(self.min_task_size_KB_per_second,self.max_task_size_KB_per_second) #choose between 50 and 100 kilobytes
+            #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
+            #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
+            task_size_per_slot_bits = int(np.random.uniform(200000,800000)) #8000 bits in a KB----------
+            self.previous_task_size_bits = task_size_per_slot_bits
+            #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
+            latency_requirement = 10#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
+            reliability_requirement = 0
+            QOS_requirement_ = QOS_requirement(latency_requirement,reliability_requirement)
+            user_task = Task(330,task_size_per_slot_bits,QOS_requirement_,qeueu_timer,self.task_identifier)
+            self.task_identifier+=1
+            #print('task identifier: ', self.task_identifier)
+            self.task_queue.append(user_task)
         
 
     def calculate_distance_from_SBS(self, SBS_x_pos, SBS_y_pos, Env_width_pixels, Env_width_metres):
@@ -302,7 +327,7 @@ class eMBB_UE(User_Equipment):
     def collect_state(self):
         #self.cpu_clock_frequency = (random.randint(5,5000))
         offloading_queue_length, local_queue_length = self.calculate_queue_lengths()
-        self.user_state_space.collect(self.total_gain,self.previous_slot_battery_energy,offloading_queue_length, local_queue_length)
+        self.user_state_space.collect(self.total_gain_,self.previous_slot_battery_energy,len(self.communication_queue), len(self.local_queue))
         #self.user_state_space.collect(self.total_gain,self.communication_queue,self.battery_energy_level,self.communication_queue[0].QOS_requirement,self.cpu_clock_frequency)
         return self.user_state_space
 
@@ -339,7 +364,7 @@ class eMBB_UE(User_Equipment):
             # print('self.allocated_offloading_ratio')
             # print(self.allocated_offloading_ratio)
             # print('')
-            for x in range(0,self.task_arrival_rate_tasks_per_second):
+            for x in range(0,len(self.task_queue)):
                 packet_dec = self.task_queue[x].bits
                 self.QOS_requirement_for_transmission = self.task_queue[x].QOS_requirement
                 packet_bin = bin(packet_dec)[2:]
@@ -362,8 +387,9 @@ class eMBB_UE(User_Equipment):
 
                 #self.offloaded_packet = random.getrandbits(self.packet_offload_size_bits)
                 #self.has_transmitted_this_time_slot = True
-            for x in range(0,self.task_arrival_rate_tasks_per_second):
-                self.task_queue.pop(0)
+            if len(self.task_queue)>0:
+                for x in range(0,len(self.task_queue)):
+                    self.task_queue.pop(0)
 
             if(self.allocated_offloading_ratio > 0):
                 self.has_transmitted_this_time_slot = True
@@ -437,7 +463,10 @@ class eMBB_UE(User_Equipment):
         reshaped_allocated_RBs = np.array(self.allocated_RBs)
         reshaped_allocated_RBs = reshaped_allocated_RBs.squeeze()#.reshape(1,communication_channel.time_divisions_per_slot*communication_channel.num_allocate_RBs_upper_bound)
         reshaped_allocated_RBs = reshaped_allocated_RBs.reshape(communication_channel.time_divisions_per_slot,communication_channel.num_allocate_RBs_upper_bound)
-        
+        # print('self.total_gain_')
+        # print(self.total_gain_)
+        # print('reshaped_allocated_RBs')
+        # print(reshaped_allocated_RBs)
         if self.battery_energy_level > 0 and self.has_transmitted_this_time_slot == True:
             for tb in range(0,communication_channel.time_divisions_per_slot):
                 for rb in range(0,communication_channel.num_allocate_RBs_upper_bound):
@@ -454,14 +483,16 @@ class eMBB_UE(User_Equipment):
                     # print('tb: ', tb+1, ' rb: ', rb+1, ' currently occupied: ', current_rb_occupied)
                     # print('')
                     #if RB_indicator == 1:
-                    RB_channel_gain = self.total_gain[0][rb]
+                    rb_small_scale_gain = self.total_gain_[0][rb]
+                    rb_large_scale_gain = self.total_gain_[0][communication_channel.num_allocate_RBs_upper_bound+rb]
+                    RB_channel_gain = rb_small_scale_gain*rb_large_scale_gain
                     achieved_RB_channel_rate = self.calculate_channel_rate(communication_channel,RB_indicator,RB_channel_gain,current_rb_occupied)
                     #achieved_RB_channel_rate_ = self.calculate_channel_rate_(communication_channel,RB_indicator,RB_channel_gain,current_rb_occupied)
                     achieved_RB_channel_rates.append(achieved_RB_channel_rate)
                     #achieved_RB_channel_rates_.append(achieved_RB_channel_rate_)
 
             self.achieved_channel_rate = sum(achieved_RB_channel_rates)
-         #   print('offload queue service rate: ', self.achieved_channel_rate, ' bits/s')
+            #print('offload queue service rate: ', self.achieved_channel_rate, ' bits/s')
             #self.achieved_channel_rate_ = sum(achieved_RB_channel_rates_)
             self.previous_channel_rate = self.achieved_channel_rate
             min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
@@ -479,7 +510,9 @@ class eMBB_UE(User_Equipment):
         RB_bandwidth = communication_channel.RB_bandwidth_Hz
         noise_spectral_density = communication_channel.noise_spectral_density_W
         channel_rate_numerator = self.assigned_transmit_power_W*RB_channel_gain#*self.channel_gain_scaling_factor
-        channel_rate_denominator = noise_spectral_density#*RB_bandwidth
+        # print('self.assigned_transmit_power_W: ', self.assigned_transmit_power_W)
+        # print('RB_channel_gain: ', RB_channel_gain)
+        channel_rate_denominator = noise_spectral_density*RB_bandwidth
         half_num_mini_slots_per_rb = communication_channel.num_of_mini_slots/2
         if current_rb_occupied == False:
             channel_rate = RB_indicator*(RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator)))
@@ -750,6 +783,32 @@ class eMBB_UE(User_Equipment):
         number_of_RBs = communication_channel.num_allocate_RBs_upper_bound
         small_scale_gain = np.random.exponential(1,size=(1,number_of_RBs))
         large_scale_gain = np.random.exponential(1,size=(1,number_of_RBs))
+
+        # print('large_scale_gain: ', large_scale_gain)
+        num_samples = number_of_RBs
+        #Gaussian distributed g_l with mean 0 and standard deviation 8 dB
+        if self.timestep_counter_ == 0 or self.timestep_counter_ == 10:
+            g_l = np.random.normal(loc=0, scale=8, size=num_samples)
+            # Calculate g
+            #print('************************************************************')
+            #print('self.distance_from_SBS: ', self.distance_from_SBS_)
+            #print('g_l: ', g_l)
+            g = 35.3 + (10*1.5) * np.log10(self.distance_from_SBS_) + g_l
+            #print('g: ', g)
+            # Calculate G
+            G = 10 ** (-g)
+            G = np.array([G])
+            large_scale_gain = np.random.exponential(1,size=(1,number_of_RBs))#G
+            if self.timestep_counter_ == 10:
+                self.timestep_counter_ = 0
+            #print('G: ', G)
+            #print('large_scale_gain: ', large_scale_gain)
+        else:
+            large_scale_gain = self.large_scale_gain
+        #print('************************************************************')
+        self.timestep_counter_+=1
+
+
         self.small_scale_channel_gain = small_scale_gain
         first_large_scale_gain = large_scale_gain[0][0]
         item = 0
@@ -760,13 +819,13 @@ class eMBB_UE(User_Equipment):
         self.small_scale_gain = small_scale_gain
         self.large_scale_gain = large_scale_gain
     
-        #print('small_scale_gain')
-        #print(small_scale_gain)
-        #print('larger_scale_gain')
-        #print(large_scale_gain)
-        self.total_gain = np.concatenate((small_scale_gain,large_scale_gain),axis=1)#np.random.exponential(1,size=(1,number_of_RBs))
-        #print('self.total_gain')
-        #print(self.total_gain)
+        # print('small_scale_gain')
+        # print(self.small_scale_gain)
+        # print('larger_scale_gain')
+        # print(self.large_scale_gain)
+        self.total_gain_ = np.concatenate((small_scale_gain,large_scale_gain),axis=1)#np.random.exponential(1,size=(1,number_of_RBs))
+        # print('self.total_gain')
+        # print(self.total_gain_)
         #self.large_scale_channel_gain = np.random.lognormal(0.0,1.0)
         #self.total_gain = self.small_scale_channel_gain#*self.large_scale_channel_gain#self.pathloss_gain
         #if self.total_gain < 0.1:
@@ -882,17 +941,21 @@ class eMBB_UE(User_Equipment):
     def compute_battery_energy_level(self):
         self.previous_slot_battery_energy = self.battery_energy_level
         self.battery_energy_level = self.battery_energy_level + self.energy_harvested
-        #print('self.battery_energy_level: ', self.battery_energy_level)
+        if self.battery_energy_level > self.max_battery_capacity:
+            self.battery_energy_level = self.max_battery_capacity
+        #print('self.battery_energy_level: ', self.battery_energy_level, " J")
 
     def harvest_energy(self):
         self.energy_harvested = np.random.exponential(250)#random.randint(0,2000)
         small_scale_gain = self.small_scale_gain[0]
         large_scale_gain = self.large_scale_gain[0]
         total_gain = sum(small_scale_gain*large_scale_gain)
-        self.energy_harvested = self.energy_harvesting_constant*total_gain
+        energy_harvesting_noise = np.random.uniform(-0.00001,0.00001)
+        self.energy_harvested = (self.energy_conversion_efficiency*self.BS_transmit_power*self.antenna_gain*self.slot_time_ms)/(self.distance_from_SBS_**self.pathloss_coefficient)
 
+        self.energy_harvested+=energy_harvesting_noise
         self.energy_harvested_sim = self.energy_harvested
-        #print('self.energy_harvested: ', self.energy_harvested)
+        #print('self.energy_harvested: ', self.energy_harvested, " J")
 
 
     def energy_consumption_reward(self):

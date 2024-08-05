@@ -39,6 +39,7 @@ individual_local_queue_delays = np.load('individual_local_queue_delays.npy')
 individual_offload_queue_delays = np.load('individual_offload_queue_delays.npy')
 individual_local_queue_lengths = np.load('individual_local_queue_lengths.npy')
 individual_offload_queue_lengths = np.load('individual_offload_queue_lengths.npy')
+overall_users_reward = np.load('overall_users_reward.npy')
 
 
 
@@ -240,13 +241,14 @@ throughputs_smooth = moving_average(throughputs, window_size)
 delays_smooth = delays#moving_average(delays, window_size)
 energy_efficiency_smooth = moving_average(energy_efficiency_rewards, window_size)
 fairness_index_smooth = moving_average(fairness_index, window_size)
+overall_users_reward_smooth = moving_average(overall_users_reward, window_size)
 print(energy_efficiency_rewards)
 # q_action_smooth = moving_average(q_action, window_size)
 # offload_actions_smooth = moving_average(offload_actions, window_size)
 # power_actions_smooth = moving_average(power_actions, window_size)
 # RBs_smooth = moving_average(RBs_actions, window_size)
-
-axis[0,0].plot(timesteps[window_size-1:], rewards_smooth)
+print(rewards_smooth)
+axis[0,0].plot(timesteps[window_size-1:], overall_users_reward_smooth)
 axis[0,0].set_title('total reward')
 axis[0,0].grid()
 

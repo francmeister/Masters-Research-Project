@@ -67,8 +67,9 @@ class Communication_Channel():
         self.num_RB = 6#int(self.system_bandwidth_Hz/self.RB_bandwidth_Hz)
         self.system_bandwidth_Hz = self.RB_bandwidth_Hz*self.num_RB*2
         self.long_TTI = 1 #1ms
-        self.noise_spectral_density_dbm = 0.00122077763#-174 # -174dBM/Hz
-        self.noise_spectral_density_W = 0.00122077763#(math.pow(10,(self.noise_spectral_density_dbm/10)))/1000
+        self.noise_spectral_density_dbm = -174 # -174dBM/Hz
+        self.noise_spectral_density_W = (math.pow(10,(self.noise_spectral_density_dbm/10)))/1000
+        #print('self.noise_spectral_density_W: ', self.noise_spectral_density_W)
         self.single_side_standard_deviation = 5
         self.eMBB_Users = []
         self.RBs = []

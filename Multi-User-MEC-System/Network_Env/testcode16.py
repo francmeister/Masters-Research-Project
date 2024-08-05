@@ -23,6 +23,7 @@
 # print("Maximum value observed in the sample:", max_value)
 
 import numpy as np
+import matplotlib.pyplot as plt 
 
 # Parameters
 scale = 1.0  # Scale parameter
@@ -37,14 +38,22 @@ min_value = np.min(samples)
 print("Minimum value observed in the sample:", min_value)
 
 # Parameters
-scale = 1.0  # Scale parameter
-large_sample_size = 1000000000  # Large sample size
+scale = 6.0  # Scale parameter
+large_sample_size = 10000  # Large sample size
 
 # Draw samples
 large_samples = np.random.exponential(scale, large_sample_size)
 
 # Find the minimum value in the large sample
 min_large_value = np.min(large_samples)
+
+x_axis = []
+for x in range(0,large_sample_size):
+    x_axis.append(x)
+
+plt.plot(x_axis, large_samples)
+plt.show()
+
 
 print("Minimum value observed in the large sample:", min_large_value)
 

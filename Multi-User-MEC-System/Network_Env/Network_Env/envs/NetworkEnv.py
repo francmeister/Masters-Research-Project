@@ -37,8 +37,8 @@ class NetworkEnv(gym.Env):
         self.num_allocate_RB_lower_bound = self.Communication_Channel_1.num_allocate_RBs_lower_bound
         self.time_divisions_per_slot = self.Communication_Channel_1.time_divisions_per_slot
         #self.max_transmit_power_db = 100#self.eMBB_UE_1.max_transmission_power_dBm
-        self.max_transmit_power_db = 40
-        self.min_transmit_power_db = 10
+        self.max_transmit_power_db = 20
+        self.min_transmit_power_db = 5
         self.offload_decisions_label = 0
         self.allocate_num_RB_label = 4
         self.allocate_transmit_powers_label = 1
@@ -150,7 +150,7 @@ class NetworkEnv(gym.Env):
         self.action_space_high = 1
         self.action_space_low = 0
 
-        self.STEP_LIMIT = 70
+        self.STEP_LIMIT = 1000
         self.sleep = 0
         self.steps = 0
         self.initial_RB_bandwidth = self.Communication_Channel_1.RB_bandwidth_Hz
@@ -520,8 +520,8 @@ class NetworkEnv(gym.Env):
         
         #print('Action after interpolation transposed')
         #offload_decisions_actions_mapped = [1]#[0, 0, 0.5, 0.5, 1, 1, 1]
-        #transmit_power_actions_mapped = [40]#,20,20,20,20,20,20]
-        #RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
+        #transmit_power_actions_mapped = [20]#,20,20,20,20,20,20]
+        #RB_allocation_actions = np.array([[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
         #print('RB_allocation_actions: ', RB_allocation_actions)
         #print(RB_allocation_actions)
         #RB_allocation_actions_mapped = [6]#,10,15,15,20,20,20]
@@ -645,7 +645,7 @@ class NetworkEnv(gym.Env):
 
             row+=1
             col = 0
-
+  
         row = 0
         for battery_energy in observation_battery_energies:
             observation_battery_energies[row] = interp(observation_battery_energies[row],[self.battery_energy_min,self.battery_energy_max],[0,1])
@@ -751,7 +751,7 @@ class NetworkEnv(gym.Env):
         self.communication_queue_min = self.eMBB_UE_1.min_communication_qeueu_size
         self.communication_queue_max = self.eMBB_UE_1.max_communication_qeueu_size
         self.battery_energy_min = 0
-        self.battery_energy_max = self.eMBB_UE_1.max_battery_energy
+        self.battery_energy_max = self.eMBB_UE_1.max_battery_capacity
         self.latency_requirement_min = 0
         self.latency_requirement_max = self.eMBB_UE_1.max_allowable_latency
         self.cpu_frequency_max = self.eMBB_UE_1.max_cpu_frequency
@@ -762,8 +762,8 @@ class NetworkEnv(gym.Env):
         self.min_off_queue_length = 0
         self.resource_block_allocation_matrix = []
         self.resource_allocation_constraint_violation = 0
-        if self.timestep_counter >= 500000:
-            self.Communication_Channel_1.RB_bandwidth_Hz = 10*self.initial_RB_bandwidth
+        # if self.timestep_counter >= 500000:
+        #     self.Communication_Channel_1.RB_bandwidth_Hz = 10*self.initial_RB_bandwidth
        
         for eMBB_User in self.eMBB_Users:
             #eMBB_User.set_properties_UE()
