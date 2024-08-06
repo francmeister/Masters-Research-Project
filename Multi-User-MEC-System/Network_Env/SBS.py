@@ -192,6 +192,7 @@ class SBS():
         self.total_users_energy_not_normalized = 0
         self.total_users_throughput_not_normalized = 0
         throughput_log_reward = 0
+        self.overall_users_reward = 0
         for eMBB_User in eMBB_Users:
             self.users_lc_service_rates.append(eMBB_User.service_rate_bits_per_second)
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
@@ -247,8 +248,8 @@ class SBS():
 
             self.energy_efficiency_rewards+=energy_efficiency_reward
             self.battery_energy_rewards+=battery_energy_reward
-            self.throughput_rewards+=total_rate
-            self.energy_rewards+=total_energy
+            self.throughput_rewards+=eMBB_User_channel_rate
+            self.energy_rewards+=eMBB_User_energy_consumption
             self.delay_rewards+=queue_delay_reward
             self.delays+=delay
             self.tasks_dropped+=tasks_dropped
