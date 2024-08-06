@@ -305,7 +305,8 @@ class SBS():
         # print('total_users_delay_rewards: ', total_users_delay_rewards)
         # print('total_users_energy_reward: ', total_users_energy_reward)
         # print('total reward: ', self.overall_users_reward)
-        #print('q_throughput_log_reward*throughput_log_reward: ', q_throughput_log_reward*throughput_log_reward)
+        # #print('q_throughput_log_reward*throughput_log_reward: ', q_throughput_log_reward*throughput_log_reward)
+        # print('self.throughput_rewards - ')
         #print('q_total_users_battery_energies_reward*total_users_battery_energies_reward: ', q_total_users_battery_energies_reward*total_users_battery_energies_reward)
 
         #print('self.overall_users_reward: ', self.overall_users_reward)
