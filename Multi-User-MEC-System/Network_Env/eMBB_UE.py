@@ -231,7 +231,7 @@ class eMBB_UE(User_Equipment):
         self.pathloss_coefficient = 1.5
         self.antenna_gain = 10 # 10dB
         self.slot_time_ms = 10**(-3)
-        self.max_battery_capacity = 50
+        self.max_battery_capacity = 26640
         self.battery_energy_level = self.max_battery_capacity#(random.randint(15000,25000))
         self.energy_harvesting_constant = 5
     
@@ -763,6 +763,8 @@ class eMBB_UE(User_Equipment):
             #print('embb user: ', self.UE_label, "self.achieved_total_energy_consumption: ", self.achieved_total_energy_consumption)
             #print('self.achieved_total_energy_consumption: ', self.achieved_total_energy_consumption)
             self.battery_energy_level = self.battery_energy_level - self.achieved_total_energy_consumption
+            if self.battery_energy_level < 0:
+                self.battery_energy_level = 0
         else:
             self.achieved_total_energy_consumption = 0
             self.tasks_dropped+=1
