@@ -32,7 +32,7 @@ class eMBB_UE(User_Equipment):
         #self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
         #self.max_service_rate_cycles_per_slot = 620000
         #self.service_rate_bits_per_second = 2500000 #2.5MB/s(random.randint(5,5000))
-        self.service_rate_bits_per_second = random.randint(2000000,7000000)
+        self.service_rate_bits_per_second = 7000000#random.randint(2000000,7000000)
         self.service_rate_bits_per_slot = self.service_rate_bits_per_second/1000 
         self.max_service_rate_cycles_per_slot = self.service_rate_bits_per_slot*self.cycles_per_bit
         #print('self.max_service_rate_cycles_per_slot: ', self.max_service_rate_cycles_per_slot)
@@ -499,7 +499,7 @@ class eMBB_UE(User_Equipment):
             #if self.timeslot_counter >= 500000:
             #    self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,7000],[0,10]) 
             #else:
-            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,20000000],[0,1]) 
+            self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,100342857],[0,1]) 
             #self.achieved_channel_rate_normalized = interp(self.achieved_channel_rate,[0,56000],[0,1]) 
        
 
@@ -539,27 +539,33 @@ class eMBB_UE(User_Equipment):
         used_cpu_cycles = 0
         counter = 0
         #print('local queue service rate: ', (self.max_service_rate_cycles_per_slot/330)*8*1000, ' bits/s')
+        #print('len(self.local_queue): ', self.local_queue)
         for local_task in self.local_queue:
-            #print('cycles left: ', cpu_cycles_left)
-            #print('local_task.required_computation_cycles: ', local_task.required_computation_cycles)
+            # print('cycles left: ', cpu_cycles_left)
+            # print('local_task.required_computation_cycles: ', local_task.required_computation_cycles)
             if cpu_cycles_left > local_task.required_computation_cycles:
                 #print('cycles left: ', cpu_cycles_left)
-                #self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(local_task.required_computation_cycles,2)*local_task.required_computation_cycles
+                self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(local_task.required_computation_cycles,2)*local_task.required_computation_cycles
                 cpu_cycles_left-=local_task.required_computation_cycles
                 self.dequeued_local_tasks.append(local_task)
                 counter += 1
 
             elif cpu_cycles_left < local_task.required_computation_cycles and cpu_cycles_left > self.cycles_per_bit:
+                # print('cycles left: ', cpu_cycles_left)
+                # print('local_task.required_computation_cycles: ', local_task.required_computation_cycles)
+                #print('task_identifier: ', local_task.task_identifier)#, 'self.bits: ', local_task.bits)
                 bits_that_can_be_processed = cpu_cycles_left/self.cycles_per_bit
-                #self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(cpu_cycles_left,2)*cpu_cycles_left
+                #print("bits_that_can_be_processed: ", bits_that_can_be_processed)
+                self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(cpu_cycles_left,2)*cpu_cycles_left
+                #print('self.achieved_local_energy_consumption: ', self.achieved_local_energy_consumption)
                 local_task.split_task(bits_that_can_be_processed) 
                 break
-
+        #print('len(self.local_queue): ', len(self.local_queue))
         for x in range(0,counter):
             self.local_queue.pop(0)
         #self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2) = energy consumed per cycle (J/cycle)
         used_cpu_cycles = self.max_service_rate_cycles_per_slot - cpu_cycles_left
-        self.achieved_local_energy_consumption = self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2)*used_cpu_cycles
+        #self.achieved_local_energy_consumption = self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2)*used_cpu_cycles
         task_identities = []
         task_latency_requirements = []
         task_attained_queueing_latency = []
@@ -637,6 +643,7 @@ class eMBB_UE(User_Equipment):
                 elif offloading_task.slot_task_size > left_bits:
                     offloading_task.split_task(left_bits)
                     offloading_bits+=left_bits
+                    break
 
             for x in range(0,counter):
                 self.communication_queue.pop(0)
@@ -684,6 +691,7 @@ class eMBB_UE(User_Equipment):
         self.check_completed_tasks()
         #self.achieved_transmission_delay = 1
         self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*(1/communication_channel.time_divisions_per_slot)*sum(self.allocated_RBs)
+        #print('self.achieved_transmission_energy_consumption: ', self.achieved_transmission_energy_consumption)
         #self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*self.achieved_transmission_delay
         #print('self.achieved_transmission_energy_consumption: ', self.achieved_transmission_energy_consumption)
         #self.achieved_transmission_energy_consumption = interp(self.achieved_transmission_energy_consumption,[0,12*math.pow(10,-5)],[0,100])
@@ -755,9 +763,10 @@ class eMBB_UE(User_Equipment):
     def total_energy_consumed(self):
         #print(self.battery_energy_level)
         if self.battery_energy_level >  self.achieved_total_energy_consumption:
+            #print('self.achieved_local_energy_consumption: ', self.achieved_local_energy_consumption, ' self.achieved_transmission_energy_consumption: ', self.achieved_transmission_energy_consumption)
             self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption
             #print('self.achieved_total_energy_consumption: ', self.achieved_total_energy_consumption, " J")
-            self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,65],[0,1])
+            self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,25],[0,1])
             #self.achieved_total_energy_consumption_normalized = interp(self.achieved_total_energy_consumption,[0,46000],[0,1])
             self.episode_energy+=self.achieved_total_energy_consumption
             #print('embb user: ', self.UE_label, "self.achieved_total_energy_consumption: ", self.achieved_total_energy_consumption)

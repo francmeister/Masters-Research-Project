@@ -177,6 +177,6 @@ def individual_user_subplots(user_num, timesteps, energy_rewards, throughput_rew
 #string_reward_component = 'RB allocations'
 #individual_sub_plots(numbers_users=len(power_actions[0]),timesteps=timesteps,reward_component=RBs_actions,string_reward_component=string_reward_component)
 
-user_num =0
+user_num =2
 individual_user_subplots(user_num, timesteps, individual_energies, individual_channel_rates, individual_queue_delays, offload_actions, power_actions,individual_local_queue_lengths, individual_local_queue_delays, individual_offload_queue_lengths, individual_offload_queue_delays, RBs_actions,individual_average_task_size_offload_queue,individual_expected_rate_over_prev_T_slot,individual_battery_energy_levels,individual_energy_harvested)
 
