@@ -122,7 +122,7 @@ class SBS():
     def calculate_achieved_system_reward(self, eMBB_Users, urllc_users, communication_channel, q_action):
         #print('number of embb users: ', len(eMBB_Users))
     
-        max_channel_rate = communication_channel.system_bandwidth_Hz*math.log2(1+((5*1)/communication_channel.noise_spectral_density_W))
+        max_channel_rate = communication_channel.system_bandwidth_Hz*math.log2(1+((0.1*10)/(communication_channel.noise_spectral_density_W*communication_channel.system_bandwidth_Hz)))
         r_min = max_channel_rate/len(eMBB_Users)
         self.achieved_system_reward = 0
         eMBB_User_energy_consumption = 0
@@ -195,6 +195,7 @@ class SBS():
         self.overall_users_reward = 0
         self.total_energy_normalized = 0
         self.total_throughput_normalized = 0
+        r_min_reward = 0
         for eMBB_User in eMBB_Users:
             self.users_lc_service_rates.append(eMBB_User.service_rate_bits_per_second)
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
@@ -228,7 +229,7 @@ class SBS():
             #total_users_throughput_reward += (eMBB_User_channel_rate-r_min)
             total_users_throughput_reward += (eMBB_User_channel_rate)
             #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
-            #print('r_min: ', r_min)
+            r_min_reward += interp((eMBB_User_channel_rate-r_min),[-r_min,0],[-1,1])
             if eMBB_User_channel_rate > 0:
                throughput_log_reward += (math.log2(eMBB_User_channel_rate/r_min))
             else:
@@ -338,7 +339,7 @@ class SBS():
         #self.achieved_system_reward = fairness_index_normalized
         #return self.achieved_system_reward, urllc_reliability_reward_normalized, self.energy_rewards,self.throughput_rewards
         #print('self.achieved_system_reward: ', self.achieved_system_reward)
-        normalized_reward = self.total_throughput_normalized/self.total_energy_normalized 
+        normalized_reward = self.total_throughput_normalized/self.total_energy_normalized + r_min_reward
         return self.achieved_system_reward, normalized_reward, self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, self.overall_users_reward , self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, self.total_users_throughput_not_normalized , self.energy_rewards,self.throughput_rewards
