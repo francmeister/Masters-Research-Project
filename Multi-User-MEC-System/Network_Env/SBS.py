@@ -229,7 +229,7 @@ class SBS():
             #total_users_throughput_reward += (eMBB_User_channel_rate-r_min)
             total_users_throughput_reward += (eMBB_User_channel_rate)
             #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
-            r_min_reward += interp((eMBB_User_channel_rate-r_min),[-r_min,0],[-1,1])
+            r_min_reward += interp((eMBB_User_channel_rate-r_min),[-r_min,0],[-5,5])
             if eMBB_User_channel_rate > 0:
                throughput_log_reward += (math.log2(eMBB_User_channel_rate/r_min))
             else:
