@@ -291,7 +291,7 @@ class SBS():
 
         fairness_index = self.calculate_fairness(eMBB_Users)
         #print('fairness index: ', fairness_index)
-        print('self.throughput_log_reward: ',self.throughput_log_rewardself.throughput_log_reward)
+        # print('self.throughput_log_reward: ',self.throughput_log_rewardself.throughput_log_reward)
         fairness_index_normalized = interp(fairness_index,[0,1],[0,1])
         self.q_action = 10**1
         q_delay = 10**0
