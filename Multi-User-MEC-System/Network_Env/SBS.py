@@ -228,7 +228,7 @@ class SBS():
             total_users_energy_reward += eMBB_User_energy_consumption
             #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
             #total_users_throughput_reward += (eMBB_User_channel_rate-r_min)
-            total_users_throughput_reward += (eMBB_User_channel_rate)
+            total_users_throughput_reward += (eMBB_User_channel_rate-r_min)
             #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
             r_min_reward += interp((eMBB_User_channel_rate-r_min),[-r_min,0],[-5,5])
             if eMBB_User_channel_rate > 0:
@@ -303,7 +303,7 @@ class SBS():
         #print('total_users_delay_rewards*total_users_energy_reward: ', total_users_delay_rewards*total_users_energy_reward)
         self.individual_channel_rates.append(individual_channel_rates)
         #self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------
-        self.overall_users_reward = total_users_throughput_reward - q_energy*total_users_energy_reward + q_throughput_log_reward*throughput_log_reward#(q_delay*total_users_delay_rewards* q_energy*total_users_energy_reward) #+ q_throughput_log_reward*throughput_log_reward #+ q_total_users_battery_energies_reward*total_users_battery_energies_reward + q_urllc_reliability_reward*urllc_reliability_reward + q_total_offload_traffic_reward*total_offload_traffic_reward
+        self.overall_users_reward = total_users_throughput_reward - q_energy*total_users_energy_reward #+ q_throughput_log_reward*throughput_log_reward#(q_delay*total_users_delay_rewards* q_energy*total_users_energy_reward) #+ q_throughput_log_reward*throughput_log_reward #+ q_total_users_battery_energies_reward*total_users_battery_energies_reward + q_urllc_reliability_reward*urllc_reliability_reward + q_total_offload_traffic_reward*total_offload_traffic_reward
         if self.energy_rewards > 0:
             self.energy_efficiency_rewards = self.throughput_rewards/self.energy_rewards
         else:
