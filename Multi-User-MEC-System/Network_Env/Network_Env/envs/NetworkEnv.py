@@ -1,6 +1,6 @@
 import gym
 from gym import spaces
-import pygame, sys, time, random, numpy as np
+import sys, time, random, numpy as np
 from eMBB_UE import eMBB_UE
 from URLLC_UE import URLLC_UE
 from Communication_Channel import Communication_Channel
@@ -8,7 +8,7 @@ from SBS import SBS
 from numpy import interp
 import pandas as pd
 
-pygame.init()
+
 
 #Set constant variables
 SCREEN_WIDTH = 1500
@@ -18,7 +18,7 @@ ENV_HEIGHT_PIXELS = 900
 ENV_WIDTH_METRES = 400
 ENV_HEIGHT_METRES = 400
 
-clock = pygame.time.Clock()
+#clock = pygame.time.Clock()
 #screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
 class NetworkEnv(gym.Env):

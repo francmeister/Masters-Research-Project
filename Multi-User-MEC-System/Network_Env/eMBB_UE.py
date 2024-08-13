@@ -545,7 +545,7 @@ class eMBB_UE(User_Equipment):
             # print('local_task.required_computation_cycles: ', local_task.required_computation_cycles)
             if cpu_cycles_left > local_task.required_computation_cycles:
                 #print('cycles left: ', cpu_cycles_left)
-                self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(local_task.required_computation_cycles,2)*local_task.required_computation_cycles
+                #self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(local_task.required_computation_cycles,2)*local_task.required_computation_cycles
                 cpu_cycles_left-=local_task.required_computation_cycles
                 self.dequeued_local_tasks.append(local_task)
                 counter += 1
@@ -555,8 +555,9 @@ class eMBB_UE(User_Equipment):
                 # print('local_task.required_computation_cycles: ', local_task.required_computation_cycles)
                 #print('task_identifier: ', local_task.task_identifier)#, 'self.bits: ', local_task.bits)
                 bits_that_can_be_processed = cpu_cycles_left/self.cycles_per_bit
+                cpu_cycles_left = 0
                 #print("bits_that_can_be_processed: ", bits_that_can_be_processed)
-                self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(cpu_cycles_left,2)*cpu_cycles_left
+                #self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(cpu_cycles_left,2)*cpu_cycles_left
                 #print('self.achieved_local_energy_consumption: ', self.achieved_local_energy_consumption)
                 local_task.split_task(bits_that_can_be_processed) 
                 break
@@ -565,6 +566,10 @@ class eMBB_UE(User_Equipment):
             self.local_queue.pop(0)
         #self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2) = energy consumed per cycle (J/cycle)
         used_cpu_cycles = self.max_service_rate_cycles_per_slot - cpu_cycles_left
+        self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2)*used_cpu_cycles
+        # print('self.max_service_rate_cycles_per_slot: ', self.max_service_rate_cycles_per_slot)
+        # print('self.achieved_local_energy_consumption: ', self.achieved_local_energy_consumption)
+        # print('cpu_cycles_left: ', cpu_cycles_left)
         #self.achieved_local_energy_consumption = self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2)*used_cpu_cycles
         task_identities = []
         task_latency_requirements = []
