@@ -122,7 +122,7 @@ class SBS():
     def calculate_achieved_system_reward(self, eMBB_Users, urllc_users, communication_channel, q_action):
         #print('number of embb users: ', len(eMBB_Users))
     
-        max_channel_rate = communication_channel.system_bandwidth_Hz*math.log2(1+((0.1*10)/(communication_channel.noise_spectral_density_W*communication_channel.system_bandwidth_Hz)))
+        max_channel_rate = communication_channel.system_bandwidth_Hz*math.log2(1+((0.1*10**-10)/(communication_channel.noise_spectral_density_W*communication_channel.system_bandwidth_Hz)))
         r_min = max_channel_rate/len(eMBB_Users)
         self.achieved_system_reward = 0
         eMBB_User_energy_consumption = 0
@@ -230,6 +230,7 @@ class SBS():
             total_eMBB_User_delay_normalized+=eMBB_User_delay_normalized
             total_users_energy_reward += eMBB_User_energy_consumption
             #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
+            print('r_min: ', r_min)
             total_users_throughput_reward += (eMBB_User_channel_rate-r_min)
             #total_users_throughput_reward += (eMBB_User_channel_rate)
             #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
