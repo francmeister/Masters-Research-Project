@@ -32,7 +32,7 @@ class eMBB_UE(User_Equipment):
         #self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
         #self.max_service_rate_cycles_per_slot = 620000
         #self.service_rate_bits_per_second = 2500000 #2.5MB/s(random.randint(5,5000))
-        self.service_rate_bits_per_second = random.randint(2000000,7000000)
+        self.service_rate_bits_per_second = 120000#random.randint(2000000,7000000)
         self.service_rate_bits_per_slot = self.service_rate_bits_per_second/1000 
         self.max_service_rate_cycles_per_slot = self.service_rate_bits_per_slot*self.cycles_per_bit
         #print('self.max_service_rate_cycles_per_slot: ', self.max_service_rate_cycles_per_slot)
@@ -492,7 +492,7 @@ class eMBB_UE(User_Equipment):
                     #achieved_RB_channel_rates_.append(achieved_RB_channel_rate_)
 
             self.achieved_channel_rate = sum(achieved_RB_channel_rates)
-            #print('offload queue service rate: ', self.achieved_channel_rate, ' bits/s')
+            #rint('offload queue service rate: ', self.achieved_channel_rate, ' bits/s')
             #self.achieved_channel_rate_ = sum(achieved_RB_channel_rates_)
             self.previous_channel_rate = self.achieved_channel_rate
             min_achievable_rate, max_achievable_rate = self.min_and_max_achievable_rates(communication_channel)
@@ -803,30 +803,31 @@ class eMBB_UE(User_Equipment):
         # print('large_scale_gain: ', large_scale_gain)
         num_samples = number_of_RBs
         #Gaussian distributed g_l with mean 0 and standard deviation 8 dB
-        if self.timestep_counter_ == 0 or self.timestep_counter_ == 10:
-            g_l = np.random.normal(loc=0, scale=8, size=num_samples)
-            # Calculate g
-            #print('************************************************************')
-            #print('self.distance_from_SBS: ', self.distance_from_SBS_)
-            #print('g_l: ', g_l)
-            g = 35.3 + (10*1.5) * np.log10(self.distance_from_SBS_) + g_l
-            #print('g: ', g)
-            # Calculate G
-            G = 10 ** (-g)
-            G = np.array([G])
-            large_scale_gain = np.random.exponential(1,size=(1,number_of_RBs))#G
-            if self.timestep_counter_ == 10:
-                self.timestep_counter_ = 0
-            #print('G: ', G)
-            #print('large_scale_gain: ', large_scale_gain)
-        else:
-            large_scale_gain = self.large_scale_gain
+        #print("self.timestep_counter_: ", self.timestep_counter_)
+        #if self.timestep_counter_ == 1 or self.timestep_counter_ == 10:
+        g_l = np.random.normal(loc=0, scale=8, size=num_samples)
+        # Calculate g
         #print('************************************************************')
-        self.timestep_counter_+=1
+        #print('self.distance_from_SBS: ', self.distance_from_SBS_)
+        #print('g_l: ', g_l)
+        g = 35.3 + 37.8 * np.log10(self.distance_from_SBS_) #+ g_l
+        #print('g: ', g)
+        # Calculate G
+        G = 10 ** (-g/10)
+        G = np.array([G])
+        large_scale_gain = np.random.exponential(1,size=(1,number_of_RBs))#G
+        # if self.timestep_counter_ == 10:
+        #     self.timestep_counter_ = 0
+        # #print('G: ', G)
+        #print('large_scale_gain: ', large_scale_gain)
+        # else:
+        #     large_scale_gain = self.large_scale_gain
+        # #print('************************************************************')
+        #self.timestep_counter_+=1
 
 
         self.small_scale_channel_gain = small_scale_gain
-        first_large_scale_gain = large_scale_gain[0][0]
+        first_large_scale_gain = G#large_scale_gain[0][0]
         item = 0
         for gain in large_scale_gain[0]:
             large_scale_gain[0][item] = first_large_scale_gain
