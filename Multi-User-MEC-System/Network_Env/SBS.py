@@ -180,6 +180,7 @@ class SBS():
         self.q_action = 10^6
         self.urllc_reliability_reward_normalized = urllc_reliability_reward_normalized
         individual_channel_rates = []
+        self.throughput_rmin_reward=0
 
 
         self.energy_efficiency_rewards = 0
@@ -210,7 +211,7 @@ class SBS():
             self.total_energy_normalized+=eMBB_User.achieved_total_energy_consumption_normalized
             self.total_users_throughput_not_normalized+=eMBB_User.achieved_channel_rate
             self.total_throughput_normalized+=eMBB_User.achieved_channel_rate_normalized
-            eMBB_User_energy_consumption = len(eMBB_User.local_queue)#achieved_local_energy_consumption#achieved_total_energy_consumption
+            eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption
             total_energy += eMBB_User_energy_consumption
             #eMBB_User_channel_rate = eMBB_User.achieved_channel_rate_normalized
             eMBB_User_channel_rate = eMBB_User.achieved_channel_rate
@@ -301,7 +302,7 @@ class SBS():
         fairness_index_normalized = interp(fairness_index,[0,1],[0,1])
         self.q_action = 10**1
         q_delay = 10**0
-        q_energy = 10**8
+        q_energy = 10**6
         q_total_users_battery_energies_reward = 10**4
         q_urllc_reliability_reward = 10**0
         q_total_offload_traffic_reward = 10**0
@@ -453,6 +454,7 @@ class SBS():
         self.total_energy_normalized = 0
         self.total_throughput_normalized = 0
         self.throughput_log_reward = 0
+        self.throughput_rmin_reward = 0
         
 
     def calculate_fairness(self,eMBB_Users):
