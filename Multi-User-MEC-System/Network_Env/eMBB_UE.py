@@ -44,6 +44,8 @@ class eMBB_UE(User_Equipment):
         self.offload_queue_delay = 0
         self.channel_gain_scaling_factor = 1
         self.distance_from_SBS_ = np.random.uniform(low=30, high=100)
+        self.average_offloading_rate = 0
+        self.calculate_offloading_rate()
 
 
         self.set_properties_eMBB()
@@ -838,6 +840,27 @@ class eMBB_UE(User_Equipment):
         #if self.total_gain < 0.1:
         #    self.total_gain = 0.1
 
+    def calculate_offloading_rate(self):
+        loops = 10**3
+        transmit_power = 50*math.pow(10,-3)
+        RB_bandwidth = 180*math.pow(10,3)
+        N_o = (math.pow(10,(-174/10)))/1000
+        rates = []
+
+        for x in range(1,loops):
+            small_scale_gain = np.random.exponential(1,size=(1,1))
+            g_l = np.random.normal(loc=0, scale=8, size=1)
+            g = 35.3 + 37.8 * np.log10(self.distance_from_SBS_) + g_l
+            large_scale_gain = 10 ** (-g/10)
+            #print('large_scale_gain: ', large_scale_gain)
+            channel_rate_numerator = transmit_power*small_scale_gain*large_scale_gain
+            channel_rate_denominator = RB_bandwidth*N_o
+            rate = RB_bandwidth*math.log2(1+channel_rate_numerator/channel_rate_denominator)
+            rates.append(rate)
+        
+        self.average_offloading_rate = sum(rates)/(len(rates))
+        #print('self.average_offloading_rate: ', self.average_offloading_rate)
+
     def calculate_assigned_transmit_power_W(self):
         #self.assigned_transmit_power_W = self.assigned_transmit_power_dBm#(math.pow(10,(self.assigned_transmit_power_dBm/10)))/1000
         self.assigned_transmit_power_W = (math.pow(10,(self.assigned_transmit_power_dBm/10)))/1000
@@ -1258,11 +1281,11 @@ class eMBB_UE(User_Equipment):
         #print('average_packet_size_bits: ', average_packet_size_bits)
         #print('len(self.communication_queue): ', len(self.communication_queue))
 
-        if expected_rate_over_prev_T_slot_ms > 0:
-            offload_queueing_time = (average_packet_size_bits/expected_rate_over_prev_T_slot_ms)*len(self.communication_queue)
-        else:
-            offload_queueing_time = (average_packet_size_bits)*len(self.communication_queue)
-        offloading_delay = offload_queueing_time #+ 1
+        #if expected_rate_over_prev_T_slot_ms > 0:
+        offload_queueing_time = (average_packet_size_bits/self.average_offloading_rate)*len(self.communication_queue)
+        #else:
+            #offload_queueing_time = (average_packet_size_bits)*len(self.communication_queue)
+        offloading_delay = offload_queueing_time + 1
 
         #print('offload_queueing_time: ', offload_queueing_time)
         self.local_queue_length = len(self.local_queue)
