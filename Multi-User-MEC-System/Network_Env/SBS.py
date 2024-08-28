@@ -232,8 +232,8 @@ class SBS():
             total_users_energy_reward += eMBB_User_energy_consumption
             #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
             #print('r_min: ', r_min)
-            #total_users_throughput_reward += (eMBB_User_channel_rate-r_min)
-            total_users_throughput_reward += (eMBB_User_channel_rate)
+            total_users_throughput_reward += (eMBB_User_channel_rate-r_min)
+            #total_users_throughput_reward += (eMBB_User_channel_rate)
             #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
             #print('r_min: ', r_min)
             #total_users_throughput_reward += (eMBB_User_channel_rate)
