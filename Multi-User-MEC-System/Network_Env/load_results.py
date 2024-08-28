@@ -276,7 +276,7 @@ axis[0,1].set_xlabel('Timestep')
 axis[0,1].set_ylabel('Data Rate (bits/s)')
 axis[0,1].grid()
 
-axis[1,1].plot(timesteps, delays_smooth)
+axis[1,1].plot(timesteps[window_size-1:], delays_smooth)
 axis[1,1].set_title('Sum delays')
 axis[1,1].set_xlabel('Timestep')
 axis[1,1].set_ylabel('Delay (ms)')

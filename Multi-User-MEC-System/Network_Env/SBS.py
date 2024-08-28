@@ -232,8 +232,8 @@ class SBS():
             total_users_energy_reward += eMBB_User_energy_consumption
             #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
             #print('r_min: ', r_min)
-            #total_users_throughput_reward += (eMBB_User_channel_rate-r_min)
-            total_users_throughput_reward += (eMBB_User_channel_rate)
+            total_users_throughput_reward += (eMBB_User_channel_rate-r_min)
+            #total_users_throughput_reward += (eMBB_User_channel_rate)
             #print('eMBB_User_channel_rate: ', eMBB_User_channel_rate)
             #print('r_min: ', r_min)
             #total_users_throughput_reward += (eMBB_User_channel_rate)
@@ -305,8 +305,8 @@ class SBS():
         #print('throughput_log_reward: ', throughput_log_reward)
         fairness_index_normalized = interp(fairness_index,[0,1],[0,1])
         self.q_action = 10**1
-        q_delay = 30#10**0
-        q_energy = 5*10**7
+        q_delay = 10**2
+        q_energy = 10**8
         q_total_users_battery_energies_reward = 10**4
         q_urllc_reliability_reward = 10**0
         q_total_offload_traffic_reward = 10**0
