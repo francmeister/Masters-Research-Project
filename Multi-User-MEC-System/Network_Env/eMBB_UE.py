@@ -1288,8 +1288,19 @@ class eMBB_UE(User_Equipment):
         offloading_delay = offload_queueing_time + 1
 
         #print('offload_queueing_time: ', offload_queueing_time)
-        self.local_queue_length = len(self.local_queue)
-        self.offload_queue_length = len(self.communication_queue)
+
+        local_queue_size_bits = 0
+        offload_queue_size_bits = 0
+        if len(self.local_queue) > 0:
+            for task in self.local_queue:
+                local_queue_size_bits+=task.slot_task_size
+        
+        if len(self.communication_queue) > 0:
+            for task in self.communication_queue:
+                offload_queue_size_bits+=task.slot_task_size
+
+        self.local_queue_length = local_queue_size_bits
+        self.offload_queue_length = offload_queue_size_bits
         # print('self.local_queue_length: ', self.local_queue_length)
         # print('self.offload_queue_length: ', self.offload_queue_length)
         # print('local_delay: ', local_delay)

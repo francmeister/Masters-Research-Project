@@ -41,6 +41,8 @@ individual_local_queue_lengths = np.load('individual_local_queue_lengths.npy')
 individual_offload_queue_lengths = np.load('individual_offload_queue_lengths.npy')
 overall_users_reward = np.load('overall_users_reward.npy')
 
+log_throughput_reward = np.load('throughput_log_reward.npy')
+
 
 
 
@@ -134,7 +136,7 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-figure, axis = plt.subplots(3,2)
+figure, axis = plt.subplots(3,3)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
@@ -242,6 +244,7 @@ delays_smooth = delays#moving_average(delays, window_size)
 energy_efficiency_smooth = moving_average(energy_efficiency_rewards, window_size)
 fairness_index_smooth = moving_average(fairness_index, window_size)
 overall_users_reward_smooth = moving_average(overall_users_reward, window_size)
+log_throughput_reward_smooth = moving_average(log_throughput_reward, window_size)
 print('len(overall_users_reward): ', len(throughputs))
 print('len(throughputs): ', len(overall_users_reward))
 print('len(energies): ', len(energies))
@@ -261,14 +264,14 @@ axis[0,0].grid()
 
 axis[1,0].plot(timesteps[window_size-1:], energies_smooth)
 #axis[1,0].plot(timesteps, energies)
-axis[1,0].set_title('energies reward')
+axis[1,0].set_title('Total Energy Consumption')
 axis[1,0].set_xlabel('Timestep')
 axis[1,0].set_ylabel('Sum energy (J)')
 axis[1,0].grid()
 
 axis[0,1].plot(timesteps[window_size-1:], throughputs_smooth)
 #axis[0,1].plot(timesteps, throughputs)
-axis[0,1].set_title('throughputs reward')
+axis[0,1].set_title('Total achieved throughput')
 axis[0,1].set_xlabel('Timestep')
 axis[0,1].set_ylabel('Data Rate (bits/s)')
 axis[0,1].grid()
@@ -290,6 +293,12 @@ axis[2,1].set_title('Energy Efficiency')
 axis[2,1].set_xlabel('Timestep')
 axis[2,1].set_ylabel('EE Value')
 axis[2,1].grid()
+
+axis[0,2].plot(timesteps[window_size-1:], log_throughput_reward_smooth)
+axis[0,2].set_title('Log Throughput Constraint')
+axis[0,2].set_xlabel('Timestep')
+#axis[3,0].set_ylabel('Throughput Constraint Value')
+axis[0,2].grid()
 
 # axis[0,0].plot(timesteps, offload_actions)
 # axis[0,0].set_title('Offloading Actions')
