@@ -41,11 +41,30 @@ def moving_average(data, window_size):
 
 window_size = 100
 
-rewards_0_15_smooth = moving_average(rewards_0_15, window_size)
-rewards_0_35_smooth = moving_average(rewards_0_35, window_size)
+rewards_0_15_normalized = []
+rewards_0_35_normalized = []
+rewards_0_65_normalized = []
+rewards_0_99_normalized = []
+
+
+for x in rewards_0_15:
+    rewards_0_15_normalized.append(interp(x,[0,max(rewards_0_99)],[0,1]))
+
+for x in rewards_0_35:
+    rewards_0_35_normalized.append(interp(x,[0,max(rewards_0_99)],[0,1]))
+
+for x in rewards_0_65:
+    rewards_0_65_normalized.append(interp(x,[0,max(rewards_0_99)],[0,1]))
+
+for x in rewards_0_99:
+    rewards_0_99_normalized.append(interp(x,[0,max(rewards_0_99)],[0,1]))
+
+
+rewards_0_15_smooth = moving_average(rewards_0_15_normalized, window_size)
+rewards_0_35_smooth = moving_average(rewards_0_35_normalized, window_size)
 rewards_0_45_smooth = moving_average(rewards_0_45, window_size)
-rewards_0_99_smooth = moving_average(rewards_0_99, window_size)
-rewards_0_65_smooth = moving_average(rewards_0_65, window_size)
+rewards_0_99_smooth = moving_average(rewards_0_99_normalized, window_size)
+rewards_0_65_smooth = moving_average(rewards_0_65_normalized, window_size)
 rewards_9_users_smooth = moving_average(rewards_9_users, window_size)
 rewards_11_users_smooth = moving_average(rewards_11_users, window_size)
 
@@ -65,7 +84,7 @@ plt.plot(new_timesteps[window_size-1:], rewards_0_99_smooth, color="red", label=
 #plt.plot(timesteps_11_users[window_size-1:], rewards_11_users_smooth, color="black", label='11 Users')
 
 plt.xlabel("Episodes")
-plt.ylabel("System Reward($\mathcal{R}$)")
+plt.ylabel("Normalized System Reward")
 plt.legend(["$\epsilon$ = 0.15", "$\epsilon$ = 0.35", "$\epsilon$ = 0.65", "$\epsilon$ = 0.99"], loc="upper left")
 plt.grid()
 

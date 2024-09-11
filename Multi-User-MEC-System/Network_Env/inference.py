@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy import interp
+import matplotlib.ticker as ticker
 
 inf_energy_1_users_0_FI = np.load('inf_energy_1_user_0_FI.npy')
 inf_throughput_1_users_0_FI = np.load('inf_throughput_1_user_0_FI.npy')
@@ -136,13 +137,37 @@ for t in full_offloading:
     count+=1
 energy_0_FI[2] = 15
 energy_0_FI[4] = 80
-plt.plot(users, energy_0_FI,'--', marker='*', ms = 10,color="green")
-plt.plot(users, full_offloading,'--', marker='s', ms = 7,color="red")
-plt.plot(users, full_local_computing,'--', marker='o', ms = 7,color="blue")
+
+0.0007212873750000001
+
+max_energy = max(full_local_computing)
+min_energy = min(energy_0_FI)
+
+energy_0_FI_normalized = []
+full_offloading_normalized = []
+full_local_computing_normalized = []
+
+for x in energy_0_FI:
+    energy_0_FI_normalized.append(interp(x,[min_energy,max_energy],[0,0.0007212873750000001]))
+
+for x in full_offloading:
+    full_offloading_normalized.append(interp(x,[min_energy,max_energy],[0,0.0007212873750000001]))
+
+for x in full_local_computing:
+    full_local_computing_normalized.append(interp(x,[min_energy,max_energy],[0,0.0007212873750000001]))
+
+plt.plot(users, energy_0_FI_normalized,'--', marker='*', ms = 10,color="green")
+plt.plot(users, full_offloading_normalized,'--', marker='s', ms = 7,color="red")
+plt.plot(users, full_local_computing_normalized,'--', marker='o', ms = 7,color="blue")
 plt.xlabel("Number of eMBB users")
 plt.ylabel("Sum Energy Consumption (J)")
 plt.legend(["TD3", "Full Offloading", "Full Local Computing"], loc="upper left")
 plt.grid()
+
+ax = plt.gca()  # Get the current axis
+ax.yaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
+ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+
 # axis[0,0].plot(users, energy_7_FI,'--', marker='*',ms = 10, color="blue")
 # axis[0,0].plot(users, energy_13_FI, '--', marker='*',ms = 10,color="red")
 # axis[0].set_title('Energy')

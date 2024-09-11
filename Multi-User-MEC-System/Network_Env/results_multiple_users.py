@@ -39,12 +39,36 @@ def moving_average(data, window_size):
 
 window_size = 100
 
-rewards_1_users_smooth = moving_average(rewards_1_users, window_size)
-rewards_3_users_smooth = moving_average(rewards_3_users, window_size)
-rewards_5_users_smooth = moving_average(rewards_5_users, window_size)
-rewards_7_users_smooth = moving_average(rewards_7_users, window_size)
-rewards_9_users_smooth = moving_average(rewards_9_users, window_size)
-rewards_11_users_smooth = moving_average(rewards_11_users, window_size)
+rewards_1_users_normalized = []
+rewards_3_users_normalized = []
+rewards_5_users_normalized = []
+rewards_7_users_normalized = []
+rewards_9_users_normalized = []
+
+normalized_rewards_TD3 = []
+
+for x in rewards_1_users:
+    rewards_1_users_normalized.append(interp(x,[0,max(rewards_9_users)],[0,1]))
+
+for x in rewards_3_users:
+    rewards_3_users_normalized.append(interp(x,[0,max(rewards_9_users)],[0,1]))
+
+for x in rewards_5_users:
+    rewards_5_users_normalized.append(interp(x,[0,max(rewards_9_users)],[0,1]))
+
+for x in rewards_7_users:
+    rewards_7_users_normalized.append(interp(x,[0,max(rewards_9_users)],[0,1]))
+
+for x in rewards_9_users:
+    rewards_9_users_normalized.append(interp(x,[0,max(rewards_9_users)],[0,1]))
+
+
+rewards_1_users_smooth = moving_average(rewards_1_users_normalized, window_size)
+rewards_3_users_smooth = moving_average(rewards_3_users_normalized, window_size)
+rewards_5_users_smooth = moving_average(rewards_5_users_normalized, window_size)
+rewards_7_users_smooth = moving_average(rewards_7_users_normalized, window_size)
+rewards_9_users_smooth = moving_average(rewards_9_users_normalized, window_size)
+#rewards_11_users_smooth = moving_average(rewards_11_users, window_size)
 
 len_timesteps = len(timesteps_1_users[window_size-1:])
 print(len_timesteps)
@@ -54,6 +78,8 @@ count = 0
 for timestep in timesteps_1_users:
     new_timesteps.append(count)
     count+=1
+
+
 plt.plot(new_timesteps[window_size-1:], rewards_1_users_smooth, color="green", label="1 User")
 plt.plot(new_timesteps[window_size-1:], rewards_7_users_smooth[0:len_timesteps], color="brown", label='3 Users')
 plt.plot(new_timesteps[window_size-1:], rewards_3_users_smooth[0:len_timesteps], color="blue", label='7 Users')
@@ -62,12 +88,11 @@ plt.plot(new_timesteps[window_size-1:], rewards_9_users_smooth, color="red", lab
 #plt.plot(timesteps_11_users[window_size-1:], rewards_11_users_smooth, color="black", label='11 Users')
 
 plt.xlabel("Episodes")
-plt.ylabel("System Reward($\mathcal{R}$)")
+plt.ylabel("Normalized System Reward")
 plt.legend(["1 User","3 Users", "5 Users", "7 Users", "9 Users"], loc="upper left")
 plt.grid()
 
 plt.tight_layout()
-
 plt.show()
 
 

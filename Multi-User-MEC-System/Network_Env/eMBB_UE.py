@@ -32,7 +32,7 @@ class eMBB_UE(User_Equipment):
         #self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
         #self.max_service_rate_cycles_per_slot = 620000
         #self.service_rate_bits_per_second = 2500000 #2.5MB/s(random.randint(5,5000))
-        self.service_rate_bits_per_second = random.randint(100000,300000)#120000
+        self.service_rate_bits_per_second = 121212.121212#120000#random.randint(100000,300000)#120000
         self.service_rate_bits_per_slot = self.service_rate_bits_per_second/1000 
         self.max_service_rate_cycles_per_slot = self.service_rate_bits_per_slot*self.cycles_per_bit
         #print('self.max_service_rate_cycles_per_slot: ', self.max_service_rate_cycles_per_slot)
@@ -558,7 +558,7 @@ class eMBB_UE(User_Equipment):
             self.local_queue.pop(0)
         #self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2) = energy consumed per cycle (J/cycle)
         used_cpu_cycles = self.max_service_rate_cycles_per_slot - cpu_cycles_left
-        self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2)*used_cpu_cycles
+        self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2)*self.max_service_rate_cycles_per_slot#used_cpu_cycles
         # print('self.max_service_rate_cycles_per_slot: ', self.max_service_rate_cycles_per_slot)
         # print('self.achieved_local_energy_consumption: ', self.achieved_local_energy_consumption)
         #print('used_cpu_cycles: ', used_cpu_cycles)
@@ -687,7 +687,7 @@ class eMBB_UE(User_Equipment):
 
         self.check_completed_tasks()
         #self.achieved_transmission_delay = 1
-        self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*(1/communication_channel.time_divisions_per_slot)*sum(self.allocated_RBs)
+        self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*(1/communication_channel.time_divisions_per_slot)*(10**-3)*sum(self.allocated_RBs)
         #print('self.achieved_transmission_energy_consumption: ', self.achieved_transmission_energy_consumption)
         #self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*self.achieved_transmission_delay
         #print('self.achieved_transmission_energy_consumption: ', self.achieved_transmission_energy_consumption)
