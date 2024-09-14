@@ -360,8 +360,8 @@ class SBS():
         #return self.achieved_system_reward, urllc_reliability_reward_normalized, self.energy_rewards,self.throughput_rewards
         #print('self.achieved_system_reward: ', self.achieved_system_reward)
         normalized_reward = self.total_throughput_normalized/self.total_energy_normalized + r_min_reward
-        return self.achieved_system_reward, self.overall_users_reward, self.energy_rewards,self.throughput_rewards
-        #return self.achieved_system_reward, self.overall_users_reward , self.energy_rewards,self.throughput_rewards
+        #return self.achieved_system_reward, self.overall_users_reward, self.energy_rewards,self.throughput_rewards
+        return self.achieved_system_reward, self.energy_efficiency_rewards , self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, self.total_users_throughput_not_normalized , self.energy_rewards,self.throughput_rewards
 
     def achieved_eMBB_delay_requirement_revenue_or_penalty(self,eMBB_User):
