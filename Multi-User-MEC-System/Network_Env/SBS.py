@@ -201,6 +201,7 @@ class SBS():
         self.total_throughput_normalized = 0
         self.throughput_log_reward = 0
         r_min_reward = 0
+        temp_reward = 0
         for eMBB_User in eMBB_Users:
             self.users_lc_service_rates.append(eMBB_User.service_rate_bits_per_second)
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
@@ -308,23 +309,26 @@ class SBS():
         #print('throughput_log_reward: ', throughput_log_reward)
         fairness_index_normalized = interp(fairness_index,[0,1],[0,1])
         self.q_action = 10**1
-        q_delay = 20**(-4)
-        q_energy = 10**3
+        q_delay = 10**3
+        q_energy = 10**10
         q_total_users_battery_energies_reward = 10**4
         q_urllc_reliability_reward = 10**0
         q_total_offload_traffic_reward = 10**0
-        q_throughput_log_reward = 10**5
-        q_throughput = 10**(-7)
+        q_throughput_log_reward = 10**4
+        q_throughput = 1#0**(-7)
         #print('total_users_delay_rewards*total_users_energy_reward: ', total_users_delay_rewards*total_users_energy_reward)
         self.individual_channel_rates.append(individual_channel_rates)
         #self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------
         #print('total_users_throughput_reward: ', total_users_throughput_reward)
-        self.overall_users_reward = q_throughput*total_users_throughput_reward - (q_energy*total_users_energy_reward) - (q_delay*total_users_delay_rewards) #+ (q_throughput_log_reward*throughput_log_reward)#(q_delay*total_users_delay_rewards* q_energy*total_users_energy_reward) #+ q_throughput_log_reward*throughput_log_reward #+ q_total_users_battery_energies_reward*total_users_battery_energies_reward + q_urllc_reliability_reward*urllc_reliability_reward + q_total_offload_traffic_reward*total_offload_traffic_reward
+        self.overall_users_reward = q_throughput*total_users_throughput_reward - (q_energy*total_users_energy_reward) - (q_delay*total_users_delay_rewards) + (q_throughput_log_reward*throughput_log_reward)#(q_delay*total_users_delay_rewards* q_energy*total_users_energy_reward) #+ q_throughput_log_reward*throughput_log_reward #+ q_total_users_battery_energies_reward*total_users_battery_energies_reward + q_urllc_reliability_reward*urllc_reliability_reward + q_total_offload_traffic_reward*total_offload_traffic_reward
         if self.energy_rewards > 0:
             self.energy_efficiency_rewards = self.throughput_rewards/self.energy_rewards#(q_throughput*total_users_throughput_reward)/(q_energy*total_users_energy_reward)#/self.throughput_rewards/self.energy_rewards
         else:
             self.energy_efficiency_rewards = 0
 
+        q_throughput = 10**(-7)
+        q_energy = 10**3
+        temp_reward = (q_throughput*total_users_throughput_reward)/(q_energy*total_users_energy_reward)
         #print('total_users_throughput_reward: ', total_users_throughput_reward)
         # print('total_users_delay_rewards: ', total_users_delay_rewards)
         #print('total_users_energy_reward: ', total_users_energy_reward)
@@ -360,7 +364,8 @@ class SBS():
         #return self.achieved_system_reward, urllc_reliability_reward_normalized, self.energy_rewards,self.throughput_rewards
         #print('self.achieved_system_reward: ', self.achieved_system_reward)
         normalized_reward = self.total_throughput_normalized/self.total_energy_normalized + r_min_reward
-        return self.achieved_system_reward, self.overall_users_reward, self.energy_rewards,self.throughput_rewards
+        return self.achieved_system_reward, temp_reward, self.energy_rewards,self.throughput_rewards
+        #return self.achieved_system_reward, self.overall_users_reward, self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, self.energy_efficiency_rewards , self.energy_rewards,self.throughput_rewards
         #return self.achieved_system_reward, self.total_users_throughput_not_normalized , self.energy_rewards,self.throughput_rewards
 
