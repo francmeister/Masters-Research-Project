@@ -35,6 +35,7 @@ class eMBB_UE(User_Equipment):
         self.service_rate_bits_per_second = 121212.121212#120000#random.randint(100000,300000)#120000
         self.service_rate_bits_per_slot = self.service_rate_bits_per_second/1000 
         self.max_service_rate_cycles_per_slot = self.service_rate_bits_per_slot*self.cycles_per_bit
+        self.max_bits_process_per_slot = self.max_service_rate_cycles_per_slot/self.cycles_per_bit
         #print('self.max_service_rate_cycles_per_slot: ', self.max_service_rate_cycles_per_slot)
         #self.service_rate_bits_per_slot = (self.max_service_rate_cycles_per_slot/self.cycles_per_byte)*8
         self.local_queue_length = 0
@@ -122,7 +123,7 @@ class eMBB_UE(User_Equipment):
         self.has_transmitted_this_time_slot = False
         self.communication_queue = []
         #self.energy_consumption_coefficient = math.pow(10,-12.3)
-        self.energy_consumption_coefficient = math.pow(10,-15)
+        self.energy_consumption_coefficient = math.pow(10,-13)
         self.achieved_transmission_energy_consumption = 0
         self.achieved_local_processing_delay = 0
         self.achieved_total_energy_consumption = 0
@@ -278,7 +279,7 @@ class eMBB_UE(User_Equipment):
                 #task_size_per_second_kilobytes = random.randint(self.min_task_size_KB_per_second,self.max_task_size_KB_per_second) #choose between 50 and 100 kilobytes
                 #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
                 #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
-                task_size_per_slot_bits = int(np.random.uniform(500,1500))#Average of 1000 bits per task in slot #int(task_size_per_slot_kilobytes*8000) #8000 bits in a KB----------
+                task_size_per_slot_bits = int(np.random.uniform(45,50))#int(np.random.uniform(500,1500))#Average of 1000 bits per task in slot #int(task_size_per_slot_kilobytes*8000) #8000 bits in a KB----------
                 self.previous_task_size_bits = task_size_per_slot_bits
                 #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
                 latency_requirement = 10#latency required is 10 ms for every task#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
@@ -295,7 +296,7 @@ class eMBB_UE(User_Equipment):
                 #task_size_per_second_kilobytes = random.randint(self.min_task_size_KB_per_second,self.max_task_size_KB_per_second) #choose between 50 and 100 kilobytes
                 #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
                 #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
-                task_size_per_slot_bits = int(np.random.uniform(500,1500)) #8000 bits in a KB----------
+                task_size_per_slot_bits = int(np.random.uniform(45,50))#int(np.random.uniform(500,1500)) #8000 bits in a KB----------
                 self.previous_task_size_bits = task_size_per_slot_bits
                 #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
                 latency_requirement = 10#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
@@ -530,8 +531,15 @@ class eMBB_UE(User_Equipment):
         self.dequeued_local_tasks.clear()
         used_cpu_cycles = 0
         counter = 0
+        #print('self.max_bits_process_per_slot: ', self.max_bits_process_per_slot)
         #print('local queue service rate: ', (self.max_service_rate_cycles_per_slot/330)*8*1000, ' bits/s')
         #print('len(self.local_queue): ', self.local_queue)
+        total_bits_size = 0
+        for local_task in self.local_queue:
+            total_bits_size+=local_task.slot_task_size
+
+        #print('total_bits_size: ', total_bits_size)
+
         for local_task in self.local_queue:
             # print('cycles left: ', cpu_cycles_left)
             # print('local_task.required_computation_cycles: ', local_task.required_computation_cycles)
@@ -558,7 +566,10 @@ class eMBB_UE(User_Equipment):
             self.local_queue.pop(0)
         #self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2) = energy consumed per cycle (J/cycle)
         used_cpu_cycles = self.max_service_rate_cycles_per_slot - cpu_cycles_left
-        self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2)*self.max_service_rate_cycles_per_slot#used_cpu_cycles
+        if total_bits_size > self.max_bits_process_per_slot:
+            self.achieved_local_energy_consumption = self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2)*self.max_service_rate_cycles_per_slot#used_cpu_cycles
+        else:
+            self.achieved_local_energy_consumption = (total_bits_size/self.max_bits_process_per_slot) * (self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2)*self.max_service_rate_cycles_per_slot)
         # print('self.max_service_rate_cycles_per_slot: ', self.max_service_rate_cycles_per_slot)
         # print('self.achieved_local_energy_consumption: ', self.achieved_local_energy_consumption)
         #print('used_cpu_cycles: ', used_cpu_cycles)
