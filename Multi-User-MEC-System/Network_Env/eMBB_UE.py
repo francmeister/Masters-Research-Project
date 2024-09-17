@@ -296,7 +296,7 @@ class eMBB_UE(User_Equipment):
                 #task_size_per_second_kilobytes = random.randint(self.min_task_size_KB_per_second,self.max_task_size_KB_per_second) #choose between 50 and 100 kilobytes
                 #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
                 #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
-                int(np.random.uniform(45,50))#int(np.random.uniform(500,1500)) #8000 bits in a KB----------
+                task_size_per_slot_bits = int(np.random.uniform(45,50))#int(np.random.uniform(500,1500)) #8000 bits in a KB----------
                 self.previous_task_size_bits = task_size_per_slot_bits
                 #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
                 latency_requirement = 10#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
