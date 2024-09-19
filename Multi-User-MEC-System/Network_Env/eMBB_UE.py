@@ -644,7 +644,7 @@ class eMBB_UE(User_Equipment):
             self.average_packet_size_bits
         #print('achieved channel rate')
         #print(self.achieved_channel_rate)
-        self.com_queue_length = len(communication_channel)
+        self.com_queue_length = len(self.communication_queue)
         if self.achieved_channel_rate == 0:
             self.achieved_transmission_delay = 0
         else:
