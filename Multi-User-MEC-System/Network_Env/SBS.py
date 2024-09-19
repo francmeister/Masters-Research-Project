@@ -299,6 +299,8 @@ class SBS():
             self.individual_energy_harvested.append(eMBB_User.energy_harvested)
             self.individual_local_energy_consumed.append(eMBB_User.achieved_local_energy_consumption)
             self.individual_offloading_energy.append(eMBB_User.achieved_transmission_energy_consumption)
+            self.individual_small_scale_gains.append(eMBB_User.small_scale_gain_)
+            self.individual_large_scale_gains.append(eMBB_User.large_scale_gain_)
     
             #print('eMBB_User.expected_rate_over_prev_T_slot: ', eMBB_User.expected_rate_over_prev_T_slot)
             #print('eMBB_User.average_task_size_offload_queue: ', eMBB_User.average_task_size_offload_queue)
@@ -310,11 +312,11 @@ class SBS():
         fairness_index_normalized = interp(fairness_index,[0,1],[0,1])
         self.q_action = 10**1
         q_delay = 10**5
-        q_energy = 10**10
+        q_energy = 10**8
         q_total_users_battery_energies_reward = 10**4
         q_urllc_reliability_reward = 10**0
         q_total_offload_traffic_reward = 10**0
-        q_throughput_log_reward = 10**4
+        q_throughput_log_reward = 10**3
         q_throughput = 1#0**(-7)
         #print('total_users_delay_rewards*total_users_energy_reward: ', total_users_delay_rewards*total_users_energy_reward)
         self.individual_channel_rates.append(individual_channel_rates)
@@ -470,6 +472,9 @@ class SBS():
         self.total_throughput_normalized = 0
         self.throughput_log_reward = 0
         self.throughput_rmin_reward = 0
+        self.individual_small_scale_gains = []
+        self.individual_large_scale_gains = []
+    
         
 
     def calculate_fairness(self,eMBB_Users):

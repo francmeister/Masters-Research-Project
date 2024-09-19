@@ -46,6 +46,13 @@ class eMBB_UE(User_Equipment):
         self.channel_gain_scaling_factor = 1
         self.distance_from_SBS_ = np.random.uniform(low=30, high=100)
         self.average_offloading_rate = 0
+
+        self.battery_energy_level_ = 0
+        self.small_scale_gain_ = 0
+        self.large_scale_gain_ = 0
+        self.com_queue_length = 0
+        self.loc_queue_length = 0
+
         self.calculate_offloading_rate()
 
 
@@ -538,6 +545,7 @@ class eMBB_UE(User_Equipment):
         for local_task in self.local_queue:
             total_bits_size+=local_task.slot_task_size
 
+        self.loc_queue_length = len(self.local_queue)
         #print('total_bits_size: ', total_bits_size)
 
         for local_task in self.local_queue:
@@ -636,6 +644,7 @@ class eMBB_UE(User_Equipment):
             self.average_packet_size_bits
         #print('achieved channel rate')
         #print(self.achieved_channel_rate)
+        self.com_queue_length = len(communication_channel)
         if self.achieved_channel_rate == 0:
             self.achieved_transmission_delay = 0
         else:
@@ -836,6 +845,9 @@ class eMBB_UE(User_Equipment):
             large_scale_gain[0][item] = first_large_scale_gain
             item+=1
 
+        self.small_scale_gain_ = small_scale_gain[0][0]
+        self.large_scale_gain_ = large_scale_gain[0][0]
+
         self.small_scale_gain = small_scale_gain
         self.large_scale_gain = large_scale_gain
     
@@ -985,6 +997,8 @@ class eMBB_UE(User_Equipment):
         if self.battery_energy_level > self.max_battery_capacity:
             self.battery_energy_level = self.max_battery_capacity
         #print('self.battery_energy_level: ', self.battery_energy_level, " J")
+
+        self.battery_energy_level_ = self.previous_slot_battery_energy
 
     def harvest_energy(self):
         self.energy_harvested = np.random.exponential(250)#random.randint(0,2000)
