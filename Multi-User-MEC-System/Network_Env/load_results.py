@@ -43,6 +43,13 @@ overall_users_reward = np.load('overall_users_reward.npy')
 
 log_throughput_reward = np.load('throughput_log_reward.npy')
 
+individual_average_offloading_rates = np.load('individual_average_offloading_rates.npy')
+print('individual_average_offloading_rates:')
+print(individual_average_offloading_rates[0])
+
+individual_large_scale_gains = np.load('individual_large_scale_gains.npy')
+individual_small_scale_gains = np.load('individual_small_scale_gains.npy')
+
 
 
 

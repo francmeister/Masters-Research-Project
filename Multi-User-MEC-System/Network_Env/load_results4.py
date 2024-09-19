@@ -22,6 +22,12 @@ resource_allocation_matrix = np.array(resource_allocation_matrix)
 
 individual_energy_harvested = np.load('individual_energy_harvested.npy')
 individual_battery_energy_levels = np.load('individual_battery_energy_levels.npy')
+individual_average_offloading_rates = np.load('individual_average_offloading_rates.npy')
+print('individual_average_offloading_rates:')
+print(individual_average_offloading_rates[0])
+
+individual_large_scale_gains = np.load('individual_large_scale_gains.npy')
+individual_small_scale_gains = np.load('individual_small_scale_gains.npy')
 
 #print(individual_battery_energy_levels)
 

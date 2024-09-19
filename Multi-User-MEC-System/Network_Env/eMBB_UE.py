@@ -106,6 +106,9 @@ class eMBB_UE(User_Equipment):
 
         self.battery_energy_level_sim = self.battery_energy_level
         self.energy_harvested_sim = 0
+
+        self.local_queue_length_num_tasks = 0
+        self.offload_queue_length_num_tasks = 0
         
 
         #self.QOS_requirement = QOS_requirement()
@@ -1326,6 +1329,9 @@ class eMBB_UE(User_Equipment):
 
         self.local_queue_length = local_queue_size_bits
         self.offload_queue_length = offload_queue_size_bits
+
+        self.local_queue_length_num_tasks = len(self.local_queue)
+        self.offload_queue_length_num_tasks = len(self.communication_queue)
         # print('self.local_queue_length: ', self.local_queue_length)
         # print('self.offload_queue_length: ', self.offload_queue_length)
         # print('local_delay: ', local_delay)

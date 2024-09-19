@@ -161,6 +161,12 @@ class SBS():
 
         self.individual_local_energy_consumed = []
         self.individual_offloading_energy = []
+        self.individual_small_scale_gains = []
+        self.individual_large_scale_gains = []
+        self.individual_average_offloading_rates = []
+        self.individual_local_queue_length_num_tasks = []
+        self.individual_offload_queue_length_num_tasks = []
+
 
 
         total_users_energy_reward = 0
@@ -302,6 +308,10 @@ class SBS():
             self.individual_small_scale_gains.append(eMBB_User.small_scale_gain_)
             self.individual_large_scale_gains.append(eMBB_User.large_scale_gain_)
             self.individual_average_offloading_rates.append(eMBB_User.average_offloading_rate)
+
+            self.individual_local_queue_length_num_tasks.append(eMBB_User.local_queue_length_num_tasks)
+            self.individual_offload_queue_length_num_tasks.append(eMBB_User.offload_queue_length_num_tasks)
+
     
             #print('eMBB_User.expected_rate_over_prev_T_slot: ', eMBB_User.expected_rate_over_prev_T_slot)
             #print('eMBB_User.average_task_size_offload_queue: ', eMBB_User.average_task_size_offload_queue)
@@ -476,6 +486,8 @@ class SBS():
         self.individual_small_scale_gains = []
         self.individual_large_scale_gains = []
         self.individual_average_offloading_rates = []
+        self.individual_local_queue_length_num_tasks = []
+        self.individual_offload_queue_length_num_tasks = []
         
     
         
