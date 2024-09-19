@@ -301,6 +301,7 @@ class SBS():
             self.individual_offloading_energy.append(eMBB_User.achieved_transmission_energy_consumption)
             self.individual_small_scale_gains.append(eMBB_User.small_scale_gain_)
             self.individual_large_scale_gains.append(eMBB_User.large_scale_gain_)
+            self.individual_average_offloading_rates.append(eMBB_User.average_offloading_rate)
     
             #print('eMBB_User.expected_rate_over_prev_T_slot: ', eMBB_User.expected_rate_over_prev_T_slot)
             #print('eMBB_User.average_task_size_offload_queue: ', eMBB_User.average_task_size_offload_queue)
@@ -474,6 +475,8 @@ class SBS():
         self.throughput_rmin_reward = 0
         self.individual_small_scale_gains = []
         self.individual_large_scale_gains = []
+        self.individual_average_offloading_rates = []
+        
     
         
 
