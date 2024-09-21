@@ -187,6 +187,7 @@ class SBS():
         self.urllc_reliability_reward_normalized = urllc_reliability_reward_normalized
         individual_channel_rates = []
         self.throughput_rmin_reward=0
+        self.individual_offload_stability_constraint_reward = []
 
 
         self.energy_efficiency_rewards = 0
@@ -206,6 +207,7 @@ class SBS():
         self.total_energy_normalized = 0
         self.total_throughput_normalized = 0
         self.throughput_log_reward = 0
+        self.total_offload_traffic_reward = 0
         r_min_reward = 0
         temp_reward = 0
         for eMBB_User in eMBB_Users:
@@ -233,6 +235,7 @@ class SBS():
             queue_delay_reward,delay = eMBB_User.calculate_queuing_delays()
             tasks_dropped = eMBB_User.tasks_dropped
             total_offload_traffic_reward += eMBB_User.offloading_queue_stability_constraint_reward()
+            self.total_offload_traffic_reward += total_offload_traffic_reward
             #total_lc_delay_violation_probability+=eMBB_User.local_queue_violation_constraint_reward()
 
             total_eMBB_User_delay_normalized+=eMBB_User_delay_normalized
@@ -311,6 +314,7 @@ class SBS():
 
             self.individual_local_queue_length_num_tasks.append(eMBB_User.local_queue_length_num_tasks)
             self.individual_offload_queue_length_num_tasks.append(eMBB_User.offload_queue_length_num_tasks)
+            self.individual_offload_stability_constraint_reward.append(eMBB_User.offload_stability_constraint_reward)
 
     
             #print('eMBB_User.expected_rate_over_prev_T_slot: ', eMBB_User.expected_rate_over_prev_T_slot)
@@ -488,6 +492,8 @@ class SBS():
         self.individual_average_offloading_rates = []
         self.individual_local_queue_length_num_tasks = []
         self.individual_offload_queue_length_num_tasks = []
+        self.individual_offload_stability_constraint_reward = []
+        self.total_offload_traffic_reward = 0
         
     
         

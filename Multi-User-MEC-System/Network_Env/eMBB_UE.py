@@ -59,7 +59,7 @@ class eMBB_UE(User_Equipment):
         self.set_properties_eMBB()
 
     def set_properties_eMBB(self):
-
+        self.offload_stability_constraint_reward = 0
         #State Space Limits
         self.timestep_counter_ = 0
         self.max_allowable_latency = 2000 #[1,2] s
@@ -1017,7 +1017,7 @@ class eMBB_UE(User_Equipment):
 
 
     def energy_consumption_reward(self):
-        energy_reward = self.battery_energy_level #+ self.energy_harversted 
+        energy_reward = self.previous_slot_battery_energy + self.energy_harversted - self.achieved_total_energy_consumption
         self.battery_energy_level_sim = self.battery_energy_level
 
         max_energy_reward = 40000
@@ -1025,7 +1025,7 @@ class eMBB_UE(User_Equipment):
 
         #energy_reward_normalized = 0
         if energy_reward >= 0:
-            energy_reward = 10
+            energy_reward = 1
         else:
             energy_reward = energy_reward
 
@@ -1373,16 +1373,19 @@ class eMBB_UE(User_Equipment):
     
     def offloading_queue_stability_constraint_reward(self):
         offload_traffic = 0
-        if self.achieved_channel_rate > 0:
-            offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/self.achieved_channel_rate
-        else:
-            offload_traffic
+        #if self.achieved_channel_rate > 0:
+        #offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/self.achieved_channel_rate
+        offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/self.average_offloading_rate
+        #else:
+        #    offload_traffic
         reward = 1-offload_traffic
 
         if reward < 0:
             reward = reward
         else:
-            reward = 100
+            reward = 1
+
+        self.offload_stability_constraint_reward = reward
         return reward#offload_traffic
     
     def local_queue_violation_constraint_reward(self):

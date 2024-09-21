@@ -50,6 +50,8 @@ print(individual_average_offloading_rates[0])
 individual_large_scale_gains = np.load('individual_large_scale_gains.npy')
 individual_small_scale_gains = np.load('individual_small_scale_gains.npy')
 
+total_offload_traffic_reward = np.load('total_offload_traffic_reward.npy')
+
 
 
 
@@ -252,6 +254,8 @@ energy_efficiency_smooth = moving_average(energy_efficiency_rewards, window_size
 fairness_index_smooth = moving_average(fairness_index, window_size)
 overall_users_reward_smooth = moving_average(overall_users_reward, window_size)
 log_throughput_reward_smooth = moving_average(log_throughput_reward, window_size)
+battery_energy_rewards_smooth = moving_average(battery_energy_rewards, window_size)
+total_offload_traffic_reward_smooth  =  moving_average(total_offload_traffic_reward, window_size)
 print('len(overall_users_reward): ', len(throughputs))
 print('len(throughputs): ', len(overall_users_reward))
 print('len(energies): ', len(energies))
@@ -306,6 +310,19 @@ axis[0,2].set_title('Log Throughput Constraint')
 axis[0,2].set_xlabel('Timestep')
 #axis[3,0].set_ylabel('Throughput Constraint Value')
 axis[0,2].grid()
+
+axis[1,2].plot(timesteps[window_size-1:], battery_energy_rewards_smooth)
+axis[1,2].set_title('Battery Energy Constraint Sum Reward')
+axis[1,2].set_xlabel('Timestep')
+#axis[3,0].set_ylabel('Throughput Constraint Value')
+axis[1,2].grid()
+
+axis[2,2].plot(timesteps[window_size-1:], total_offload_traffic_reward_smooth)
+axis[2,2].set_title('Offload Traffic Constraint Sum Reward')
+axis[2,2].set_xlabel('Timestep')
+#axis[3,0].set_ylabel('Throughput Constraint Value')
+axis[2,2].grid()
+
 
 # axis[0,0].plot(timesteps, offload_actions)
 # axis[0,0].set_title('Offloading Actions')
