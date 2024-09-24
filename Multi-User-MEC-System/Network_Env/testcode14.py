@@ -22,4 +22,4 @@ def variance_calculation(rates):
 
 
 variance = variance_calculation(rates)
-print(variance)
+print(math.factorial(3))
