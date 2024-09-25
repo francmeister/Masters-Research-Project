@@ -32,7 +32,7 @@ class eMBB_UE(User_Equipment):
         #self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
         #self.max_service_rate_cycles_per_slot = 620000
         #self.service_rate_bits_per_second = 2500000 #2.5MB/s(random.randint(5,5000))
-        self.service_rate_bits_per_second = 25000000#121212.121212#120000#random.randint(100000,300000)#120000
+        self.service_rate_bits_per_second = 969700#121212.121212#120000#random.randint(100000,300000)#120000
         self.service_rate_bits_per_slot = self.service_rate_bits_per_second/1000 
         self.max_service_rate_cycles_per_slot = self.service_rate_bits_per_slot*self.cycles_per_bit
         self.max_bits_process_per_slot = self.max_service_rate_cycles_per_slot/self.cycles_per_bit
@@ -293,7 +293,7 @@ class eMBB_UE(User_Equipment):
                 #task_size_per_second_kilobytes = random.randint(self.min_task_size_KB_per_second,self.max_task_size_KB_per_second) #choose between 50 and 100 kilobytes
                 #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
                 #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
-                task_size_per_slot_bits = int(np.random.uniform(2000,4000))#int(np.random.uniform(500,1500))#Average of 1000 bits per task in slot #int(task_size_per_slot_kilobytes*8000) #8000 bits in a KB----------
+                task_size_per_slot_bits = int(np.random.uniform(400,800))#int(np.random.uniform(500,1500))#Average of 1000 bits per task in slot #int(task_size_per_slot_kilobytes*8000) #8000 bits in a KB----------
                 self.packet_size_bits = 12000 # 10 bits per packet
                 self.cycles_per_packet = self.packet_size_bits*self.cycles_per_bit
                 self.previous_task_size_bits = task_size_per_slot_bits
@@ -585,10 +585,13 @@ class eMBB_UE(User_Equipment):
             self.local_queue.pop(0)
         #self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2) = energy consumed per cycle (J/cycle)
         used_cpu_cycles = self.max_service_rate_cycles_per_slot - cpu_cycles_left
+        # print('self.energy_consumption_coefficient: ', self.energy_consumption_coefficient)
+        # print('self.max_service_rate_cycles_per_slot: ', self.max_service_rate_cycles_per_slot)
         if total_bits_size > self.max_bits_process_per_slot:
             self.achieved_local_energy_consumption = self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2)*self.max_service_rate_cycles_per_slot#used_cpu_cycles
         else:
             self.achieved_local_energy_consumption = (total_bits_size/self.max_bits_process_per_slot) * (self.energy_consumption_coefficient*math.pow(self.max_service_rate_cycles_per_slot,2)*self.max_service_rate_cycles_per_slot)
+        #print("self.achieved_local_energy_consumption: ", self.achieved_local_energy_consumption)
         # print('self.max_service_rate_cycles_per_slot: ', self.max_service_rate_cycles_per_slot)
         # print('self.achieved_local_energy_consumption: ', self.achieved_local_energy_consumption)
         #print('used_cpu_cycles: ', used_cpu_cycles)
@@ -789,7 +792,6 @@ class eMBB_UE(User_Equipment):
         
 
     def total_energy_consumed(self):
-        #print(self.battery_energy_level)
         if self.battery_energy_level >  self.achieved_total_energy_consumption:
             #print('self.achieved_local_energy_consumption: ', self.achieved_local_energy_consumption, ' self.achieved_transmission_energy_consumption: ', self.achieved_transmission_energy_consumption)
             self.achieved_total_energy_consumption = self.achieved_local_energy_consumption + self.achieved_transmission_energy_consumption

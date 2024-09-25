@@ -54,7 +54,7 @@ print(env.action_space.sample())
 for timestep in timesteps:
     print('----------------------------------------------------------------------------------------------------------------------------------------------------')
     action = env.action_space.sample()
-    action = env.apply_resource_allocation_constraint(action)
+    action = env.enforce_constraint(action)
     #print(action)
     action2, action = env.reshape_action_space_dict(action)
     #print('')

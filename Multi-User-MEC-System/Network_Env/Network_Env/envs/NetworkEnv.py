@@ -364,6 +364,7 @@ class NetworkEnv(gym.Env):
             sorted_column_array_2 = np.sort(second_column_array)[::-1]
             first_largest_num = sorted_column_array_1[0]
             second_largest_num = sorted_column_array_2[0]
+            #print('np.where(first_column_array==first_largest_num): ', np.where(first_column_array==first_largest_num)[0])
             index_first_largest_num = np.where(first_column_array==first_largest_num)[0][0]
             #print('index_first_largest_num: ', index_first_largest_num)
             index_second_largest_num = np.where(second_column_array==second_largest_num)[0][0]
@@ -519,7 +520,7 @@ class NetworkEnv(gym.Env):
         #collect the final action - number of URLLC users per RB
         
         #print('Action after interpolation transposed')
-        #offload_decisions_actions_mapped = [0.7]#[0, 0, 0.5, 0.5, 1, 1, 1]
+        #offload_decisions_actions_mapped = [0]#[0, 0, 0.5, 0.5, 1, 1, 1]
         #transmit_power_actions_mapped = [20]#,20,20,20,20,20,20]
         #RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])#, [0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0]])
         #print('RB_allocation_actions: ', RB_allocation_actions)
@@ -885,16 +886,16 @@ class NetworkEnv(gym.Env):
     def group_users(self):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
-        self.eMBB_Users.append(self.eMBB_UE_2)
-        self.eMBB_Users.append(self.eMBB_UE_3)
-        self.eMBB_Users.append(self.eMBB_UE_4)
-        self.eMBB_Users.append(self.eMBB_UE_5)
-        self.eMBB_Users.append(self.eMBB_UE_6)
-        self.eMBB_Users.append(self.eMBB_UE_7)
-        self.eMBB_Users.append(self.eMBB_UE_8)
-        self.eMBB_Users.append(self.eMBB_UE_9)
-        self.eMBB_Users.append(self.eMBB_UE_10)
-        self.eMBB_Users.append(self.eMBB_UE_11)
+        #self.eMBB_Users.append(self.eMBB_UE_2)
+        #self.eMBB_Users.append(self.eMBB_UE_3)
+        #self.eMBB_Users.append(self.eMBB_UE_4)
+        #self.eMBB_Users.append(self.eMBB_UE_5)
+        #self.eMBB_Users.append(self.eMBB_UE_6)
+        #self.eMBB_Users.append(self.eMBB_UE_7)
+        #self.eMBB_Users.append(self.eMBB_UE_8)
+        #self.eMBB_Users.append(self.eMBB_UE_9)
+        #self.eMBB_Users.append(self.eMBB_UE_10)
+        #self.eMBB_Users.append(self.eMBB_UE_11)
 
         self.URLLC_Users.append(self.URLLC_UE_1)
         #self.URLLC_Users.append(self.URLLC_UE_2)
