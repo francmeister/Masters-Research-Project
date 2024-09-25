@@ -877,7 +877,7 @@ class eMBB_UE(User_Equipment):
     def calculate_offloading_rate(self):
         loops = 10**3
         transmit_power = 50*math.pow(10,-3)
-        RB_bandwidth = 180*math.pow(10,3)
+        RB_bandwidth = 5*180*math.pow(10,3)
         N_o = (math.pow(10,(-174/10)))/1000
         rates = []
 
