@@ -64,7 +64,7 @@ class Communication_Channel():
         self.num_subcarriers_per_RB = 12
         #self.num_subcarriers_per_RB = 20
         self.RB_bandwidth_Hz = self.subcarrier_bandwidth_Hz*self.num_subcarriers_per_RB
-        self.num_RB = 55#int(self.system_bandwidth_Hz/self.RB_bandwidth_Hz)
+        self.num_RB = 6#int(self.system_bandwidth_Hz/self.RB_bandwidth_Hz)
         self.system_bandwidth_Hz = self.RB_bandwidth_Hz*self.num_RB*2
         self.long_TTI = 1 #1ms
         self.noise_spectral_density_dbm = -174 # -174dBM/Hz
@@ -75,7 +75,7 @@ class Communication_Channel():
         self.RBs = []
         self.RB_eMBB_mappings = []
         self.num_of_available_RBs = self.num_RB
-        self.num_allocate_RBs_upper_bound = 55
+        self.num_allocate_RBs_upper_bound = 6
         self.num_allocate_RBs_lower_bound = 1
         self.number_of_RBs_available = self.num_allocate_RBs_upper_bound
         self.allocated_RBs = []

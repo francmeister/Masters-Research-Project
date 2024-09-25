@@ -256,7 +256,6 @@ class NetworkEnv(gym.Env):
         q_action = action['q_action']
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
         resource_block_action_matrix_size = self.number_of_users*self.time_divisions_per_slot*self.num_allocate_RB_upper_bound
-
         # main_column_array = resource_block_action_matrix[:,:,0]
         # #column_array = column_array.reshape(1,self.number_of_users*self.time_divisions_per_slot)
         # first_column_array = main_column_array[:,0]
@@ -366,6 +365,7 @@ class NetworkEnv(gym.Env):
             first_largest_num = sorted_column_array_1[0]
             second_largest_num = sorted_column_array_2[0]
             index_first_largest_num = np.where(first_column_array==first_largest_num)[0][0]
+            #print('index_first_largest_num: ', index_first_largest_num)
             index_second_largest_num = np.where(second_column_array==second_largest_num)[0][0]
             main_column_array = [[0 for _ in range(self.time_divisions_per_slot)] for _ in range(limit_index_array_1)]
             main_column_array[index_first_largest_num][0] = 1
