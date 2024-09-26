@@ -1386,7 +1386,7 @@ class eMBB_UE(User_Equipment):
         self.offload_stability_constraint_reward = 0
         #if self.achieved_channel_rate > 0:
         #offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/self.achieved_channel_rate
-        offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/self.average_offloading_rate
+        offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/(self.average_offloading_rate/1000)
         #else:
         #    offload_traffic
         reward = 1-offload_traffic
