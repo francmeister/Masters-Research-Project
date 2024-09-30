@@ -1395,7 +1395,7 @@ class eMBB_UE(User_Equipment):
         reward = 1-offload_traffic
 
         if reward < 0:
-            reward = reward
+            reward = reward*5
         else:
             reward = 1
         self.offlaod_traffic_numerator = self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits
