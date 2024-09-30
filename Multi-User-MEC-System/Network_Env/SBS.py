@@ -189,6 +189,9 @@ class SBS():
         individual_channel_rates = []
         self.throughput_rmin_reward=0
         self.individual_offload_stability_constraint_reward = []
+        self.individual_local_queueing_violation_prob_reward = []
+        self.individual_offload_ratio_reward = []
+
 
 
         self.energy_efficiency_rewards = 0
@@ -211,9 +214,13 @@ class SBS():
         self.total_offload_traffic_reward = 0
         r_min_reward = 0
         temp_reward = 0
+        self.total_local_queueing_violation_prob_reward = 0
+        self.total_offload_ratio_reward = 0
         for eMBB_User in eMBB_Users:
-            #queueing_delay_violation_probability = eMBB_User.local_queue_delay_violation_probability()
-            #print('queueing_delay_violation_probability: ', queueing_delay_violation_probability)
+            queueing_delay_violation_probability = eMBB_User.local_queue_delay_violation_probability()
+            self.total_local_queueing_violation_prob_reward += eMBB_User.local_queue_delay_violation_probability()
+            self.total_offload_ratio_reward += eMBB_User.offload_ratio_reward()
+            #print('queueing_delay_violation_probability reward: ', queueing_delay_violation_probability)
             self.users_lc_service_rates.append(eMBB_User.service_rate_bits_per_second)
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
             self.total_delay += eMBB_User_delay 
@@ -320,6 +327,9 @@ class SBS():
             self.individual_offload_queue_length_num_tasks.append(eMBB_User.offload_queue_length_num_tasks)
             self.individual_offload_stability_constraint_reward.append(eMBB_User.offload_stability_constraint_reward)
             self.individual_offload_traffic_numerator.append(eMBB_User.offlaod_traffic_numerator)
+            self.individual_local_queueing_violation_prob_reward.append(eMBB_User.queueing_violation_prob_reward)
+            self.individual_offload_ratio_reward.append(eMBB_User.offloa_ratio_reward)
+
 
     
             #print('eMBB_User.expected_rate_over_prev_T_slot: ', eMBB_User.expected_rate_over_prev_T_slot)
@@ -501,7 +511,10 @@ class SBS():
         self.individual_offload_stability_constraint_reward = []
         self.total_offload_traffic_reward = 0
         self.individual_offload_traffic_numerator = []
-        
+        self.individual_local_queueing_violation_prob_reward = []
+        self.individual_offload_ratio_reward = []
+        self.total_local_queueing_violation_prob_reward = 0
+        self.total_offload_ratio_reward = 0
     
         
 

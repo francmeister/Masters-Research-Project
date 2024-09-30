@@ -29,6 +29,8 @@ class eMBB_UE(User_Equipment):
         self.timestep_counter = 0
         self.cycles_per_byte = 330
         self.cycles_per_bit = self.cycles_per_byte/8
+        self.queueing_violation_prob_reward = 0
+        self.offloa_ratio_reward = 0
         #self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
         #self.max_service_rate_cycles_per_slot = 620000
         #self.service_rate_bits_per_second = 2500000 #2.5MB/s(random.randint(5,5000))
@@ -52,9 +54,10 @@ class eMBB_UE(User_Equipment):
         self.large_scale_gain_ = 0
         self.com_queue_length = 0
         self.loc_queue_length = 0
-        self.packet_size_bits = 12000
+        self.packet_size_bits = 100 # 12000 bits per packet
         self.cycles_per_packet = self.packet_size_bits*self.cycles_per_bit
         self.max_allowable_latency_ = 2000
+        self.local_queue_delay_violation_probability_constraint = 0.5
 
         self.calculate_offloading_rate()
 
@@ -294,7 +297,7 @@ class eMBB_UE(User_Equipment):
                 #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
                 #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
                 task_size_per_slot_bits = int(np.random.uniform(400,800))#int(np.random.uniform(500,1500))#Average of 1000 bits per task in slot #int(task_size_per_slot_kilobytes*8000) #8000 bits in a KB----------
-                self.packet_size_bits = 12000 # 10 bits per packet
+                self.packet_size_bits = 100 # 12000 bits per packet
                 self.cycles_per_packet = self.packet_size_bits*self.cycles_per_bit
                 self.previous_task_size_bits = task_size_per_slot_bits
                 #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
@@ -313,7 +316,7 @@ class eMBB_UE(User_Equipment):
                 #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
                 #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
                 task_size_per_slot_bits = int(np.random.uniform(400,800))#int(np.random.uniform(500,1500)) #8000 bits in a KB----------
-                self.packet_size_bits = 12000 # 10 bits per packet
+                self.packet_size_bits = 100 # 12000 bits per packet
                 self.cycles_per_packet = self.packet_size_bits*self.cycles_per_bit
                 self.previous_task_size_bits = task_size_per_slot_bits
                 #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
@@ -1495,12 +1498,14 @@ class eMBB_UE(User_Equipment):
         Q = len(self.local_queue)
         Ld = total_bits_local_queue/self.packet_size_bits
         Ld = int(Ld)
+        #print(Ld)
 
         computation_time_per_packet = self.cycles_per_packet/self.max_service_rate_cycles_per_slot
-        print('computation_time_per_packet: ',computation_time_per_packet)
+        #print('computation_time_per_packet: ',computation_time_per_packet)
         Ld_max = self.max_allowable_latency_/computation_time_per_packet
         Ld_max = int(Ld_max)
-        print('Ld_max: ', Ld_max)
+        Ld_max = 5
+        #print('Ld_max: ', Ld_max)
         Pr_Ld_Q_Pr_Q = []
         Pr_Ld_Q = 0
         Pr_Q = 0
@@ -1509,11 +1514,24 @@ class eMBB_UE(User_Equipment):
             for q in range(0,Ld_max+1):
                 if q < Ld:
                     Pr_Ld_Q, Pr_Q = self.prob(Ld,q)
-                    Pr_Ld_Q_Pr_Q.append(Pr_Ld_Q*Pr_Q)
+                    #Pr_Ld_Q_Pr_Q.append(Pr_Ld_Q*Pr_Q)
+                    Pr_Ld_Q_Pr_Q.append(Pr_Q)
 
-        queueing_violation_prob = 1-sum(Pr_Ld_Q_Pr_Q)
+            queueing_violation_prob = 1-sum(Pr_Ld_Q_Pr_Q)
+        #print('queueing_violation_prob: ',queueing_violation_prob)
+        #queueing_violation_prob = 0.2
+        if queueing_violation_prob > 1:
+            queueing_violation_prob = 1
 
-        return queueing_violation_prob
+        queueing_violation_prob_reward = 0
+        if (self.local_queue_delay_violation_probability_constraint-(queueing_violation_prob)) < 0:
+            queueing_violation_prob_reward = (self.local_queue_delay_violation_probability_constraint-(queueing_violation_prob))
+
+        else:
+            queueing_violation_prob_reward = 1
+
+        self.queueing_violation_prob_reward = queueing_violation_prob_reward
+        return queueing_violation_prob_reward
 
 
 
@@ -1525,8 +1543,8 @@ class eMBB_UE(User_Equipment):
         if Ld < 0:
             Ld = 0
         p = 0.5
-        print('Ld: ', Ld)
-        print('Q: ', Q)
+        #print('Ld: ', Ld)
+        #print('Q: ', Q)
         Pr_Ld_Q = (math.factorial(n)/(math.factorial(k)*math.factorial(n-k)))*(p**Q)*(1-p)**(Ld-Q)
 
         bits_per_task = []
@@ -1534,19 +1552,43 @@ class eMBB_UE(User_Equipment):
             bits_per_task.append(task.slot_task_size)
 
         average_bits_per_task = sum(bits_per_task)/len(bits_per_task)
-
+        #print('average_bits_per_task: ', average_bits_per_task)
         average_packets_per_task = average_bits_per_task/self.packet_size_bits
 
         computation_time_per_packet = self.cycles_per_packet/self.max_service_rate_cycles_per_slot
-        mew = 1/(average_packets_per_task*computation_time_per_packet)
-        print('average_packets_per_task*computation_time_per_packet: ', average_packets_per_task*computation_time_per_packet)
-        print('mew: ', mew)
+        #mew = 1/(average_packets_per_task*computation_time_per_packet)
+        #slot time = 1ms, average task size in packets/task = 3, packet computation time = 12 ms
+        mew = 10**-1/(3*12*10**-3)
 
-        rho = ((1-self.allocated_offloading_ratio)*self.task_arrival_rate_tasks_per_second)/mew
-        print('rho: ', rho)
+        #print('average_packets_per_task*computation_time_per_packet: ', average_packets_per_task*computation_time_per_packet)
+        #print('mew: ', 1-mew/5)
+        #print('(1-self.allocated_offloading_ratio)*5: ', (1-self.allocated_offloading_ratio)*5)
+        # xlimit = 0.4, x > 0.4
+        #self.allocated_offloading_ratio = 0.7
+        rho = ((1-self.allocated_offloading_ratio)*5)/mew
+
+        #print('rho: ', rho)
+        #Q = 4
         Pr_Q = (rho**Q)*(1-rho)
-        print('Pr_Ld_Q: ', Pr_Ld_Q, ' Pr_Q: ', Pr_Q)
+        #print('Pr_Ld_Q: ', Pr_Ld_Q, ' Pr_Q: ', Pr_Q)
+        #print('self.allocated_offloading_ratio :',self.allocated_offloading_ratio )
+        if self.allocated_offloading_ratio < 0.4 or Pr_Q < 0:
+            Pr_Q = 0
+        #print('Pr_Q: ', Pr_Q)
+        #('Pr_Ld_Q: ', Pr_Ld_Q, ' Pr_Q: ', Pr_Q)
         return Pr_Ld_Q, Pr_Q
+    
+    def offload_ratio_reward(self):
+        offload_ratio_min = 0.4
+        offload_ratio_reward = 0
+        if self.allocated_offloading_ratio < offload_ratio_min:
+            offload_ratio_reward = offload_ratio_min - self.allocated_offloading_ratio
+        else:
+            offload_ratio_reward = 1
+
+        self.offloa_ratio_reward = offload_ratio_reward
+        return offload_ratio_reward
+    
 
 
 

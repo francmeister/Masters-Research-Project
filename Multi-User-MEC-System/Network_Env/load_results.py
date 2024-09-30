@@ -51,6 +51,8 @@ individual_large_scale_gains = np.load('individual_large_scale_gains.npy')
 individual_small_scale_gains = np.load('individual_small_scale_gains.npy')
 
 total_offload_traffic_reward = np.load('total_offload_traffic_reward.npy')
+total_local_queueing_violation_prob_reward = np.load('total_local_queueing_violation_prob_reward.npy')
+total_offload_ratio_reward = np.load('total_offload_ratio_reward.npy')
 
 
 
@@ -145,7 +147,7 @@ RBs_actions_ = RBs_actions[start_index:end_index]
 #plt.scatter(timesteps,offload_actions,color="blue")
 #plt.scatter(timesteps,power_actions,color="green")
 #plt.scatter(timesteps,subcarrier_actions,color="red")
-figure, axis = plt.subplots(3,3)
+figure, axis = plt.subplots(3,4)
 
 # axis[0].plot(timesteps, throughputs)
 # axis[0].set_title('throughputs reward')
@@ -323,7 +325,17 @@ axis[2,2].set_xlabel('Timestep')
 #axis[3,0].set_ylabel('Throughput Constraint Value')
 axis[2,2].grid()
 
+axis[0,3].plot(timesteps[window_size-1:], total_local_queueing_violation_prob_reward)
+axis[0,3].set_title('Local Queueing Violation Probability Reward')
+axis[0,3].set_xlabel('Timestep')
+#axis[3,0].set_ylabel('Throughput Constraint Value')
+axis[0,3].grid()
 
+axis[1,3].plot(timesteps[window_size-1:], total_offload_ratio_reward)
+axis[1,3].set_title('Minimun Offloading Ratio Reward')
+axis[1,3].set_xlabel('Timestep')
+#axis[3,0].set_ylabel('Throughput Constraint Value')
+axis[1,3].grid()
 # axis[0,0].plot(timesteps, offload_actions)
 # axis[0,0].set_title('Offloading Actions')
 # axis[0,0].set_xlabel('Timestep')
