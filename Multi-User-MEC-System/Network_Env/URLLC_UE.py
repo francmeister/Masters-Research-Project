@@ -25,6 +25,7 @@ class URLLC_UE(User_Equipment):
         self.assigned_access_point = 0
         self.assigned_access_point_label_matrix = []
         self.assigned_access_point_label_matrix_integers = []
+        self.prob_packet_arrival = 0.5
         self.set_properties_URLLC()
 
     def set_properties_URLLC(self):
@@ -69,7 +70,7 @@ class URLLC_UE(User_Equipment):
 
         #Specify slot task size, computation cycles and latency requirement
         #self.task_arrival_rate_tasks_per_second = random.randint(self.min_task_arrival_rate_tasks_per_second,self.max_task_arrival_rate_tasks_per_second)
-        self.task_arrival_rate_tasks_per_slot = np.random.binomial(size=1,n=1,p=1)#np.random.poisson(5,1)
+        self.task_arrival_rate_tasks_per_slot = np.random.binomial(size=1,n=1,p=self.prob_packet_arrival)#np.random.poisson(5,1)
         self.task_arrival_rate_tasks_per_slot = self.task_arrival_rate_tasks_per_slot[0]
         #self.task_size_per_slot_bits = 10#10 bits per task in slot 
         qeueu_timer = 0
