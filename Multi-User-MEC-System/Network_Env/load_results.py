@@ -260,6 +260,8 @@ battery_energy_rewards_smooth = moving_average(battery_energy_rewards, window_si
 total_offload_traffic_reward_smooth  =  moving_average(total_offload_traffic_reward, window_size)
 total_local_queueing_violation_prob_reward_smooth = moving_average(total_local_queueing_violation_prob_reward, window_size)
 total_offload_ratio_reward_smooth = moving_average(total_offload_ratio_reward, window_size)
+urllc_reliability_reward_smooth = moving_average(urllc_reliability_reward,window_size)
+outage_probabilities_smooth = moving_average(outage_probabilities,window_size)
 print('len(overall_users_reward): ', len(throughputs))
 print('len(throughputs): ', len(overall_users_reward))
 print('len(energies): ', len(energies))
@@ -338,6 +340,21 @@ axis[1,3].set_title('Minimun Offloading Ratio Reward')
 axis[1,3].set_xlabel('Timestep')
 #axis[3,0].set_ylabel('Throughput Constraint Value')
 axis[1,3].grid()
+
+axis[2,3].plot(timesteps[window_size-1:], urllc_reliability_reward_smooth)
+axis[2,3].set_title('URLLC Reliability Reward')
+axis[2,3].set_xlabel('Timestep')
+#axis[3,0].set_ylabel('Throughput Constraint Value')
+axis[2,3].grid()
+
+
+# axis[2,3].plot(timesteps[window_size-1:], outage_probabilities_smooth)
+# axis[2,3].set_title('Outage Probability')
+# axis[2,3].set_xlabel('Timestep')
+# #axis[3,0].set_ylabel('Throughput Constraint Value')
+# axis[2,3].grid()
+
+
 # axis[0,0].plot(timesteps, offload_actions)
 # axis[0,0].set_title('Offloading Actions')
 # axis[0,0].set_xlabel('Timestep')
