@@ -10,6 +10,7 @@ from State_Space import State_Space
 from numpy import interp
 import pandas as pd
 from Communication_Channel import Communication_Channel
+from scipy.stats import norm
 
 class URLLC_UE(User_Equipment):
     def __init__(self, URLLC_UE_label,User_label, x,y):
@@ -51,7 +52,7 @@ class URLLC_UE(User_Equipment):
         self.local_task_queue = []
         self.offload_task_queue = []
         self.small_scale_channel_gain_threshold = 0
-        self.task_size_per_slot_bits = 300
+        self.task_size_per_slot_bits = 256
         self.latency_requirement = 1#latency required is 10 ms for every task#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
         self.reliability_requirement = 0
         self.assigned_resource_block = 0
@@ -61,7 +62,9 @@ class URLLC_UE(User_Equipment):
         self.puncturing_embb_user_small_scale_gain = 0
         self.puncturing_embb_user_large_scale_gain = 0
         self.transmit_power = 100*10**(-3)
-        self.achieved_channel_rate = 0
+        self.achieved_channel_rate_per_slot = 0
+        self.channel_rate_per_second_without_penalty = 0
+        self.channel_rate_per_second_penalty= 0
         
 
     def generate_task(self,communication_channel):
@@ -207,9 +210,17 @@ class URLLC_UE(User_Equipment):
         self.find_puncturing_embb_users(eMBB_users)
         numerator = self.small_scale_gain[0][self.assigned_resource_block-1]*self.large_scale_gain[0][self.assigned_resource_block-1]*self.transmit_power
         denominator = self.puncturing_embb_user_large_scale_gain*self.puncturing_embb_user_small_scale_gain*self.puncturing_embb_user_transmit_power + communication_channel.RB_bandwidth_Hz*communication_channel.noise_spectral_density_W 
-        channel_rate = communication_channel.RB_bandwidth_Hz*(1/communication_channel.num_of_mini_slots)*math.log2((1+numerator/denominator))
+        code_block_length_symbols = 2
+        denom = 1+(numerator/denominator)
+        channel_dispersion = 1-(1/math.pow((denom),2))
+        epsilon = 10**-5
+        inverse_Q = norm.ppf(1 - epsilon)
+        channel_rate = communication_channel.RB_bandwidth_Hz*(1/communication_channel.num_of_mini_slots)*math.log2((1+numerator/denominator)) - math.sqrt((channel_dispersion/code_block_length_symbols))*inverse_Q
+        self.channel_rate_per_second_without_penalty = communication_channel.RB_bandwidth_Hz*(1/communication_channel.num_of_mini_slots)*math.log2((1+numerator/denominator))
+        self.channel_rate_per_second_penalty = math.sqrt((channel_dispersion/code_block_length_symbols))*inverse_Q
         #self.achieved_channel_rate = channel_rate/500
-        self.achieved_channel_rate = channel_rate/1000
+        self.achieved_channel_rate_per_slot = channel_rate/1000
+        return self.achieved_channel_rate_per_slot
         #print('urllc user id: ', self.URLLC_UE_label, 'achieved channel rate: ', self.achieved_channel_rate)
 
 

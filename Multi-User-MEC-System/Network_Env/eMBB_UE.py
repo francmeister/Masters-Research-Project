@@ -1272,6 +1272,17 @@ class eMBB_UE(User_Equipment):
 
 
     #def calculate_queuing_time(self):
+    def urllc_puncturing_users_sum_data_rates(self, urllc_users):
+        sum_data_rate = 0
+        self.puncturing_users_sum_data_rates = 0
+        self.num_puncturing_users = 0
+
+        for urllc_user in urllc_users:
+            if urllc_user.URLLC_UE_label in self.puncturing_urllc_users_:
+                self.puncturing_users_sum_data_rates+=(urllc_user.achieved_channel_rate_per_slot*1000)
+                self.num_puncturing_users+=1
+
+    
     def initial_large_scale_gain_all_access_points(self,num_access_point):
         large_scale_gain = np.random.exponential(1,size=(1,num_access_point))
         large_scale_gain = large_scale_gain.squeeze()

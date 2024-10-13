@@ -216,6 +216,26 @@ class SBS():
         temp_reward = 0
         self.total_local_queueing_violation_prob_reward = 0
         self.total_offload_ratio_reward = 0
+        self.urllc_total_rate_per_second = 0
+        self.urllc_total_rate_per_slot = 0
+        self.individual_urllc_channel_rate_per_slot_with_penalty = []
+        self.individual_urllc_channel_rate_per_second_penalties = []
+        self.individual_urllc_channel_rate_per_second_without_penalty = []
+        self.individual_urllc_channel_rate_per_second_with_penalty = []
+
+        self.individual_embb_puncturing_users_sum_data_rates = []
+        self.individual_embb_num_puncturing_users = []
+
+        for urllc_user in urllc_users:
+            self.individual_urllc_channel_rate_per_slot_with_penalty.append(urllc_user.achieved_channel_rate_per_slot)
+            self.individual_urllc_channel_rate_per_second_penalties.append(urllc_user.channel_rate_per_second_penalty)
+            self.individual_urllc_channel_rate_per_second_without_penalty.append(urllc_user.channel_rate_per_second_without_penalty)
+            self.individual_urllc_channel_rate_per_second_with_penalty.append(urllc_user.achieved_channel_rate_per_slot*1000)
+            self.urllc_total_rate_per_second+=(urllc_user.achieved_channel_rate_per_slot*1000)
+            self.urllc_total_rate_per_slot+=urllc_user.achieved_channel_rate_per_slot
+            
+
+
         for eMBB_User in eMBB_Users:
             queueing_delay_violation_probability = eMBB_User.local_queue_delay_violation_probability()
             self.total_local_queueing_violation_prob_reward += eMBB_User.local_queue_delay_violation_probability()
@@ -329,6 +349,8 @@ class SBS():
             self.individual_offload_traffic_numerator.append(eMBB_User.offlaod_traffic_numerator)
             self.individual_local_queueing_violation_prob_reward.append(eMBB_User.queueing_violation_prob_reward)
             self.individual_offload_ratio_reward.append(eMBB_User.offloa_ratio_reward)
+            self.individual_embb_puncturing_users_sum_data_rates.append(eMBB_User.puncturing_users_sum_data_rates)
+            self.individual_embb_num_puncturing_users.append(eMBB_User.num_puncturing_users)
 
 
     
@@ -519,7 +541,14 @@ class SBS():
         self.total_offload_ratio_reward = 0
         self.urllc_total_rate = 0
         self.F_L_inverse=0
-    
+        self.urllc_total_rate_per_second = 0
+        self.urllc_total_rate_per_slot = 0
+        self.individual_urllc_channel_rate_per_slot_with_penalty = []
+        self.individual_urllc_channel_rate_per_second_penalties = []
+        self.individual_urllc_channel_rate_per_second_without_penalty = []
+        self.individual_urllc_channel_rate_per_second_with_penalty = []
+        self.individual_embb_puncturing_users_sum_data_rates = []
+        self.individual_embb_num_puncturing_users = []
         
 
     def calculate_fairness(self,eMBB_Users):
@@ -617,6 +646,7 @@ class SBS():
         num_arriving_urllc_packets = self.num_arriving_urllc_packets
         #print('num_arriving_urllc_packets: ', num_arriving_urllc_packets)
         urllc_task_size = 0
+        #print('len(urllc_users): ', len(urllc_users))
         if len(urllc_users) > 0:
             urllc_task_size = urllc_users[0].task_size_per_slot_bits    
 
@@ -624,8 +654,8 @@ class SBS():
         rates = []
         for urllc_user in urllc_users:
             #urllc_total_rate = urllc_total_rate+ (urllc_user.achieved_channel_rate*8)
-            urllc_total_rate = urllc_total_rate + urllc_user.achieved_channel_rate
-            rates.append(urllc_user.achieved_channel_rate)
+            urllc_total_rate = urllc_total_rate + urllc_user.achieved_channel_rate_per_slot
+            rates.append(urllc_user.achieved_channel_rate_per_slot)
        
         K = num_arriving_urllc_packets*urllc_task_size
         K_mean, std_K = self.K_expectation_over_prev_T_slot(10,K)
@@ -639,9 +669,14 @@ class SBS():
 
         #K = K - 300
         self.urllc_total_rate = urllc_total_rate
+        #self.urllc_reliability_constraint_max = 0.5
+        #print('self.urllc_reliability_constraint_max: ', self.urllc_reliability_constraint_max)
+        #print('stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival): ', stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival))
         self.F_L_inverse = urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival)
+        
         reliability_reward = urllc_total_rate-urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival)
         #print('urllc_total_rate: ', urllc_total_rate)
+        #print('rllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival): ', urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival))
         #print('K*(1-self.urllc_reliability_constraint_max): ', K*(1-self.urllc_reliability_constraint_max))
         if reliability_reward < 0:
             reliability_reward = reliability_reward

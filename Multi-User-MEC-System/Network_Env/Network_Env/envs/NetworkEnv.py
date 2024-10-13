@@ -593,7 +593,8 @@ class NetworkEnv(gym.Env):
             #print('urllc user id: ', URLLC_user.URLLC_UE_label, 'achieved channel rate: ', URLLC_user.achieved_channel_rate)
 
         #print('')
-       
+        for eMBB_User in self.eMBB_Users: 
+            eMBB_User.urllc_puncturing_users_sum_data_rates(self.URLLC_Users)
 
         self.SBS1.receive_offload_packets(self.eMBB_Users)
         self.SBS1.calculate_achieved_total_system_energy_consumption(self.eMBB_Users)
@@ -857,12 +858,18 @@ class NetworkEnv(gym.Env):
         self.eMBB_UE_10 = eMBB_UE(10,10,100,600)
         self.eMBB_UE_11 = eMBB_UE(11,11,100,600)
 
-        self.URLLC_UE_1 = URLLC_UE(1,8,100,600)
-        self.URLLC_UE_2 = URLLC_UE(2,5,100,600)
-        self.URLLC_UE_3 = URLLC_UE(3,6,100,600)
-        self.URLLC_UE_4 = URLLC_UE(4,7,100,600)
-        self.URLLC_UE_5 = URLLC_UE(5,8,100,600)
-        self.URLLC_UE_6 = URLLC_UE(6,9,100,600)
+        self.URLLC_UE_1 = URLLC_UE(1,12,100,600)
+        self.URLLC_UE_2 = URLLC_UE(2,13,100,600)
+        self.URLLC_UE_3 = URLLC_UE(3,14,100,600)
+        self.URLLC_UE_4 = URLLC_UE(4,15,100,600)
+        self.URLLC_UE_5 = URLLC_UE(5,16,100,600)
+        self.URLLC_UE_6 = URLLC_UE(6,17,100,600)
+        self.URLLC_UE_7 = URLLC_UE(7,18,100,600)
+        self.URLLC_UE_8 = URLLC_UE(8,19,100,600)
+        self.URLLC_UE_9 = URLLC_UE(9,20,100,600)
+        self.URLLC_UE_10 = URLLC_UE(10,21,100,600)
+        self.URLLC_UE_11 = URLLC_UE(11,22,100,600)
+        self.URLLC_UE_12 = URLLC_UE(12,23,100,600)
 
         # Set channel gain scaling factorsS
         #self.eMBB_UE_4.set_channel_gain_scaling_factor(40)
@@ -903,6 +910,13 @@ class NetworkEnv(gym.Env):
         self.URLLC_Users.append(self.URLLC_UE_4)
         self.URLLC_Users.append(self.URLLC_UE_5)
         self.URLLC_Users.append(self.URLLC_UE_6)
+        self.URLLC_Users.append(self.URLLC_UE_7)
+        self.URLLC_Users.append(self.URLLC_UE_8)
+        self.URLLC_Users.append(self.URLLC_UE_9)
+        self.URLLC_Users.append(self.URLLC_UE_10)
+        self.URLLC_Users.append(self.URLLC_UE_11)
+        self.URLLC_Users.append(self.URLLC_UE_12)
+
 
     def check_timestep(self):
         if self.steps >= self.STEP_LIMIT:
