@@ -3,10 +3,11 @@ import matplotlib.pyplot as plt
 from numpy import interp
 
 users = [1,3,5,7,9]
-rewards = [3491669445.086330,6213448854.972728,8299887306.846853,10747468210.837811,13325714188.122597]
+rewards_TD3 = [3491669445.086330,6213448854.972728,8299887306.846853,10747468210.837811,13325714188.122597]
+rewards_DDPG = [,3489206827.739998 (3 users),]
 
-
-plt.plot(users, rewards, color="green", marker='s')
+plt.plot(users, rewards_TD3, color="green", marker='s')
+plt.plot(users, rewards_TD3, color="green", marker='s')
 # plt.plot(new_timesteps[window_size-1:], rewards_7_users_smooth[0:len_timesteps], color="brown", label='3 Users')
 # plt.plot(new_timesteps[window_size-1:], rewards_3_users_smooth[0:len_timesteps], color="blue", label='7 Users')
 # plt.plot(new_timesteps[window_size-1:], rewards_5_users_smooth[0:len_timesteps], color="grey", label='5 Users')
