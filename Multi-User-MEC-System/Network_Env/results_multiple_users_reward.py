@@ -4,7 +4,7 @@ from numpy import interp
 
 users = [1,3,5,7,9]
 rewards_TD3 = [3491669445.086330,6213448854.972728,8299887306.846853,10747468210.837811,13325714188.122597]
-rewards_DDPG = [2616310443.630260 (1 users),3489206827.739998 (3 users),]
+rewards_DDPG = [2616310443.630260 (1 users), 3489206827.739998 (3 users), 4643189572.781940 (5 users), 7485253962.268092 (9 users)]
 
 plt.plot(users, rewards_TD3, color="green", marker='s')
 plt.plot(users, rewards_TD3, color="green", marker='s')
