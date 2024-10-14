@@ -15,7 +15,7 @@ RB_allocation_matrix = np.load('RB_allocation_matrix.npy')
 delays = np.load('delays.npy')
 tasks_dropped = np.load('tasks_dropped.npy')
 outage_probabilities = np.load('outage_probabilties.npy')
-urllc_reliability_reward = np.load('urllc_reliability_reward_normalized.npy')
+urllc_reliability_reward = np.load('urllc_reliability_reward.npy')
 resource_allocation_matrix = np.load('resource_allocation_matrix.npy',allow_pickle=True)
 resource_allocation_constraint_violation_count = np.load('resource_allocation_constraint_violation_count.npy',allow_pickle=True)
 resource_allocation_matrix = np.array(resource_allocation_matrix)
@@ -153,8 +153,8 @@ def moving_average(data, window_size):
 
 
 def individual_user_subplots(user_num, timesteps, individual_urllc_channel_rate_per_slot_with_penalty, individual_urllc_channel_rate_per_second_penalties, individual_urllc_channel_rate_per_second_without_penalty, individual_urllc_channel_rate_per_second_with_penalty):
-    row = 4
-    col = 4
+    row = 2
+    col = 2
 
     figure, axis = plt.subplots(row,col)
     axis = axis.flatten()
@@ -164,10 +164,10 @@ def individual_user_subplots(user_num, timesteps, individual_urllc_channel_rate_
     window_size = 5
 
     axis[0].plot(timesteps, individual_urllc_channel_rate_per_slot_with_penalty[:,user_num])
-    axis[0].set_title('user num: '+ str(user_num) + ' Channel Rate per slot (bits/slot)')
+    axis[0].set_title('user num: '+ str(user_num) + ' Channel Rate per slot (bits/slot) with penalty')
 
     axis[1].plot(timesteps, individual_urllc_channel_rate_per_second_penalties[:,user_num])
-    axis[1].set_title('user num: '+ str(user_num) + ' Channel Rate per second (bits/s)')
+    axis[1].set_title('user num: '+ str(user_num) + ' Channel Rate penalties (bits/s)')
 
     axis[2].plot(timesteps, individual_urllc_channel_rate_per_second_without_penalty[:,user_num])
     axis[2].set_title('user num: '+ str(user_num) + ' CR without penalty (bits/s)')

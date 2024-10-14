@@ -593,12 +593,17 @@ class SBS():
                 self.available_resource_time_blocks.append((tb,rb))
         
         for urllc_user in URLLC_Users:
-            random_number = np.random.randint(0, len(self.available_resource_time_blocks), 1)
-            random_number = random_number[0]
-            urllc_user.assigned_resource_time_block = self.available_resource_time_blocks[random_number]
-            self.available_resource_time_blocks = np.delete(self.available_resource_time_blocks,random_number,axis=0)
-            urllc_user.assigned_time_block = urllc_user.assigned_resource_time_block[0]
-            urllc_user.assigned_resource_block = urllc_user.assigned_resource_time_block[1]
+            urllc_user.assigned_time_block = 0
+            urllc_user.assigned_resource_block = 0
+
+        for urllc_user in URLLC_Users:
+            if len(self.available_resource_time_blocks) > 0:
+                random_number = np.random.randint(0, len(self.available_resource_time_blocks), 1)
+                random_number = random_number[0]
+                urllc_user.assigned_resource_time_block = self.available_resource_time_blocks[random_number]
+                self.available_resource_time_blocks = np.delete(self.available_resource_time_blocks,random_number,axis=0)
+                urllc_user.assigned_time_block = urllc_user.assigned_resource_time_block[0]
+                urllc_user.assigned_resource_block = urllc_user.assigned_resource_time_block[1]
 
     def count_num_arriving_urllc_packets(self, urllc_users):
         self.num_arriving_urllc_packets = 0
@@ -673,7 +678,7 @@ class SBS():
         #print('self.urllc_reliability_constraint_max: ', self.urllc_reliability_constraint_max)
         #print('stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival): ', stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival))
         self.F_L_inverse = urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival)
-        
+        #print('self.F_L_inverse: ', self.F_L_inverse)
         reliability_reward = urllc_total_rate-urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival)
         #print('urllc_total_rate: ', urllc_total_rate)
         #print('rllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival): ', urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival))
