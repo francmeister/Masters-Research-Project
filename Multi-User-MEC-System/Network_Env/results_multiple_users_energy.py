@@ -10,7 +10,7 @@ rewards_FO = [0.00016040274177026443,0.0001712125556318549,0.0001672572954780080
 
 
 plt.plot(users, rewards_TD3, color="green", marker='s')
-plt.plot(users, rewards_FL, color="blue", marker='s')
+#plt.plot(users, rewards_FL, color="blue", marker='s')
 plt.plot(users, rewards_FO, color="red", marker='s')
 # plt.plot(new_timesteps[window_size-1:], rewards_7_users_smooth[0:len_timesteps], color="brown", label='3 Users')
 # plt.plot(new_timesteps[window_size-1:], rewards_3_users_smooth[0:len_timesteps], color="blue", label='7 Users')
