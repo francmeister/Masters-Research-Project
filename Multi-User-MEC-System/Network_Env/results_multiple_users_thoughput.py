@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from numpy import interp
 
 users = [1,3,5,7,9]
-rewards = [22866024.332961,26118055.833008,22773363.595256,23650460.309246,25036270.762014]
+rewards = [22866024.332961,22106013.889061,22773363.595256,23650460.309246,25036270.762014]
 
 
 plt.plot(users, rewards, color="green", marker='s')

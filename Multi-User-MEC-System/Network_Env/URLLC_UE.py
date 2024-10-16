@@ -26,7 +26,7 @@ class URLLC_UE(User_Equipment):
         self.assigned_access_point = 0
         self.assigned_access_point_label_matrix = []
         self.assigned_access_point_label_matrix_integers = []
-        self.prob_packet_arrival = 0.5
+        self.prob_packet_arrival = 0.6
         self.set_properties_URLLC()
 
     def set_properties_URLLC(self):
