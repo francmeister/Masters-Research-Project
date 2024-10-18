@@ -170,7 +170,7 @@ class SBS():
 
             y_pred_tensor = self.access_point_model(x_train_tensor)
             loss = self.criterion(y_pred_tensor, y_train_tensor)
-            self.training_loss.append(loss.detach().numpy())
+            self.training_loss.append(loss.detach().cpu().numpy())
             #print(loss)
             self.optimizer.zero_grad()
             loss.backward()
