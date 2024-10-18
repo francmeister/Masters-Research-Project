@@ -31,6 +31,7 @@ class eMBB_UE(User_Equipment):
         self.distance_from_associated_access_point = 0
         self.x_coordinate = 0
         self.y_coordinate = 0
+        self.user_association_channel_rate_array = []
         self.set_properties_eMBB()
 
     def set_coordinates(self, coordinates):
@@ -57,17 +58,17 @@ class eMBB_UE(User_Equipment):
             distance_from_access_point = self.calculate_distance_from_access_point(access_point_coordinate)
             self.distances_from_access_point.append(distance_from_access_point)
 
-        num_access_points = len(self.distances_from_access_point)
-        random_nums = self.generate_unique_numbers(num_access_points)
+        # num_access_points = len(self.distances_from_access_point)
+        # random_nums = self.generate_unique_numbers(num_access_points)
 
-        first_rand_num = random_nums[0]
-        second_rand_num = random_nums[1]
-        third_rand_num = random_nums[2]
+        # first_rand_num = random_nums[0]
+        # second_rand_num = random_nums[1]
+        # third_rand_num = random_nums[2]
 
-        self.distances_from_access_point[first_rand_num] = self.distances_from_access_point[first_rand_num]/10000000000
-        self.distances_from_access_point[second_rand_num] = self.distances_from_access_point[second_rand_num]/100000
-        self.distances_from_access_point[third_rand_num] = self.distances_from_access_point[third_rand_num]*10000
-        #print('distances_from_access_point: ', self.distances_from_access_point)
+        # self.distances_from_access_point[first_rand_num] = self.distances_from_access_point[first_rand_num]/10000000000
+        # self.distances_from_access_point[second_rand_num] = self.distances_from_access_point[second_rand_num]/100000
+        # self.distances_from_access_point[third_rand_num] = self.distances_from_access_point[third_rand_num]*10000
+        # #print('distances_from_access_point: ', self.distances_from_access_point)
         #print('')
         #print('user: ', self.user_label, 'self.distances_from_access_point: ', self.distances_from_access_point)
         access_point_number = 1
@@ -92,7 +93,9 @@ class eMBB_UE(User_Equipment):
             self.slow_fading_channel_gain = np.random.exponential(1) 
             self.slow_fading_gain_change_timer = 0
 
-        return self.fast_fading_channel_gain*self.slow_fading_channel_gain
+        self.slow_fading_gain_change_timer+=1
+
+        #return self.fast_fading_channel_gain*self.slow_fading_channel_gain
     
     def calculate_achieved_user_association_channel_rate(self, communication_channel):
         #self.user_association_channel_rate = math.pow(self.distance_from_associated_access_point,-1)#*self.fast_fading_channel_gain*self.slow_fading_channel_gain
@@ -104,6 +107,8 @@ class eMBB_UE(User_Equipment):
         channel_rate_denominator = noise_spectral_density#*RB_bandwidth
         channel_rate = RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
         self.user_association_channel_rate = channel_rate/1000
+        self.user_association_channel_rate_array.append(self.user_association_channel_rate)
+        self.user_association_channel_rate = sum(self.user_association_channel_rate_array)/len(self.user_association_channel_rate_array)
         #random_value = 0.0001*random.random()
 
         #print('embb: ', self.user_label, 'user association channel rate: ', self.user_association_channel_rate)
@@ -112,7 +117,7 @@ class eMBB_UE(User_Equipment):
 
        # return self.user_association_channel_rate*100
 
-    def calculate_distance_from_current_access_point(self, timestep):
+    def calculate_distance_from_current_access_point(self):
         #print('embb user: ', self.user_label, 'current_associated_access_point: ', self.current_associated_access_point, 'distances_from_access_point: ', self.distances_from_access_point)
         #print(self.distances_from_access_point)
         # if timestep < 8000:
@@ -293,6 +298,7 @@ class eMBB_UE(User_Equipment):
         self.offloading_ratio = 0
         self.average_packet_size_bits = 0
         self.max_lc_queue_delay_violation_probability = 0.8
+        self.user_association_channel_rate_array = []
 
 
     def move_user(self,ENV_WIDTH,ENV_HEIGHT):

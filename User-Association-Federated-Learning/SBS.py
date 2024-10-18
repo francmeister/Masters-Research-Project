@@ -32,6 +32,7 @@ class SBS():
         self.timestep_counter = 0
         self.average_reward_in_memory = 0
         self.training_loss = []
+        self.max_user_channel_rate = 0
         self.set_properties()
 
     def get_all_users(self, all_users):
@@ -138,7 +139,7 @@ class SBS():
 
     def acquire_global_memory(self, global_memory):    
         self.training_memory = copy.deepcopy(global_memory[self.SBS_label-1])   
-        print(self.training_memory.storage)
+        #print(self.training_memory.storage)
 
     def train_local_dnn(self):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -237,8 +238,14 @@ class SBS():
         for user_channel_gain in user_channel_gains:
             user_channel_gains_normalized.append(interp(user_channel_gain,[0,5],[0,0.005]))
 
+        user_channel_rates_normalized = []
+        for user_channel_rate in user_channel_rates:
+            user_channel_rates_normalized.append(interp(user_channel_rate,[0,self.max_user_channel_rate],[0,1]))
+
+        print('user_channel_rates')
+        print(user_channel_rates)
         #user_features = [user_ids, user_distances_normalized, user_channel_gains_normalized]
-        user_features = [user_ids, user_channel_rates]
+        user_features = [user_ids, user_channel_rates_normalized]
         user_features = np.array(user_features).transpose()
         user_features_for_inference = []
 
@@ -332,8 +339,8 @@ class SBS():
 
         future_associations = np.array(future_associations)
         self.buffer_memory.append((preprocessed_inputs, future_associations, 0))
-        print('preprocessed_inputs: ', preprocessed_inputs)
-        print('association_prediction: ', future_associations)
+        # print('preprocessed_inputs: ', preprocessed_inputs)
+        # print('association_prediction: ', future_associations)
         return future_associations
         
     def populate_buffer_memory_sample_with_reward(self,global_reward):

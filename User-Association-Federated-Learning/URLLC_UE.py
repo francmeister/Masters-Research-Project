@@ -59,14 +59,23 @@ class URLLC_UE(User_Equipment):
         if self.slow_fading_gain_change_timer >=25:
             self.slow_fading_channel_gain = np.random.exponential(1) 
 
-        return self.fast_fading_channel_gain*self.slow_fading_channel_gain
+        self.slow_fading_channel_gain+=1
+        #return self.fast_fading_channel_gain*self.slow_fading_channel_gain
     
-    def calculate_achieved_user_association_channel_rate(self):
-        self.user_association_channel_rate = math.pow(self.distance_from_associated_access_point,-3)*self.fast_fading_channel_gain*self.slow_fading_channel_gain
-
+    def calculate_achieved_user_association_channel_rate(self,communication_channel):
+        RB_channel_gain = self.slow_fading_channel_gain*self.fast_fading_channel_gain
+        RB_bandwidth = communication_channel.system_bandwidth_Hz_user_association
+        noise_spectral_density = communication_channel.noise_spectral_density_W
+        channel_rate_numerator = self.max_transmission_power_dBm*math.pow(self.distance_from_associated_access_point,-1)*RB_channel_gain
+        channel_rate_denominator = noise_spectral_density#*RB_bandwidth
+        channel_rate = RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
+        self.user_association_channel_rate = channel_rate/1000
+        self.user_association_channel_rate_array.append(self.user_association_channel_rate)
+        self.user_association_channel_rate = sum(self.user_association_channel_rate_array)/len(self.user_association_channel_rate_array)
+        
     def calculate_distance_from_current_access_point(self):
         self.distance_from_associated_access_point = self.distances_from_access_point[self.current_associated_access_point-1]
-
+        
     
     def set_properties_URLLC(self):
         self.user_association_channel_gain = 0
