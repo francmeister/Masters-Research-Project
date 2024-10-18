@@ -138,6 +138,7 @@ class SBS():
 
     def acquire_global_memory(self, global_memory):    
         self.training_memory = copy.deepcopy(global_memory[self.SBS_label-1])   
+        print(self.training_memory.storage)
 
     def train_local_dnn(self):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
