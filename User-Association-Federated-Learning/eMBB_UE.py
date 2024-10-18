@@ -29,6 +29,8 @@ class eMBB_UE(User_Equipment):
         self.current_associated_access_point = 0
         self.user_association_channel_rate = 0
         self.distance_from_associated_access_point = 0
+        self.x_coordinate = 0
+        self.y_coordinate = 0
         self.set_properties_eMBB()
 
     def set_coordinates(self, coordinates):
