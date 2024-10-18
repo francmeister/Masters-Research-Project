@@ -315,7 +315,11 @@ class SBS():
 
         associations_prediction_mapped = np.array(associations_prediction_mapped)
         self.buffer_memory.append((preprocessed_inputs, association_prediction, 0))
+        print('self.buffer_memory:')
+        print(self.buffer_memory)
         return associations_prediction_mapped_for_global_model
+    
+    #def random_based_association(self):
     
     def populate_buffer_memory_sample_with_reward(self,global_reward):
         rewards_in_memory = []
@@ -478,6 +482,7 @@ class SBS():
         total_lc_delay_violation_probability = 0
         urllc_reliability_reward, urllc_reliability_reward_normalized = self.calculate_urllc_reliability_reward(urllc_users)
         self.urllc_reliability_reward_normalized = urllc_reliability_reward_normalized
+        self.user_association_channel_rate_reward = 0
         for eMBB_User in eMBB_Users:
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
             eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
