@@ -127,7 +127,8 @@ class SBS():
     #def predict_future_association(self):
 
     def acquire_global_model(self, global_model):
-        #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        global_model_param.data = global_model_param.data.to(device)
         if self.model_update_tracker == 0:
             self.access_point_model.load_state_dict(global_model.state_dict())
             self.model_update_tracker+=1
