@@ -37,7 +37,11 @@ class CustomBarrier:
                 # All threads have reached the aggregation point
                 # Perform the aggregation here
                 env.SBS.acquire_global_model(global_entity.global_model)
-                SBS_association = env.SBS.predict_future_association(access_point_radius, timestep_counter, env.eMBB_Users, env.URLLC_Users)
+                if timestep_counter <= 50000:
+                    global_entity_random_associations = global_entity.perform_random_association(self,env.SBS.all_users)
+                    SBS_association = env.SBS.random_based_association(global_entity_random_associations,access_point_radius, timestep_counter, env.eMBB_Users, env.URLLC_Users)
+                else:
+                    SBS_association = env.SBS.predict_future_association(access_point_radius, timestep_counter, env.eMBB_Users, env.URLLC_Users)
                 self.local_associations.append(SBS_association)
                 global_entity.acquire_local_user_associations(SBS_association)
                 global_entity.calculate_global_reward(episode_reward)
@@ -65,7 +69,11 @@ class CustomBarrier:
                 # Wait for aggregation to complete
                 #print("Access Point: ", access_point_number, " waiting for reassociations")
                 env.SBS.acquire_global_model(global_entity.global_model)
-                SBS_association = env.SBS.predict_future_association(access_point_radius, timestep_counter, env.eMBB_Users, env.URLLC_Users)
+                if timestep_counter <= 50000:
+                    global_entity_random_associations = global_entity.perform_random_association(self,env.SBS.all_users)
+                    SBS_association = env.SBS.random_based_association(global_entity_random_associations,access_point_radius, timestep_counter, env.eMBB_Users, env.URLLC_Users)
+                else:
+                    SBS_association = env.SBS.predict_future_association(access_point_radius, timestep_counter, env.eMBB_Users, env.URLLC_Users)
                 self.local_associations.append(SBS_association)
                 global_entity.acquire_local_user_associations(SBS_association)
                 global_entity.calculate_global_reward(episode_reward)

@@ -315,12 +315,27 @@ class SBS():
 
         associations_prediction_mapped = np.array(associations_prediction_mapped)
         self.buffer_memory.append((preprocessed_inputs, association_prediction, 0))
-        print('preprocessed_inputs: ', preprocessed_inputs)
-        print('association_prediction: ', association_prediction)
+        # print('preprocessed_inputs: ', preprocessed_inputs)
+        # print('association_prediction: ', association_prediction)
         return associations_prediction_mapped_for_global_model
     
-    #def random_based_association(self):
-    
+    def random_based_association(self, global_entity_associations, access_point_radius, timestep_counter, embb_users, urllc_users):
+        preprocessed_inputs = self.preprocess_model_inputs(access_point_radius, embb_users, urllc_users)
+        future_associations = []
+        for user in self.all_users:
+            future_associations.append(0)
+   
+        for user in self.users:
+            for association in global_entity_associations:
+                if association[0] == user.user_label:
+                    future_associations[user.user_label-1] = association[1][0]
+
+        future_associations = np.array(future_associations)
+        self.buffer_memory.append((preprocessed_inputs, future_associations, 0))
+        print('preprocessed_inputs: ', preprocessed_inputs)
+        print('association_prediction: ', future_associations)
+        return future_associations
+        
     def populate_buffer_memory_sample_with_reward(self,global_reward):
         rewards_in_memory = []
         if len(self.buffer_memory) > 1:
