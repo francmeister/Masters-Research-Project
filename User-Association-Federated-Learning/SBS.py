@@ -315,8 +315,8 @@ class SBS():
 
         associations_prediction_mapped = np.array(associations_prediction_mapped)
         self.buffer_memory.append((preprocessed_inputs, association_prediction, 0))
-        print('self.buffer_memory:')
-        print(np.array(self.buffer_memory))
+        print('preprocessed_inputs: ', preprocessed_inputs)
+        print('association_prediction: ', association_prediction)
         return associations_prediction_mapped_for_global_model
     
     #def random_based_association(self):
