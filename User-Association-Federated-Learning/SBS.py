@@ -227,7 +227,7 @@ class SBS():
                 #print('user: ', user.user_label, 'distance: ', user.distance_from_associated_access_point,'channel rate: ', user.user_association_channel_rate)
             else:
                 user_distances.append(0)
-                user_channel_gains.append(0)
+                user_channel_gains.append(0.1)
                 user_channel_rates.append(0)
 
         user_distances_normalized = []
@@ -240,10 +240,8 @@ class SBS():
 
         user_channel_rates_normalized = []
         for user_channel_rate in user_channel_rates:
-            user_channel_rates_normalized.append(interp(user_channel_rate,[0,self.max_user_channel_rate],[0,1]))
+            user_channel_rates_normalized.append(interp(user_channel_rate,[0,self.max_user_channel_rate],[1,2]))
 
-        print('user_channel_rates')
-        print(user_channel_rates)
         #user_features = [user_ids, user_distances_normalized, user_channel_gains_normalized]
         user_features = [user_ids, user_channel_rates_normalized]
         user_features = np.array(user_features).transpose()
