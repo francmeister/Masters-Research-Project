@@ -38,7 +38,7 @@ class CustomBarrier:
                 # Perform the aggregation here
                 env.SBS.acquire_global_model(global_entity.global_model)
                 if timestep_counter <= 50000:
-                    global_entity_random_associations = global_entity.perform_random_association(self,env.SBS.all_users)
+                    global_entity_random_associations = global_entity.perform_random_association(env.SBS.all_users)
                     SBS_association = env.SBS.random_based_association(global_entity_random_associations,access_point_radius, timestep_counter, env.eMBB_Users, env.URLLC_Users)
                 else:
                     SBS_association = env.SBS.predict_future_association(access_point_radius, timestep_counter, env.eMBB_Users, env.URLLC_Users)
@@ -70,7 +70,7 @@ class CustomBarrier:
                 #print("Access Point: ", access_point_number, " waiting for reassociations")
                 env.SBS.acquire_global_model(global_entity.global_model)
                 if timestep_counter <= 50000:
-                    global_entity_random_associations = global_entity.perform_random_association(self,env.SBS.all_users)
+                    global_entity_random_associations = global_entity.perform_random_association(env.SBS.all_users)
                     SBS_association = env.SBS.random_based_association(global_entity_random_associations,access_point_radius, timestep_counter, env.eMBB_Users, env.URLLC_Users)
                 else:
                     SBS_association = env.SBS.predict_future_association(access_point_radius, timestep_counter, env.eMBB_Users, env.URLLC_Users)
