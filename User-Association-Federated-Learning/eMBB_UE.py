@@ -58,7 +58,6 @@ class eMBB_UE(User_Equipment):
             distance_from_access_point = self.calculate_distance_from_access_point(access_point_coordinate)
             self.distances_from_access_point.append(distance_from_access_point)
         
-        print('eMBB User: ', self.user_label,'self.distances_from_access_point: ', self.distances_from_access_point)
         # num_access_points = len(self.distances_from_access_point)
         # random_nums = self.generate_unique_numbers(num_access_points)
 
@@ -93,7 +92,7 @@ class eMBB_UE(User_Equipment):
 
         if self.slow_fading_gain_change_timer == 0:
             g_l = np.random.normal(loc=0, scale=8, size=1)
-            print('eMBB User: ', self.user_label,'self.distance_from_associated_access_point: ', self.distance_from_associated_access_point)
+            #print('eMBB User: ', self.user_label,'self.distance_from_associated_access_point: ', self.distance_from_associated_access_point)
             g = 35.3 + 37.8 * np.log10(self.distance_from_associated_access_point) + g_l
             print('g: ', g)
             G = 10 ** (-g/10)
@@ -168,6 +167,8 @@ class eMBB_UE(User_Equipment):
 
         print('eMBB User: ', self.user_label, 'self.current_associated_access_point: ', self.current_associated_access_point)
         self.distance_from_associated_access_point = self.distances_from_access_point[self.current_associated_access_point-1]
+        print('eMBB User: ', self.user_label,'self.distance_from_associated_access_point: ', self.distance_from_associated_access_point)
+        print('eMBB User: ', self.user_label,'self.distances_from_access_point: ', self.distances_from_access_point)
         #self.distance_from_associated_access_point = max(self.distances_from_access_point)#self.distances_from_access_point[self.current_associated_access_point-1]
         #print('embb user: ', self.eMBB_UE_label, 'distance from associated AP: ', self.distance_from_associated_access_point)
 
