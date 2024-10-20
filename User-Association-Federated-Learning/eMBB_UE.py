@@ -83,6 +83,7 @@ class eMBB_UE(User_Equipment):
         #print(access_point_coordinate[0])
         #print(math.pow((self.y_coordinate-access_point_coordinate[1]),2))
         distance_squared = math.pow((self.x_coordinate-access_point_coordinate[0]),2) + math.pow((self.y_coordinate-access_point_coordinate[1]),2)
+        print('distance_squared: ', distance_squared)
         distance = math.sqrt(distance_squared)
         return distance
 
