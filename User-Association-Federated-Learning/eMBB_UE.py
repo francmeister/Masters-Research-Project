@@ -97,6 +97,7 @@ class eMBB_UE(User_Equipment):
             self.slow_fading_channel_gain = G#np.random.exponential(1) 
             self.slow_fading_gain_change_timer = 0
 
+        print('self.slow_fading_gain_change_timer: ', self.slow_fading_gain_change_timer)
         self.slow_fading_gain_change_timer+=1
 
         #return self.fast_fading_channel_gain*self.slow_fading_channel_gain
