@@ -57,7 +57,8 @@ class eMBB_UE(User_Equipment):
         for access_point_coordinate in access_points_coordinates:
             distance_from_access_point = self.calculate_distance_from_access_point(access_point_coordinate)
             self.distances_from_access_point.append(distance_from_access_point)
-
+        
+        print('self.distances_from_access_point: ', self.distances_from_access_point)
         # num_access_points = len(self.distances_from_access_point)
         # random_nums = self.generate_unique_numbers(num_access_points)
 
@@ -83,7 +84,7 @@ class eMBB_UE(User_Equipment):
         #print(access_point_coordinate[0])
         #print(math.pow((self.y_coordinate-access_point_coordinate[1]),2))
         distance_squared = math.pow((self.x_coordinate-access_point_coordinate[0]),2) + math.pow((self.y_coordinate-access_point_coordinate[1]),2)
-        print('distance_squared: ', distance_squared)
+        #print('distance_squared: ', distance_squared)
         distance = math.sqrt(distance_squared)
         return distance
 
