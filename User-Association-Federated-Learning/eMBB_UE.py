@@ -92,22 +92,22 @@ class eMBB_UE(User_Equipment):
 
         if self.slow_fading_gain_change_timer == 0:
             g_l = np.random.normal(loc=0, scale=8, size=1)
-            print('eMBB User: ', self.user_label,'self.distance_from_associated_access_point in timer function: ', self.distance_from_associated_access_point)
+            #print('eMBB User: ', self.user_label,'self.distance_from_associated_access_point in timer function: ', self.distance_from_associated_access_point)
             g = 35.3 + 37.8 * np.log10(self.distance_from_associated_access_point) + g_l
-            print('eMBB User: ', self.user_label,'g: ', g)
+            #print('eMBB User: ', self.user_label,'g: ', g)
             G = 10 ** (-g/10)
-            print('eMBB User: ', self.user_label,'G: ', G)
+            #print('eMBB User: ', self.user_label,'G: ', G)
             self.slow_fading_channel_gain = G#np.random.exponential(1) 
             self.slow_fading_gain_change_timer = 0
 
-        print('self.slow_fading_gain_change_timer: ', self.slow_fading_gain_change_timer)
+        #print('self.slow_fading_gain_change_timer: ', self.slow_fading_gain_change_timer)
         self.slow_fading_gain_change_timer+=1
 
         #return self.fast_fading_channel_gain*self.slow_fading_channel_gain
     
     def calculate_achieved_user_association_channel_rate(self, communication_channel):
         #self.user_association_channel_rate = math.pow(self.distance_from_associated_access_point,-1)#*self.fast_fading_channel_gain*self.slow_fading_channel_gain
-        print('eMBB User: ', self.user_label,'self.slow_fading_channel_gain: ', self.slow_fading_channel_gain)
+        #print('eMBB User: ', self.user_label,'self.slow_fading_channel_gain: ', self.slow_fading_channel_gain)
         #print('self.fast_fading_channel_gain: ', self.fast_fading_channel_gain)
         RB_channel_gain = self.slow_fading_channel_gain*self.fast_fading_channel_gain
         #print('RB_channel_gain: ', RB_channel_gain)
@@ -122,7 +122,7 @@ class eMBB_UE(User_Equipment):
         #random_value = 0.0001*random.random()
         #print('channel_rate_numerator: ', channel_rate_numerator)
         #print('channel_rate_denominator: ', channel_rate_denominator)
-        print(self.user_association_channel_rate)
+        #print(self.user_association_channel_rate)
         #print('embb: ', self.user_label, 'user association channel rate: ', self.user_association_channel_rate)
         return self.user_association_channel_rate#random_value*math.pow(self.distance_from_associated_access_point,-1)*10000#self.user_association_channel_rate
     
@@ -165,10 +165,10 @@ class eMBB_UE(User_Equipment):
         # elif timestep >= 12000:
         #     self.distance_from_associated_access_point = min(self.distances_from_access_point)
 
-        print('eMBB User: ', self.user_label, 'self.current_associated_access_point: ', self.current_associated_access_point)
+        #print('eMBB User: ', self.user_label, 'self.current_associated_access_point: ', self.current_associated_access_point)
         self.distance_from_associated_access_point = self.distances_from_access_point[self.current_associated_access_point-1]
-        print('eMBB User: ', self.user_label,'self.distance_from_associated_access_point: ', self.distance_from_associated_access_point)
-        print('eMBB User: ', self.user_label,'self.distances_from_access_point: ', self.distances_from_access_point)
+        #print('eMBB User: ', self.user_label,'self.distance_from_associated_access_point: ', self.distance_from_associated_access_point)
+        #print('eMBB User: ', self.user_label,'self.distances_from_access_point: ', self.distances_from_access_point)
         #self.distance_from_associated_access_point = max(self.distances_from_access_point)#self.distances_from_access_point[self.current_associated_access_point-1]
         #print('embb user: ', self.eMBB_UE_label, 'distance from associated AP: ', self.distance_from_associated_access_point)
 
