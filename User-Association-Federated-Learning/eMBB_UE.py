@@ -91,6 +91,7 @@ class eMBB_UE(User_Equipment):
 
         if self.slow_fading_gain_change_timer == 0:
             g_l = np.random.normal(loc=0, scale=8, size=1)
+            print('self.distance_from_associated_access_point: ', self.distance_from_associated_access_point)
             g = 35.3 + 37.8 * np.log10(self.distance_from_associated_access_point) + g_l
             G = 10 ** (-g/10)
             self.slow_fading_channel_gain = G#np.random.exponential(1) 
@@ -104,7 +105,7 @@ class eMBB_UE(User_Equipment):
         #self.user_association_channel_rate = math.pow(self.distance_from_associated_access_point,-1)#*self.fast_fading_channel_gain*self.slow_fading_channel_gain
 
         RB_channel_gain = self.slow_fading_channel_gain*self.fast_fading_channel_gain
-        print('RB_channel_gain: ', RB_channel_gain)
+        #print('RB_channel_gain: ', RB_channel_gain)
         RB_bandwidth = communication_channel.system_bandwidth_Hz_user_association
         noise_spectral_density = communication_channel.noise_spectral_density_W
         channel_rate_numerator = self.max_transmission_power_W*RB_channel_gain
