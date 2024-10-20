@@ -583,7 +583,7 @@ class NetworkEnv(gym.Env):
         self.SBS.calculate_achieved_total_rate_eMBB_users(self.eMBB_Users)
         self.SBS.calculate_achieved_system_energy_efficiency()
         system_reward, reward, self.total_energy,self.total_rate,user_association_channel_rate_reward = self.SBS.calculate_achieved_system_reward(self.eMBB_Users,self.URLLC_Users,self.Communication_Channel_1)
-        self.user_association_channel_rate_reward+=user_association_channel_rate_reward
+        self.user_association_channel_rate_reward=user_association_channel_rate_reward
         #reward = [x + resource_block_allocation_penalty for x in reward]
        
         

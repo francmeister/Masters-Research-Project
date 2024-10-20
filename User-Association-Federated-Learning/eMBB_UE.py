@@ -113,7 +113,7 @@ class eMBB_UE(User_Equipment):
         self.user_association_channel_rate_array.append(self.user_association_channel_rate)
         self.user_association_channel_rate = sum(self.user_association_channel_rate_array)/len(self.user_association_channel_rate_array)
         #random_value = 0.0001*random.random()
-
+        print(self.user_association_channel_rate)
         #print('embb: ', self.user_label, 'user association channel rate: ', self.user_association_channel_rate)
         return self.user_association_channel_rate#random_value*math.pow(self.distance_from_associated_access_point,-1)*10000#self.user_association_channel_rate
     
