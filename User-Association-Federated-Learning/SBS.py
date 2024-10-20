@@ -261,7 +261,9 @@ class SBS():
         preprocessed_inputs = self.preprocess_model_inputs(access_point_radius, embb_users, urllc_users)
         preprocessed_inputs_tensor = torch.Tensor(preprocessed_inputs).to(self.device)
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
-        association_prediction = association_prediction.detach().numpy()
+        #association_prediction = association_prediction.detach().numpy()
+        association_prediction = association_prediction.cpu().detach().numpy()
+
         # if timestep_counter < 50000:
         #     association_prediction = []
         #     #end = random.random()
