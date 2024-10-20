@@ -32,6 +32,7 @@ class eMBB_UE(User_Equipment):
         self.x_coordinate = 0
         self.y_coordinate = 0
         self.user_association_channel_rate_array = []
+        self.distances_from_access_points = []
         self.set_properties_eMBB()
 
     def set_coordinates(self, coordinates):
@@ -53,10 +54,14 @@ class eMBB_UE(User_Equipment):
     def calculate_distances_from_access_point(self,access_points_coordinates, radius):
         self.distances_from_access_point = []
         self.access_points_within_radius = []
+        self.distances_from_access_points = []
         #print(access_points_coordinates)
+        access_point_number = 1
         for access_point_coordinate in access_points_coordinates:
             distance_from_access_point = self.calculate_distance_from_access_point(access_point_coordinate)
             self.distances_from_access_point.append(distance_from_access_point)
+            self.distances_from_access_points.append((self.user_label,access_point_number,distance_from_access_point))
+            access_point_number+=1
         
         # num_access_points = len(self.distances_from_access_point)
         # random_nums = self.generate_unique_numbers(num_access_points)
