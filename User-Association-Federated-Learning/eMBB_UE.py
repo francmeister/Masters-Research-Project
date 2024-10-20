@@ -93,7 +93,9 @@ class eMBB_UE(User_Equipment):
             g_l = np.random.normal(loc=0, scale=8, size=1)
             print('self.distance_from_associated_access_point: ', self.distance_from_associated_access_point)
             g = 35.3 + 37.8 * np.log10(self.distance_from_associated_access_point) + g_l
+            print('g: ', g)
             G = 10 ** (-g/10)
+            print('G: ', G)
             self.slow_fading_channel_gain = G#np.random.exponential(1) 
             self.slow_fading_gain_change_timer = 0
 
