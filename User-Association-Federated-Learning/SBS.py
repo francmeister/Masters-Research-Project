@@ -381,7 +381,8 @@ class SBS():
             self.buffer_memory.pop(0)
         for sample in self.training_memory.storage:
             rewards_in_memory.append(sample[2])
-        
+        print('rewards_in_memory: ')
+        print(rewards_in_memory)
         self.average_reward_in_memory = sum(rewards_in_memory)/len(rewards_in_memory) + random.random()
         #print('SBS: ', self.SBS_label, self.training_memory.storage)
 
