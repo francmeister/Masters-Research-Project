@@ -261,13 +261,13 @@ class SBS():
         preprocessed_inputs_tensor = torch.Tensor(preprocessed_inputs).to(self.device)
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
         association_prediction = association_prediction.detach().numpy()
-        if timestep_counter < 50000:
-            association_prediction = []
-            #end = random.random()
-            #association_prediction = (association_prediction + np.random.normal(0, end))
-            for user in self.all_users:
-                association_prediction.append(random.randint(1,self.num_access_points)) 
-            association_prediction = np.array(association_prediction)
+        # if timestep_counter < 50000:
+        #     association_prediction = []
+        #     #end = random.random()
+        #     #association_prediction = (association_prediction + np.random.normal(0, end))
+        #     for user in self.all_users:
+        #         association_prediction.append(random.randint(1,self.num_access_points)) 
+        #     association_prediction = np.array(association_prediction)
 
         #elif timestep_counter >= 1000:
             #association_prediction = (association_prediction + np.random.normal(0, 0.1))
@@ -341,7 +341,28 @@ class SBS():
         # print('preprocessed_inputs: ', preprocessed_inputs)
         # print('association_prediction: ', future_associations)
         return future_associations
+    
+    def save_model(self, filename, directory):
+        torch.save(self.access_point_model.state_dict(), '%s/%s.pth' % (directory, filename))
+        #torch.save(self.access_point_model.state_dict(), '%s/%s_critic.pth' % (directory, filename))
+
+    def load_model(self, filename, directory):
+        self.access_point_model.load_state_dict(torch.load('%s/%s.pth' % (directory, filename)))
+        #torch.save(self.access_point_model.state_dict(), '%s/%s_critic.pth' % (directory, filename))
         
+    def collect_user_results(self):
+        self.users_achieved_channel_rates = []
+        self.users_distances_to_associated_APs = []
+        self.users_distances_to_other_APs = []
+        self.users_channel_rates_to_other_APs = []
+
+        for user in self.users:
+            self.users_achieved_channel_rates.append((user.user_label,user.user_association_channel_rate))
+            self.users_distances_to_associated_APs.append((user.user_label, user.current_associated_access_point))
+            self.users_distances_to_other_APs(user.user_label,user.distances_from_access_point)
+            self.users_channel_rates_to_other_APs.append(user.access_points_channel_rates)
+
+
     def populate_buffer_memory_sample_with_reward(self,global_reward):
         rewards_in_memory = []
         if len(self.buffer_memory) > 1:
@@ -613,6 +634,10 @@ class SBS():
     #def perform_timeslot_sequential_events(self,eMBB_Users,URLLC_Users,communication_channel):
 
     def set_properties(self):
+        self.users_achieved_channel_rates = []
+        self.users_distances_to_associated_APs = []
+        self.users_distances_to_other_APs = []
+        self.users_channel_rates_to_other_APs = []
         self.user_association_channel_rate_reward = 0
         self.distance_exponent = -5
         self.associated_users = []

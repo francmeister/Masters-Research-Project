@@ -138,7 +138,7 @@ class GLOBAL_ENTITY():
 
     def clear_local_user_associations(self):
         self.local_associations_reset_count+=1
-        print(self.local_associations_reset_count)
+        #print(self.local_associations_reset_count)
         if self.local_associations_reset_count >= self.num_access_point:
             self.local_associations.clear()
             self.local_associations_reset_count = 0

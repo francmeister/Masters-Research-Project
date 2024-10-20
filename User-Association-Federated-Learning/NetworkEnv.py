@@ -600,6 +600,7 @@ class NetworkEnv(gym.Env):
             eMBB_User.compute_battery_energy_level()
             eMBB_User.generate_task(self.Communication_Channel_1)
             eMBB_User.collect_state()
+            eMBB_User.calculate_channel_rate_to_other_access_points(self.Communication_Channel_1)
 
         for urllc_user in self.URLLC_Users:
             urllc_user.calculate_channel_gain_on_all_resource_blocks(self.Communication_Channel_1)
