@@ -104,6 +104,7 @@ class eMBB_UE(User_Equipment):
         #self.user_association_channel_rate = math.pow(self.distance_from_associated_access_point,-1)#*self.fast_fading_channel_gain*self.slow_fading_channel_gain
 
         RB_channel_gain = self.slow_fading_channel_gain*self.fast_fading_channel_gain
+        print('RB_channel_gain: ', RB_channel_gain)
         RB_bandwidth = communication_channel.system_bandwidth_Hz_user_association
         noise_spectral_density = communication_channel.noise_spectral_density_W
         channel_rate_numerator = self.max_transmission_power_W*RB_channel_gain
@@ -113,7 +114,7 @@ class eMBB_UE(User_Equipment):
         self.user_association_channel_rate_array.append(self.user_association_channel_rate)
         #self.user_association_channel_rate = sum(self.user_association_channel_rate_array)/len(self.user_association_channel_rate_array)
         #random_value = 0.0001*random.random()
-        print('channel_rate_numerator: ', channel_rate_numerator)
+        #print('channel_rate_numerator: ', channel_rate_numerator)
         print('channel_rate_denominator: ', channel_rate_denominator)
         print(self.user_association_channel_rate)
         #print('embb: ', self.user_label, 'user association channel rate: ', self.user_association_channel_rate)
