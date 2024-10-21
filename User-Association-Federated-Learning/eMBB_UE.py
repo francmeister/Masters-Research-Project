@@ -33,6 +33,7 @@ class eMBB_UE(User_Equipment):
         self.y_coordinate = 0
         self.user_association_channel_rate_array = []
         self.distances_from_access_points = []
+        self.access_points_channel_rates = []
         self.set_properties_eMBB()
 
     def set_coordinates(self, coordinates):
