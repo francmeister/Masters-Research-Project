@@ -60,7 +60,9 @@ all_users.append(URLLC_UE_3)
 access_point.associate_users(all_users)
 access_point.get_all_users(all_users)
 
-env = NetworkEnv(all_users,access_point)
+access_point_coordinates = []
+access_point_coordinates.append((3,6))
+env = NetworkEnv(all_users,access_point,access_point_coordinates,23)
 access_point.reassociate_users(np.array([1,1,1,3,1,4]))
 
 obs = env.reset()

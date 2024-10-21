@@ -135,6 +135,7 @@ class eMBB_UE(User_Equipment):
     def calculate_channel_rate_to_other_access_points(self, communication_channel):
         self.access_points_channel_rates = []
         access_point_number = 1
+        print('user: ', self.user_label,'self.distances_from_access_point: ', self.distances_from_access_point)
         for distance_from_access_point in self.distances_from_access_point:
             fast_fading_gain = np.random.exponential(1)
             g_l = np.random.normal(loc=0, scale=8, size=1)
@@ -150,6 +151,7 @@ class eMBB_UE(User_Equipment):
             self.access_points_channel_rates.append((self.user_label, access_point_number, channel_rate))
             access_point_number+=1
        # return self.user_association_channel_rate*100
+        print('user: ', self.user_label,'self.access_points_channel_rates: ', self.access_points_channel_rates)
 
     def calculate_distance_from_current_access_point(self):
         #print('embb user: ', self.user_label, 'current_associated_access_point: ', self.current_associated_access_point, 'distances_from_access_point: ', self.distances_from_access_point)
