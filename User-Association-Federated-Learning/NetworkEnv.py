@@ -751,7 +751,7 @@ class NetworkEnv(gym.Env):
         self.min_off_queue_length = 0
         self.resource_block_allocation_matrix = []
         self.resource_allocation_constraint_violation = 0
-        self.eMBB_Users = copy.deepcopy(self.SBS.embb_users)
+        self.eMBB_Users = copy.deepcopy(self.SBS.users)
         self.URLLC_Users = copy.deepcopy(self.SBS.urllc_users)
         self.users = []
 
@@ -774,6 +774,7 @@ class NetworkEnv(gym.Env):
             eMBB_User.calculate_distance_from_current_access_point()
             eMBB_User.calculate_user_association_channel_gains()
             eMBB_User.calculate_channel_rate_to_other_access_points(self.Communication_Channel_1)
+            #print('eMBB_User.access_points_channel_rates: ', eMBB_User.access_points_channel_rates)
             distances.append(eMBB_User.distance_from_associated_access_point)
             access_points.append(eMBB_User.current_associated_access_point)
             users.append(eMBB_User.user_label)

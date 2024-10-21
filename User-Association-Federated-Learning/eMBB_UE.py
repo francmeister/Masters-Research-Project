@@ -150,6 +150,8 @@ class eMBB_UE(User_Equipment):
             channel_rate_denominator = noise_spectral_density*RB_bandwidth
             channel_rate = RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
             self.access_points_channel_rates.append((self.user_label, access_point_number, channel_rate))
+            print('user: ', self.user_label,'self.access_points_channel_rates: ', self.access_points_channel_rates)
+
             access_point_number+=1
        # return self.user_association_channel_rate*100
         #print('user: ', self.user_label,'self.access_points_channel_rates: ', self.access_points_channel_rates)
