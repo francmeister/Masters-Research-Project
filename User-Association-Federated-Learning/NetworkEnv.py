@@ -759,10 +759,10 @@ class NetworkEnv(gym.Env):
         access_points = []
         users = []
 
-        #print('SBS: ', self.SBS.SBS_label, 'Number of connected users: ', len(self.eMBB_Users))
+        print('SBS: ', self.SBS.SBS_label, 'Number of connected users: ', len(self.eMBB_Users))
         #print('SBS: ', self.SBS.SBS_label, 'Number of users: ', len(self.eMBB_Users)+len(self.URLLC_Users), 'embb users: ',len(self.eMBB_Users), 'urllc users: ', len(self.URLLC_Users))
-        print('embbusers: ', len(self.eMBB_Users))
-        print('urllc users: ',len(self.URLLC_Users))
+        # print('embbusers: ', len(self.eMBB_Users))
+        # print('urllc users: ',len(self.URLLC_Users))
         print('')
         for eMBB_User in self.eMBB_Users:
             self.users.append(eMBB_User)

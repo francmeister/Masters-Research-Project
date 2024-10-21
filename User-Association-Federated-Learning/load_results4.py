@@ -18,7 +18,13 @@ users_channel_rates_to_other_APs_AP_1 = np.load('users_channel_rates_to_other_AP
 # users_channel_rates_to_other_APs_AP_2 = np.load('users_channel_rates_to_other_APs_AP_2.npy')
 # users_channel_rates_to_other_APs_AP_3 = np.load('users_channel_rates_to_other_APs_AP_3.npy')
 
+access_point_users_AP_1 = np.load('access_point_users_AP_1.npy')
+# access_point_users_AP_2 = np.load('access_point_users_AP_2.npy')
+# access_point_users_AP_3 = np.load('access_point_users_AP_3.npy')
 
+print('access_point_users_AP_1')
+print(access_point_users_AP_1)
+print('----------------------------------')
 print('users_achieved_channel_rates_AP_1')
 print(users_achieved_channel_rates_AP_1)
 print('----------------------------------')

@@ -136,19 +136,19 @@ class eMBB_UE(User_Equipment):
         self.access_points_channel_rates = []
         access_point_number = 1
         for distance_from_access_point in self.distances_from_access_point:
-                fast_fading_gain = np.random.exponential(1)
-                g_l = np.random.normal(loc=0, scale=8, size=1)
-                g = 35.3 + 37.8 * np.log10(distance_from_access_point) + g_l
-                G = 10 ** (-g/10)
-                slow_fading_gain = G
-                RB_channel_gain = fast_fading_gain*slow_fading_gain
-                RB_bandwidth = communication_channel.system_bandwidth_Hz_user_association
-                noise_spectral_density = communication_channel.noise_spectral_density_W
-                channel_rate_numerator = self.max_transmission_power_W*RB_channel_gain
-                channel_rate_denominator = noise_spectral_density*RB_bandwidth
-                channel_rate = RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
-                self.access_points_channel_rates.append((self.user_label, access_point_number, channel_rate))
-                access_point_number+=1
+            fast_fading_gain = np.random.exponential(1)
+            g_l = np.random.normal(loc=0, scale=8, size=1)
+            g = 35.3 + 37.8 * np.log10(distance_from_access_point) + g_l
+            G = 10 ** (-g/10)
+            slow_fading_gain = G
+            RB_channel_gain = fast_fading_gain*slow_fading_gain
+            RB_bandwidth = communication_channel.system_bandwidth_Hz_user_association
+            noise_spectral_density = communication_channel.noise_spectral_density_W
+            channel_rate_numerator = self.max_transmission_power_W*RB_channel_gain
+            channel_rate_denominator = noise_spectral_density*RB_bandwidth
+            channel_rate = RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
+            self.access_points_channel_rates.append((self.user_label, access_point_number, channel_rate))
+            access_point_number+=1
        # return self.user_association_channel_rate*100
 
     def calculate_distance_from_current_access_point(self):
