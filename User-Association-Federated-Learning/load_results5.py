@@ -37,8 +37,8 @@ access_point_users_AP_3 = np.load('access_point_users_AP_3.npy')
 # print('users_channel_rates_to_other_APs_AP_1')
 # print(users_channel_rates_to_other_APs_AP_1)
 
-# print('access_point_users_AP_2')
-# print(access_point_users_AP_2)
+print('access_point_users_AP_2')
+print(access_point_users_AP_2)
 # print('----------------------------------')
 # print('users_achieved_channel_rates_AP_2')
 # print(users_achieved_channel_rates_AP_2)
@@ -72,7 +72,7 @@ print('access_point_3_users: ', access_point_3_users)
 
 access_points = users_distances_to_other_APs_AP_1[0][:,1]
 
-distances_to_access_points = []#[users_distances_to_other_APs_AP_1[0][:,2]
+channel_rates_to_access_points = []#[users_distances_to_other_APs_AP_1[0][:,2]
 
 
 def plot_per_user(user_id, access_point_1_users, access_point_2_users, access_point_3_users):
@@ -81,15 +81,15 @@ def plot_per_user(user_id, access_point_1_users, access_point_2_users, access_po
     if user_id in access_point_1_users:
         user_associated_AP = 1
         index = np.where(access_point_1_users == user_id)[0][0]
-        distances_to_access_points = users_distances_to_other_APs_AP_1[index][:,2]
+        channel_rates_to_access_points = users_channel_rates_to_other_APs_AP_1[index][:,2]
     elif user_id in access_point_2_users:
         user_associated_AP = 2
         index = np.where(access_point_2_users == user_id)[0][0]
-        distances_to_access_points = users_distances_to_other_APs_AP_2[index][:,2]
+        channel_rates_to_access_points = users_channel_rates_to_other_APs_AP_2[index][:,2]
     elif user_id in access_point_3_users:
         user_associated_AP = 3
         index = np.where(access_point_3_users == user_id)[0][0]
-        distances_to_access_points = users_distances_to_other_APs_AP_3[index][:,2]
+        channel_rates_to_access_points = users_channel_rates_to_other_APs_AP_3[index][:,2]
     print('user_associated_AP: ', user_associated_AP)
 
 
@@ -105,7 +105,7 @@ def plot_per_user(user_id, access_point_1_users, access_point_2_users, access_po
             colors.append(default_color)
             labels.append('Other non-associated APs')
 
-    bars = plt.bar(access_points, distances_to_access_points, color=colors)
+    bars = plt.bar(access_points, channel_rates_to_access_points, color=colors)
 
     # Create custom legend
     associated_bar = plt.Rectangle((0, 0), 1, 1, fc=association_color)
@@ -115,7 +115,7 @@ def plot_per_user(user_id, access_point_1_users, access_point_2_users, access_po
 
     # Adding labels and title
     plt.xlabel('Access Point Number')
-    plt.ylabel('Distance to AP')
+    plt.ylabel('Channel Rate to AP')
     plt.title('User: ' + str(user_id))
     plt.show()
 
