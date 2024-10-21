@@ -39,7 +39,7 @@ class SBS():
         self.all_users = copy.deepcopy(all_users)
 
     def associate_users(self, users):
-        self.users = copy.deepcopy(users)
+        self.users = users
         # print('SBS_label')
         # print(self.SBS_label)
         # print('number of users')
