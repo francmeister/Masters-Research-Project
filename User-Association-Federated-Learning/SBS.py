@@ -363,6 +363,7 @@ class SBS():
             self.users_achieved_channel_rates.append((user.user_label,user.user_association_channel_rate))
             self.users_distances_to_associated_APs.append((user.user_label, user.distance_from_associated_access_point))
             self.users_distances_to_other_APs.append(user.distances_from_access_points)
+            print('user.access_points_channel_rates: ', user.access_points_channel_rates)
             self.users_channel_rates_to_other_APs.append(user.access_points_channel_rates)
             self.access_point_users.append((self.SBS_label,user.user_label))
 
