@@ -358,12 +358,13 @@ class SBS():
         self.users_distances_to_associated_APs = []
         self.users_distances_to_other_APs = []
         self.users_channel_rates_to_other_APs = []
-
+        self.access_point_users = []
         for user in self.users:
             self.users_achieved_channel_rates.append((user.user_label,user.user_association_channel_rate))
-            self.users_distances_to_associated_APs.append((user.user_label, user.current_associated_access_point))
+            self.users_distances_to_associated_APs.append((user.user_label, user.distance_from_associated_access_point))
             self.users_distances_to_other_APs.append(user.distances_from_access_points)
             self.users_channel_rates_to_other_APs.append(user.access_points_channel_rates)
+            self.access_point_users.append((self.SBS_label,user.user_label))
 
 
     def populate_buffer_memory_sample_with_reward(self,global_reward):
@@ -638,10 +639,12 @@ class SBS():
     #def perform_timeslot_sequential_events(self,eMBB_Users,URLLC_Users,communication_channel):
 
     def set_properties(self):
+        self.access_point_users = []
         self.users_achieved_channel_rates = []
         self.users_distances_to_associated_APs = []
         self.users_distances_to_other_APs = []
         self.users_channel_rates_to_other_APs = []
+        self.access_point_users = []
         self.user_association_channel_rate_reward = 0
         self.distance_exponent = -5
         self.associated_users = []

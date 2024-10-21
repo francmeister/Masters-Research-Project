@@ -761,7 +761,9 @@ class NetworkEnv(gym.Env):
 
         #print('SBS: ', self.SBS.SBS_label, 'Number of connected users: ', len(self.eMBB_Users))
         #print('SBS: ', self.SBS.SBS_label, 'Number of users: ', len(self.eMBB_Users)+len(self.URLLC_Users), 'embb users: ',len(self.eMBB_Users), 'urllc users: ', len(self.URLLC_Users))
-       
+        print('embbusers: ', len(self.eMBB_Users))
+        print('urllc users: ',len(self.URLLC_Users))
+        print('')
         for eMBB_User in self.eMBB_Users:
             self.users.append(eMBB_User)
             #eMBB_User.set_properties_UE()
@@ -771,6 +773,7 @@ class NetworkEnv(gym.Env):
             eMBB_User.calculate_distances_from_access_point(self.access_point_coordinates, self.radius)
             eMBB_User.calculate_distance_from_current_access_point()
             eMBB_User.calculate_user_association_channel_gains()
+            eMBB_User.calculate_channel_rate_to_other_access_points(self.Communication_Channel_1)
             distances.append(eMBB_User.distance_from_associated_access_point)
             access_points.append(eMBB_User.current_associated_access_point)
             users.append(eMBB_User.user_label)
