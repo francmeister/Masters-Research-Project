@@ -173,7 +173,7 @@ class SBS():
             y_pred_tensor = self.access_point_model(x_train_tensor)
             loss = self.criterion(y_pred_tensor, y_train_tensor)
             self.training_loss.append(loss.detach().cpu().numpy())
-            print('SBS: ', self.SBS_label, 'Training loss: ', loss)
+            #print('SBS: ', self.SBS_label, 'Training loss: ', loss)
             self.optimizer.zero_grad()
             loss.backward()
             self.optimizer.step()
@@ -584,7 +584,7 @@ class SBS():
             self.individual_delay_rewards.append(queue_delay_reward)
             self.individual_queue_delays.append(delay)
             self.total_reward += energy_efficiency_reward*queue_delay_reward + battery_energy_reward
-            self.user_association_channel_rate_reward+=eMBB_User.calculate_achieved_user_association_channel_rate(communication_channel)
+            self.user_association_channel_rate_reward+=eMBB_User.user_association_channel_rate
 
         for urllc_user in urllc_users:
             self.user_association_channel_rate_reward+=urllc_user.calculate_achieved_user_association_channel_rate()
