@@ -37,7 +37,7 @@ class CustomBarrier:
                 # All threads have reached the aggregation point
                 # Perform the aggregation here
                 env.SBS.acquire_global_model(global_entity.global_model)
-                if timestep_counter <= 10000:
+                if timestep_counter <= 5000:
                     global_entity_random_associations = global_entity.perform_random_association(env.SBS.all_users)
                     SBS_association = env.SBS.random_based_association(global_entity_random_associations,access_point_radius, timestep_counter, env.eMBB_Users, env.URLLC_Users)
                 else:
