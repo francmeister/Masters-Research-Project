@@ -61,11 +61,12 @@ def moving_average(data, window_size):
     return np.convolve(data, weights, 'valid')
 
 window_size = 100
+window_size_training_DNNs = 100
 
 global_reward_smooth = moving_average(global_reward, window_size)
-DNN_training_loss_AP_1_smooth = moving_average(DNN_training_loss_AP_1, window_size)
-DNN_training_loss_AP_2_smooth = moving_average(DNN_training_loss_AP_2, window_size)
-DNN_training_loss_AP_3_smooth = moving_average(DNN_training_loss_AP_3, window_size)
+DNN_training_loss_AP_1_smooth = moving_average(DNN_training_loss_AP_1, window_size_training_DNNs)
+DNN_training_loss_AP_2_smooth = moving_average(DNN_training_loss_AP_2, window_size_training_DNNs)
+DNN_training_loss_AP_3_smooth = moving_average(DNN_training_loss_AP_3, window_size_training_DNNs)
 
 figure, axis = plt.subplots(3,3)
 
