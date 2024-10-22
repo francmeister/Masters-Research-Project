@@ -17,19 +17,43 @@ for gb in global_reward:
     timesteps_global_reward.append(x)
     x+=1
 
-timesteps_average_reward_in_memory = []
+timesteps_average_reward_in_memory_AP_1 = []
 x = 0
 for gb in average_reward_in_memory_AP_1:
-    timesteps_average_reward_in_memory.append(x)
+    timesteps_average_reward_in_memory_AP_1.append(x)
     x+=1
 
-timestep_DNN_training_loss = []
+timesteps_average_reward_in_memory_AP_2 = []
+x = 0
+for gb in average_reward_in_memory_AP_2:
+    timesteps_average_reward_in_memory_AP_2.append(x)
+    x+=1
+
+timesteps_average_reward_in_memory_AP_3 = []
+x = 0
+for gb in average_reward_in_memory_AP_3:
+    timesteps_average_reward_in_memory_AP_3.append(x)
+    x+=1
+
+timestep_DNN_training_loss_AP_1 = []
 x = 0
 for gb in DNN_training_loss_AP_1:
-    timestep_DNN_training_loss.append(x)
+    timestep_DNN_training_loss_AP_1.append(x)
     x+=1
 
-figure, axis = plt.subplots(3,4)
+timestep_DNN_training_loss_AP_2 = []
+x = 0
+for gb in DNN_training_loss_AP_2:
+    timestep_DNN_training_loss_AP_2.append(x)
+    x+=1
+
+timestep_DNN_training_loss_AP_3 = []
+x = 0
+for gb in DNN_training_loss_AP_3:
+    timestep_DNN_training_loss_AP_3.append(x)
+    x+=1
+
+figure, axis = plt.subplots(3,3)
 
 
 axis[0,0].plot(timesteps_global_reward, global_reward)
@@ -39,21 +63,21 @@ axis[0,0].set_xlabel('Timestep')
 axis[0,0].set_ylabel('Sum Utility Value')
 axis[0,0].grid()
 
-axis[1,0].plot(timesteps_average_reward_in_memory, average_reward_in_memory_AP_1)
+axis[1,0].plot(timesteps_average_reward_in_memory_AP_1, average_reward_in_memory_AP_1)
 #axis[1,0].plot(timesteps, energies)
 axis[1,0].set_title('Average Utility Value in Training Memory AP 1')
 axis[1,0].set_xlabel('Timestep')
 axis[1,0].set_ylabel('Average Utility Value')
 axis[1,0].grid()
 
-axis[2,0].plot(timesteps_average_reward_in_memory, average_reward_in_memory_AP_2)
+axis[2,0].plot(timesteps_average_reward_in_memory_AP_2, average_reward_in_memory_AP_2)
 #axis[1,0].plot(timesteps, energies)
 axis[2,0].set_title('Average Utility Value in Training Memory AP 2')
 axis[2,0].set_xlabel('Timestep')
 axis[2,0].set_ylabel('Average Utility Value')
 axis[2,0].grid()
 
-axis[0,1].plot(timesteps_average_reward_in_memory, average_reward_in_memory_AP_3)
+axis[0,1].plot(timesteps_average_reward_in_memory_AP_3, average_reward_in_memory_AP_3)
 #axis[1,0].plot(timesteps, energies)
 axis[0,1].set_title('Average Utility Value in Training Memory AP 3')
 axis[0,1].set_xlabel('Timestep')
@@ -67,16 +91,16 @@ axis[1,1].set_xlabel('Timestep')
 axis[1,1].set_ylabel('Training Loss')
 axis[1,1].grid()
 
-axis[2,1].plot(DNN_training_loss_AP_1, DNN_training_loss_AP_2)
+axis[2,1].plot(DNN_training_loss_AP_2, DNN_training_loss_AP_2)
 #axis20,1].plot(timesteps, throughputs)
 axis[2,1].set_title('DNN Training Loss AP 2')
 axis[2,1].set_xlabel('Timestep')
 axis[2,1].set_ylabel('Training Loss')
 axis[2,1].grid()
 
-axis[0,2].plot(DNN_training_loss_AP_1, DNN_training_loss_AP_2)
+axis[0,2].plot(DNN_training_loss_AP_3, DNN_training_loss_AP_3)
 #axis[0,1].plot(timesteps, throughputs)
-axis[0,2].set_title('DNN Training Loss AP 2')
+axis[0,2].set_title('DNN Training Loss AP 3')
 axis[0,2].set_xlabel('Timestep')
 axis[0,2].set_ylabel('Training Loss')
 axis[0,2].grid()
