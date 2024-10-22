@@ -115,7 +115,7 @@ def plot_per_user(user_id, access_point_1_users, access_point_2_users, access_po
 
     # Adding labels and title
     plt.xlabel('Access Point Number')
-    plt.ylabel('Distance to AP')
+    plt.ylabel('Distances to Access Points (m)')
     plt.title('User: ' + str(user_id))
     plt.show()
 

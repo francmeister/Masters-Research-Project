@@ -115,7 +115,7 @@ def plot_per_user(user_id, access_point_1_users, access_point_2_users, access_po
 
     # Adding labels and title
     plt.xlabel('Access Point Number')
-    plt.ylabel('Channel Rate to AP')
+    plt.ylabel('Channel Rate to Access Points (bits/s)')
     plt.title('User: ' + str(user_id))
     plt.show()
 
