@@ -54,10 +54,23 @@ for gb in DNN_training_loss_AP_3:
     timestep_DNN_training_loss_AP_3.append(x)
     x+=1
 
+
+def moving_average(data, window_size):
+    """Compute the moving average of data."""
+    weights = np.repeat(1.0, window_size) / window_size
+    return np.convolve(data, weights, 'valid')
+
+window_size = 100
+
+global_reward_smooth = moving_average(global_reward, window_size)
+DNN_training_loss_AP_1_smooth = moving_average(DNN_training_loss_AP_1, window_size)
+DNN_training_loss_AP_2_smooth = moving_average(DNN_training_loss_AP_2, window_size)
+DNN_training_loss_AP_3_smooth = moving_average(DNN_training_loss_AP_3, window_size)
+
 figure, axis = plt.subplots(3,3)
 
 
-axis[0,0].plot(timesteps_global_reward, global_reward)
+axis[0,0].plot(timesteps_global_reward[window_size-1:], global_reward_smooth)
 #axis[0,0].plot(timesteps, overall_users_reward)
 axis[0,0].set_title('Sum Utility Value all APs')
 axis[0,0].set_xlabel('Timestep')
@@ -85,21 +98,21 @@ axis[0,1].set_xlabel('Timestep')
 axis[0,1].set_ylabel('Average Utility Value')
 axis[0,1].grid()
 
-axis[1,1].plot(timestep_DNN_training_loss_AP_1, DNN_training_loss_AP_1)
+axis[1,1].plot(timestep_DNN_training_loss_AP_1[window_size-1:], DNN_training_loss_AP_1_smooth)
 #axis[0,1].plot(timesteps, throughputs)
 axis[1,1].set_title('DNN Training Loss AP 1')
 axis[1,1].set_xlabel('Timestep')
 axis[1,1].set_ylabel('Training Loss')
 axis[1,1].grid()
 
-axis[2,1].plot(timestep_DNN_training_loss_AP_2, DNN_training_loss_AP_2)
+axis[2,1].plot(timestep_DNN_training_loss_AP_2[window_size-1:], DNN_training_loss_AP_2_smooth)
 #axis20,1].plot(timesteps, throughputs)
 axis[2,1].set_title('DNN Training Loss AP 2')
 axis[2,1].set_xlabel('Timestep')
 axis[2,1].set_ylabel('Training Loss')
 axis[2,1].grid()
 
-axis[0,2].plot(timestep_DNN_training_loss_AP_3, DNN_training_loss_AP_3)
+axis[0,2].plot(timestep_DNN_training_loss_AP_3[window_size-1:], DNN_training_loss_AP_3_smooth)
 #axis[0,1].plot(timesteps, throughputs)
 axis[0,2].set_title('DNN Training Loss AP 3')
 axis[0,2].set_xlabel('Timestep')
