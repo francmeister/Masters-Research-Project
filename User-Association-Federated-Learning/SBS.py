@@ -221,13 +221,14 @@ class SBS():
             
 
         for user in self.all_users:
-            user_ids.append(user.user_label)
             if user.user_label in associated_users_ids:
+                user_ids.append(user.user_label)
                 user_distances.append(user.distance_from_associated_access_point)
                 user_channel_gains.append(user.calculate_user_association_channel_gains())
                 user_channel_rates.append(user.user_association_channel_rate)
                 #print('user: ', user.user_label, 'distance: ', user.distance_from_associated_access_point,'channel rate: ', user.user_association_channel_rate)
             else:
+                user_ids.append(0)
                 user_distances.append(0)
                 user_channel_gains.append(0)
                 user_channel_rates.append(0)
@@ -244,8 +245,13 @@ class SBS():
         for user_channel_rate in user_channel_rates:
             user_channel_rates_normalized.append(interp(user_channel_rate,[0,self.max_user_channel_rate],[0,1]))
 
+        user_ids_normalized = []
+        numbers_of_users = len(self.all_users)
+        for user_id in user_ids:
+            user_ids_normalized.append(interp(user_id,[0,numbers_of_users],[0,1]))
+
         #user_features = [user_ids, user_distances_normalized, user_channel_gains_normalized]
-        user_features = [user_ids, user_channel_rates_normalized]
+        user_features = [user_ids_normalized, user_channel_rates_normalized]
         user_features = np.array(user_features).transpose()
         user_features_for_inference = []
 
