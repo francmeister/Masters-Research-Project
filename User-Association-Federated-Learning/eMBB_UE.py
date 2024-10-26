@@ -134,7 +134,7 @@ class eMBB_UE(User_Equipment):
     
 
     def calculate_channel_rate_to_other_access_points(self, communication_channel, steps,step_limit):
-        self.access_points_channel_rates = []
+        #self.access_points_channel_rates = []
         #self.ap_slot_channel_rates = []
         #print('user: ', self.user_label,'self.distances_from_access_point: ', self.distances_from_access_point)
         for distance_from_access_point in self.distances_from_access_point:
