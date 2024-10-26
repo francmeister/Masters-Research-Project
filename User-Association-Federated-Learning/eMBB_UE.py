@@ -150,11 +150,12 @@ class eMBB_UE(User_Equipment):
             channel_rate_denominator = noise_spectral_density*RB_bandwidth
             channel_rate = RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
             self.ap_slot_channel_rates.append(channel_rate)
-            print('eMBB user: ', self.eMBB_UE_label, 'slot channel rates: ', self.ap_slot_channel_rates)
+            print('eMBB user: ', self.eMBB_UE_label, 'steps: ', steps,'slot channel rates: ', self.ap_slot_channel_rates)
 
         if steps == step_limit:
             number_of_access_points = len(self.distances_from_access_point)
             number_of_slot = len(self.ap_slot_channel_rates)/number_of_access_points
+            print('eMBB user: ', self.eMBB_UE_label, 'number_of_access_points: ', number_of_access_points, 'number_of_slot: ', number_of_slot)
             self.ap_slot_channel_rates = np.array(self.ap_slot_channel_rates)
             self.ap_slot_channel_rates = self.ap_slot_channel_rates.reshape(number_of_access_points,number_of_slot)
             print('eMBB user: ', self.eMBB_UE_label, 'slot channel rates reshaped: ', self.ap_slot_channel_rates)
