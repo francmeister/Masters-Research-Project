@@ -323,7 +323,7 @@ class SBS():
                 associations_prediction_mapped[user.user_label-1] = 0
 
         associations_prediction_mapped = np.array(associations_prediction_mapped)
-        print('SBS: ', self.SBS_label, 'associated users: ', self.users, 'associations_prediction_mapped: ', associations_prediction_mapped)
+        print('SBS: ', self.SBS_label, 'associated users: ', associated_users_ids, 'associations_prediction_mapped: ', associations_prediction_mapped)
         self.buffer_memory.append((preprocessed_inputs, associations_prediction_mapped, 0))
         # print('preprocessed_inputs: ', preprocessed_inputs)
         # print('association_prediction: ', association_prediction)
