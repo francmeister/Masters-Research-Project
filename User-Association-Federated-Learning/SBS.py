@@ -245,6 +245,7 @@ class SBS():
         for user_channel_rate in user_channel_rates:
             user_channel_rates_normalized.append(interp(user_channel_rate,[0,self.max_user_channel_rate],[0,1]))
 
+        print('SBS: ', self.SBS_label, 'user_ids: ', user_ids, 'user_channel_rates: ', user_channel_rates, 'user_channel_rates_normalized: ', user_channel_rates_normalized)
         user_ids_normalized = []
         numbers_of_users = len(self.all_users)
         for user_id in user_ids:
