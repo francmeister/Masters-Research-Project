@@ -229,7 +229,7 @@ class SBS():
                 #print('user: ', user.user_label, 'distance: ', user.distance_from_associated_access_point,'channel rate: ', user.user_association_channel_rate)
             else:
                 user_distances.append(0)
-                user_channel_gains.append(0.1)
+                user_channel_gains.append(0)
                 user_channel_rates.append(0)
 
         user_distances_normalized = []
@@ -320,10 +320,11 @@ class SBS():
         for user in self.all_users:
             if user.user_label not in associated_users_ids:
                 associations_prediction_mapped_for_global_model[user.user_label-1] = 0
-                association_prediction[user.user_label-1] = 0
+                associations_prediction_mapped[user.user_label-1] = 0
 
         associations_prediction_mapped = np.array(associations_prediction_mapped)
-        self.buffer_memory.append((preprocessed_inputs, association_prediction, 0))
+        print('SBS: ', self.SBS_label, 'associated users: ', self.users, 'associations_prediction_mapped: ', associations_prediction_mapped)
+        self.buffer_memory.append((preprocessed_inputs, associations_prediction_mapped, 0))
         # print('preprocessed_inputs: ', preprocessed_inputs)
         # print('association_prediction: ', association_prediction)
         return associations_prediction_mapped_for_global_model
