@@ -111,7 +111,7 @@ class eMBB_UE(User_Equipment):
 
         #return self.fast_fading_channel_gain*self.slow_fading_channel_gain
     
-    def calculate_achieved_user_association_channel_rate(self, communication_channel):
+    def calculate_achieved_user_association_channel_rate(self, communication_channel, steps):
         #self.user_association_channel_rate = math.pow(self.distance_from_associated_access_point,-1)#*self.fast_fading_channel_gain*self.slow_fading_channel_gain
         #print('eMBB User: ', self.user_label,'self.slow_fading_channel_gain: ', self.slow_fading_channel_gain)
         #print('self.fast_fading_channel_gain: ', self.fast_fading_channel_gain)
@@ -125,6 +125,8 @@ class eMBB_UE(User_Equipment):
         self.user_association_channel_rate = channel_rate
         self.user_association_channel_rate_array.append(self.user_association_channel_rate)
         self.user_association_channel_rate = sum(self.user_association_channel_rate_array)/len(self.user_association_channel_rate_array)
+        if steps == 100:
+            print('eMBB: ', self.eMBB_UE_label, 'steps: ', steps,'self.user_association_channel_rate_array: ', self.user_association_channel_rate_array, "len(self.user_association_channel_rate_array): ", self.user_association_channel_rate_array)
         #random_value = 0.0001*random.random()
         #print('channel_rate_numerator: ', channel_rate_numerator)
         #print('channel_rate_denominator: ', channel_rate_denominator)
