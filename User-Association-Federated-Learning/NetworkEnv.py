@@ -600,7 +600,7 @@ class NetworkEnv(gym.Env):
             eMBB_User.compute_battery_energy_level()
             eMBB_User.generate_task(self.Communication_Channel_1)
             eMBB_User.collect_state()
-            eMBB_User.calculate_channel_rate_to_other_access_points(self.Communication_Channel_1)
+            eMBB_User.calculate_channel_rate_to_other_access_points(self.Communication_Channel_1, self.steps,self.STEP_LIMIT)
 
         for urllc_user in self.URLLC_Users:
             urllc_user.calculate_channel_gain_on_all_resource_blocks(self.Communication_Channel_1)
@@ -773,7 +773,7 @@ class NetworkEnv(gym.Env):
             eMBB_User.calculate_distances_from_access_point(self.access_point_coordinates, self.radius)
             eMBB_User.calculate_distance_from_current_access_point()
             eMBB_User.calculate_user_association_channel_gains()
-            eMBB_User.calculate_channel_rate_to_other_access_points(self.Communication_Channel_1)
+            eMBB_User.calculate_channel_rate_to_other_access_points(self.Communication_Channel_1, self.steps,self.STEP_LIMIT)
             #print('eMBB_User.access_points_channel_rates: ', eMBB_User.access_points_channel_rates)
             distances.append(eMBB_User.distance_from_associated_access_point)
             access_points.append(eMBB_User.current_associated_access_point)
