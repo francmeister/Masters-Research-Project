@@ -157,8 +157,8 @@ class eMBB_UE(User_Equipment):
             number_of_slot = len(self.ap_slot_channel_rates)/number_of_access_points
             print('eMBB user: ', self.eMBB_UE_label, 'number_of_access_points: ', number_of_access_points, 'number_of_slot: ', number_of_slot, 'len(self.ap_slot_channel_rates): ',len(self.ap_slot_channel_rates))
             self.ap_slot_channel_rates = np.array(self.ap_slot_channel_rates)
-            print('eMBB user: ', self.eMBB_UE_label, 'np array self.ap_slot_channel_rates: ', self.ap_slot_channel_rates)
-            self.ap_slot_channel_rates = self.ap_slot_channel_rates.reshape(1,number_of_access_points,int(number_of_slot))
+            print('eMBB user: ', self.eMBB_UE_label, 'np array self.ap_slot_channel_rates: ', self.ap_slot_channel_rates, 'self.ap_slot_channel_rates shape: ', self.ap_slot_channel_rates.shape)
+            self.ap_slot_channel_rates = self.ap_slot_channel_rates.reshape(number_of_access_points,int(number_of_slot))
             print('eMBB user: ', self.eMBB_UE_label, 'slot channel rates reshaped: ', self.ap_slot_channel_rates)
             average_channel_rates = np.mean(self.ap_slot_channel_rates, axis=0)
             print('eMBB user: ', self.eMBB_UE_label, 'slot channel rates averages: ', average_channel_rates)
