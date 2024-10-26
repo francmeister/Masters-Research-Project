@@ -251,7 +251,7 @@ class SBS():
             user_ids_normalized.append(interp(user_id,[0,numbers_of_users],[0,1]))
 
         #user_features = [user_ids, user_distances_normalized, user_channel_gains_normalized]
-        user_features = [user_ids_normalized, user_channel_rates_normalized]
+        user_features = [user_ids, user_channel_rates_normalized]
         user_features = np.array(user_features).transpose()
         user_features_for_inference = []
 
