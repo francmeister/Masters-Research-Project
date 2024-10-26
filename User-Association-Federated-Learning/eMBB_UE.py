@@ -125,8 +125,8 @@ class eMBB_UE(User_Equipment):
         self.user_association_channel_rate = channel_rate
         self.user_association_channel_rate_array.append(self.user_association_channel_rate)
         self.user_association_channel_rate = sum(self.user_association_channel_rate_array)/len(self.user_association_channel_rate_array)
-        if steps == 100:
-            print('eMBB: ', self.eMBB_UE_label, 'steps: ', steps,'self.user_association_channel_rate_array: ', self.user_association_channel_rate_array, "len(self.user_association_channel_rate_array): ", self.user_association_channel_rate_array)
+        #if steps == 100:
+            #print('eMBB: ', self.eMBB_UE_label, 'steps: ', steps,'self.user_association_channel_rate_array: ', self.user_association_channel_rate_array, "len(self.user_association_channel_rate_array): ", self.user_association_channel_rate_array)
         #random_value = 0.0001*random.random()
         #print('channel_rate_numerator: ', channel_rate_numerator)
         #print('channel_rate_denominator: ', channel_rate_denominator)
