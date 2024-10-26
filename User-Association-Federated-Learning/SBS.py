@@ -242,7 +242,7 @@ class SBS():
 
         user_channel_rates_normalized = []
         for user_channel_rate in user_channel_rates:
-            user_channel_rates_normalized.append(interp(user_channel_rate,[0,self.max_user_channel_rate],[1,2]))
+            user_channel_rates_normalized.append(interp(user_channel_rate,[0,self.max_user_channel_rate],[0,1]))
 
         #user_features = [user_ids, user_distances_normalized, user_channel_gains_normalized]
         user_features = [user_ids, user_channel_rates_normalized]
