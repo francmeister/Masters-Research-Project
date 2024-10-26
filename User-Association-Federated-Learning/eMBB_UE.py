@@ -34,6 +34,7 @@ class eMBB_UE(User_Equipment):
         self.user_association_channel_rate_array = []
         self.distances_from_access_points = []
         self.access_points_channel_rates = []
+        self.access_points_within_radius_for_plotting = []
         self.set_properties_eMBB()
 
     def set_coordinates(self, coordinates):
@@ -81,6 +82,9 @@ class eMBB_UE(User_Equipment):
         for distance_from_access_point in self.distances_from_access_point:
             if distance_from_access_point <= radius:
                 self.access_points_within_radius.append((access_point_number,distance_from_access_point))
+                self.access_points_within_radius_for_plotting.append((self.eMBB_UE_label,access_point_number,1))
+            else:
+                self.access_points_within_radius_for_plotting((self.eMBB_UE_label,access_point_number,0))
             access_point_number+=1
 
         #print(self.distances_from_access_point)

@@ -310,16 +310,15 @@ class SBS():
 
         associations = []
     
-        # for user in self.users:
-        #     user_access_points_in_radius = []
-        #     for x in user.access_points_within_radius:
-        #         user_access_points_in_radius.append(x[0])
-        #     if associations_prediction_mapped[user.user_label-1] not in user_access_points_in_radius:
-        #         associations.append((user.user_label,self.SBS_label))
-        #         association_prediction[user.user_label-1] = self.SBS_label
-        #         associations_prediction_mapped[user.user_label-1] = self.SBS_label
-            #else:
-                #association_prediction.append((user.user_label, association_prediction[user.user_label-1]))
+        for user in self.users:
+            user_access_points_in_radius = []
+            for x in user.access_points_within_radius:
+                user_access_points_in_radius.append(x[0])
+            if associations_prediction_mapped[user.user_label-1] not in user_access_points_in_radius:
+                randnum = np.random.randint(0, len(user_access_points_in_radius)+1)
+                associations_prediction_mapped[user.user_label-1] = user_access_points_in_radius[randnum][0]
+            else:
+                association_prediction.append((user.user_label, association_prediction[user.user_label-1]))
 
         for user in self.users:
             associated_users_ids.append(user.user_label)
@@ -367,6 +366,7 @@ class SBS():
         self.users_distances_to_other_APs = []
         self.users_channel_rates_to_other_APs = []
         self.access_point_users = []
+        self.access_points_within_radius = []
         for user in self.users:
             self.users_achieved_channel_rates.append((user.user_label,user.user_association_channel_rate))
             self.users_distances_to_associated_APs.append((user.user_label, user.distance_from_associated_access_point))
@@ -374,6 +374,7 @@ class SBS():
             #print('user.access_points_channel_rates: ', user.access_points_channel_rates)
             self.users_channel_rates_to_other_APs.append(user.access_points_channel_rates)
             self.access_point_users.append((self.SBS_label,user.user_label))
+            self.access_points_within_radius.append(user.access_points_within_radius_for_plotting)
 
 
     def populate_buffer_memory_sample_with_reward(self,global_reward):
