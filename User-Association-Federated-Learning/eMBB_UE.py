@@ -57,6 +57,7 @@ class eMBB_UE(User_Equipment):
         self.distances_from_access_point = []
         self.access_points_within_radius = []
         self.distances_from_access_points = []
+        self.access_points_within_radius_for_plotting = []
         #print(access_points_coordinates)
         access_point_number = 1
         for access_point_coordinate in access_points_coordinates:
