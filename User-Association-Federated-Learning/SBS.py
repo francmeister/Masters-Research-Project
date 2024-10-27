@@ -130,14 +130,14 @@ class SBS():
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         global_model.to(device)
         self.access_point_model.to(device)
-        if self.model_update_tracker == 0:
-            self.access_point_model.load_state_dict(global_model.state_dict())
-            self.model_update_tracker+=1
-        else:
-            # Step 14: Still once every two iterations, we update the weights of the Actor target by polyak averaging
-            for global_model_param, local_model_param in zip(global_model.parameters(), self.access_point_model.parameters()):
-                local_model_param.data.copy_(self.tau * global_model_param.data + (1 - self.tau) * local_model_param.data)
-            #self.access_point_model.to(device)
+        # if self.model_update_tracker == 0:
+        #     self.access_point_model.load_state_dict(global_model.state_dict())
+        #     self.model_update_tracker+=1
+        # else:
+        #     # Step 14: Still once every two iterations, we update the weights of the Actor target by polyak averaging
+        #     for global_model_param, local_model_param in zip(global_model.parameters(), self.access_point_model.parameters()):
+        #         local_model_param.data.copy_(self.tau * global_model_param.data + (1 - self.tau) * local_model_param.data)
+        #     #self.access_point_model.to(device)
 
     def acquire_global_memory(self, global_memory):    
         self.training_memory = copy.deepcopy(global_memory[self.SBS_label-1])   
@@ -149,7 +149,7 @@ class SBS():
         self.criterion = nn.MSELoss()
         self.optimizer = optim.Adam(self.access_point_model.parameters(), lr=0.001)
         self.num_training_epochs = 1000
-        x_train, y_train, sample_rewards = self.training_memory.sample(20)
+        x_train, y_train, sample_rewards = self.training_memory.sample(5)
         # print('len(x_train[0]): ', y_train[0])
         #print(len(x_train[0]))
 
@@ -319,7 +319,7 @@ class SBS():
                     randnum = random.randint(0, len(user_access_points_in_radius)-1)
                     associations_prediction_mapped[user.user_label-1] = user_access_points_in_radius[randnum]
                 else:
-                    associations_prediction_mapped[user.user_label-1] = user.distances_from_access_point[0]
+                    associations_prediction_mapped[user.user_label-1] = random.randint(0, 2)#user.distances_from_access_point[0]
             #else:
             #    association_prediction.append((user.user_label, association_prediction[user.user_label-1]))
 

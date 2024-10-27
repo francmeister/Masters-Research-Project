@@ -9,7 +9,7 @@ import numpy as np
 
 class DNN_TRAINING_MEMORY():
 
-  def __init__(self, max_size=30):
+  def __init__(self, max_size=10):
     self.storage = []
     self.max_size = max_size
     self.ptr = 0
