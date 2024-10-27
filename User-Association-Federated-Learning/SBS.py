@@ -383,7 +383,7 @@ class SBS():
 
     def populate_buffer_memory_sample_with_reward(self,global_reward):
         rewards_in_memory = []
-        if len(self.buffer_memory) > 1:
+        if len(self.buffer_memory) > 1 and len(self.training_memory.storage) > 0:
             new_sample = (self.buffer_memory[0][0],self.buffer_memory[0][1],global_reward)
             self.buffer_memory[0] = new_sample
             dnn_memory_rewards = []
