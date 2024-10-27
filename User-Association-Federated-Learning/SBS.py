@@ -330,7 +330,7 @@ class SBS():
         for user in self.all_users:
             if user.user_label not in associated_users_ids:
                 associations_prediction_mapped_for_global_model[user.user_label-1] = 0
-                associations_prediction_mapped[user.user_label-1] = 0
+                #associations_prediction_mapped[user.user_label-1] = 0
 
         associations_prediction_mapped = np.array(associations_prediction_mapped)
         #print('SBS: ', self.SBS_label, 'timestep_counter: ',timestep_counter,'associated users: ', 'preprocessed_inputs: ', preprocessed_inputs,associated_users_ids, 'associations_prediction_mapped: ', associations_prediction_mapped)
