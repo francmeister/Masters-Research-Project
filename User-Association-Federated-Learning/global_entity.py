@@ -41,7 +41,8 @@ class GLOBAL_ENTITY():
         for user in users:
             if len(user.access_points_within_radius) > 0:
                 user_num_access_points = len(user.access_points_within_radius) 
-                randint = int(random.randint(0,user_num_access_points-1))
+                #randint = int(random.randint(0,user_num_access_points-1))
+                randint = int(random.randint(0,2))
                 user_access_point = user.access_points_within_radius[randint]
                 self.initial_associations.append((user.user_label, user_access_point))
             else: 
