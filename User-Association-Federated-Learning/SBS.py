@@ -316,7 +316,7 @@ class SBS():
                 user_access_points_in_radius.append(x[0])
             if associations_prediction_mapped[user.user_label-1] not in user_access_points_in_radius:
                 randnum = np.random.randint(0, len(user_access_points_in_radius)+1)
-                associations_prediction_mapped[user.user_label-1] = user_access_points_in_radius[randnum][0]
+                associations_prediction_mapped[user.user_label-1] = user_access_points_in_radius[randnum]
             #else:
             #    association_prediction.append((user.user_label, association_prediction[user.user_label-1]))
 
@@ -329,7 +329,7 @@ class SBS():
                 associations_prediction_mapped[user.user_label-1] = 0
 
         associations_prediction_mapped = np.array(associations_prediction_mapped)
-        print('SBS: ', self.SBS_label, 'timestep_counter: ',timestep_counter,'associated users: ', 'preprocessed_inputs: ', preprocessed_inputs,associated_users_ids, 'associations_prediction_mapped: ', associations_prediction_mapped)
+        #print('SBS: ', self.SBS_label, 'timestep_counter: ',timestep_counter,'associated users: ', 'preprocessed_inputs: ', preprocessed_inputs,associated_users_ids, 'associations_prediction_mapped: ', associations_prediction_mapped)
         self.buffer_memory.append((preprocessed_inputs, associations_prediction_mapped, 0))
         # print('preprocessed_inputs: ', preprocessed_inputs)
         # print('association_prediction: ', association_prediction)
