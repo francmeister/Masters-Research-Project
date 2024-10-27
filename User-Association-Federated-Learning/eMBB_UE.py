@@ -158,6 +158,7 @@ class eMBB_UE(User_Equipment):
             self.ap_slot_channel_rates.append(channel_rate)
 
         if steps == step_limit:
+            self.access_points_channel_rates = []
             number_of_access_points = len(self.distances_from_access_point)
             number_of_slot = len(self.ap_slot_channel_rates)/number_of_access_points
             self.ap_slot_channel_rates = np.array(self.ap_slot_channel_rates)
