@@ -405,7 +405,10 @@ class SBS():
             model_outputs.append(sample[1])
         model_outputs = np.array(model_outputs)
         print('SBS: ', self.SBS_label, 'model_outputs: ', model_outputs)
-        self.average_reward_in_memory = sum(rewards_in_memory)/len(rewards_in_memory) + random.random()
+        if len(rewards_in_memory) > 0:
+            self.average_reward_in_memory = sum(rewards_in_memory)/len(rewards_in_memory) + random.random()
+        else:
+            self.average_reward_in_memory = 0
         #print('SBS: ', self.SBS_label, self.training_memory.storage)
 
     def collect_state_space(self, eMBB_Users,urllc_users, Communication_Channel_1):
