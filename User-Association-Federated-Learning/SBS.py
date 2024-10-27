@@ -383,17 +383,20 @@ class SBS():
 
     def populate_buffer_memory_sample_with_reward(self,global_reward):
         rewards_in_memory = []
-        if len(self.buffer_memory) > 1 and len(self.training_memory.storage) > 0:
+        if len(self.buffer_memory) > 1:
             new_sample = (self.buffer_memory[0][0],self.buffer_memory[0][1],global_reward)
             self.buffer_memory[0] = new_sample
             dnn_memory_rewards = []
             for sample in self.training_memory.storage:
                 dnn_memory_rewards.append(sample[2])
-            max_index = dnn_memory_rewards.index(max(dnn_memory_rewards))
 
-            if global_reward >= dnn_memory_rewards[max_index]:
-                self.training_memory.add(self.buffer_memory[0])
+            if len(self.training_memory.storage) > 0:
+                max_index = dnn_memory_rewards.index(max(dnn_memory_rewards))
+                if global_reward >= dnn_memory_rewards[max_index]:
+                    self.training_memory.add(self.buffer_memory[0])
                 #print('SBS: ', self.SBS_label, 'Appended')
+            else:
+                self.training_memory.add(self.buffer_memory[0])
 
             self.buffer_memory.pop(0)
         for sample in self.training_memory.storage:
