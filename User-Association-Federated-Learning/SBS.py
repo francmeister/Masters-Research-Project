@@ -342,13 +342,16 @@ class SBS():
     def random_based_association(self, global_entity_associations, access_point_radius, timestep_counter, embb_users, urllc_users):
         preprocessed_inputs = self.preprocess_model_inputs(access_point_radius, embb_users, urllc_users)
         future_associations = []
-        for user in self.all_users:
-            future_associations.append(0)
+        # for user in self.all_users:
+        #     future_associations.append(0)
+
+        for association in global_entity_associations:
+            future_associations.append(association[1][0])
    
-        for user in self.users:
-            for association in global_entity_associations:
-                if association[0] == user.user_label:
-                    future_associations[user.user_label-1] = association[1][0]
+        # for user in self.users:
+        #     for association in global_entity_associations:
+        #         if association[0] == user.user_label:
+        #             future_associations[user.user_label-1] = association[1][0]
 
         future_associations = np.array(future_associations)
         self.buffer_memory.append((preprocessed_inputs, future_associations, 0))
