@@ -315,7 +315,7 @@ class SBS():
             for x in user.access_points_within_radius:
                 user_access_points_in_radius.append(x[0])
             if associations_prediction_mapped[user.user_label-1] not in user_access_points_in_radius:
-                randnum = np.random.randint(0, len(user_access_points_in_radius))
+                randnum = random.randint(0, len(user_access_points_in_radius)-1)
                 associations_prediction_mapped[user.user_label-1] = user_access_points_in_radius[randnum]
             #else:
             #    association_prediction.append((user.user_label, association_prediction[user.user_label-1]))
