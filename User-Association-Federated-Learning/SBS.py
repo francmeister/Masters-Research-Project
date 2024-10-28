@@ -270,7 +270,7 @@ class SBS():
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
         #association_prediction = association_prediction.detach().numpy()
         association_prediction = association_prediction.cpu().detach().numpy()
-        print('SBS: ', self.SBS_label,'association_prediction: ', association_prediction)
+        #print('SBS: ', self.SBS_label,'association_prediction: ', association_prediction)
 
         # if timestep_counter < 50000:
         #     association_prediction = []
@@ -295,8 +295,8 @@ class SBS():
         
 
         association_prediction_bin = np.array(association_prediction_bin)
-        print('SBS: ', self.SBS_label,'association_prediction_reshaped: ', association_prediction_reshaped)
-        print('SBS: ', self.SBS_label,'association_prediction_bin: ', association_prediction_bin)
+        #print('SBS: ', self.SBS_label,'association_prediction_reshaped: ', association_prediction_reshaped)
+        #print('SBS: ', self.SBS_label,'association_prediction_bin: ', association_prediction_bin)
         #associations_prediction_mapped = []
         # for prediction in association_prediction:
         #     associations_prediction_mapped.append(round(prediction))
@@ -349,7 +349,7 @@ class SBS():
 
         association_prediction_reshaped = association_prediction_reshaped.reshape(1,len(association_prediction_reshaped)*len(association_prediction_reshaped[0]))
         association_prediction_int = self.bin_to_int(association_prediction_bin)
-        print('SBS: ', self.SBS_label,'association_prediction_int: ', association_prediction_int, 'association_prediction_reshaped: ', association_prediction_reshaped)
+        print('SBS: ', self.SBS_label,'association_prediction_int: ', association_prediction_int)
         #associations_prediction_mapped = np.array(associations_prediction_mapped)
         #print('SBS: ', self.SBS_label, 'timestep_counter: ',timestep_counter,'associated users: ', 'preprocessed_inputs: ', preprocessed_inputs,associated_users_ids, 'associations_prediction_mapped: ', associations_prediction_mapped)
         self.buffer_memory.append((preprocessed_inputs, association_prediction_reshaped, 0))
@@ -390,7 +390,7 @@ class SBS():
         bin_array = np.array(bin_array)
         bin_array = bin_array.reshape(1,len(bin_array)*len(bin_array[0]))
         bin_array = bin_array.squeeze()
-        print('SBS: ', self.SBS_label, 'bin_array: ', bin_array, 'int_array: ', nparray)
+        #print('SBS: ', self.SBS_label, 'bin_array: ', bin_array, 'int_array: ', nparray)
         return bin_array
     
     def bin_to_int(self,nparray):
