@@ -356,6 +356,7 @@ class SBS():
                 association_prediction_reshaped[user.user_label-1] = np.array([0,0,0])
 
         association_prediction_reshaped = association_prediction_reshaped.reshape(1,len(association_prediction_reshaped)*len(association_prediction_reshaped[0]))
+        association_prediction_reshaped = association_prediction_reshaped.squeeze()
         print('SBS: ', self.SBS_label,'association_prediction_reshaped: ', association_prediction_reshaped)
         association_prediction_int = self.bin_to_int(association_prediction_bin)
         #print('SBS: ', self.SBS_label,'association_prediction_int: ', association_prediction_int)
@@ -469,9 +470,9 @@ class SBS():
         model_outputs = []
         for sample in self.training_memory.storage:
             model_outputs.append(sample[1])
-        print('SBS: ', self.SBS_label, 'model_outputs before np array: ', model_outputs)
+        #print('SBS: ', self.SBS_label, 'model_outputs before np array: ', model_outputs)
         model_outputs = np.array(model_outputs)
-        print('SBS: ', self.SBS_label, 'model_outputs: ', model_outputs)
+        #print('SBS: ', self.SBS_label, 'model_outputs: ', model_outputs)
         if len(rewards_in_memory) > 0:
             self.average_reward_in_memory = sum(rewards_in_memory)/len(rewards_in_memory) + random.random()
         else:
