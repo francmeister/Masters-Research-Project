@@ -270,6 +270,13 @@ class SBS():
         association_prediction = self.access_point_model(preprocessed_inputs_tensor)
         #association_prediction = association_prediction.detach().numpy()
         association_prediction = association_prediction.cpu().detach().numpy()
+        mean = 0      # Mean of the normal distribution
+        std_dev = 0.15 # Standard deviation of the normal distribution
+
+        # Generate noise and add it to the array
+        noise = np.random.normal(mean, std_dev, association_prediction.shape)
+        association_prediction = association_prediction + noise
+        association_prediction = np.clip(association_prediction, 0, 1)
         print('SBS: ', self.SBS_label,'association_prediction: ', association_prediction)
 
         # if timestep_counter < 50000:
@@ -457,11 +464,11 @@ class SBS():
             rewards_in_memory.append(sample[2])
         #print('rewards_in_memory: ')
         #print(rewards_in_memory)
-        # model_outputs = []
-        # for sample in self.training_memory.storage:
-        #     model_outputs.append(sample[1])
-        # model_outputs = np.array(model_outputs)
-        #print('SBS: ', self.SBS_label, 'model_outputs: ', model_outputs)
+        model_outputs = []
+        for sample in self.training_memory.storage:
+            model_outputs.append(sample[1])
+        model_outputs = np.array(model_outputs)
+        print('SBS: ', self.SBS_label, 'model_outputs: ', model_outputs)
         if len(rewards_in_memory) > 0:
             self.average_reward_in_memory = sum(rewards_in_memory)/len(rewards_in_memory) + random.random()
         else:
