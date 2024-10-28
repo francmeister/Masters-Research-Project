@@ -467,6 +467,7 @@ class SBS():
         model_outputs = []
         for sample in self.training_memory.storage:
             model_outputs.append(sample[1])
+        print('SBS: ', self.SBS_label, 'model_outputs before np array: ', model_outputs)
         model_outputs = np.array(model_outputs)
         print('SBS: ', self.SBS_label, 'model_outputs: ', model_outputs)
         if len(rewards_in_memory) > 0:
