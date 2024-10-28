@@ -345,11 +345,11 @@ class SBS():
                 #associations_prediction_mapped_for_global_model[user.user_label-1] = 0
                 #associations_prediction_mapped[user.user_label-1] = 0
                 association_prediction_bin[user.user_label-1] = np.array([0,0,0])
-                association_prediction_reshaped[user.use_label-1] = np.array([0,0,0])
+                association_prediction_reshaped[user.user_label-1] = np.array([0,0,0])
 
         association_prediction_reshaped = association_prediction_reshaped.reshape(1,len(association_prediction_reshaped)*len(association_prediction_reshaped[0]))
         association_prediction_int = self.bin_to_int(association_prediction_bin)
-        print('SBS: ', self.SBS_label,'association_prediction_int: ', association_prediction_int)
+        print('SBS: ', self.SBS_label,'association_prediction_int: ', association_prediction_int, 'association_prediction_reshaped: ', association_prediction_reshaped)
         #associations_prediction_mapped = np.array(associations_prediction_mapped)
         #print('SBS: ', self.SBS_label, 'timestep_counter: ',timestep_counter,'associated users: ', 'preprocessed_inputs: ', preprocessed_inputs,associated_users_ids, 'associations_prediction_mapped: ', associations_prediction_mapped)
         self.buffer_memory.append((preprocessed_inputs, association_prediction_reshaped, 0))
