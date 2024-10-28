@@ -20,4 +20,5 @@ class DNN(nn.Module):
         x = self.relu(self.fc1(x))
         x = self.relu(self.fc2(x))
         x = self.relu(self.fc3(x))
+        x = torch.sigmoid(x)
         return x

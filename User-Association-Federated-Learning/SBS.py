@@ -282,25 +282,38 @@ class SBS():
 
         #elif timestep_counter >= 1000:
             #association_prediction = (association_prediction + np.random.normal(0, 0.1))
+        association_prediction_bin = []
+        association_prediction_reshaped = association_prediction.reshape(len(self.all_users), self.num_access_points)
+        for prediction in association_prediction_reshaped:
+            index_of_max = np.argmax(prediction)
+            if index_of_max == 0:
+                association_prediction_bin.append([1,0,0])
+            elif index_of_max == 1:
+                association_prediction_bin.append([0,1,0])
+            elif index_of_max == 2:
+                association_prediction_bin.append([0,0,1])
+        
 
+        association_prediction_bin = np.array(association_prediction_bin)
+        print('SBS: ', self.SBS_label,'association_prediction_reshaped: ', association_prediction_reshaped)
+        print('SBS: ', self.SBS_label,'association_prediction_bin: ', association_prediction_bin)
+        #associations_prediction_mapped = []
+        # for prediction in association_prediction:
+        #     associations_prediction_mapped.append(round(prediction))
 
-        associations_prediction_mapped = []
-        for prediction in association_prediction:
-            associations_prediction_mapped.append(round(prediction))
+        # x=0
+        # for prediction in associations_prediction_mapped:
+        #     if prediction < 1:
+        #         associations_prediction_mapped[x] = 1
+        #     elif prediction > self.num_access_points:
+        #         associations_prediction_mapped[x] = self.num_access_points
 
-        x=0
-        for prediction in associations_prediction_mapped:
-            if prediction < 1:
-                associations_prediction_mapped[x] = 1
-            elif prediction > self.num_access_points:
-                associations_prediction_mapped[x] = self.num_access_points
-
-            x+=1
+        #     x+=1
         
         #print('associations_prediction_mapped')
         #print(associations_prediction_mapped)
 
-        associations_prediction_mapped_for_global_model = copy.deepcopy(associations_prediction_mapped)
+        #associations_prediction_mapped_for_global_model = copy.deepcopy(associations_prediction_mapped)
         associated_users_ids = []
 
         # print('SBS: ', self.SBS_label)
@@ -329,35 +342,71 @@ class SBS():
 
         for user in self.all_users:
             if user.user_label not in associated_users_ids:
-                associations_prediction_mapped_for_global_model[user.user_label-1] = 0
+                #associations_prediction_mapped_for_global_model[user.user_label-1] = 0
                 #associations_prediction_mapped[user.user_label-1] = 0
+                association_prediction_bin[user.user_label-1] = np.array([0,0,0])
+                association_prediction_reshaped[user.use_label-1] = np.array([0,0,0])
 
-        associations_prediction_mapped = np.array(associations_prediction_mapped)
+        association_prediction_reshaped = association_prediction_reshaped.reshape(1,len(association_prediction_reshaped)*len(association_prediction_reshaped[0]))
+        association_prediction_int = self.bin_to_int(association_prediction_bin)
+        print('SBS: ', self.SBS_label,'association_prediction_int: ', association_prediction_int)
+        #associations_prediction_mapped = np.array(associations_prediction_mapped)
         #print('SBS: ', self.SBS_label, 'timestep_counter: ',timestep_counter,'associated users: ', 'preprocessed_inputs: ', preprocessed_inputs,associated_users_ids, 'associations_prediction_mapped: ', associations_prediction_mapped)
-        self.buffer_memory.append((preprocessed_inputs, associations_prediction_mapped, 0))
+        self.buffer_memory.append((preprocessed_inputs, association_prediction_reshaped, 0))
         # print('preprocessed_inputs: ', preprocessed_inputs)
         # print('association_prediction: ', association_prediction)
-        return associations_prediction_mapped_for_global_model
+        return association_prediction_int
     
     def random_based_association(self, global_entity_associations, access_point_radius, timestep_counter, embb_users, urllc_users):
         preprocessed_inputs = self.preprocess_model_inputs(access_point_radius, embb_users, urllc_users)
         future_associations = []
-        # for user in self.all_users:
-        #     future_associations.append(0)
-
-        for association in global_entity_associations:
-            future_associations.append(association[1][0])
+        for user in self.all_users:
+            future_associations.append(0)
    
-        # for user in self.users:
-        #     for association in global_entity_associations:
-        #         if association[0] == user.user_label:
-        #             future_associations[user.user_label-1] = association[1][0]
+        for user in self.users:
+            for association in global_entity_associations:
+                if association[0] == user.user_label:
+                    future_associations[user.user_label-1] = association[1][0]
 
         future_associations = np.array(future_associations)
-        self.buffer_memory.append((preprocessed_inputs, future_associations, 0))
+        future_associations_binary = self.int_to_binary(future_associations)
+        self.buffer_memory.append((preprocessed_inputs, future_associations_binary, 0))
         # print('preprocessed_inputs: ', preprocessed_inputs)
         # print('association_prediction: ', future_associations)
         return future_associations
+    
+    def int_to_binary(self,nparray):
+        bin_array = []
+        for number in nparray:
+            if number == 0:
+                bin_array.append([0,0,0])
+            elif number == 1:
+                bin_array.append([1,0,0])
+            elif number == 2:
+                bin_array.append([0,1,0])
+            elif number == 3:
+                bin_array.append([0,0,1])   
+
+        bin_array = np.array(bin_array)
+        bin_array = bin_array.reshape(1,len(bin_array)*len(bin_array[0]))
+        return bin_array
+    
+    def bin_to_int(self,nparray):
+        int_array = []
+        #nparray = nparray.reshape(len(self.all_users),self.num_access_points)
+        for bin in nparray:
+            if bin == np.array([0,0,0]):
+                int_array.append(0)
+            elif bin == np.array([1,0,0]):
+                int_array.append(1)
+            elif bin == np.array([0,1,0]):
+                int_array.append(2)
+            elif bin == np.array([0,0,1]):
+                int_array.append(3)
+        
+        int_array = np.array(int_array)
+        return int_array
+            
     
     def save_model(self, filename, directory):
         torch.save(self.access_point_model.state_dict(), '%s/%s.pth' % (directory, filename))
