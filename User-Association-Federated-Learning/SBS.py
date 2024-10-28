@@ -397,13 +397,13 @@ class SBS():
         int_array = []
         #nparray = nparray.reshape(len(self.all_users),self.num_access_points)
         for bin in nparray:
-            if bin == np.array([0,0,0]):
+            if np.array_equal(bin, np.array([0,0,0])): 
                 int_array.append(0)
-            elif bin == np.array([1,0,0]):
+            elif np.array_equal(bin, np.array([1,0,0])):
                 int_array.append(1)
-            elif bin == np.array([0,1,0]):
+            elif np.array_equal(bin, np.array([0,1,0])):
                 int_array.append(2)
-            elif bin == np.array([0,0,1]):
+            elif np.array_equal(bin, np.array([0,0,1])):
                 int_array.append(3)
         
         int_array = np.array(int_array)
