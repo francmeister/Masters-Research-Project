@@ -357,7 +357,7 @@ class SBS():
 
         association_prediction_reshaped = association_prediction_reshaped.reshape(1,len(association_prediction_reshaped)*len(association_prediction_reshaped[0]))
         association_prediction_reshaped = association_prediction_reshaped.squeeze()
-        print('SBS: ', self.SBS_label,'association_prediction_reshaped: ', association_prediction_reshaped)
+        #print('SBS: ', self.SBS_label,'association_prediction_reshaped: ', association_prediction_reshaped)
         association_prediction_int = self.bin_to_int(association_prediction_bin)
         #print('SBS: ', self.SBS_label,'association_prediction_int: ', association_prediction_int)
         #associations_prediction_mapped = np.array(associations_prediction_mapped)
