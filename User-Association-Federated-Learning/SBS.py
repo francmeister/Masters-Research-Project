@@ -389,6 +389,8 @@ class SBS():
 
         bin_array = np.array(bin_array)
         bin_array = bin_array.reshape(1,len(bin_array)*len(bin_array[0]))
+        bin_array = bin_array.squeeze()
+        print('SBS: ', self.SBS_label, 'bin_array: ', bin_array, 'int_array: ', nparray)
         return bin_array
     
     def bin_to_int(self,nparray):
@@ -459,7 +461,7 @@ class SBS():
         for sample in self.training_memory.storage:
             model_outputs.append(sample[1])
         model_outputs = np.array(model_outputs)
-        print('SBS: ', self.SBS_label, 'model_outputs: ', model_outputs)
+        #print('SBS: ', self.SBS_label, 'model_outputs: ', model_outputs)
         if len(rewards_in_memory) > 0:
             self.average_reward_in_memory = sum(rewards_in_memory)/len(rewards_in_memory) + random.random()
         else:
