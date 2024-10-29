@@ -336,10 +336,10 @@ class SBS():
             user_access_points_in_radius = []
             for x in user.access_points_within_radius:
                 user_access_points_in_radius.append(x[0])
-            #if self.bin_to_int_single_num(association_prediction_bin[user.user_label-1]) not in user_access_points_in_radius:
-            randnum = random.randint(0, len(user_access_points_in_radius)-1)
-            association_prediction_bin[user.user_label-1] = self.int_to_binary_single_num(user_access_points_in_radius[randnum])
-    
+            if self.bin_to_int_single_num(association_prediction_bin[user.user_label-1]) not in user_access_points_in_radius:
+                randnum = random.randint(0, len(user_access_points_in_radius)-1)
+                association_prediction_bin[user.user_label-1] = self.int_to_binary_single_num(user_access_points_in_radius[randnum])
+        
             #else:
                #association_prediction.append((user.user_label, association_prediction[user.user_label-1]))
 
@@ -403,16 +403,12 @@ class SBS():
     
     def int_to_binary_single_num(self,int_num):
         if int_num == 0:
-            print(np.array([0,0,0]))
             return np.array([0,0,0])
         elif int_num == 1:
-            print(np.array([0,0,0]))
             return np.array([1,0,0])
         elif int_num == 2:
-            print(np.array([0,0,0]))
             return np.array([0,1,0])
         elif int_num == 3:
-            print(np.array([0,0,0]))
             return np.array([0,0,1]) 
     
     def bin_to_int(self,nparray):
