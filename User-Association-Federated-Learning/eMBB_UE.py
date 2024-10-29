@@ -87,7 +87,7 @@ class eMBB_UE(User_Equipment):
             else:
                 self.access_points_within_radius_for_plotting.append((self.eMBB_UE_label,access_point_number,0))
             access_point_number+=1
-        print('eMBB UE: ', self.UE_label,'self.distances_from_access_point: ', self.distances_from_access_point, 'self.access_points_within_radius_for_plotting: ', self.access_points_within_radius_for_plotting)
+        #print('eMBB UE: ', self.UE_label,'self.distances_from_access_point: ', self.distances_from_access_point, 'self.access_points_within_radius_for_plotting: ', self.access_points_within_radius_for_plotting)
         #print(self.distances_from_access_point)
 
     def calculate_distance_from_access_point(self,access_point_coordinate):

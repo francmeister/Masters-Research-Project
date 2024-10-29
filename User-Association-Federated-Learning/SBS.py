@@ -464,6 +464,8 @@ class SBS():
             self.access_point_users.append((self.SBS_label,user.user_label))
             self.access_points_within_radius.append(user.access_points_within_radius_for_plotting)
 
+        print('SBS: ', self.SBS_label, "self.access_points_within_radius: ", self.access_points_within_radius)
+
 
     def populate_buffer_memory_sample_with_reward(self,global_reward):
         rewards_in_memory = []
