@@ -135,5 +135,6 @@ def plot_per_user(user_id, access_point_1_users, access_point_2_users, access_po
     plt.title('User: ' + str(user_id))
     plt.show()
 
+
 user_id = 12
 plot_per_user(user_id,access_point_1_users,access_point_2_users,access_point_3_users)
