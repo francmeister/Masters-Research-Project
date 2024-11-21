@@ -159,6 +159,21 @@ class NetworkEnv(gym.Env):
         self.q_actions = 0
         self.resource_block_action_matrix = []
 
+        self.max_small_scale_channel_gain = 0
+        self.min_small_scale_channel_gain = 0
+
+        self.max_battery_energy_level = 5
+        self.min_battery_energy_level = 0
+
+        self.max_large_scale_channel_gain = 0
+        self.min_large_scale_channel_gain = 0
+
+        self.max_local_queue_length = 0
+        self.min_local_queue_length = 0
+
+        self.max_offloading_queue_length = 0
+        self.min_offloading_queue_length = 0
+
     def reshape_observation_space_for_model(self,observation_space):
         observation_space = np.transpose(observation_space)
         observation_space = observation_space.reshape(1,len(observation_space)*len(observation_space[0]))
@@ -604,8 +619,8 @@ class NetworkEnv(gym.Env):
         system_reward, reward, self.total_energy,self.total_rate = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users,self.URLLC_Users,self.Communication_Channel_1, q_action)
     
         #reward = [x + resource_block_allocation_penalty for x in reward]
-       
-        
+        # print('self.max_battery_energy_level')
+        # print(self.max_battery_energy_level)
         #print('Reward')
         #print(reward)
         #print(' ')
@@ -640,27 +655,45 @@ class NetworkEnv(gym.Env):
         col = 0
         min_value = 0
         max_value = 0
+        observation_channel_gains = np.array(observation_channel_gains)
+        # print('observation_channel_gains:')
+        # print(observation_channel_gains)
+        # print('observation_channel_gains.shape: ', observation_channel_gains.shape)
+        user = 0
         for channel_gains in observation_channel_gains:
+            #print('channel_gains: ', channel_gains)
             for channel_gain in channel_gains:
-                observation_channel_gains[row][col] = interp(observation_channel_gains[row][col],[self.channel_gain_min,self.channel_gain_max],[0,1])
-                col+=1
+                # print('channel_gain')
+                # print(channel_gain)
+                for gain in channel_gain:
+                    if col < self.num_allocate_RB_upper_bound:
+                        observation_channel_gains[user][0][col] = interp(observation_channel_gains[user][0][col],[self.min_small_scale_channel_gain,self.max_small_scale_channel_gain],[0,1])
+                    else:
+                        observation_channel_gains[user][0][col] = interp(observation_channel_gains[user][0][col],[self.min_large_scale_channel_gain,self.max_large_scale_channel_gain],[0,1])
+                    col+=1
 
-            row+=1
-            col = 0
+                row+=1
+                col = 0
+            user+=1
   
         row = 0
+        # print('observation_battery_energies: ')
+        # print(observation_battery_energies)
         for battery_energy in observation_battery_energies:
-            observation_battery_energies[row] = interp(observation_battery_energies[row],[self.battery_energy_min,self.battery_energy_max],[0,1])
+            observation_battery_energies[row] = interp(observation_battery_energies[row],[self.min_battery_energy_level,self.max_battery_energy_level],[0,1])
             row+=1
         
         row = 0
         for offloading_queue_length in observation_offloading_queue_lengths:
-            observation_offloading_queue_lengths[row] = interp(observation_offloading_queue_lengths[row],[self.min_off_queue_length,self.max_off_queue_length],[0,1])
+            # print('offload_queue_length: ', observation_offloading_queue_lengths[row])
+            # print('self.min_offloading_queue_length: ', self.min_offloading_queue_length)
+            # print('self.max_offloading_queue_length: ', self.max_offloading_queue_length)
+            observation_offloading_queue_lengths[row] = interp(observation_offloading_queue_lengths[row],[self.min_offloading_queue_length,self.max_offloading_queue_length],[0,1])
             row+=1
 
         row = 0
         for local_queue_length in observation_local_queue_lengths:
-            observation_local_queue_lengths[row] = interp(observation_local_queue_lengths[row],[self.min_lc_queue_length,self.max_lc_queue_length],[0,1])
+            observation_local_queue_lengths[row] = interp(observation_local_queue_lengths[row],[self.min_local_queue_length,self.max_local_queue_length],[0,1])
             row+=1
 
         observation_channel_gains = np.array(observation_channel_gains).squeeze()
@@ -681,11 +714,13 @@ class NetworkEnv(gym.Env):
       
         #observation_channel_gains = np.transpose(observation_channel_gains)
         #observation_battery_energies = np.transpose(observation_battery_energies)
+        # print('observation_channel_gains:')
+        # print(observation_channel_gains)
         observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,num_urllc_arriving_packets)) #observation_channel_gains.
         #print('observation matrix')
         observation = self.reshape_observation_space_for_model(observation)
-        # print('observation: ')
-        # print(observation)
+        print('observation: ')
+        print(observation)
        
 
         done = self.check_timestep()
@@ -1259,3 +1294,19 @@ class NetworkEnv(gym.Env):
         self.timestep_counter+=1
         self.RB_bandwidth = self.Communication_Channel_1.RB_bandwidth_Hz
         return observation,reward,done,info
+    
+    def change_state_limits(self, min_small_scale_channel_gain,max_small_scale_channel_gain,
+                            min_large_scale_channel_gain,max_large_scale_channel_gain,
+                            min_battery_energy_level,max_battery_energy_level,
+                            min_local_queueing_length,max_local_queueing_length,
+                            min_offloading_queueing_length,max_offloading_queueing_length):
+        self.min_small_scale_channel_gain = min_small_scale_channel_gain
+        self.max_small_scale_channel_gain = max_small_scale_channel_gain
+        self.min_large_scale_channel_gain = min_large_scale_channel_gain
+        self.max_large_scale_channel_gain = max_large_scale_channel_gain
+        self.max_battery_energy_level = max_battery_energy_level
+        self.min_battery_energy_level = min_battery_energy_level
+        self.min_local_queue_length = min_local_queueing_length
+        self.max_local_queue_length = max_local_queueing_length
+        self.min_offloading_queue_length = min_offloading_queueing_length
+        self.max_offloading_queue_length = max_offloading_queueing_length

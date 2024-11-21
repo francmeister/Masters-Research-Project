@@ -12,8 +12,131 @@ from numpy import interp
 
 env = gym.make('NetworkEnv-v0')
 
+timesteps = np.arange(0,env.STEP_LIMIT,1)
+num_episodes = 1
+episodes = np.arange(0,num_episodes,1)
+obs = env.reset()
+number_of_users = env.number_of_users
+number_of_RBs = env.num_allocate_RB_upper_bound
+small_scale_channel_gains = []
+large_scale_channel_gains = []
+battery_energy_levels = []
+local_queue_lengths = []
+offloading_queue_lengths = []
+#observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,num_urllc_arriving_packets)) #observation_channel_gains.
+for episode in episodes:
+    for timestep in timesteps:
+        #print('----------------------------------------------------------------------------------------------------------------------------------------------------')
+        action = env.action_space.sample()
+        action = env.enforce_constraint(action)
+        #print(action)
+        action2, action = env.reshape_action_space_dict(action)
+        observation,reward,dones,info = env.step_(action)
+        small_scale_channel_gains.append(observation[0:number_of_users*number_of_RBs])
+        large_scale_channel_gains.append(observation[number_of_users*number_of_RBs:(number_of_users*number_of_RBs)*2])
+        battery_energy_levels.append(observation[(number_of_users*number_of_RBs)*2:(number_of_users*number_of_RBs)*2+number_of_users])
+        offloading_queue_lengths.append(observation[(number_of_users*number_of_RBs)*2+number_of_users:(number_of_users*number_of_RBs)*2+number_of_users*2])
+        local_queue_lengths.append(observation[(number_of_users*number_of_RBs)*2+number_of_users*2:(number_of_users*number_of_RBs)*2+number_of_users*3])
+        #print('observation:')
+        #print(observation)
+        #print('----------------------------------------------------------')
+        #print('small_scale_channel_gains:')
+        #print(observation[0:number_of_users*number_of_RBs])
+        #print('----------------------------------------------------------')
+        #print('battery_energy_levels')
+        #print(observation[(number_of_users*number_of_RBs)*2:(number_of_users*number_of_RBs)*2+number_of_users])
+        #print('----------------------------------------------------------')
+        #print('large_scale_channel_gains:')
+        #print(observation[number_of_users*number_of_RBs:(number_of_users*number_of_RBs)*2])
+        #print('----------------------------------------------------------')
+        #print('offloading_queue_lengths:')
+        #print(observation[(number_of_users*number_of_RBs)*2+number_of_users:(number_of_users*number_of_RBs)*2+number_of_users*2])
+        #print('----------------------------------------------------------')
+        #print('local_queue_lengths')
+        #print(observation[(number_of_users*number_of_RBs)*2+number_of_users*2:(number_of_users*number_of_RBs)*2+number_of_users*3])
+
+small_scale_channel_gains = np.array(small_scale_channel_gains)
+small_scale_channel_gains_x_dim = len(small_scale_channel_gains)
+small_scale_channel_gains_y_dim = len(small_scale_channel_gains[0])
+small_scale_channel_gains = small_scale_channel_gains.reshape(1,small_scale_channel_gains_x_dim*small_scale_channel_gains_y_dim)
+small_scale_channel_gains = small_scale_channel_gains.squeeze()
+
+large_scale_channel_gains = np.array(large_scale_channel_gains)
+large_scale_channel_gains_x_dim = len(large_scale_channel_gains)
+large_scale_channel_gains_y_dim = len(large_scale_channel_gains[0])
+large_scale_channel_gains = large_scale_channel_gains.reshape(1,large_scale_channel_gains_x_dim*large_scale_channel_gains_y_dim)
+large_scale_channel_gains = large_scale_channel_gains.squeeze()
+
+offloading_queue_lengths = np.array(offloading_queue_lengths)
+offloading_queue_lengths_x_dim = len(offloading_queue_lengths)
+offloading_queue_lengths_y_dim = len(offloading_queue_lengths[0])
+offloading_queue_lengths = offloading_queue_lengths.reshape(1,offloading_queue_lengths_x_dim*offloading_queue_lengths_y_dim)
+offloading_queue_lengths = offloading_queue_lengths.squeeze()
+
+local_queue_lengths = np.array(local_queue_lengths)
+local_queue_lengths_x_dim = len(local_queue_lengths)
+local_queue_lengths_y_dim = len(local_queue_lengths[0])
+local_queue_lengths = local_queue_lengths.reshape(1,local_queue_lengths_x_dim*local_queue_lengths_y_dim)
+local_queue_lengths = local_queue_lengths.squeeze()
+
+battery_energy_levels = np.array(battery_energy_levels)
+battery_energy_levels_x_dim = len(battery_energy_levels)
+battery_energy_levels_y_dim = len(battery_energy_levels[0])
+battery_energy_levels = battery_energy_levels.reshape(1,battery_energy_levels_x_dim*battery_energy_levels_y_dim)
+battery_energy_levels = battery_energy_levels.squeeze()
+
+# print('small_scale_channel_gains:')
+# print(small_scale_channel_gains)
+# print('----------------------------------------------------------')
+# print('large_scale_channel_gains:')
+# print(large_scale_channel_gains)
+# print('----------------------------------------------------------')
+# print('offloading_queue_lengths:')
+# print(offloading_queue_lengths)
+# print('----------------------------------------------------------')
+# print('local_queue_lengths')
+# print(local_queue_lengths)
+# print('----------------------------------------------------------')
+# print('battery_energy_levels')
+# print(battery_energy_levels)
+
+max_small_scale_channel_gain = max(small_scale_channel_gains)
+min_small_scale_channel_gain = min(small_scale_channel_gains)
+
+max_large_scale_channel_gain = max(large_scale_channel_gains)
+min_large_scale_channel_gain = min(large_scale_channel_gains)
+
+min_local_queue_length = 0
+min_offloading_queue_length = 0
+
+max_local_queue_length = max(local_queue_lengths)
+max_offloading_queue_length = max(offloading_queue_lengths)
+
+max_local_queue_length_ = max(max_local_queue_length,max_offloading_queue_length)
+max_offloading_queue_length_ = max(max_local_queue_length,max_offloading_queue_length)
+
+min_battery_energy_level = 0
+max_battery_energy_level = max(battery_energy_levels)
+
+#print('max_battery_energy_level: ', max_battery_energy_level)
+
+env.max_small_scale_channel_gain = max_small_scale_channel_gain
+env.min_small_scale_channel_gain = min_small_scale_channel_gain
+
+env.max_battery_energy_level = max_battery_energy_level
+env.min_battery_energy_level = min_battery_energy_level
+
+env.max_large_scale_channel_gain = max_large_scale_channel_gain
+env.min_large_scale_channel_gain = min_large_scale_channel_gain
+
+env.max_local_queue_length = max_local_queue_length_
+env.min_local_queue_length = min_local_queue_length
+
+env.max_offloading_queue_length = max_offloading_queue_length_
+env.min_offloading_queue_length = min_offloading_queue_length
+print('env.max_battery_energy_level: ', env.max_battery_energy_level )
 #timesteps = 5
-timesteps = np.arange(0,70,1)
+timesteps = np.arange(0,1,1)
 rewards = []
 offload_decisions = []
 RB_allocations = []
@@ -51,6 +174,12 @@ print(env.action_space.sample())
 #print('observation sample')
 #print(env.observation_space.sample())
 #expl_noise = 0.5
+print('env.max_battery_energy_level:', env.max_battery_energy_level)
+env.change_state_limits(min_small_scale_channel_gain,max_small_scale_channel_gain,
+                            min_large_scale_channel_gain,max_large_scale_channel_gain,
+                            min_battery_energy_level,max_battery_energy_level,
+                            min_local_queue_length,max_local_queue_length,
+                            min_offloading_queue_length,max_offloading_queue_length)
 for timestep in timesteps:
     print('----------------------------------------------------------------------------------------------------------------------------------------------------')
     action = env.action_space.sample()
@@ -76,7 +205,9 @@ for timestep in timesteps:
     #print(action)
     #print(' ')
     #print('action: ', action)
+    print('env.max_battery_energy_level before step:', env.max_battery_energy_level)
     observation,reward,dones,info = env.step(action)
+    print('env.max_battery_energy_level after step:', env.max_battery_energy_level)
     
     #print(observation)
     throughputs.append(env.eMBB_UE_1.achieved_channel_rate_normalized)
