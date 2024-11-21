@@ -829,6 +829,7 @@ class eMBB_UE(User_Equipment):
         large_scale_gain = np.random.exponential(1,size=(1,number_of_RBs))
 
         # print('large_scale_gain: ', large_scale_gain)
+        #print()
         num_samples = number_of_RBs
         #Gaussian distributed g_l with mean 0 and standard deviation 8 dB
         #print("self.timestep_counter_: ", self.timestep_counter_)
@@ -838,12 +839,15 @@ class eMBB_UE(User_Equipment):
         #print('************************************************************')
         #print('self.distance_from_SBS: ', self.distance_from_SBS_)
         #print('g_l: ', g_l)
-        g = 35.3 + 37.8 * np.log10(self.distance_from_SBS_) #+ g_l
+        g = 35.3 + 37.8 * np.log10(self.distance_from_SBS_) + g_l
         #print('g: ', g)
         # Calculate G
         G = 10 ** (-g/10)
         G = np.array([G])
-        large_scale_gain = np.random.exponential(1,size=(1,number_of_RBs))#G
+        #print('G: ', G)
+        large_scale_gain = G#np.random.exponential(1,size=(1,number_of_RBs))#G
+        # print('small_scale_gain: ', small_scale_gain)
+        # print('large_scale_gain: ', large_scale_gain)
         # if self.timestep_counter_ == 10:
         #     self.timestep_counter_ = 0
         # #print('G: ', G)
@@ -857,9 +861,12 @@ class eMBB_UE(User_Equipment):
         self.small_scale_channel_gain = small_scale_gain
         first_large_scale_gain = G#large_scale_gain[0][0]
         item = 0
-        for gain in large_scale_gain[0]:
-            large_scale_gain[0][item] = first_large_scale_gain
-            item+=1
+        # print('large_scale_gain: ', large_scale_gain[0])
+        # for gain in large_scale_gain[0]:
+        #     print('gain: ', gain)
+        #     print('first_large_scale_gain: ', first_large_scale_gain)
+        #     large_scale_gain[0][item] = first_large_scale_gain
+        #     item+=1
 
         self.small_scale_gain_ = small_scale_gain[0][0]
         self.large_scale_gain_ = large_scale_gain[0][0]

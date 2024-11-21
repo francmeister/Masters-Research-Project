@@ -684,6 +684,8 @@ class NetworkEnv(gym.Env):
         observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,num_urllc_arriving_packets)) #observation_channel_gains.
         #print('observation matrix')
         observation = self.reshape_observation_space_for_model(observation)
+        # print('observation: ')
+        # print(observation)
        
 
         done = self.check_timestep()
@@ -926,3 +928,334 @@ class NetworkEnv(gym.Env):
         
     def seed(self):
         pass
+
+    def step_(self, action):
+        #g = self.reshape_action_space_for_model(action)
+        #print('action reshaped')
+        #print(g)
+        #.self.selected_actions =
+        #print('------------')
+        #f = self.reshape_action_space_for_model(action)
+        #print(f)
+        #  []
+        #print(action)
+        #self.reshape_action_space_for_model(action)
+        #action = self.enforce_constraint(action)
+        box_action = np.array(action['box_actions'])
+        binary_actions = action['binary_actions']
+        q_action = action['q_action']
+        self.q_actions = q_action
+        #print('q_action: ', q_action)
+        #print('action')
+        #print(action)
+        #user_resource_block_allocations = action['user_resource_block_allocations']
+        #user_resource_block_allocations = user_resource_block_allocations.reshape(self.time_divisions_per_slot,self.num_allocate_RB_upper_bound)
+ 
+
+        self.check_resource_block_allocation_constraint(binary_actions)
+    
+        resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
+    
+        self.resource_block_allocation_matrix.append(resource_block_action_matrix)
+        #print('resource_block_action_matrix')
+        #print(resource_block_action_matrix)
+        #print(' ')
+        # done_sampling = True
+        # if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
+        #     while done_sampling:
+        #         action = self.action_space.sample()
+        #         box_action = np.array(action['box_actions'])
+        #         binary_actions = action['binary_actions']
+        #         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
+        #         if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
+        #             done_sampling = True
+        #         else:
+        #             done_sampling = False
+
+        #print(resource_block_action_matrix)
+        #print(" ")
+        #print("Action before interpolation")
+        #print(action)
+        #box_action = np.transpose(box_action)
+        #print("Action before interpolation transposed")
+        #print(action)
+        reward = 0
+
+        #collect offload decisions actions 
+        num_offloading_actions = int(self.box_action_space_len/self.number_of_box_actions)
+
+        num_power_action = num_offloading_actions
+
+        # print('box_action')
+        # print(box_action)
+        offload_decisions_actions = box_action[0:num_offloading_actions]
+        # print('offload_decisions_actions')
+        # print(offload_decisions_actions)
+     
+        #offload_decisions_actions = offload_decisions_actions[0:self.number_of_eMBB_users]
+
+        offload_decisions_actions_mapped = []
+        for offload_decision in offload_decisions_actions:
+            offload_decision_mapped = interp(offload_decision,[0,1],[self.min_offload_decision,self.max_offload_decision])
+            offload_decisions_actions_mapped.append(offload_decision_mapped)
+        
+        #collect trasmit powers allocations actions
+        transmit_power_actions = box_action[num_offloading_actions:num_offloading_actions*self.number_of_box_actions]
+        #transmit_power_actions = transmit_power_actions[0:self.number_of_eMBB_users]
+
+        transmit_power_actions_mapped = []
+
+        for transmit_power_action in transmit_power_actions:
+            transmit_power_action_mapped = interp(transmit_power_action,[0,1],[self.min_transmit_power_db,self.max_transmit_power_db])
+            transmit_power_actions_mapped.append(transmit_power_action_mapped)
+
+        #self.selected_powers.append(transmit_power_actions_mapped[0])
+        
+    
+        #binary_actions = action['binary_actions']
+        #resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.num_allocate_RB_upper_bound)
+    
+        RB_allocation_actions = resource_block_action_matrix 
+        RB_sum_allocations = []
+        for RB_allocation_action in RB_allocation_actions:
+            RB_sum_allocations.append(sum(RB_allocation_action))
+
+
+        #print(RB_allocation_actions)
+        #RB_allocation_actions = RB_allocation_actions[0:self.number_of_eMBB_users]
+        #RB_allocation_actions_mapped = []
+        #print('RB_allocation_actions', RB_allocation_actions)
+        #for RB_allocation_action in RB_allocation_actions:
+        #    RB_allocation_action_mapped = interp(RB_allocation_action,[0,1],[self.num_allocate_RB_lower_bound,self.num_allocate_RB_upper_bound])
+        #    RB_allocation_actions_mapped.append(RB_allocation_action_mapped)
+
+        #RB_allocation_actions = (np.rint(RB_allocation_actions)).astype(int)
+        #RB_allocation_actions_mapped = (np.rint(RB_allocation_actions_mapped)).astype(int)
+        #print('RB_allocation_action_mapped: ', RB_allocation_actions_mapped)
+        #self.selected_RBs.append(RB_allocation_actions_mapped[0]) 
+        #self.selected_actions.append(RB_allocation_actions_mapped)
+        
+        #self.selected_actions.append(transmit_power_actions_mapped)
+        
+        #collect the final action - number of URLLC users per RB
+        
+        #print('Action after interpolation transposed')
+        #offload_decisions_actions_mapped = [1,1,1,1,1,1,1,1,1]#[0, 0, 0.5, 0.5, 1, 1, 1]
+        #transmit_power_actions_mapped = [20]#,20,20,20,20,20,20]
+        #RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])#, [0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0]])
+        #print('RB_allocation_actions: ', RB_allocation_actions)
+        #print(RB_allocation_actions)
+        #RB_allocation_actions_mapped = [6]#,10,15,15,20,20,20]
+        #number_URLLC_Users_per_RB_action_mapped = 3
+        #print("New Timestep: ", self.steps)
+        #print("offload_decisions_actions")
+        #print(offload_decisions_actions_mapped)
+        #print("subcarrier_allocation_actions")
+        #print(subcarrier_allocation_actions_mapped)
+        #print("transmit_power_actions")
+        #print(transmit_power_actions_mapped)
+        #print(' ')
+        #print("number_URLLC_Users_per_RB_action")
+        #print(number_URLLC_Users_per_RB_action_mapped)
+        self.offload_decisions = offload_decisions_actions_mapped
+        self.powers = transmit_power_actions_mapped
+        self.subcarriers = RB_sum_allocations
+        self.RB_allocation_matrix = RB_allocation_actions
+
+        #print('self.offload decisions')
+        #print(offload_decision_mapped)
+
+        #Perform Actions
+        self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions_mapped)
+        #self.SBS1.allocate_transmit_powers(self.eMBB_Users,transmit_power_actions)
+        #offload_decisions_actions_mapped = [1]
+        #offload_decisions_actions_mapped = np.array(offload_decisions_actions_mapped)
+        #print('offload_decisions_actions_mapped: ', offload_decisions_actions_mapped)
+        self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions_mapped)
+        #self.SBS1.allocate_offlaoding_ratios(self.eMBB_Users,offload_decisions_actions)
+
+        #self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action_mapped
+        #self.Communication_Channel_1.number_URLLC_Users_per_RB = number_URLLC_Users_per_RB_action
+
+        self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
+        self.Communication_Channel_1.initiate_RBs()
+        #RB_allocation_actions = [[1,0,0,0,0,0,0,0,0,0,0,0]]
+        # RB_allocation_actions = np.array(RB_allocation_actions)
+        # print('RB_allocation_actions')
+        # print(RB_allocation_actions)
+        # print('')
+        self.num_RBs_allocated = sum(RB_allocation_actions[0])
+        #print("RB_allocation_actions: ", RB_allocation_actions)
+        self.Communication_Channel_1.allocate_RBs_eMBB(self.eMBB_Users,RB_allocation_actions)
+        #self.Communication_Channel_1.allocate_subcarriers_eMBB(self.eMBB_Users,subcarrier_allocation_actions)
+        #self.Communication_Channel_1.create_resource_blocks_URLLC()
+        #self.Communication_Channel_1.allocate_resource_blocks_URLLC(self.URLLC_Users)
+        #self.Communication_Channel_1.subcarrier_URLLC_User_mapping()
+
+
+        for eMBB_User in self.eMBB_Users:
+            eMBB_User.increment_task_queue_timers()
+            eMBB_User.split_tasks()
+       
+
+        for eMBB_User in self.eMBB_Users:
+            #if eMBB_User.has_transmitted_this_time_slot == True:
+            eMBB_User.transmit_to_SBS(self.Communication_Channel_1,self.URLLC_Users)
+            #print('eMBB_User id: ', eMBB_User.eMBB_UE_label, 'achieved channel rate: ', eMBB_User.achieved_channel_rate)
+            eMBB_User.local_processing()
+            eMBB_User.offloading(self.Communication_Channel_1)
+            eMBB_User.total_energy_consumed()
+            eMBB_User.total_processing_delay()
+
+        #print('')
+        for URLLC_user in self.URLLC_Users:
+            URLLC_user.calculate_achieved_channel_rate(self.eMBB_Users,self.Communication_Channel_1)
+            #print('urllc user id: ', URLLC_user.URLLC_UE_label, 'achieved channel rate: ', URLLC_user.achieved_channel_rate)
+
+        #print('')
+        for eMBB_User in self.eMBB_Users: 
+            eMBB_User.urllc_puncturing_users_sum_data_rates(self.URLLC_Users)
+
+        self.SBS1.receive_offload_packets(self.eMBB_Users)
+        self.SBS1.calculate_achieved_total_system_energy_consumption(self.eMBB_Users)
+        self.SBS1.calculate_achieved_total_system_processing_delay(self.eMBB_Users)
+        self.SBS1.calculate_achieved_total_rate_eMBB_users(self.eMBB_Users)
+        self.SBS1.calculate_achieved_system_energy_efficiency()
+        system_reward, reward, self.total_energy,self.total_rate = self.SBS1.calculate_achieved_system_reward(self.eMBB_Users,self.URLLC_Users,self.Communication_Channel_1, q_action)
+    
+        #reward = [x + resource_block_allocation_penalty for x in reward]
+       
+        
+        #print('Reward')
+        #print(reward)
+        #print(' ')
+        #mapped_reward = interp(reward,[0,1000],[7200000000,7830000000])
+        #Update game state after performing actions
+        for eMBB_User in self.eMBB_Users:
+            eMBB_User.calculate_distance_from_SBS(self.SBS1.x_position, self.SBS1.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
+            eMBB_User.calculate_channel_gain(self.Communication_Channel_1)
+            eMBB_User.harvest_energy()
+            eMBB_User.compute_battery_energy_level()
+            eMBB_User.generate_task(self.Communication_Channel_1)
+            eMBB_User.collect_state()
+
+        for urllc_user in self.URLLC_Users:
+            urllc_user.calculate_channel_gain_on_all_resource_blocks(self.Communication_Channel_1)
+            urllc_user.generate_task(self.Communication_Channel_1)
+            urllc_user.split_tasks()
+
+        observation_channel_gains, observation_battery_energies, observation_offloading_queue_lengths, observation_local_queue_lengths, num_urllc_arriving_packets = self.SBS1.collect_state_space(self.eMBB_Users, self.URLLC_Users)
+        
+        #observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
+        #observation_channel_gains = np.array(observation_channel_gains, dtype=np.float32)
+        #observation_battery_energies = np.array(observation_battery_energies, dtype=np.float32)
+        #print('Observation before transpose')
+        #print(np.transpose(observation))
+        #normalize observation values to a range between 0 and 1 using interpolation
+        # row = 0
+        # for num_urllc_arriving_packet in num_urllc_arriving_packets:
+        #     num_urllc_arriving_packets[row] = interp(num_urllc_arriving_packets[row],[0,len(self.URLLC_Users)],[0,1])
+        #     row+=1
+        # row = 0
+        # col = 0
+        # min_value = 0
+        # max_value = 0
+        # for channel_gains in observation_channel_gains:
+        #     for channel_gain in channel_gains:
+        #         observation_channel_gains[row][col] = interp(observation_channel_gains[row][col],[self.channel_gain_min,self.channel_gain_max],[0,1])
+        #         col+=1
+
+        #     row+=1
+        #     col = 0
+  
+        # row = 0
+        # for battery_energy in observation_battery_energies:
+        #     observation_battery_energies[row] = interp(observation_battery_energies[row],[self.battery_energy_min,self.battery_energy_max],[0,1])
+        #     row+=1
+        
+        # row = 0
+        # for offloading_queue_length in observation_offloading_queue_lengths:
+        #     observation_offloading_queue_lengths[row] = interp(observation_offloading_queue_lengths[row],[self.min_off_queue_length,self.max_off_queue_length],[0,1])
+        #     row+=1
+
+        # row = 0
+        # for local_queue_length in observation_local_queue_lengths:
+        #     observation_local_queue_lengths[row] = interp(observation_local_queue_lengths[row],[self.min_lc_queue_length,self.max_lc_queue_length],[0,1])
+        #     row+=1
+
+        observation_channel_gains = np.array(observation_channel_gains).squeeze()
+        
+        observation_battery_energies = np.array(observation_battery_energies)
+        observation_offloading_queue_lengths = np.array(observation_offloading_queue_lengths)
+        observation_local_queue_lengths = np.array(observation_local_queue_lengths)
+        num_urllc_arriving_packets = np.array(num_urllc_arriving_packets)
+
+        if self.number_of_users == 1:
+            observation_channel_gains_num = len(observation_channel_gains)
+            observation_battery_energies_num = len(observation_battery_energies)
+            #observation_offloading_queue_lengths_num = len(observation_offloading_queue_lengths)
+            #observation_local_queue_lengths_num = len(observation_local_queue_lengths)
+
+            observation_channel_gains = observation_channel_gains.reshape(observation_battery_energies_num,observation_channel_gains_num)
+        
+      
+        #observation_channel_gains = np.transpose(observation_channel_gains)
+        #observation_battery_energies = np.transpose(observation_battery_energies)
+        observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,num_urllc_arriving_packets)) #observation_channel_gains.
+        #print('observation matrix')
+        observation = self.reshape_observation_space_for_model(observation)
+        # print('observation: ')
+        # print(observation)
+       
+
+        done = self.check_timestep()
+        dones = [0 for element in range(len(self.eMBB_Users) - 1)]
+        dones.append(done)
+        info = {'reward': reward}
+        self.steps+=1
+        #print('Timestep: ', self.steps)
+        #print('reward: ', reward)
+        self.rewards.append(reward)
+        #print(' ')
+        
+        penalty_per_RB = -(1/self.num_allocate_RB_upper_bound)
+        penalty_accumulation = 0
+        sum_allocations_per_RB_matrix = np.sum(resource_block_action_matrix, axis=0)
+        self.sum_allocations_per_RB_matrix = sum_allocations_per_RB_matrix
+        #print(self.sum_allocations_per_RB_matrix)
+        if not np.all(np.sum(resource_block_action_matrix, axis=0) <= 1):
+      
+            for sum_allocations_per_RB in sum_allocations_per_RB_matrix:
+                if sum_allocations_per_RB >= 1:
+                    penalty_accumulation += ((sum_allocations_per_RB-1)*penalty_per_RB)
+                   
+                elif sum_allocations_per_RB == 0:
+                    penalty_accumulation += -0.2#((1-sum_allocations_per_RB)*penalty_per_RB)
+                elif sum_allocations_per_RB == 1:
+                    penalty_accumulation += 0.5
+
+            
+
+        #      #penalty_accumulation = interp(penalty_accumulation,[-1,0],[-1,5])
+
+        elif np.all(np.sum(resource_block_action_matrix, axis=0) == 1):
+            for x in range(0,self.num_allocate_RB_upper_bound):
+                penalty_accumulation += 1
+
+        for sum_allocations_per_RB in sum_allocations_per_RB_matrix:       
+            if sum_allocations_per_RB == 0:
+                penalty_accumulation += -0.2#((1-sum_allocations_per_RB)*penalty_per_RB)
+        
+        #print(penalty_accumulation)
+        #row = 0
+      
+        #for item in reward:
+            #if item > 0: 
+        #    reward[row] = penalty_accumulation
+        #    row+=1
+        #dones[len(dones)-1] = 1
+        #print(reward)
+        #print('')
+        self.timestep_counter+=1
+        self.RB_bandwidth = self.Communication_Channel_1.RB_bandwidth_Hz
+        return observation,reward,done,info
