@@ -134,9 +134,9 @@ env.min_local_queue_length = min_local_queue_length
 
 env.max_offloading_queue_length = max_offloading_queue_length_
 env.min_offloading_queue_length = min_offloading_queue_length
-print('env.max_battery_energy_level: ', env.max_battery_energy_level )
+#print('env.max_battery_energy_level: ', env.max_battery_energy_level )
 #timesteps = 5
-timesteps = np.arange(0,1,1)
+timesteps = np.arange(0,100,1)
 rewards = []
 offload_decisions = []
 RB_allocations = []
@@ -174,7 +174,7 @@ print(env.action_space.sample())
 #print('observation sample')
 #print(env.observation_space.sample())
 #expl_noise = 0.5
-print('env.max_battery_energy_level:', env.max_battery_energy_level)
+#print('env.max_battery_energy_level:', env.max_battery_energy_level)
 env.change_state_limits(min_small_scale_channel_gain,max_small_scale_channel_gain,
                             min_large_scale_channel_gain,max_large_scale_channel_gain,
                             min_battery_energy_level,max_battery_energy_level,
@@ -205,9 +205,9 @@ for timestep in timesteps:
     #print(action)
     #print(' ')
     #print('action: ', action)
-    print('env.max_battery_energy_level before step:', env.max_battery_energy_level)
+    #print('env.max_battery_energy_level before step:', env.max_battery_energy_level)
     observation,reward,dones,info = env.step(action)
-    print('env.max_battery_energy_level after step:', env.max_battery_energy_level)
+    #print('env.max_battery_energy_level after step:', env.max_battery_energy_level)
     
     #print(observation)
     throughputs.append(env.eMBB_UE_1.achieved_channel_rate_normalized)

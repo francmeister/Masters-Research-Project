@@ -23,6 +23,10 @@ class State_Space():
         #self.QOS_requirements = QOS_requirements
         #self.local_cpu_frequency = local_cpu_frequency
 
+    def collect_urrlc(self,channel_gain):
+        self.channel_gain = channel_gain
+
+
     def calculate_communication_queue_size(self):
         com_queue_size = len(self.communication_queue)
 

@@ -27,11 +27,19 @@ class URLLC_UE(User_Equipment):
         self.assigned_access_point_label_matrix = []
         self.assigned_access_point_label_matrix_integers = []
         self.prob_packet_arrival = 0.6
+        self.x_coordinate = np.random.uniform(low=30, high=100)
+        self.y_coordinate = np.random.uniform(low=30, high=100)
+        self.embb_user_in_close_proximity = 0
+        self.distance_from_embb_user_in_close_proximity = 10000
+        self.total_gain_ = []
+        self.distance_from_SBS_ = 0
         self.set_properties_URLLC()
 
     def set_properties_URLLC(self):
+        self.user_state_space = State_Space()
         self.max_task_arrival_rate_tasks_per_second = 10
         self.min_task_arrival_rate_tasks_per_second = 5
+        self.total_gain_ = np.zeros(self.communication_channel.num_allocate_RBs_upper_bound*2)
         self.cycles_per_byte = 330
         self.cycles_per_bit = self.cycles_per_byte/8
         self.max_service_rate_cycles_per_slot = 620000
@@ -57,6 +65,7 @@ class URLLC_UE(User_Equipment):
         self.reliability_requirement = 0
         self.assigned_resource_block = 0
         self.assigned_time_block = 0
+        self.assigned_code_block = 0
         self.assigned_resource_time_block = []
         self.puncturing_embb_user_transmit_power = 0
         self.puncturing_embb_user_small_scale_gain = 0
@@ -90,12 +99,27 @@ class URLLC_UE(User_Equipment):
         number_of_RBs = communication_channel.num_allocate_RBs_upper_bound
         small_scale_gain = np.random.exponential(1,size=(1,number_of_RBs))
         large_scale_gain = np.random.exponential(1,size=(1,number_of_RBs))
-        self.small_scale_channel_gain = small_scale_gain
-        first_large_scale_gain = large_scale_gain[0][0]
-        item = 0
-        for gain in large_scale_gain[0]:
-            large_scale_gain[0][item] = first_large_scale_gain
-            item+=1
+
+        num_samples = number_of_RBs
+        g_l = np.random.normal(loc=0, scale=8, size=num_samples)
+        # Calculate g
+        #print('************************************************************')
+        #print('self.distance_from_SBS: ', self.distance_from_SBS_)
+        #print('g_l: ', g_l)
+        g = 35.3 + 37.8 * np.log10(self.distance_from_SBS_) + g_l
+        #print('g: ', g)
+        # Calculate G
+        G = 10 ** (-g/10)
+        G = np.array([G])
+        #print('G: ', G)
+        large_scale_gain = G
+
+        # self.small_scale_channel_gain = small_scale_gain
+        # first_large_scale_gain = large_scale_gain[0][0]
+        # item = 0
+        # for gain in large_scale_gain[0]:
+        #     large_scale_gain[0][item] = first_large_scale_gain
+        #     item+=1
 
         self.small_scale_gain = small_scale_gain
         self.large_scale_gain = large_scale_gain
@@ -109,6 +133,11 @@ class URLLC_UE(User_Equipment):
         self.total_gain_on_allocated_rb = self.small_scale_gain_on_allocated_rb*self.large_scale_gain_on_allocated_rb
         self.total_gain = small_scale_gain*large_scale_gain
         self.total_gain = self.total_gain.squeeze()
+        # print('self.total_gain_')
+        # print(self.total_gain_)
+        # print('large_scale_gain')
+        # print(large_scale_gain)
+        self.total_gain_ = np.concatenate((small_scale_gain,large_scale_gain),axis=1)
         
 
         #print('self.total_gain')
@@ -266,5 +295,36 @@ class URLLC_UE(User_Equipment):
 
         self.assigned_access_point_label_matrix_integers = np.array(self.assigned_access_point_label_matrix_integers)
 
+    def calculate_distances_from_embb_users(self, embb_users):
+        self.distances_from_embb_users = [] 
+        #print('URLLC num: ', self.UE_label, 'x_coord: ', self.x_coordinate, 'y_coord: ', self.y_coordinate)
+        for embb_user in embb_users:
+            #print('embb_user num: ', embb_user.UE_label, 'x_coord: ', embb_user.x_coordinate, 'y_coord: ', embb_user.y_coordinate)
+            x_diff_metres = abs(self.x_coordinate-embb_user.x_coordinate)
+            y_diff_metres = abs(self.y_coordinate-embb_user.y_coordinate)
+
+
+            distance_from_embb_user = math.sqrt(math.pow(x_diff_metres,2)+math.pow(y_diff_metres,2))
+            if distance_from_embb_user < self.distance_from_embb_user_in_close_proximity:
+                self.embb_user_in_close_proximity = embb_user.UE_label
+                self.distance_from_embb_user_in_close_proximity = distance_from_embb_user
+
+            self.distances_from_embb_users.append((embb_user.UE_label,distance_from_embb_user))
+
+    def calculate_distance_from_SBS(self, SBS_x_pos, SBS_y_pos):
+
+        x_diff_metres = abs(SBS_x_pos-self.x_coordinate)
+        y_diff_metres = abs(SBS_y_pos-self.y_coordinate)
+
+
+        self.distance_from_SBS_ = math.sqrt(math.pow(x_diff_metres,2)+math.pow(y_diff_metres,2))
+
+    def collect_state(self):
+        #self.cpu_clock_frequency = (random.randint(5,5000))
+        self.user_state_space.collect_urrlc(self.total_gain_)
+        #self.user_state_space.collect(self.total_gain,self.communication_queue,self.battery_energy_level,self.communication_queue[0].QOS_requirement,self.cpu_clock_frequency)
+        return self.user_state_space
+
+        
 
 

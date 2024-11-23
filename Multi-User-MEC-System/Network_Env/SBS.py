@@ -12,6 +12,8 @@ class SBS():
         #SBS Telecom properties
         self.x_position = 200
         self.y_position = 200
+        self.x_coordinate = np.random.uniform(low=30, high=100)
+        self.y_coordinate = np.random.uniform(low=30, high=100)
         self.individual_rewards = []
         self.users_lc_service_rates = []
         self.set_properties()
@@ -37,6 +39,7 @@ class SBS():
         num_arriving_urllc_packets = []
         latency_requirement = []
         local_frequencies = []
+        urllc_users_channel_gains = []
         #reliability_requirement = []
         #Collect Channel gains
         self.count_num_arriving_urllc_packets(urllc_users)
@@ -54,10 +57,13 @@ class SBS():
         #print('state space')
         #print(channel_gains[0])
         #print(battery_energy)
+        if len(urllc_users) > 0:
+            for urllc_user in urllc_users:
+                urllc_users_channel_gains.append(urllc_user.user_state_space.channel_gain)
         self.system_state_space_RB_channel_gains.append(channel_gains)
         #self.system_state_space.append(communication_queue_size)
         self.system_state_space_battery_energies.append(battery_energy)
-        return channel_gains, battery_energy, offloading_queue_lengths, local_queue_lengths, num_arriving_urllc_packets
+        return channel_gains, battery_energy, offloading_queue_lengths, local_queue_lengths, num_arriving_urllc_packets, urllc_users_channel_gains
         #return channel_gains, battery_energy
 
     def allocate_transmit_powers(self,eMBB_Users, action):
@@ -584,7 +590,7 @@ class SBS():
         
         return 1/sum_square_error
     
-    def allocate_resource_blocks_URLLC(self,communication_channel, URLLC_Users):
+    def allocate_resource_blocks_URLLC(self,communication_channel, URLLC_Users, embb_users):
         for URLLC_user in URLLC_Users:
             URLLC_user.calculate_channel_gain_on_all_resource_blocks(communication_channel)
 
@@ -595,15 +601,38 @@ class SBS():
         for urllc_user in URLLC_Users:
             urllc_user.assigned_time_block = 0
             urllc_user.assigned_resource_block = 0
+            urllc_user.assigned_code_block = 0
 
+        #for embb_user in embb_users:
+            #print('embb user: ', embb_user.UE_label, 'embb_user.available_resource_time_code_block: ', embb_user.available_resource_time_code_block)
         for urllc_user in URLLC_Users:
-            if len(self.available_resource_time_blocks) > 0:
-                random_number = np.random.randint(0, len(self.available_resource_time_blocks), 1)
-                random_number = random_number[0]
-                urllc_user.assigned_resource_time_block = self.available_resource_time_blocks[random_number]
-                self.available_resource_time_blocks = np.delete(self.available_resource_time_blocks,random_number,axis=0)
-                urllc_user.assigned_time_block = urllc_user.assigned_resource_time_block[0]
-                urllc_user.assigned_resource_block = urllc_user.assigned_resource_time_block[1]
+            for embb_user in embb_users:
+                #print('embb user: ', embb_user.UE_label, 'embb_user.available_resource_time_code_block: ', embb_user.available_resource_time_code_block)
+                if urllc_user.embb_user_in_close_proximity == embb_user.UE_label:
+                    #print('urllc user: ', urllc_user.UE_label, 'embb user in proximity: ', embb_user.UE_label)
+                    if len(embb_user.available_resource_time_code_block) > 0:
+                        urllc_user.assigned_time_block = embb_user.available_resource_time_code_block[0][0]
+                        urllc_user.assigned_resource_block = embb_user.available_resource_time_code_block[0][1]
+                        urllc_user.assigned_code_block = embb_user.available_resource_time_code_block[0][2]
+                        embb_user.available_resource_time_code_block.pop(0)
+
+        #for urllc_user in URLLC_Users:
+            #print('URLLC User: ', urllc_user.UE_label, 'embb_user_in_close_proximity: ', urllc_user.embb_user_in_close_proximity, 'urllc_user.assigned_time_block: ', urllc_user.assigned_time_block, 
+                  #'urllc_user.assigned_resource_block: ', urllc_user.assigned_resource_block, 'urllc_user.assigned_code_block: ', urllc_user.assigned_code_block)
+            # urllc_user.assigned_time_block = 0
+            # urllc_user.assigned_resource_block = 0
+            # urllc_user.assigned_code_block = 0
+
+        # for urllc_user in URLLC_Users:
+        #     if len(self.available_resource_time_blocks) > 0:
+        #         random_number = np.random.randint(0, len(self.available_resource_time_blocks), 1)
+        #         random_number = random_number[0]
+        #         urllc_user.assigned_resource_time_block = self.available_resource_time_blocks[random_number]
+        #         self.available_resource_time_blocks = np.delete(self.available_resource_time_blocks,random_number,axis=0)
+        #         urllc_user.assigned_time_block = urllc_user.assigned_resource_time_block[0]
+        #         urllc_user.assigned_resource_block = urllc_user.assigned_resource_time_block[1]
+
+        
 
     def count_num_arriving_urllc_packets(self, urllc_users):
         self.num_arriving_urllc_packets = 0

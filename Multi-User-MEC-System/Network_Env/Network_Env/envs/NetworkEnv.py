@@ -33,6 +33,7 @@ class NetworkEnv(gym.Env):
         self.min_offload_decision = 0
         self.number_of_eMBB_users = len(self.eMBB_Users)
         self.number_of_users = len(self.eMBB_Users) 
+        self.number_of_urllc_users = len(self.URLLC_Users)
         self.num_allocate_RB_upper_bound = self.Communication_Channel_1.num_allocate_RBs_upper_bound
         self.num_allocate_RB_lower_bound = self.Communication_Channel_1.num_allocate_RBs_lower_bound
         self.time_divisions_per_slot = self.Communication_Channel_1.time_divisions_per_slot
@@ -81,27 +82,22 @@ class NetworkEnv(gym.Env):
         number_of_lc_queues_per_user = 1
         numbers_of_off_queues_per_user = 1
         number_of_arriving_urllc_packets = 1
-        number_of_states_per_user = self.num_allocate_RB_upper_bound*2 + number_of_batteries_per_user + numbers_of_off_queues_per_user + number_of_lc_queues_per_user + number_of_arriving_urllc_packets
-
-        observation_space_high = np.array([[[self.channel_gain_max for _ in range(self.num_allocate_RB_upper_bound)] + 
-                                            [self.channel_gain_max for _ in range(self.num_allocate_RB_upper_bound)] +
-                                            [self.battery_energy_max for _ in range(1)] +
-                                            [self.max_off_queue_length for _ in range(1)] +
-                                            [self.max_lc_queue_length for _ in range(1)] +
-                                            [len(self.URLLC_Users) for _ in range(1)]]*self.number_of_users],dtype=np.float32)
-        
-        observation_space_high = observation_space_high.reshape(self.number_of_users,number_of_states_per_user)
+        number_of_states_per_embb_user = self.num_allocate_RB_upper_bound*2 + number_of_batteries_per_user + numbers_of_off_queues_per_user + number_of_lc_queues_per_user
+        number_of_states_per_urllc_user = self.num_allocate_RB_upper_bound*2
 
         
-        observation_space_low = np.array([[[self.channel_gain_min for _ in range(self.num_allocate_RB_upper_bound)] +
-                                           [self.channel_gain_max for _ in range(self.num_allocate_RB_upper_bound)] + 
-                                           [self.battery_energy_min for _ in range(1)] +
-                                           [self.min_off_queue_length for _ in range(1)] +
-                                           [self.min_lc_queue_length for _ in range(1)] +
-                                           [0 for _ in range(1)]]*self.number_of_users],dtype=np.float32)
+        # observation_space_high = observation_space_high.reshape(1,self.number_of_eMBB_users*number_of_states_per_embb_user+self.number_of_urllc_users*number_of_states_per_urllc_user)
+
         
-        observation_space_low = observation_space_low.reshape(self.number_of_users,number_of_states_per_user)
+        # observation_space_low = np.array([[[self.channel_gain_min for _ in range(self.num_allocate_RB_upper_bound)] +
+        #                                    [self.channel_gain_max for _ in range(self.num_allocate_RB_upper_bound)] + 
+        #                                    [self.battery_energy_min for _ in range(1)] +
+        #                                    [self.min_off_queue_length for _ in range(1)] +
+        #                                    [self.max_lc_queue_length for _ in range(1)]]*self.number_of_users +
+        #                                    [self.channel_gain_min for _ in range(self.num_allocate_RB_upper_bound)]*self.number_of_urllc_users],dtype=np.float32)
         
+        # observation_space_high = observation_space_high.reshape(1,self.number_of_eMBB_users*number_of_states_per_embb_user+self.number_of_urllc_users*number_of_states_per_urllc_user)
+        observation_space_high, observation_space_low = self.observation_space_collection()
         '''observation_space_low = np.array([[self.channel_gain_min for _ in range(self.number_of_users)], [self.communication_queue_min for _ in range(self.number_of_users)], 
                         [self.energy_harvested_min for _ in range(self.number_of_users)], [self.latency_requirement_min for _ in range(self.number_of_users)], 
                         [self.reliability_requirement_min for _ in range(self.number_of_users)]],dtype=np.float32)'''
@@ -141,11 +137,15 @@ class NetworkEnv(gym.Env):
         sample_observation = self.observation_space.sample()
         reshaped_action_for_model_training, reshaped_action_for_model_training2 = self.reshape_action_space_dict(sample_action)
         #print('reshaped_action_for_model_training: ', reshaped_action_for_model_training)
-        reshaped_observation_for_model_training = self.reshape_observation_space_for_model(sample_observation)
+        t = 0
+        #reshaped_observation_for_model_training = self.reshape_observation_space_for_model(sample_observation)
 
         self.action_space_dim = len(reshaped_action_for_model_training)#self.box_action_space.shape[1] + (self.num_allocate_RB_upper_bound*self.time_divisions_per_slot)
 
-        self.observation_space_dim = len(reshaped_observation_for_model_training)
+        # print('sample_observation')
+        # print(sample_observation)
+        self.observation_space_dim = len(sample_observation)
+        #print('self.observation_space_dim: ', self.observation_space_dim)
       
         self.action_space_high = 1
         self.action_space_low = 0
@@ -174,10 +174,70 @@ class NetworkEnv(gym.Env):
         self.max_offloading_queue_length = 0
         self.min_offloading_queue_length = 0
 
+    def observation_space_collection(self):
+        observation_space_high = []
+        for x in range(0,self.num_allocate_RB_upper_bound*self.number_of_users):
+            observation_space_high.append(self.channel_gain_max)
+
+        for x in range(0,self.num_allocate_RB_upper_bound*self.number_of_users):
+            observation_space_high.append(self.channel_gain_max)
+
+        for x in range(0,self.number_of_users):
+            observation_space_high.append(self.battery_energy_max)
+
+        for x in range(0,self.number_of_users):
+            observation_space_high.append(self.max_off_queue_length)
+
+        for x in range(0,self.number_of_users):
+            observation_space_high.append(self.max_lc_queue_length)
+
+        for x in range(0,self.number_of_urllc_users*self.num_allocate_RB_upper_bound):
+            observation_space_high.append(self.channel_gain_max)
+
+        for x in range(0,self.number_of_urllc_users*self.num_allocate_RB_upper_bound):
+            observation_space_high.append(self.channel_gain_max)
+
+
+        observation_space_low = []
+        for x in range(0,self.num_allocate_RB_upper_bound*self.number_of_users):
+            observation_space_low.append(self.channel_gain_min)
+
+        for x in range(0,self.num_allocate_RB_upper_bound*self.number_of_users):
+            observation_space_low.append(self.channel_gain_min)
+
+        for x in range(0,self.number_of_users):
+            observation_space_low.append(self.battery_energy_min)
+
+        for x in range(0,self.number_of_users):
+            observation_space_low.append(self.min_off_queue_length)
+
+        for x in range(0,self.number_of_users):
+            observation_space_low.append(self.min_lc_queue_length)
+
+        for x in range(0,self.number_of_urllc_users*self.num_allocate_RB_upper_bound):
+            observation_space_low.append(self.channel_gain_min)
+
+        for x in range(0,self.number_of_urllc_users*self.num_allocate_RB_upper_bound):
+            observation_space_low.append(self.channel_gain_min)
+
+        observation_space_high = np.array(observation_space_high)
+        observation_space_low = np.array(observation_space_low)
+
+        #print('observation_space_high.shape: ', observation_space_high.shape)
+
+        return observation_space_high, observation_space_low
+
+        
+        
     def reshape_observation_space_for_model(self,observation_space):
+    
         observation_space = np.transpose(observation_space)
         observation_space = observation_space.reshape(1,len(observation_space)*len(observation_space[0]))
         observation_space = observation_space.squeeze()
+
+        # print('observation_space')
+        # print(observation_space)
+        # print('shape: ', observation_space.shape)
         return observation_space
        
     def reshape_action_space_dict(self,action):
@@ -343,7 +403,7 @@ class NetworkEnv(gym.Env):
             #         count+=1
         # print('****************************************************')
         # print('resource_block_action_matrix')
-        #print(resource_block_action_matrix)
+        # print(resource_block_action_matrix)
         resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
         #print(resource_block_action_matrix)
@@ -406,6 +466,8 @@ class NetworkEnv(gym.Env):
             #             resource_block_action_matrix[x,y,z] = 0
             #         count+=1
         
+        # print('resource_block_action_matrix:')
+        # print(resource_block_action_matrix)
         resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
         self.resource_block_action_matrix = resource_block_action_matrix
@@ -591,7 +653,13 @@ class NetworkEnv(gym.Env):
         for eMBB_User in self.eMBB_Users:
             eMBB_User.increment_task_queue_timers()
             eMBB_User.split_tasks()
+            eMBB_User.available_resource_time_code_block_fn(self.Communication_Channel_1)
        
+        self.SBS1.allocate_resource_blocks_URLLC(self.Communication_Channel_1, self.URLLC_Users, self.eMBB_Users)
+        # for urllc_user in self.URLLC_Users:
+        #     print('urllc_user.assigned_resource_block: ', urllc_user.assigned_resource_block, 'urllc_user.assigned_time_block: ', urllc_user.assigned_time_block,
+        #           'urllc_user.assigned_code_block: ', urllc_user.assigned_code_block)
+                        
 
         for eMBB_User in self.eMBB_Users:
             #if eMBB_User.has_transmitted_this_time_slot == True:
@@ -627,7 +695,7 @@ class NetworkEnv(gym.Env):
         #mapped_reward = interp(reward,[0,1000],[7200000000,7830000000])
         #Update game state after performing actions
         for eMBB_User in self.eMBB_Users:
-            eMBB_User.calculate_distance_from_SBS(self.SBS1.x_position, self.SBS1.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
+            #eMBB_User.calculate_distance_from_SBS(self.SBS1.x_position, self.SBS1.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
             eMBB_User.calculate_channel_gain(self.Communication_Channel_1)
             eMBB_User.harvest_energy()
             eMBB_User.compute_battery_energy_level()
@@ -638,8 +706,9 @@ class NetworkEnv(gym.Env):
             urllc_user.calculate_channel_gain_on_all_resource_blocks(self.Communication_Channel_1)
             urllc_user.generate_task(self.Communication_Channel_1)
             urllc_user.split_tasks()
+            urllc_user.collect_state()
 
-        observation_channel_gains, observation_battery_energies, observation_offloading_queue_lengths, observation_local_queue_lengths, num_urllc_arriving_packets = self.SBS1.collect_state_space(self.eMBB_Users, self.URLLC_Users)
+        observation_channel_gains, observation_battery_energies, observation_offloading_queue_lengths, observation_local_queue_lengths, num_urllc_arriving_packets, observation_channel_gains_urllc = self.SBS1.collect_state_space(self.eMBB_Users, self.URLLC_Users)
         
         #observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
         #observation_channel_gains = np.array(observation_channel_gains, dtype=np.float32)
@@ -677,8 +746,31 @@ class NetworkEnv(gym.Env):
             user+=1
   
         row = 0
-        # print('observation_battery_energies: ')
-        # print(observation_battery_energies)
+
+        # print('observation_channel_gains.shape: ', observation_channel_gains.shape)
+        observation_channel_gains_urllc = np.array(observation_channel_gains_urllc)
+        # print('observation_channel_gains_urllc')
+        # print(observation_channel_gains_urllc)
+        user = 0
+        for channel_gains in observation_channel_gains_urllc:
+            #print('channel_gains: ', channel_gains)
+            for channel_gain in channel_gains:
+                # print('channel_gain')
+                # print(channel_gain)
+                for gain in channel_gain:
+                    if col < self.num_allocate_RB_upper_bound:
+                        observation_channel_gains_urllc[user][0][col] = interp(observation_channel_gains_urllc[user][0][col],[self.min_small_scale_channel_gain,self.max_small_scale_channel_gain],[0,1])
+                    else:
+                        observation_channel_gains_urllc[user][0][col] = interp(observation_channel_gains_urllc[user][0][col],[self.min_large_scale_channel_gain,self.max_large_scale_channel_gain],[0,1])
+                    col+=1
+
+                row+=1
+                col = 0
+            user+=1
+  
+        row = 0
+        # print('observation_channel_gains_urllc: ')
+        # print(observation_channel_gains_urllc)
         for battery_energy in observation_battery_energies:
             observation_battery_energies[row] = interp(observation_battery_energies[row],[self.min_battery_energy_level,self.max_battery_energy_level],[0,1])
             row+=1
@@ -697,7 +789,7 @@ class NetworkEnv(gym.Env):
             row+=1
 
         observation_channel_gains = np.array(observation_channel_gains).squeeze()
-        
+        observation_channel_gains_urllc = np.array(observation_channel_gains_urllc).squeeze()
         observation_battery_energies = np.array(observation_battery_energies)
         observation_offloading_queue_lengths = np.array(observation_offloading_queue_lengths)
         observation_local_queue_lengths = np.array(observation_local_queue_lengths)
@@ -716,11 +808,11 @@ class NetworkEnv(gym.Env):
         #observation_battery_energies = np.transpose(observation_battery_energies)
         # print('observation_channel_gains:')
         # print(observation_channel_gains)
-        observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,num_urllc_arriving_packets)) #observation_channel_gains.
+        observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,observation_channel_gains_urllc)) #observation_channel_gains.
         #print('observation matrix')
         observation = self.reshape_observation_space_for_model(observation)
-        print('observation: ')
-        print(observation)
+        # print('observation: ')
+        # print(observation)
        
 
         done = self.check_timestep()
@@ -808,10 +900,14 @@ class NetworkEnv(gym.Env):
             #eMBB_User.set_properties_UE()
             eMBB_User.set_properties_eMBB()
             eMBB_User.collect_state()
+            eMBB_User.calculate_distance_from_SBS(self.SBS1.x_coordinate,self.SBS1.y_coordinate)
 
         for URLLC_User in self.URLLC_Users:
             URLLC_User.set_properties_UE()
             URLLC_User.set_properties_URLLC()
+            URLLC_User.calculate_distances_from_embb_users(self.eMBB_Users)
+            URLLC_User.calculate_distance_from_SBS(self.SBS1.x_coordinate, self.SBS1.y_coordinate)
+            URLLC_User.collect_state()
 
         self.eMBB_Users.clear()
         self.URLLC_Users.clear()
@@ -822,12 +918,12 @@ class NetworkEnv(gym.Env):
 
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_RBs()
-        self.SBS1.allocate_resource_blocks_URLLC(self.Communication_Channel_1, self.URLLC_Users)
+        self.SBS1.allocate_resource_blocks_URLLC(self.Communication_Channel_1, self.URLLC_Users,self.eMBB_Users)
         
         info = {'reward': 0}
         #print('battery enegy: ', self.SBS1.system_state_space[4])
         #observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
-        observation_channel_gains, observation_battery_energies, observation_offloading_queue_lengths, observation_local_queue_lengths, num_urllc_arriving_packets = self.SBS1.collect_state_space(self.eMBB_Users, self.URLLC_Users)
+        observation_channel_gains, observation_battery_energies, observation_offloading_queue_lengths, observation_local_queue_lengths, num_urllc_arriving_packets, observation_channel_gains_urllc = self.SBS1.collect_state_space(self.eMBB_Users, self.URLLC_Users)
         #observation_channel_gains = np.array(observation_channel_gains, dtype=np.float32)
         #observation_battery_energies = np.array(observation_battery_energies, dtype=np.float32)
         #print('Observation before transpose')
@@ -842,9 +938,21 @@ class NetworkEnv(gym.Env):
         col = 0
         min_value = 0
         max_value = 0
+        print('observation_channel_gains')
+        print(observation_channel_gains)
         for channel_gains in observation_channel_gains:
             for channel_gain in channel_gains:
                 observation_channel_gains[row][col] = interp(observation_channel_gains[row][col],[self.channel_gain_min,self.channel_gain_max],[0,1])
+                col+=1
+
+            row+=1
+            col = 0
+        row = 0
+        print('observation_channel_gains_urllc')
+        print(observation_channel_gains_urllc)
+        for channel_gains in observation_channel_gains_urllc:
+            for channel_gain in channel_gains:
+                observation_channel_gains_urllc[row][col] = interp(observation_channel_gains_urllc[row][col],[self.channel_gain_min,self.channel_gain_max],[0,1])
                 col+=1
 
             row+=1
@@ -867,7 +975,7 @@ class NetworkEnv(gym.Env):
 
         #observation_channel_gains = np.transpose(observation_channel_gains)
         #observation_battery_energies = np.transpose(observation_battery_energies)
-        observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,num_urllc_arriving_packets)) #observation_channel_gains.
+        observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,observation_channel_gains_urllc)) #observation_channel_gains.
         observation = self.reshape_observation_space_for_model(observation)
         reward = 0
         done = 0
@@ -948,11 +1056,11 @@ class NetworkEnv(gym.Env):
         self.URLLC_Users.append(self.URLLC_UE_5)
         self.URLLC_Users.append(self.URLLC_UE_6)
         self.URLLC_Users.append(self.URLLC_UE_7)
-        self.URLLC_Users.append(self.URLLC_UE_8)
-        self.URLLC_Users.append(self.URLLC_UE_9)
-        self.URLLC_Users.append(self.URLLC_UE_10)
-        self.URLLC_Users.append(self.URLLC_UE_11)
-        self.URLLC_Users.append(self.URLLC_UE_12)
+        #self.URLLC_Users.append(self.URLLC_UE_8)
+        #self.URLLC_Users.append(self.URLLC_UE_9)
+        #self.URLLC_Users.append(self.URLLC_UE_10)
+        #self.URLLC_Users.append(self.URLLC_UE_11)
+        #self.URLLC_Users.append(self.URLLC_UE_12)
 
 
     def check_timestep(self):
@@ -1167,7 +1275,7 @@ class NetworkEnv(gym.Env):
         #mapped_reward = interp(reward,[0,1000],[7200000000,7830000000])
         #Update game state after performing actions
         for eMBB_User in self.eMBB_Users:
-            eMBB_User.calculate_distance_from_SBS(self.SBS1.x_position, self.SBS1.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
+            #eMBB_User.calculate_distance_from_SBS(self.SBS1.x_position, self.SBS1.y_position, ENV_WIDTH_PIXELS, ENV_WIDTH_METRES)
             eMBB_User.calculate_channel_gain(self.Communication_Channel_1)
             eMBB_User.harvest_energy()
             eMBB_User.compute_battery_energy_level()
@@ -1179,7 +1287,7 @@ class NetworkEnv(gym.Env):
             urllc_user.generate_task(self.Communication_Channel_1)
             urllc_user.split_tasks()
 
-        observation_channel_gains, observation_battery_energies, observation_offloading_queue_lengths, observation_local_queue_lengths, num_urllc_arriving_packets = self.SBS1.collect_state_space(self.eMBB_Users, self.URLLC_Users)
+        observation_channel_gains, observation_battery_energies, observation_offloading_queue_lengths, observation_local_queue_lengths, num_urllc_arriving_packets, observation_channel_gains_urllc = self.SBS1.collect_state_space(self.eMBB_Users, self.URLLC_Users)
         
         #observation_channel_gains, observation_battery_energies = self.SBS1.collect_state_space(self.eMBB_Users)
         #observation_channel_gains = np.array(observation_channel_gains, dtype=np.float32)
@@ -1224,6 +1332,7 @@ class NetworkEnv(gym.Env):
         observation_offloading_queue_lengths = np.array(observation_offloading_queue_lengths)
         observation_local_queue_lengths = np.array(observation_local_queue_lengths)
         num_urllc_arriving_packets = np.array(num_urllc_arriving_packets)
+        observation_channel_gains_urllc = np.array(observation_channel_gains_urllc).squeeze()
 
         if self.number_of_users == 1:
             observation_channel_gains_num = len(observation_channel_gains)
@@ -1236,7 +1345,7 @@ class NetworkEnv(gym.Env):
       
         #observation_channel_gains = np.transpose(observation_channel_gains)
         #observation_battery_energies = np.transpose(observation_battery_energies)
-        observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,num_urllc_arriving_packets)) #observation_channel_gains.
+        observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,observation_channel_gains_urllc)) #observation_channel_gains.
         #print('observation matrix')
         observation = self.reshape_observation_space_for_model(observation)
         # print('observation: ')

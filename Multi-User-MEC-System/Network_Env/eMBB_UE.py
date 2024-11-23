@@ -31,6 +31,7 @@ class eMBB_UE(User_Equipment):
         self.cycles_per_bit = self.cycles_per_byte/8
         self.queueing_violation_prob_reward = 0
         self.offloa_ratio_reward = 0
+        self.available_resource_time_code_block = []
         #self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
         #self.max_service_rate_cycles_per_slot = 620000
         #self.service_rate_bits_per_second = 2500000 #2.5MB/s(random.randint(5,5000))
@@ -46,6 +47,8 @@ class eMBB_UE(User_Equipment):
         self.local_queue_delay =0
         self.offload_queue_delay = 0
         self.channel_gain_scaling_factor = 1
+        self.x_coordinate = np.random.uniform(low=30, high=100)
+        self.y_coordinate = np.random.uniform(low=30, high=100)
         self.distance_from_SBS_ = np.random.uniform(low=30, high=100)
         self.average_offloading_rate = 0
 
@@ -329,13 +332,13 @@ class eMBB_UE(User_Equipment):
                 self.task_queue.append(user_task)
         
 
-    def calculate_distance_from_SBS(self, SBS_x_pos, SBS_y_pos, Env_width_pixels, Env_width_metres):
+    def calculate_distance_from_SBS(self, SBS_x_pos, SBS_y_pos):
 
-        x_diff_metres = abs(SBS_x_pos-self.x_position)
-        y_diff_metres = abs(SBS_y_pos-self.y_position)
+        x_diff_metres = abs(SBS_x_pos-self.x_coordinate)
+        y_diff_metres = abs(SBS_y_pos-self.y_coordinate)
 
 
-        self.distance_from_SBS = math.sqrt(math.pow(x_diff_metres,2)+math.pow(y_diff_metres,2))
+        self.distance_from_SBS_ = math.sqrt(math.pow(x_diff_metres,2)+math.pow(y_diff_metres,2))
 
     def collect_state(self):
         #self.cpu_clock_frequency = (random.randint(5,5000))
@@ -459,7 +462,43 @@ class eMBB_UE(User_Equipment):
             # print(df)
             # print(' ')
             # print('Size of offloading queue: ',sum(offload_task_sizes_bits))
-       
+    
+    def available_resource_time_code_block_fn(self,communication_channel):
+        reshaped_allocated_RBs = np.array(self.allocated_RBs)
+        reshaped_allocated_RBs = reshaped_allocated_RBs.squeeze()
+        reshaped_allocated_RBs = reshaped_allocated_RBs.reshape(communication_channel.time_divisions_per_slot,communication_channel.num_allocate_RBs_upper_bound)
+        self.available_resource_time_code_block = []
+        for tb in range(1,communication_channel.time_divisions_per_slot+1):
+                for rb in range(1,communication_channel.num_allocate_RBs_upper_bound+1):
+                    RB_indicator = reshaped_allocated_RBs[tb-1][rb-1]
+                    if RB_indicator == 1:
+                        for cb in range(1,communication_channel.code_blocks_per_resource_time_block+1):
+                            self.available_resource_time_code_block.append((tb,rb,cb))
+
+        # print('embb: ', self.UE_label)
+        # print('reshaped_allocated_RBs: ')
+        # print(reshaped_allocated_RBs)
+        # print('self.available_resource_time_code_block: ', self.available_resource_time_code_block)
+        # print('')
+    def count_and_make_unique_tuples(self,arr):
+        """
+        Counts repeating tuples in a numpy array of tuples and returns:
+        - A dictionary with tuple counts
+        - A list of unique tuples
+        """
+        # Convert the array of tuples to a NumPy array (if not already)
+        arr = np.array(arr)
+        
+        # Use np.unique to count occurrences of each tuple
+        unique_tuples, counts = np.unique(arr, axis=0, return_counts=True)
+        
+        # Combine tuples and their counts into a dictionary
+        count_dict = {tuple(t): c for t, c in zip(unique_tuples, counts)}
+        
+        # Convert unique tuples back to a list of tuples
+        unique_list = [tuple(t) for t in unique_tuples]
+        
+        return count_dict, unique_list
 
     def transmit_to_SBS(self, communication_channel, URLLC_users):
         self.timestep_counter+=1
@@ -471,8 +510,6 @@ class eMBB_UE(User_Equipment):
         self.find_puncturing_users(communication_channel,URLLC_users)
         #print('embb user: ', self.eMBB_UE_label, "puncturing urllc users: ", self.puncturing_urllc_users_)
         #print('')
-        #print('allocated RBs')
-        #print(self.allocated_RBs)
         reshaped_allocated_RBs = np.array(self.allocated_RBs)
         reshaped_allocated_RBs = reshaped_allocated_RBs.squeeze()#.reshape(1,communication_channel.time_divisions_per_slot*communication_channel.num_allocate_RBs_upper_bound)
         reshaped_allocated_RBs = reshaped_allocated_RBs.reshape(communication_channel.time_divisions_per_slot,communication_channel.num_allocate_RBs_upper_bound)
@@ -480,32 +517,45 @@ class eMBB_UE(User_Equipment):
         # print(self.total_gain_)
         # print('reshaped_allocated_RBs')
         # print(reshaped_allocated_RBs)
+        # print('self.occupied_resource_time_blocks: ')
+        # print(self.occupied_resource_time_blocks)
+        occupied_resource_time_blocks_counts, occupied_resource_time_blocks_unique_array = self.count_and_make_unique_tuples(self.occupied_resource_time_blocks)
+        # print('counts: ', counts)
+        #print('occupied_resource_time_blocks_unique_array: ', occupied_resource_time_blocks_unique_array)
+
         if self.battery_energy_level > 0 and self.has_transmitted_this_time_slot == True:
             for tb in range(0,communication_channel.time_divisions_per_slot):
                 for rb in range(0,communication_channel.num_allocate_RBs_upper_bound):
                     RB_indicator = reshaped_allocated_RBs[tb][rb]
                     current_rb_occupied = False
-                    for occupied_resource_time_block in self.occupied_resource_time_blocks:
+                    punture_counts = 0
+                    for occupied_resource_time_block in occupied_resource_time_blocks_unique_array:
                         #print('occupied_resource_time_block: ', occupied_resource_time_block)
                         if occupied_resource_time_block[0] == tb+1 and occupied_resource_time_block[1] == rb+1 and occupied_resource_time_block[2] == 1:
                             current_rb_occupied = True
-                            break
+                            punture_counts = occupied_resource_time_blocks_counts[occupied_resource_time_block]
+                            #print('occupied_resource_time_block: ', occupied_resource_time_block, 'punture_counts: ', punture_counts)
+                            #break
                         elif occupied_resource_time_block[0] == tb+1 and occupied_resource_time_block[1] == rb+1 and occupied_resource_time_block[2] == 0:
                             current_rb_occupied = False
-                            break
+                            punture_counts = 0
+                            #print('occupied_resource_time_block: ', occupied_resource_time_block, 'punture_counts: ', punture_counts)
+                            #break
                     # print('tb: ', tb+1, ' rb: ', rb+1, ' currently occupied: ', current_rb_occupied)
                     # print('')
                     #if RB_indicator == 1:
                     #print(self.total_gain_)
+                    #print('time_block: ', tb+1, 'resource_block: ', rb+1, 'puncture_count: ', punture_counts)
                     rb_small_scale_gain = self.total_gain_[0][rb]
                     rb_large_scale_gain = self.total_gain_[0][communication_channel.num_allocate_RBs_upper_bound+rb]
                     RB_channel_gain = rb_small_scale_gain*rb_large_scale_gain
-                    achieved_RB_channel_rate = self.calculate_channel_rate(communication_channel,RB_indicator,RB_channel_gain,current_rb_occupied)
+                    achieved_RB_channel_rate = self.calculate_channel_rate(communication_channel,RB_indicator,RB_channel_gain,current_rb_occupied, punture_counts)
                     #achieved_RB_channel_rate_ = self.calculate_channel_rate_(communication_channel,RB_indicator,RB_channel_gain,current_rb_occupied)
                     achieved_RB_channel_rates.append(achieved_RB_channel_rate)
                     #achieved_RB_channel_rates_.append(achieved_RB_channel_rate_)
 
             self.achieved_channel_rate = sum(achieved_RB_channel_rates)
+            #print('')
             #print('offload queue service rate: ', self.achieved_channel_rate, ' bits/s')
             #self.achieved_channel_rate_ = sum(achieved_RB_channel_rates_)
             self.previous_channel_rate = self.achieved_channel_rate
@@ -520,7 +570,7 @@ class eMBB_UE(User_Equipment):
     def set_channel_gain_scaling_factor(self,channel_gain_scaling_factor):
         self.channel_gain_scaling_factor = channel_gain_scaling_factor
 
-    def calculate_channel_rate(self, communication_channel,RB_indicator,RB_channel_gain,current_rb_occupied):
+    def calculate_channel_rate(self, communication_channel,RB_indicator,RB_channel_gain,current_rb_occupied, punture_counts):
         RB_bandwidth = communication_channel.RB_bandwidth_Hz
         noise_spectral_density = communication_channel.noise_spectral_density_W
         channel_rate_numerator = self.assigned_transmit_power_W*RB_channel_gain#*self.channel_gain_scaling_factor
@@ -531,7 +581,7 @@ class eMBB_UE(User_Equipment):
         if current_rb_occupied == False:
             channel_rate = RB_indicator*(RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator)))
         elif current_rb_occupied == True:
-            channel_rate = RB_indicator*RB_bandwidth*(1-(1/half_num_mini_slots_per_rb))*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
+            channel_rate = RB_indicator*RB_bandwidth*(1-(1/punture_counts))*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
         #return (channel_rate/500)
         return (channel_rate)
     
@@ -1175,8 +1225,8 @@ class eMBB_UE(User_Equipment):
         reshaped_allocated_RBs = np.array(self.allocated_RBs)
         reshaped_allocated_RBs = reshaped_allocated_RBs.squeeze()#.reshape(1,communication_channel.time_divisions_per_slot*communication_channel.num_allocate_RBs_upper_bound)
         reshaped_allocated_RBs = reshaped_allocated_RBs.reshape(communication_channel.time_divisions_per_slot,communication_channel.num_allocate_RBs_upper_bound)
-        #print("reshaped_allocated_RBs")
-        #print(reshaped_allocated_RBs)
+        # print("reshaped_allocated_RBs")
+        # print(reshaped_allocated_RBs)
         sum_matrix = np.sum(reshaped_allocated_RBs,axis=0)
         # print('sum_matrix')
         # print(sum_matrix)
@@ -1189,7 +1239,7 @@ class eMBB_UE(User_Equipment):
                 self.allocated_resource_blocks_numbered.append(r)
 
             r+=1
-
+        #print('self.allocated_resource_blocks_numbered: ', self.allocated_resource_blocks_numbered)
         r = 0
         c = 0
         binary_indicator = 0
@@ -1216,6 +1266,7 @@ class eMBB_UE(User_Equipment):
                 self.time_matrix.append((0))
         # print('self.time_matrix')
         # print(self.time_matrix)
+        # print('')
         self.puncturing_urllc_users(URLLC_users)
 
     def puncturing_urllc_users(self,urllc_users):
@@ -1248,12 +1299,12 @@ class eMBB_UE(User_Equipment):
 
         # print('occupied_resource_time_blocks')
         # print(self.occupied_resource_time_blocks)
-        # print('émbb user id: ', self.eMBB_UE_label, 'allocated rb: ', self.allocated_resource_blocks_numbered)
+        #print('embb user id: ', self.eMBB_UE_label, 'allocated rb: ', self.allocated_resource_blocks_numbered)
         # print('allocated time blocks: ', self.time_matrix)
         # print('')
-        # print('self.puncturing_urllc_users_: ', self.puncturing_urllc_users_)
+        #print('self.puncturing_urllc_users_: ', self.puncturing_urllc_users_)
         # print('occupied resource blocks: ', self.occupied_resource_time_blocks)
-        # print('')
+        #print('')
 
         # for urllc_user in urllc_users:
         #     print('urllc_user id: ', urllc_user.URLLC_UE_label)

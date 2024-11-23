@@ -82,6 +82,7 @@ class Communication_Channel():
         self.num_of_RBs_per_User = 0
         self.time_divisions_per_slot = 2
         self.num_of_mini_slots = 7
+        self.code_blocks_per_resource_time_block = 3
         #self.fig, self.ax = plt.subplots()
 
 
