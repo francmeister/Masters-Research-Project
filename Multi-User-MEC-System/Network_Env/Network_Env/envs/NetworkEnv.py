@@ -938,8 +938,8 @@ class NetworkEnv(gym.Env):
         col = 0
         min_value = 0
         max_value = 0
-        print('observation_channel_gains')
-        print(observation_channel_gains)
+        # print('observation_channel_gains')
+        # print(observation_channel_gains)
         for channel_gains in observation_channel_gains:
             for channel_gain in channel_gains:
                 observation_channel_gains[row][col] = interp(observation_channel_gains[row][col],[self.channel_gain_min,self.channel_gain_max],[0,1])
@@ -948,8 +948,8 @@ class NetworkEnv(gym.Env):
             row+=1
             col = 0
         row = 0
-        print('observation_channel_gains_urllc')
-        print(observation_channel_gains_urllc)
+        # print('observation_channel_gains_urllc')
+        # print(observation_channel_gains_urllc)
         for channel_gains in observation_channel_gains_urllc:
             for channel_gain in channel_gains:
                 observation_channel_gains_urllc[row][col] = interp(observation_channel_gains_urllc[row][col],[self.channel_gain_min,self.channel_gain_max],[0,1])
