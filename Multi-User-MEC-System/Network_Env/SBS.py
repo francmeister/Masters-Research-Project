@@ -677,66 +677,69 @@ class SBS():
         return largest_index
     
     def calculate_urllc_reliability_reward(self, urllc_users):
-        num_arriving_urllc_packets = self.num_arriving_urllc_packets
-        #print('num_arriving_urllc_packets: ', num_arriving_urllc_packets)
-        urllc_task_size = 0
-        #print('len(urllc_users): ', len(urllc_users))
+        reliability_reward = 0
+        reliability_reward_normalized = 0
         if len(urllc_users) > 0:
-            urllc_task_size = urllc_users[0].task_size_per_slot_bits    
+            num_arriving_urllc_packets = self.num_arriving_urllc_packets
+            #print('num_arriving_urllc_packets: ', num_arriving_urllc_packets)
+            urllc_task_size = 0
+            #print('len(urllc_users): ', len(urllc_users))
+            if len(urllc_users) > 0:
+                urllc_task_size = urllc_users[0].task_size_per_slot_bits    
 
-        urllc_total_rate = 0
-        rates = []
-        for urllc_user in urllc_users:
-            #urllc_total_rate = urllc_total_rate+ (urllc_user.achieved_channel_rate*8)
-            urllc_total_rate = urllc_total_rate + urllc_user.achieved_channel_rate_per_slot
-            rates.append(urllc_user.achieved_channel_rate_per_slot)
-       
-        K = num_arriving_urllc_packets*urllc_task_size
-        K_mean, std_K = self.K_expectation_over_prev_T_slot(10,K)
-        #inverse_cdf_K = stats.norm.ppf(p, loc=mu, scale=sigma)
-        # if len(urllc_users) > 3:
-        #     K_variance = (len(urllc_users)-2)*urllc_task_size
-        # else:
-        #     K_variance = (1)*urllc_task_size
-        #K_inv = stats.norm.ppf(K, loc=K_mean, scale=K_variance)
-     
+            urllc_total_rate = 0
+            rates = []
+            for urllc_user in urllc_users:
+                #urllc_total_rate = urllc_total_rate+ (urllc_user.achieved_channel_rate*8)
+                urllc_total_rate = urllc_total_rate + urllc_user.achieved_channel_rate_per_slot
+                rates.append(urllc_user.achieved_channel_rate_per_slot)
+        
+            K = num_arriving_urllc_packets*urllc_task_size
+            K_mean, std_K = self.K_expectation_over_prev_T_slot(10,K)
+            #inverse_cdf_K = stats.norm.ppf(p, loc=mu, scale=sigma)
+            # if len(urllc_users) > 3:
+            #     K_variance = (len(urllc_users)-2)*urllc_task_size
+            # else:
+            #     K_variance = (1)*urllc_task_size
+            #K_inv = stats.norm.ppf(K, loc=K_mean, scale=K_variance)
+        
 
-        #K = K - 300
-        self.urllc_total_rate = urllc_total_rate
-        #self.urllc_reliability_constraint_max = 0.5
-        #print('self.urllc_reliability_constraint_max: ', self.urllc_reliability_constraint_max)
-        #print('stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival): ', stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival))
-        self.F_L_inverse = urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival)
-        #print('self.F_L_inverse: ', self.F_L_inverse)
-        reliability_reward = urllc_total_rate-urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival)
-        #print('urllc_total_rate: ', urllc_total_rate)
-        #print('rllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival): ', urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival))
-        #print('K*(1-self.urllc_reliability_constraint_max): ', K*(1-self.urllc_reliability_constraint_max))
-        if reliability_reward < 0:
-            reliability_reward = reliability_reward
-        else:
-            reliability_reward = 1
-        average_rate_prev_slots, std_rate = self.urllc_rate_expectation_over_prev_T_slot(10,urllc_total_rate)
-        self.average_rate_prev_slots = average_rate_prev_slots
-        #print('average_rate_prev_slots: ', average_rate_prev_slots, 'std_rate: ', std_rate)
-        #print('K: ', K)
-        #average_rate = urllc_total_rate/len(urllc_users)
-        # variance_rate = statistics.pvariance(rates)
-        # std_rate = math.sqrt(variance_rate)
-     
-        #print('self.previous_rates: ', self.previous_rates)
-        #variance = urllc_task_size
-        #average_rate = 300
-        #self.outage_probability = stats.norm.cdf(K,loc=average_rate,scale=std_rate)
-        L = stats.binom(len(urllc_users),urllc_users[0].prob_packet_arrival)
-        self.outage_probability = 1 - L.cdf(urllc_total_rate/urllc_task_size)#stats.binom.cdf(num_arriving_urllc_packets,len(urllc_users),urllc_users[0].prob_packet_arrival)
-        #print('self.outage_probability: ', self.outage_probability )
-        # print('reliability_reward: ', reliability_reward)
-        # print('self.outage_probability: ', self.outage_probability)
-        #print('reliability_reward: ', reliability_reward)
-        reliability_reward_max = 4000
-        reliability_reward_min = 0
-        reliability_reward_normalized = interp(reliability_reward,[reliability_reward_min,reliability_reward_max],[0,5])
+            #K = K - 300
+            self.urllc_total_rate = urllc_total_rate
+            #self.urllc_reliability_constraint_max = 0.5
+            #print('self.urllc_reliability_constraint_max: ', self.urllc_reliability_constraint_max)
+            #print('stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival): ', stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival))
+            self.F_L_inverse = urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival)
+            #print('self.F_L_inverse: ', self.F_L_inverse)
+            reliability_reward = urllc_total_rate-urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival)
+            #print('urllc_total_rate: ', urllc_total_rate)
+            #print('rllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival): ', urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival))
+            #print('K*(1-self.urllc_reliability_constraint_max): ', K*(1-self.urllc_reliability_constraint_max))
+            if reliability_reward < 0:
+                reliability_reward = reliability_reward
+            else:
+                reliability_reward = 1
+            average_rate_prev_slots, std_rate = self.urllc_rate_expectation_over_prev_T_slot(10,urllc_total_rate)
+            self.average_rate_prev_slots = average_rate_prev_slots
+            #print('average_rate_prev_slots: ', average_rate_prev_slots, 'std_rate: ', std_rate)
+            #print('K: ', K)
+            #average_rate = urllc_total_rate/len(urllc_users)
+            # variance_rate = statistics.pvariance(rates)
+            # std_rate = math.sqrt(variance_rate)
+        
+            #print('self.previous_rates: ', self.previous_rates)
+            #variance = urllc_task_size
+            #average_rate = 300
+            #self.outage_probability = stats.norm.cdf(K,loc=average_rate,scale=std_rate)
+            L = stats.binom(len(urllc_users),urllc_users[0].prob_packet_arrival)
+            self.outage_probability = 1 - L.cdf(urllc_total_rate/urllc_task_size)#stats.binom.cdf(num_arriving_urllc_packets,len(urllc_users),urllc_users[0].prob_packet_arrival)
+            #print('self.outage_probability: ', self.outage_probability )
+            # print('reliability_reward: ', reliability_reward)
+            # print('self.outage_probability: ', self.outage_probability)
+            #print('reliability_reward: ', reliability_reward)
+            reliability_reward_max = 4000
+            reliability_reward_min = 0
+            reliability_reward_normalized = interp(reliability_reward,[reliability_reward_min,reliability_reward_max],[0,5])
         return reliability_reward, reliability_reward_normalized
     
     def urllc_rate_expectation_over_prev_T_slot(self, T, urllc_total_rate):

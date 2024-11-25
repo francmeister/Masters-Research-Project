@@ -808,7 +808,11 @@ class NetworkEnv(gym.Env):
         #observation_battery_energies = np.transpose(observation_battery_energies)
         # print('observation_channel_gains:')
         # print(observation_channel_gains)
-        observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,observation_channel_gains_urllc)) #observation_channel_gains.
+        if len(observation_channel_gains_urllc) > 0:
+            observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,observation_channel_gains_urllc)) #observation_channel_gains.
+        else:
+            observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths)) #observation_channel_gains.
+    
         #print('observation matrix')
         observation = self.reshape_observation_space_for_model(observation)
         # print('observation: ')
@@ -975,7 +979,10 @@ class NetworkEnv(gym.Env):
 
         #observation_channel_gains = np.transpose(observation_channel_gains)
         #observation_battery_energies = np.transpose(observation_battery_energies)
-        observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,observation_channel_gains_urllc)) #observation_channel_gains.
+        if len(observation_channel_gains_urllc) > 0:
+            observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,observation_channel_gains_urllc)) #observation_channel_gains.
+        else:
+            observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths)) #observation_channel_gains.
         observation = self.reshape_observation_space_for_model(observation)
         reward = 0
         done = 0
@@ -1044,18 +1051,18 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.append(self.eMBB_UE_5)
         self.eMBB_Users.append(self.eMBB_UE_6)
         self.eMBB_Users.append(self.eMBB_UE_7)
-        # self.eMBB_Users.append(self.eMBB_UE_8)
-        # self.eMBB_Users.append(self.eMBB_UE_9)
-        # self.eMBB_Users.append(self.eMBB_UE_10)
-        # self.eMBB_Users.append(self.eMBB_UE_11)
+        #self.eMBB_Users.append(self.eMBB_UE_8)
+        #self.eMBB_Users.append(self.eMBB_UE_9)
+        #self.eMBB_Users.append(self.eMBB_UE_10)
+        #self.eMBB_Users.append(self.eMBB_UE_11)
 
-        self.URLLC_Users.append(self.URLLC_UE_1)
-        self.URLLC_Users.append(self.URLLC_UE_2)
-        self.URLLC_Users.append(self.URLLC_UE_3)
-        self.URLLC_Users.append(self.URLLC_UE_4)
-        self.URLLC_Users.append(self.URLLC_UE_5)
-        self.URLLC_Users.append(self.URLLC_UE_6)
-        self.URLLC_Users.append(self.URLLC_UE_7)
+        #self.URLLC_Users.append(self.URLLC_UE_1)
+        #self.URLLC_Users.append(self.URLLC_UE_2)
+        #self.URLLC_Users.append(self.URLLC_UE_3)
+        #self.URLLC_Users.append(self.URLLC_UE_4)
+        #self.URLLC_Users.append(self.URLLC_UE_5)
+        #self.URLLC_Users.append(self.URLLC_UE_6)
+        #self.URLLC_Users.append(self.URLLC_UE_7)
         #self.URLLC_Users.append(self.URLLC_UE_8)
         #self.URLLC_Users.append(self.URLLC_UE_9)
         #self.URLLC_Users.append(self.URLLC_UE_10)
@@ -1345,7 +1352,10 @@ class NetworkEnv(gym.Env):
       
         #observation_channel_gains = np.transpose(observation_channel_gains)
         #observation_battery_energies = np.transpose(observation_battery_energies)
-        observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,observation_channel_gains_urllc)) #observation_channel_gains.
+        if len(observation_channel_gains_urllc) > 0:
+            observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths,observation_channel_gains_urllc)) #observation_channel_gains.
+        else:
+            observation = np.column_stack((observation_channel_gains,observation_battery_energies,observation_offloading_queue_lengths,observation_local_queue_lengths)) #observation_channel_gains.
         #print('observation matrix')
         observation = self.reshape_observation_space_for_model(observation)
         # print('observation: ')
