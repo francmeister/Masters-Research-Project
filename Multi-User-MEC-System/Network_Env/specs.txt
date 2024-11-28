@@ -1,15 +1,7 @@
 
 
-q_delay = 10**5
-        q_energy = 10**8
-        q_total_users_battery_energies_reward = 10**4
-        q_urllc_reliability_reward = 20**8
-        q_total_offload_traffic_reward = 10**7
-        q_throughput_log_reward = 10**3
-        q_throughput = 1#0**(-7)
-        q_local_queueing_violation_prob_reward = 10**6
-        q_offload_ratio_reward = 10**6
 
 
-CPU times: user 9h 39min 20s, sys: 4min 16s, total: 9h 43min 37s
-Wall time: 9h 47min 46s
+
+CPU times: user 2h 55min 39s, sys: 1min 22s, total: 2h 57min 2s
+Wall time: 2h 58min 12s
