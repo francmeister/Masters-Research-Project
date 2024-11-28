@@ -150,7 +150,7 @@ class NetworkEnv(gym.Env):
         self.action_space_high = 1
         self.action_space_low = 0
 
-        self.STEP_LIMIT = 100
+        self.STEP_LIMIT = 32
         self.sleep = 0
         self.steps = 0
         self.initial_RB_bandwidth = self.Communication_Channel_1.RB_bandwidth_Hz
@@ -1047,14 +1047,14 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.append(self.eMBB_UE_1)
         self.eMBB_Users.append(self.eMBB_UE_2)
         self.eMBB_Users.append(self.eMBB_UE_3)
-        #self.eMBB_Users.append(self.eMBB_UE_4)
-        #self.eMBB_Users.append(self.eMBB_UE_5)
-        #self.eMBB_Users.append(self.eMBB_UE_6)
-        #self.eMBB_Users.append(self.eMBB_UE_7)
-        #self.eMBB_Users.append(self.eMBB_UE_8)
-        #self.eMBB_Users.append(self.eMBB_UE_9)
-        #self.eMBB_Users.append(self.eMBB_UE_10)
-        #self.eMBB_Users.append(self.eMBB_UE_11)
+        self.eMBB_Users.append(self.eMBB_UE_4)
+        self.eMBB_Users.append(self.eMBB_UE_5)
+        self.eMBB_Users.append(self.eMBB_UE_6)
+        self.eMBB_Users.append(self.eMBB_UE_7)
+        self.eMBB_Users.append(self.eMBB_UE_8)
+        self.eMBB_Users.append(self.eMBB_UE_9)
+        self.eMBB_Users.append(self.eMBB_UE_10)
+        self.eMBB_Users.append(self.eMBB_UE_11)
 
         #self.URLLC_Users.append(self.URLLC_UE_1)
         #self.URLLC_Users.append(self.URLLC_UE_2)
