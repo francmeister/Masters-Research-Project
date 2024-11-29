@@ -5,6 +5,7 @@ from numpy import interp
 #a_load = np.load('TD3_NetworkEnv-v0_0.npy')
 
 rewards_throughput_energy_32_steps = np.load('timestep_rewards_energy_throughput_32_steps.npy')
+rewards_throughput_energy_64_steps = np.load('timestep_rewards_energy_throughput_64_steps.npy')
 rewards_throughput_energy_128_steps = np.load('timestep_rewards_energy_throughput_128_steps.npy')
 rewards_throughput_energy_256_steps = np.load('timestep_rewards_energy_throughput_256_steps.npy')
 # rewards_throughput_energy_3_user = np.load('timestep_rewards_energy_throughput_3_Users.npy')
@@ -16,18 +17,22 @@ rewards_throughput_energy_256_steps = np.load('timestep_rewards_energy_throughpu
 fairness_index = np.load('fairnes_index.npy')
 
 overall_users_reward_32_steps = np.load('overall_users_reward_TD3_32_steps.npy')
+overall_users_reward_64_steps = np.load('overall_users_reward_TD3_64_steps.npy')
 overall_users_reward_128_steps = np.load('overall_users_reward_TD3_128_steps.npy')
 overall_users_reward_256_steps = np.load('overall_users_reward_TD3_256_steps.npy')
 
 energy_rewards_32_steps = rewards_throughput_energy_32_steps[:,2]
+energy_rewards_64_steps = rewards_throughput_energy_64_steps[:,2]
 energy_rewards_128_steps = rewards_throughput_energy_128_steps[:,2]
 energy_rewards_256_steps = rewards_throughput_energy_256_steps[:,2]
 
 throughput_rewards_32_steps = rewards_throughput_energy_32_steps[:,3]
+throughput_rewards_64_steps = rewards_throughput_energy_64_steps[:,3]
 throughput_rewards_128_steps = rewards_throughput_energy_128_steps[:,3]
 throughput_rewards_256_steps = rewards_throughput_energy_256_steps[:,3]
 
 delay_rewards_32_steps = rewards_throughput_energy_32_steps[:,4]
+delay_rewards_64_steps = rewards_throughput_energy_64_steps[:,4]
 delay_rewards_128_steps = rewards_throughput_energy_128_steps[:,4]
 delay_rewards_256_steps = rewards_throughput_energy_256_steps[:,4]
 #overall_users_reward_11_users = np.load('overall_users_reward_TD3_11_users.npy')
@@ -35,6 +40,7 @@ delay_rewards_256_steps = rewards_throughput_energy_256_steps[:,4]
 
 #print('rewards_throughput_energy: ', rewards_throughput_energy)
 timesteps_32_steps = rewards_throughput_energy_32_steps[:,0]
+timesteps_64_steps = rewards_throughput_energy_64_steps[:,0]
 timesteps_128_steps = rewards_throughput_energy_128_steps[:,0]
 timesteps_256_steps = rewards_throughput_energy_256_steps[:,0]
 # timesteps_3_users = rewards_throughput_energy_3_user[:,0]
@@ -83,18 +89,22 @@ normalized_rewards_TD3 = []
 
 
 overall_users_reward_32_steps_smooth = moving_average(overall_users_reward_32_steps, window_size)
+overall_users_reward_64_steps_smooth = moving_average(overall_users_reward_64_steps, window_size)
 overall_users_reward_128_steps_smooth = moving_average(overall_users_reward_128_steps, window_size)
 overall_users_reward_256_steps_smooth = moving_average(overall_users_reward_256_steps, window_size)
 
 energy_rewards_32_steps_smooth = moving_average(energy_rewards_32_steps, window_size)
+energy_rewards_64_steps_smooth = moving_average(energy_rewards_64_steps, window_size)
 energy_rewards_128_steps_smooth = moving_average(energy_rewards_128_steps, window_size)
 energy_rewards_256_steps_smooth = moving_average(energy_rewards_256_steps, window_size)
 
 throughput_rewards_32_steps_smooth = moving_average(throughput_rewards_32_steps, window_size)
+throughput_rewards_64_steps_smooth = moving_average(throughput_rewards_64_steps, window_size)
 throughput_rewards_128_steps_smooth = moving_average(throughput_rewards_128_steps, window_size)
 throughput_rewards_256_steps_smooth = moving_average(throughput_rewards_256_steps, window_size)
 
 delay_rewards_32_steps_smooth = moving_average(delay_rewards_32_steps, window_size)
+delay_rewards_64_steps_smooth = moving_average(delay_rewards_64_steps, window_size)
 delay_rewards_128_steps_smooth = moving_average(delay_rewards_128_steps, window_size)
 delay_rewards_256_steps_smooth = moving_average(delay_rewards_256_steps, window_size)
 
@@ -162,13 +172,15 @@ for timestep in timesteps_256_steps:
 figure, axis = plt.subplots(2,2)
 
 axis[0,0].plot(timesteps_32_steps[window_size-1:], overall_users_reward_32_steps_smooth, color="green", label="1 User")
+axis[0,0].plot(timesteps_64_steps[window_size-1:], overall_users_reward_64_steps_smooth, color="red", label="1 User")
 axis[0,0].plot(timesteps_128_steps[window_size-1:], overall_users_reward_128_steps_smooth, color="brown", label='3 Users')
 axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
 axis[0,0].set_title('Total System Reward')
 axis[0,0].grid()
-#axis[0,0].legend(["TD3 32 step limit","TD3 128 step limits","TD3 256 step limits"], loc="upper left")
+axis[0,0].legend(["TD3 32 step limit","TD3 64 step limit","TD3 128 step limits","TD3 256 step limits"], loc="lower right")
 
 axis[0,1].plot(timesteps_32_steps[window_size-1:], throughput_rewards_32_steps_smooth, color="green", label="1 User")
+axis[0,1].plot(timesteps_64_steps[window_size-1:], throughput_rewards_64_steps_smooth, color="red", label="1 User")
 axis[0,1].plot(timesteps_128_steps[window_size-1:], throughput_rewards_128_steps_smooth, color="brown", label='3 Users')
 axis[0,1].plot(timesteps_256_steps[window_size-1:], throughput_rewards_256_steps_smooth, color="blue", label='3 Users')
 axis[0,1].set_title('Sum Data Rates')
@@ -179,6 +191,7 @@ axis[0,1].grid()
 
 
 axis[1,0].plot(timesteps_32_steps[window_size-1:], energy_rewards_32_steps_smooth, color="green", label="1 User")
+axis[1,0].plot(timesteps_64_steps[window_size-1:], energy_rewards_64_steps_smooth, color="red", label="1 User")
 axis[1,0].plot(timesteps_128_steps[window_size-1:], energy_rewards_128_steps_smooth, color="brown", label='3 Users')
 axis[1,0].plot(timesteps_256_steps[window_size-1:], energy_rewards_256_steps_smooth, color="blue", label='3 Users')
 axis[1,0].set_title('Energy Consumption')
@@ -189,6 +202,7 @@ axis[1,0].grid()
 
 
 axis[1,1].plot(timesteps_32_steps[window_size-1:], delay_rewards_32_steps_smooth, color="green", label="1 User")
+axis[1,1].plot(timesteps_64_steps[window_size-1:], delay_rewards_64_steps_smooth, color="green", label="1 User")
 axis[1,1].plot(timesteps_128_steps[window_size-1:], delay_rewards_128_steps_smooth, color="brown", label='3 Users')
 axis[1,1].plot(timesteps_256_steps[window_size-1:], delay_rewards_256_steps_smooth, color="blue", label='3 Users')
 axis[1,1].set_title('Sum Delay')
