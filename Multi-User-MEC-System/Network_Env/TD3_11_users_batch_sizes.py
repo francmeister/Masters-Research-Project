@@ -151,62 +151,64 @@ def detect_convergence_gradient(data, threshold=0.001, window_size=50):
 # print("Convergence for 11 Users at Episode:", convergence_11_users)
 
 
-new_timesteps_32_steps = []
+new_timesteps_30_batch = []
 count = 0
 for timestep in timesteps_30_batch:
-    new_timesteps_32_steps.append(count)
+    new_timesteps_30_batch.append(count)
     count+=1
 
-new_timesteps_128_steps = []
+new_timesteps_60_batch = []
+count = 0
+for timestep in timesteps_60_batch:
+    new_timesteps_60_batch.append(count)
+    count+=1
+
+new_timesteps_100_batch = []
 count = 0
 for timestep in timesteps_100_batch:
-    new_timesteps_128_steps.append(count)
+    new_timesteps_100_batch.append(count)
     count+=1
 
-# new_timesteps_256_steps = []
-# count = 0
-# for timestep in timesteps_256_steps:
-#     new_timesteps_256_steps.append(count)
-#     count+=1
 
 figure, axis = plt.subplots(2,2)
 
-axis[0,0].plot(timesteps_30_batch[window_size-1:], overall_users_reward_30_batch_smooth, color="green", label="1 User")
-axis[0,0].plot(timesteps_60_batch[window_size-1:], overall_users_reward_60_batch_smooth, color="red", label="1 User")
-axis[0,0].plot(timesteps_100_batch[window_size-1:], overall_users_reward_100_batch_smooth, color="brown", label='3 Users')
+axis[0,0].plot(new_timesteps_30_batch[window_size-1:], overall_users_reward_30_batch_smooth, color="green", label="1 User")
+axis[0,0].plot(new_timesteps_60_batch[window_size-1:], overall_users_reward_60_batch_smooth, color="red", label="1 User")
+axis[0,0].plot(new_timesteps_100_batch[window_size-1:], overall_users_reward_100_batch_smooth, color="brown", label='3 Users')
 #axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
 axis[0,0].set_title('Total System Reward')
 axis[0,0].grid()
+axis[0,0].set_xlabel('Episode')
 axis[0,0].legend(["TD3 30 batch size","TD3 60 batch size","TD3 100 batch size"], loc="lower right")
 
-axis[0,1].plot(timesteps_30_batch[window_size-1:], throughput_rewards_30_batch_smooth, color="green", label="1 User")
-axis[0,1].plot(timesteps_60_batch[window_size-1:], throughput_rewards_60_batch_smooth, color="red", label="1 User")
-axis[0,1].plot(timesteps_100_batch[window_size-1:], throughput_rewards_100_batch_smooth, color="brown", label='3 Users')
+axis[0,1].plot(new_timesteps_30_batch[window_size-1:], throughput_rewards_30_batch_smooth, color="green", label="1 User")
+axis[0,1].plot(new_timesteps_60_batch[window_size-1:], throughput_rewards_60_batch_smooth, color="red", label="1 User")
+axis[0,1].plot(new_timesteps_100_batch[window_size-1:], throughput_rewards_100_batch_smooth, color="brown", label='3 Users')
 #axis[0,1].plot(timesteps_256_steps[window_size-1:], throughput_rewards_256_steps_smooth, color="blue", label='3 Users')
 axis[0,1].set_title('Sum Data Rates')
-axis[0,1].set_xlabel('Timestep')
+axis[0,1].set_xlabel('Episode')
 axis[0,1].set_ylabel('Data Rate (bits/s)')
 axis[0,1].grid()
 #axis[0,0].legend(["TD3 32 step limit","TD3 128 step limits","TD3 256 step limits"], loc="upper left")
 
 
-axis[1,0].plot(timesteps_30_batch[window_size-1:], energy_rewards_30_batch_smooth, color="green", label="1 User")
-axis[1,0].plot(timesteps_60_batch[window_size-1:], energy_rewards_60_batch_smooth, color="red", label="1 User")
-axis[1,0].plot(timesteps_100_batch[window_size-1:], energy_rewards_100_batch_smooth, color="brown", label='3 Users')
+axis[1,0].plot(new_timesteps_30_batch[window_size-1:], energy_rewards_30_batch_smooth, color="green", label="1 User")
+axis[1,0].plot(new_timesteps_60_batch[window_size-1:], energy_rewards_60_batch_smooth, color="red", label="1 User")
+axis[1,0].plot(new_timesteps_100_batch[window_size-1:], energy_rewards_100_batch_smooth, color="brown", label='3 Users')
 #axis[1,0].plot(timesteps_256_steps[window_size-1:], energy_rewards_256_steps_smooth, color="blue", label='3 Users')
 axis[1,0].set_title('Energy Consumption')
-axis[1,0].set_xlabel('Timestep')
+axis[1,0].set_xlabel('Episode')
 axis[1,0].set_ylabel('Energy (J)')
 axis[1,0].grid()
 #axis[0,0].legend(["TD3 32 step limit","TD3 128 step limits","TD3 256 step limits"], loc="upper left")
 
 
-axis[1,1].plot(timesteps_30_batch[window_size-1:], delay_rewards_30_batch_smooth, color="green", label="1 User")
-axis[1,1].plot(timesteps_60_batch[window_size-1:], delay_rewards_60_batch_smooth, color="green", label="1 User")
-axis[1,1].plot(timesteps_100_batch[window_size-1:], delay_rewards_100_batch_smooth, color="brown", label='3 Users')
+axis[1,1].plot(new_timesteps_30_batch[window_size-1:], delay_rewards_30_batch_smooth, color="green", label="1 User")
+axis[1,1].plot(new_timesteps_60_batch[window_size-1:], delay_rewards_60_batch_smooth, color="green", label="1 User")
+axis[1,1].plot(new_timesteps_100_batch[window_size-1:], delay_rewards_100_batch_smooth, color="brown", label='3 Users')
 #axis[1,1].plot(timesteps_256_steps[window_size-1:], delay_rewards_256_steps_smooth, color="blue", label='3 Users')
 axis[1,1].set_title('Sum Delay')
-axis[1,1].set_xlabel('Timestep')
+axis[1,1].set_xlabel('Episode')
 axis[1,1].set_ylabel('Delay (ms)')
 axis[1,1].grid()
 #axis[0,0].legend(["TD3 32 step limit","TD3 128 step limits","TD3 256 step limits"], loc="upper left")
