@@ -205,10 +205,10 @@ def individual_user_subplots(user_num, timesteps, energy_rewards, throughput_rew
     axis[11].plot(timesteps, RBs_actions[:,user_num])
     axis[11].set_title('user num: '+ str(user_num) + ' RB allocation action')
 
-    axis[12].plot(timesteps[:3911], individual_local_queue_length_num_tasks[:,user_num])
+    axis[12].plot(timesteps, individual_local_queue_length_num_tasks[:,user_num])
     axis[12].set_title('user num: '+ str(user_num) + ' local_queue_length_tasks')
 
-    axis[13].plot(timesteps[:3911], individual_offload_queue_length_num_tasks[:,user_num])
+    axis[13].plot(timesteps, individual_offload_queue_length_num_tasks[:,user_num])
     axis[13].set_title('user num: '+ str(user_num) + ' offload_queue_length_tasks')
 
     individual_local_energy_consumed_smooth = moving_average(individual_local_energy_consumed[:,user_num], window_size)
@@ -230,11 +230,13 @@ def individual_user_subplots(user_num, timesteps, energy_rewards, throughput_rew
     plt.show()
 
 
-string_reward_component = 'RB allocations'
-print(timesteps)
-#individual_sub_plots(numbers_users=len(power_actions[0]),timesteps=timesteps,reward_component=RBs_actions,string_reward_component=string_reward_component)
+# offload_actions = np.load('offloading_actions.npy')
+# power_actions = np.load('power_actions.npy')
+# RBs_actions = np.load('subcarrier_actions.npy')
+string_reward_component = 'RBs_actions'
+individual_sub_plots(numbers_users=len(power_actions[0]),timesteps=timesteps,reward_component=RBs_actions,string_reward_component=string_reward_component)
 
-user_num =2
+user_num =5
 
-individual_user_subplots(user_num, timesteps, individual_energies, individual_channel_rates, individual_queue_delays, offload_actions, power_actions,individual_local_queue_lengths, individual_local_queue_delays, individual_offload_queue_lengths, individual_offload_queue_delays, RBs_actions,individual_average_task_size_offload_queue,individual_expected_rate_over_prev_T_slot,individual_battery_energy_levels,individual_energy_harvested,individual_local_queue_length_num_tasks,individual_offload_queue_length_num_tasks,individual_local_energy_consumed,individual_offloading_energy,individual_embb_puncturing_users_sum_data_rates,individual_embb_num_puncturing_users)
+#individual_user_subplots(user_num, timesteps, individual_energies, individual_channel_rates, individual_queue_delays, offload_actions, power_actions,individual_local_queue_lengths, individual_local_queue_delays, individual_offload_queue_lengths, individual_offload_queue_delays, RBs_actions,individual_average_task_size_offload_queue,individual_expected_rate_over_prev_T_slot,individual_battery_energy_levels,individual_energy_harvested,individual_local_queue_length_num_tasks,individual_offload_queue_length_num_tasks,individual_local_energy_consumed,individual_offloading_energy,individual_embb_puncturing_users_sum_data_rates,individual_embb_num_puncturing_users)
 

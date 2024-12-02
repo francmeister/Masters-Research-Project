@@ -257,6 +257,7 @@ class eMBB_UE(User_Equipment):
         self.max_battery_capacity = 26640
         self.battery_energy_level = self.max_battery_capacity#(random.randint(15000,25000))
         self.energy_harvesting_constant = 5
+        #self.large_scale_gain_
     
   
 
@@ -918,8 +919,15 @@ class eMBB_UE(User_Equipment):
         #     large_scale_gain[0][item] = first_large_scale_gain
         #     item+=1
 
-        self.small_scale_gain_ = small_scale_gain[0][0]
-        self.large_scale_gain_ = large_scale_gain[0][0]
+        average_small_scale_gain = 0
+        average_large_scale_gain = 0
+
+        average_small_scale_gain = sum(small_scale_gain[0])/len(small_scale_gain[0])
+
+        average_large_scale_gain = sum(large_scale_gain[0])/len(large_scale_gain[0])
+
+        self.small_scale_gain_ = average_small_scale_gain#small_scale_gain[0][0]
+        self.large_scale_gain_ = average_large_scale_gain#large_scale_gain[0][0]
 
         self.small_scale_gain = small_scale_gain
         self.large_scale_gain = large_scale_gain
