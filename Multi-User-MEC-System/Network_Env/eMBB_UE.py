@@ -286,7 +286,7 @@ class eMBB_UE(User_Equipment):
 
         #Specify slot task size, computation cycles and latency requirement
         #self.task_arrival_rate_tasks_per_second = random.randint(self.min_task_arrival_rate_tasks_per_second,self.max_task_arrival_rate_tasks_per_second)
-        self.task_arrival_rate_tasks_per_second = np.random.poisson(5,1)#np.random.poisson(25,1)#np.random.poisson(5,1)
+        self.task_arrival_rate_tasks_per_second = np.random.poisson(10,1)#np.random.poisson(25,1)#np.random.poisson(5,1)
         self.task_arrival_rate_tasks_per_second = self.task_arrival_rate_tasks_per_second[0]
         self.task_arrival_rate = self.task_arrival_rate_tasks_per_second
         self.previous_arrival_rate = self.task_arrival_rate_tasks_per_second
