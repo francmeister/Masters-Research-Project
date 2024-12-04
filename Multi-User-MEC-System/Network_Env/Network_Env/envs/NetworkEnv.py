@@ -432,19 +432,28 @@ class NetworkEnv(gym.Env):
         print(resource_block_action_matrix)
         for z in range(0,self.num_allocate_RB_upper_bound):
             main_column_array = resource_block_action_matrix[:,:,z]
+            #print('main_column_array: ', main_column_array)
             first_column_array = main_column_array[:,0]
             second_column_array = main_column_array[:,1]
+            #print('first_column_array: ', first_column_array)
+            #print('second_column_array: ', second_column_array)
             limit_index_array_1 = len(first_column_array)
+            #print('limit_index_array_1: ', limit_index_array_1)
             # column_array = column_array.reshape(1,self.number_of_users*self.time_divisions_per_slot)
             # column_array = column_array.squeeze()
             sorted_column_array_1 = np.sort(first_column_array)[::-1]
             sorted_column_array_2 = np.sort(second_column_array)[::-1]
+            #print('sorted_column_array_1: ', sorted_column_array_1)
+            #print('sorted_column_array_2: ', sorted_column_array_2)
             first_largest_num = sorted_column_array_1[0]
             second_largest_num = sorted_column_array_2[0]
+            #print('first_largest_num: ', first_largest_num)
+            #print('second_largest_num: ', second_largest_num)
             #print('np.where(first_column_array==first_largest_num): ', np.where(first_column_array==first_largest_num)[0])
             index_first_largest_num = np.where(first_column_array==first_largest_num)[0][0]
             #print('index_first_largest_num: ', index_first_largest_num)
             index_second_largest_num = np.where(second_column_array==second_largest_num)[0][0]
+            #print('index_second_largest_num: ', index_second_largest_num)
             main_column_array = [[0 for _ in range(self.time_divisions_per_slot)] for _ in range(limit_index_array_1)]
             main_column_array[index_first_largest_num][0] = 1
             main_column_array[index_second_largest_num][1] = 1
