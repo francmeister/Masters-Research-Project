@@ -357,7 +357,7 @@ class SBS():
             self.individual_offload_ratio_reward.append(eMBB_User.offloa_ratio_reward)
             self.individual_embb_puncturing_users_sum_data_rates.append(eMBB_User.puncturing_users_sum_data_rates)
             self.individual_embb_num_puncturing_users.append(eMBB_User.num_puncturing_users)
-
+            #delays
 
     
             #print('eMBB_User.expected_rate_over_prev_T_slot: ', eMBB_User.expected_rate_over_prev_T_slot)

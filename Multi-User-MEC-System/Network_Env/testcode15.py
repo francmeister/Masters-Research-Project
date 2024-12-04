@@ -97,7 +97,7 @@ for _ in range(0,run):
         #power_allocations.append(env.eMBB_UE_1.assigned_transmit_power_W)
         #local_energies.append(env.eMBB_UE_1.achieved_local_energy_consumption)
         #transmit_energies.append(env.eMBB_UE_1.achieved_transmission_energy_consumption)
-        delays.append(env.SBS1.delays)
+        delays.append(env.SBS1.total_delay)
         av_num_RBs_allocated.append(env.num_RBs_allocated)
         #print('action: ', action)
         #print('reward: ', reward)
@@ -113,18 +113,20 @@ for _ in range(0,run):
 
 
         #throughputs.append(reward[0])
-av_throughput = sum(av_throughput)/len(throughputs)
+av_throughput = sum(av_throughput)/len(av_throughput)
 av_energies = sum(energies)/len(energies)
 av_arriving_urllc_packets = sum(arriving_urllc_packets)/len(arriving_urllc_packets)
 av_num_RBs_allocated = sum(av_num_RBs_allocated)/len(av_num_RBs_allocated)
 av_outage_probability = [0 if math.isnan(x) else x for x in av_outage_probability]
 av_outage_probability = sum(av_outage_probability)/len(av_outage_probability)
 av_delay = sum(delays)/len(delays)
+av_fiarness_index = sum(fiarness_index)/len(fiarness_index)
 print('av_throughput: ', av_throughput)
 print('av_delay: ', av_delay)
 print('av_energies: ', av_energies)
 print('av_arriving_urllc_packets: ', av_arriving_urllc_packets)
 print('av_outage_probability: ', av_outage_probability)
+print('av_fiarness_index: ', av_fiarness_index)
 # throughputs = np.roll(throughputs,-1)
 # power_allocations = np.roll(power_allocations,-1)
 # data = {
