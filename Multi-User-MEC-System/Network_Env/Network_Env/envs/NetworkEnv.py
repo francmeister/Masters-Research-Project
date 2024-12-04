@@ -466,8 +466,8 @@ class NetworkEnv(gym.Env):
             #             resource_block_action_matrix[x,y,z] = 0
             #         count+=1
         
-        print('resource_block_action_matrix:')
-        print(resource_block_action_matrix)
+        # print('resource_block_action_matrix:')
+        # print(resource_block_action_matrix)
         resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
         self.resource_block_action_matrix = resource_block_action_matrix
