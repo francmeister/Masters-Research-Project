@@ -519,7 +519,6 @@ class eMBB_UE(User_Equipment):
         print('eMBB user: ', self.UE_label)
         print('reshaped_allocated_RBs')
         print(reshaped_allocated_RBs)
-        print('')
         # print('self.occupied_resource_time_blocks: ')
         # print(self.occupied_resource_time_blocks)
         occupied_resource_time_blocks_counts, occupied_resource_time_blocks_unique_array = self.count_and_make_unique_tuples(self.occupied_resource_time_blocks)
@@ -558,6 +557,8 @@ class eMBB_UE(User_Equipment):
                     #achieved_RB_channel_rates_.append(achieved_RB_channel_rate_)
 
             self.achieved_channel_rate = sum(achieved_RB_channel_rates)
+            print('achieved_channel_rate: ', self.achieved_channel_rate)
+            print('')
             #print('')
             #print('offload queue service rate: ', self.achieved_channel_rate, ' bits/s')
             #self.achieved_channel_rate_ = sum(achieved_RB_channel_rates_)
