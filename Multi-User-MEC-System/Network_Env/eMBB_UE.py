@@ -548,6 +548,8 @@ class eMBB_UE(User_Equipment):
                     #if RB_indicator == 1:
                     #print(self.total_gain_)
                     #print('time_block: ', tb+1, 'resource_block: ', rb+1, 'puncture_count: ', punture_counts)
+                    print('self.total_gain_: ')
+                    print(self.total_gain_)
                     rb_small_scale_gain = self.total_gain_[0][rb]
                     rb_large_scale_gain = self.total_gain_[0][communication_channel.num_allocate_RBs_upper_bound+rb]
                     RB_channel_gain = rb_small_scale_gain*rb_large_scale_gain
