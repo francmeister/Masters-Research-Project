@@ -525,6 +525,8 @@ class eMBB_UE(User_Equipment):
         # print('counts: ', counts)
         #print('occupied_resource_time_blocks_unique_array: ', occupied_resource_time_blocks_unique_array)
 
+        print('self.battery_energy_level: ', self.battery_energy_level)
+        print('self.has_transmitted_this_time_slot: ', self.has_transmitted_this_time_slot)
         if self.battery_energy_level > 0 and self.has_transmitted_this_time_slot == True:
             for tb in range(0,communication_channel.time_divisions_per_slot):
                 for rb in range(0,communication_channel.num_allocate_RBs_upper_bound):
