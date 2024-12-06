@@ -109,11 +109,13 @@ class NetworkEnv(gym.Env):
         action_space_high = [[max_offload_decision],[num_allocate_subcarriers_upper_bound],[max_transmit_power_db],[max_number_of_URLLC_users_per_RB]]
         action_space_low = [[min_offload_decision],[num_allocate_subcarriers_lower_bound],[min_transmit_power_db],[min_number_of_URLLC_users_per_RB]]
         '''
-     
+        resource_allocation_action_space_low = np.array([0 for _ in range(self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)],dtype=np.float32)
+        resource_allocation_action_space_high = np.array([1 for _ in range(self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)],dtype=np.float32)
         self.box_action_space = spaces.Box(low=action_space_low,high=action_space_high)
         self.number_of_box_actions = 2
         self.box_action_space_len = 0
         self.binary_action_space = spaces.MultiBinary(self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
+        #self.binary_action_space = spaces.Box(low=resource_allocation_action_space_low,high=resource_allocation_action_space_high)
         self.binary_action_space_len = 0
 
         q_action_low = 0  # Lower bound for each dimension
@@ -497,7 +499,15 @@ class NetworkEnv(gym.Env):
         user_id = 0
         for eMBB_user in self.eMBB_Users:
             user_id = eMBB_user.eMBB_UE_label
-            
+    
+    # def modify_resource_allocation_actions(self,binary_actions):
+    #     binary_actions_mapped = []
+    #     for binary_action in binary_actions:
+    #         binary_actions_mapped.append(int(interp(binary_action,[0,1],[1,self.number_of_users])))
+        
+    #     binary_actions_mapped = np.array(binary_actions_mapped)
+    #     resource_block_action_matrix = binary_actions_mapped.reshape(self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
+
     def step(self,action):
         #g = self.reshape_action_space_for_model(action)
         #print('action reshaped')
