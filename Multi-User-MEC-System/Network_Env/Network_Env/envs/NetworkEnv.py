@@ -430,7 +430,7 @@ class NetworkEnv(gym.Env):
         resource_block_action_matrix_size = self.number_of_users*self.time_divisions_per_slot*self.num_allocate_RB_upper_bound
         #resource_block_action_matrix = resource_block_action_matrix.squeeze()
         #print(resource_block_action_matrix[:,:,0])
-        if mode == 'Inference':
+        if mode == 'inference':
             print('resource_block_action_matrix before:')
             print(resource_block_action_matrix)
         for z in range(0,self.num_allocate_RB_upper_bound):
@@ -480,7 +480,7 @@ class NetworkEnv(gym.Env):
             #             resource_block_action_matrix[x,y,z] = 0
             #         count+=1
         
-        if mode == 'Inference':
+        if mode == 'inference':
             print('resource_block_action_matrix after:')
             print(resource_block_action_matrix)
             print('')
