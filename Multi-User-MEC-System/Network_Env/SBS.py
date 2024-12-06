@@ -369,7 +369,7 @@ class SBS():
         #print('throughput_log_reward: ', throughput_log_reward)
         fairness_index_normalized = interp(fairness_index,[0,1],[0,1])
         self.q_action = 10**1
-        q_delay = 10**5
+        q_delay = 20**5
         q_energy = 10**8
         q_total_users_battery_energies_reward = 10**4
         q_urllc_reliability_reward = 20**8

@@ -418,7 +418,7 @@ class NetworkEnv(gym.Env):
     
         return action
     
-    def apply_resource_allocation_constraint(self,action):
+    def apply_resource_allocation_constraint(self,action,mode):
         box_actions = action['box_actions']
         binary_actions = action['binary_actions']
         q_action = action['q_action']
@@ -430,8 +430,9 @@ class NetworkEnv(gym.Env):
         resource_block_action_matrix_size = self.number_of_users*self.time_divisions_per_slot*self.num_allocate_RB_upper_bound
         #resource_block_action_matrix = resource_block_action_matrix.squeeze()
         #print(resource_block_action_matrix[:,:,0])
-        print('resource_block_action_matrix before:')
-        print(resource_block_action_matrix)
+        if mode == 'Inference':
+            print('resource_block_action_matrix before:')
+            print(resource_block_action_matrix)
         for z in range(0,self.num_allocate_RB_upper_bound):
             main_column_array = resource_block_action_matrix[:,:,z]
             #print('main_column_array: ', main_column_array)
@@ -479,9 +480,10 @@ class NetworkEnv(gym.Env):
             #             resource_block_action_matrix[x,y,z] = 0
             #         count+=1
         
-        print('resource_block_action_matrix after:')
-        print(resource_block_action_matrix)
-        print('')
+        if mode == 'Inference':
+            print('resource_block_action_matrix after:')
+            print(resource_block_action_matrix)
+            print('')
         resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
         self.resource_block_action_matrix = resource_block_action_matrix
