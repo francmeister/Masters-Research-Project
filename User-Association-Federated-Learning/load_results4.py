@@ -136,5 +136,5 @@ def plot_per_user(user_id, access_point_1_users, access_point_2_users, access_po
     plt.show()
 
 
-user_id = 6
+user_id =1
 plot_per_user(user_id,access_point_1_users,access_point_2_users,access_point_3_users)

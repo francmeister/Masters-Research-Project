@@ -273,7 +273,8 @@ class SBS():
         association_prediction = association_prediction.cpu().detach().numpy()
         mean = 0      # Mean of the normal distribution
         std_dev = 0.15 # Standard deviation of the normal distribution
-
+        print('association_prediction:')
+        print(association_prediction)
         # Generate noise and add it to the array
         noise = np.random.normal(mean, std_dev, association_prediction.shape)
         association_prediction = association_prediction + noise
