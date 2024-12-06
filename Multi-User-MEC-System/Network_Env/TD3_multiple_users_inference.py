@@ -8,7 +8,7 @@ DDPG_delay_multiple_users = []
 full_offloading_multiple_users_delay = [3.0001200707379643,7.0099352994397455,11.180665901630894]
 local_computing_multiple_users_delay = [315.4792111021463,735.0747981843205,1158.8974912077504]
 
-TD3_throughput_multiple_users = []
+TD3_throughput_multiple_users = [36181414.966455]
 DDPG_throughput_multiple_users = []
 full_offloading_multiple_users_delay = [33978835.375478804,31914810.185659975,28852512.997813337] # with random resource allocation and power allocation
 
