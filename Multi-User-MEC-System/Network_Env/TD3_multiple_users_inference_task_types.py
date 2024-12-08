@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from numpy import interp
 
 
-TD3_energy_multiple_users_type_1 = []
+TD3_energy_multiple_users_type_1 = [0.211393]
 TD3_energy_multiple_users_type_2 = []
 TD3_energy_multiple_users_type_3 = []
 TD3_energy_multiple_users_type_4 = []
@@ -17,7 +17,7 @@ local_computing_multiple_users_energy_type_2 = []
 local_computing_multiple_users_energy_type_3 = []
 local_computing_multiple_users_energy_type_4 = []
 
-TD3_delay_multiple_users_type_1 = []
+TD3_delay_multiple_users_type_1 = [11.269698]
 TD3_delay_multiple_users_type_2  = []
 TD3_delay_multiple_users_type_3 = []
 TD3_delay_multiple_users_type_4 = []
@@ -31,7 +31,7 @@ local_computing_multiple_users_delay_type_2  = []
 local_computing_multiple_users_delay_type_3 = []
 local_computing_multiple_users_delay_type_4 = []
 
-TD3_reward_multiple_users_type_1 = []
+TD3_reward_multiple_users_type_1 = [7342440973.605168]
 TD3_reward_multiple_users_type_2  = []
 TD3_reward_multiple_users_type_3 = []
 TD3_reward_multiple_users_type_4 = []
