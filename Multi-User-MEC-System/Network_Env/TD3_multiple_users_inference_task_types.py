@@ -3,31 +3,38 @@ import matplotlib.pyplot as plt
 from numpy import interp
 
 
-TD3_energy_multiple_users_20_mhz = [0.061791]
-TD3_energy_multiple_users_40_mhz = [0.254607]
-TD3_energy_multiple_users_60_mhz = [0.573932]
+TD3_energy_multiple_users_type_1 = []
+TD3_energy_multiple_users_type_2 = []
+TD3_energy_multiple_users_type_3 = []
+TD3_energy_multiple_users_type_4 = []
 DDPG_energy_multiple_users = []
-full_offloading_multiple_users_energy_20_mhz = [0.00016858625054827568]#3,7,11 users
-full_offloading_multiple_users_energy_40_mhz = [0.00016766121518017006]#3,7,11 users
-full_offloading_multiple_users_energy_60_mhz = [0.00016711995257541476]#3,7,11 users
-local_computing_multiple_users_energy_20_mhz = [0.08727846453449922]
-local_computing_multiple_users_energy_40_mhz = [0.6970237647718855]
-local_computing_multiple_users_energy_60_mhz = [2.351248012171769]
+full_offloading_multiple_users_energy_type_1 = []#3,7,11 users
+full_offloading_multiple_users_energy_type_2 = []#3,7,11 users
+full_offloading_multiple_users_energy_type_3 = []
+full_offloading_multiple_users_energy_type_4 = []#3,7,11 users
+local_computing_multiple_users_energy_type_1 = []
+local_computing_multiple_users_energy_type_2 = []
+local_computing_multiple_users_energy_type_3 = []
+local_computing_multiple_users_energy_type_4 = []
 
-TD3_delay_multiple_users_20_mhz = [31.495322]
-TD3_delay_multiple_users_40_mhz  = [11.754907]
-TD3_delay_multiple_users_60_mhz = [11.129204]
+TD3_delay_multiple_users_type_1 = []
+TD3_delay_multiple_users_type_2  = []
+TD3_delay_multiple_users_type_3 = []
+TD3_delay_multiple_users_type_4 = []
 DDPG_delay_multiple_users = []
-full_offloading_multiple_users_delay_20_mhz = [11.234563111762428]
-full_offloading_multiple_users_delay_40_mhz  = [11.13194221278935]
-full_offloading_multiple_users_delay_60_mhz = [11.130206652085006]
-local_computing_multiple_users_delay_20_mhz = [2877.5946902951314]
-local_computing_multiple_users_delay_40_mhz  = [1162.9781233159315]
-local_computing_multiple_users_delay_60_mhz = [585.3011900806567]
+full_offloading_multiple_users_delay_type_1 = []
+full_offloading_multiple_users_delay_type_2  = []
+full_offloading_multiple_users_delay_type_3 = []
+full_offloading_multiple_users_delay_type_4 = []
+local_computing_multiple_users_delay_type_1 = []
+local_computing_multiple_users_delay_type_2  = []
+local_computing_multiple_users_delay_type_3 = []
+local_computing_multiple_users_delay_type_4 = []
 
-TD3_reward_multiple_users_20_mhz = [8959526085.714914]
-TD3_reward_multiple_users_40_mhz  = [6943804067.788673]
-TD3_reward_multiple_users_60_mhz = [3748722375.906711]
+TD3_reward_multiple_users_type_1 = []
+TD3_reward_multiple_users_type_2  = []
+TD3_reward_multiple_users_type_3 = []
+TD3_reward_multiple_users_type_4 = []
 
 TD3_throughput_multiple_users = []
 DDPG_throughput_multiple_users = []
