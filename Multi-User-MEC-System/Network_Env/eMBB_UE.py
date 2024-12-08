@@ -35,7 +35,7 @@ class eMBB_UE(User_Equipment):
         #self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
         #self.max_service_rate_cycles_per_slot = 620000
         #self.service_rate_bits_per_second = 2500000 #2.5MB/s(random.randint(5,5000))
-        self.service_rate_bits_per_second = 2424242#969700#121212.121212#120000#random.randint(100000,300000)#120000
+        self.service_rate_bits_per_second = 1454545#969700#121212.121212#120000#random.randint(100000,300000)#120000
         self.service_rate_bits_per_slot = self.service_rate_bits_per_second/1000 
         self.max_service_rate_cycles_per_slot = self.service_rate_bits_per_slot*self.cycles_per_bit
         self.max_bits_process_per_slot = self.max_service_rate_cycles_per_slot/self.cycles_per_bit
