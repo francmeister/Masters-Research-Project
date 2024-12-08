@@ -4,8 +4,8 @@ from numpy import interp
 
 
 TD3_energy_multiple_users_20_mhz = []
-TD3_energy_multiple_users_40_mhz = []
-TD3_energy_multiple_users_60_mhz = []
+TD3_energy_multiple_users_40_mhz = [0.254607]
+TD3_energy_multiple_users_60_mhz = [0.573932]
 DDPG_energy_multiple_users = []
 full_offloading_multiple_users_energy_20_mhz = []#3,7,11 users
 full_offloading_multiple_users_energy_40_mhz = []#3,7,11 users
@@ -15,8 +15,8 @@ local_computing_multiple_users_energy_40_mhz = []
 local_computing_multiple_users_energy_60_mhz = []
 
 TD3_delay_multiple_users_20_mhz = []
-TD3_delay_multiple_users_40_mhz  = []
-TD3_delay_multiple_users_60_mhz = []
+TD3_delay_multiple_users_40_mhz  = [11.754907]
+TD3_delay_multiple_users_60_mhz = [11.129204]
 DDPG_delay_multiple_users = []
 full_offloading_multiple_users_delay_20_mhz = []
 full_offloading_multiple_users_delay_40_mhz  = []
@@ -27,7 +27,7 @@ local_computing_multiple_users_delay_60_mhz = []
 
 TD3_reward_multiple_users_20_mhz = []
 TD3_reward_multiple_users_40_mhz  = []
-TD3_reward_multiple_users_60_mhz = []
+TD3_reward_multiple_users_60_mhz = [3748722375.906711]
 
 TD3_throughput_multiple_users = []
 DDPG_throughput_multiple_users = []
