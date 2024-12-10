@@ -33,6 +33,7 @@ class URLLC_UE(User_Equipment):
         self.distance_from_embb_user_in_close_proximity = 10000
         self.total_gain_ = []
         self.distance_from_SBS_ = 0
+        #task_size_per_slot_bits
         self.set_properties_URLLC()
 
     def set_properties_URLLC(self):
@@ -60,7 +61,7 @@ class URLLC_UE(User_Equipment):
         self.local_task_queue = []
         self.offload_task_queue = []
         self.small_scale_channel_gain_threshold = 0
-        self.task_size_per_slot_bits = 1100#256
+        self.task_size_per_slot_bits = 256
         self.latency_requirement = 1#latency required is 10 ms for every task#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
         self.reliability_requirement = 0
         self.assigned_resource_block = 0
