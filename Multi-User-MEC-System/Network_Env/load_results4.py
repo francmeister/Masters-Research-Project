@@ -98,10 +98,10 @@ print("user's average task size on offload queue where delay is max: ", user_1_i
 def individual_sub_plots(numbers_users, timesteps, reward_component, string_reward_component):
     row = 0
     col = 0
-    if numbers_users == 3:
+    if numbers_users == 1 or numbers_users == 2 or numbers_users == 3 or numbers_users == 4:
         row = 2
         col = 2
-    elif numbers_users == 5:
+    elif numbers_users == 5 or numbers_users == 6:
         row = 3
         col = 2
     elif numbers_users == 7:
@@ -118,7 +118,7 @@ def individual_sub_plots(numbers_users, timesteps, reward_component, string_rewa
     axis = axis.flatten()
     
     print('len(timesteps): ', len(timesteps))
-    x_point = timesteps[1500]
+    x_point = timesteps[15]
     if x_point in timesteps:
         index = np.where(timesteps == x_point)[0][0]
 
@@ -233,8 +233,9 @@ def individual_user_subplots(user_num, timesteps, energy_rewards, throughput_rew
 # offload_actions = np.load('offloading_actions.npy')
 # power_actions = np.load('power_actions.npy')
 # RBs_actions = np.load('subcarrier_actions.npy')
-string_reward_component = 'RBs_actions'
-individual_sub_plots(numbers_users=len(power_actions[0]),timesteps=timesteps,reward_component=RBs_actions,string_reward_component=string_reward_component)
+string_reward_component = 'offload_actions'
+print('len(power_actions[0]): ',len(power_actions[0]))
+individual_sub_plots(numbers_users=len(power_actions[0]),timesteps=timesteps,reward_component=offload_actions,string_reward_component=string_reward_component)
 
 user_num =5
 
