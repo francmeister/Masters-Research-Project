@@ -238,22 +238,23 @@ class NetworkEnv(gym.Env):
         observation_space = observation_space.reshape(1,len(observation_space)*len(observation_space[0]))
         # print('observation_space after reshape: ')
         # print(observation_space)
-        observation_space = observation_space.squeeze()
-        observation_space = observation_space.reshape(1,len(observation_space))
+        #observation_space = observation_space.squeeze()
+        #observation_space = observation_space.reshape(1,len(observation_space))
         # print('observation_space after squeeze')
-        # print(observation_space)
+        # print(observation_space.shape)
 
         observation_channel_gains_urllc = np.transpose(observation_channel_gains_urllc)
         observation_channel_gains_urllc = observation_channel_gains_urllc.reshape(1,len(observation_channel_gains_urllc)*len(observation_channel_gains_urllc[0]))
         #observation_channel_gains_urllc = np.transpose(observation_channel_gains_urllc)
 
         # print('observation_space.shape: ', observation_space.shape)
-        # print('observation_channel_gains_urllc.shape: ', observation_channel_gains_urllc.shape)
+        #print('observation_channel_gains_urllc.shape: ', observation_channel_gains_urllc.shape)
     
         # print('observation_space')
         # print(observation_space)
         # print('shape: ', observation_space.shape)
         observation_space = np.column_stack((observation_space,observation_channel_gains_urllc))
+        observation_space = observation_space.squeeze()
         # print('observation_space.shape: ', observation_space.shape)
         # print('')
         return observation_space
