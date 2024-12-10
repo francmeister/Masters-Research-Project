@@ -257,6 +257,7 @@ class eMBB_UE(User_Equipment):
         self.max_battery_capacity = 26640
         self.battery_energy_level = self.max_battery_capacity#(random.randint(15000,25000))
         self.energy_harvesting_constant = 5
+        self.numbers_of_puncturing_users = 0
         #self.large_scale_gain_
     
   
@@ -300,8 +301,8 @@ class eMBB_UE(User_Equipment):
                 #task_size_per_second_kilobytes = random.randint(self.min_task_size_KB_per_second,self.max_task_size_KB_per_second) #choose between 50 and 100 kilobytes
                 #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
                 #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
-                #task_size_per_slot_bits = int(np.random.uniform(400,800))#int(np.random.uniform(500,1500))#Average of 1000 bits per task in slot #int(task_size_per_slot_kilobytes*8000) #8000 bits in a KB----------
-                task_size_per_slot_bits = 50#int(np.random.uniform(400,800))
+                task_size_per_slot_bits = int(np.random.uniform(400,800))#int(np.random.uniform(500,1500))#Average of 1000 bits per task in slot #int(task_size_per_slot_kilobytes*8000) #8000 bits in a KB----------
+                #task_size_per_slot_bits = 50#int(np.random.uniform(400,800))
                 self.packet_size_bits = 100 # 12000 bits per packet
                 self.cycles_per_packet = self.packet_size_bits*self.cycles_per_bit
                 self.previous_task_size_bits = task_size_per_slot_bits
@@ -320,8 +321,8 @@ class eMBB_UE(User_Equipment):
                 #task_size_per_second_kilobytes = random.randint(self.min_task_size_KB_per_second,self.max_task_size_KB_per_second) #choose between 50 and 100 kilobytes
                 #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
                 #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
-                #task_size_per_slot_bits = int(np.random.uniform(400,800))#int(np.random.uniform(500,1500)) #8000 bits in a KB----------
-                task_size_per_slot_bits = 50#int(np.random.uniform(400,800))
+                task_size_per_slot_bits = int(np.random.uniform(400,800))#int(np.random.uniform(500,1500)) #8000 bits in a KB----------
+                #task_size_per_slot_bits = 50#int(np.random.uniform(400,800))
                 self.packet_size_bits = 100 # 12000 bits per packet
                 self.cycles_per_packet = self.packet_size_bits*self.cycles_per_bit
                 self.previous_task_size_bits = task_size_per_slot_bits
@@ -481,7 +482,7 @@ class eMBB_UE(User_Equipment):
         # print('embb: ', self.UE_label)
         # print('reshaped_allocated_RBs: ')
         # print(reshaped_allocated_RBs)
-        # print('self.available_resource_time_code_block: ', self.available_resource_time_code_block)
+        #print('self.available_resource_time_code_block: ', self.available_resource_time_code_block)
         # print('')
     def count_and_make_unique_tuples(self,arr):
         """
@@ -1289,6 +1290,7 @@ class eMBB_UE(User_Equipment):
     def puncturing_urllc_users(self,urllc_users):
         self.puncturing_urllc_users_.clear()
         self.occupied_resource_time_blocks.clear()
+        #self.numbers_of_puncturing_users = 0
         for allocated_resource_block in self.allocated_resource_blocks_numbered:
             
             time_blocks_at_this_rb = self.time_matrix[allocated_resource_block-1]
@@ -1314,6 +1316,10 @@ class eMBB_UE(User_Equipment):
                             elif urllc_user.has_transmitted_this_time_slot == False:
                                 self.occupied_resource_time_blocks.append((time_block_at_this_rb,allocated_resource_block,0))
 
+        self.numbers_of_puncturing_users = len(self.puncturing_urllc_users_)
+        #print('self.numbers_of_puncturing_users: ', self.numbers_of_puncturing_users)
+        # print('channel rate: ', self.achieved_channel_rate)
+        # print('')
         # print('occupied_resource_time_blocks')
         # print(self.occupied_resource_time_blocks)
         #print('embb user id: ', self.eMBB_UE_label, 'allocated rb: ', self.allocated_resource_blocks_numbered)

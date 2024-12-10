@@ -610,8 +610,10 @@ class SBS():
             for embb_user in embb_users:
                 #print('embb user: ', embb_user.UE_label, 'embb_user.available_resource_time_code_block: ', embb_user.available_resource_time_code_block)
                 if urllc_user.embb_user_in_close_proximity == embb_user.UE_label:
+                    embb_user.numbers_of_puncturing_users+=1
                     #print('urllc user: ', urllc_user.UE_label, 'embb user in proximity: ', embb_user.UE_label)
                     if len(embb_user.available_resource_time_code_block) > 0:
+                       # print('urllc user: ', urllc_user.UE_label, 'embb user in proximity: ', embb_user.UE_label)
                         urllc_user.assigned_time_block = embb_user.available_resource_time_code_block[0][0]
                         urllc_user.assigned_resource_block = embb_user.available_resource_time_code_block[0][1]
                         urllc_user.assigned_code_block = embb_user.available_resource_time_code_block[0][2]

@@ -7,6 +7,7 @@ individual_large_scale_gains = np.load('individual_large_scale_gains.npy')
 individual_small_scale_gains = np.load('individual_small_scale_gains.npy')
 individual_local_queue_lengths = np.load('individual_local_queue_lengths.npy')
 individual_offload_queue_lengths = np.load('individual_offload_queue_lengths.npy')
+individual_channel_rates = np.load('individual_channel_rate_rewards.npy')
 
 rewards_throughput_energy = np.load('timestep_rewards_energy_throughput.npy')
 timesteps = rewards_throughput_energy[:,0]
@@ -33,16 +34,17 @@ def individual_sub_plots(numbers_users, timesteps, reward_component, string_rewa
 
     figure, axis = plt.subplots(row,col)
     axis = axis.flatten()
-    
+    reward_component_average_values = []
     print('len(timesteps): ', len(timesteps))
-    x_point = timesteps[1500]
+    x_point = timesteps[100]
     if x_point in timesteps:
         index = np.where(timesteps == x_point)[0][0]
 
         y_values = reward_component[index, :]
         print(f"Y-values at x = {x_point}: {y_values}")
-
+        
         user_num = 0
+        print('numbers_users: ', numbers_users)
         for i in range(0, numbers_users):
             user_num = i+1
             axis_title = 'User: ' + str(user_num) + ' ' + string_reward_component
@@ -56,9 +58,13 @@ def individual_sub_plots(numbers_users, timesteps, reward_component, string_rewa
                             textcoords="offset points", 
                             xytext=(5,5), 
                             ha='center')
-
+            
+            av_value = sum(reward_component[:, i])/len(reward_component[:, i])
+            reward_component_average_values.append(av_value)
+    print('reward_component_average_values: ', reward_component_average_values)
     plt.tight_layout()
     plt.show()
+
 
 
 # def individual_user_subplots(user_num, timesteps, energy_rewards, throughput_rewards, delay_rewards, offload_actions, power_actions, local_queue_length, local_queue_delay,offload_queue_length,offload_queue_delay, RBs_actions,individual_average_task_size_offload_queue,individual_expected_rate_over_prev_T_slot,individual_battery_energy_levels,individual_energy_harvested):
@@ -122,7 +128,7 @@ def individual_sub_plots(numbers_users, timesteps, reward_component, string_rewa
 
 string_reward_component = 'individual_battery_energy_levels'
 print(timesteps)
-individual_sub_plots(numbers_users=len(individual_battery_energy_levels[0]),timesteps=timesteps,reward_component=individual_battery_energy_levels,string_reward_component=string_reward_component)
+individual_sub_plots(numbers_users=len(individual_large_scale_gains[0]),timesteps=timesteps,reward_component=individual_large_scale_gains,string_reward_component=string_reward_component)
 
 user_num =3
 #individual_user_subplots(user_num, timesteps, individual_energies, individual_channel_rates, individual_queue_delays, offload_actions, power_actions,individual_local_queue_lengths, individual_local_queue_delays, individual_offload_queue_lengths, individual_offload_queue_delays, RBs_actions,individual_average_task_size_offload_queue,individual_expected_rate_over_prev_T_slot,individual_battery_energy_levels,individual_energy_harvested)
