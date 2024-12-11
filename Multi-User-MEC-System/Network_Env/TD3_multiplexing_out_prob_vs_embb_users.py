@@ -47,7 +47,9 @@ urllc_reliability_reward_11_embb_users_smooth = moving_average(urllc_reliability
 
 number_of_embb_users = [3,7,11]
 #number of URLLC users = 8
-outage_probabilities = [0.108051,0.083359,0.115015]
+outage_probabilities_0_1 = [0.108051,0.083359,0.115015]
+outage_probabilities_0_5 = [0.753837,0.697037,0.617304]
+outage_probabilities_0_9 = [0.985717,0.983289,0.976260]
 
 figure, axis = plt.subplots(2,2)
 
@@ -70,9 +72,9 @@ axis[0,1].set_xlabel('Timestep')
 axis[0,1].set_ylabel('Sum Data Rate (bits/slot)')
 axis[0,1].legend(loc="lower right")
 
-axis[1,0].plot(number_of_embb_users, outage_probabilities, color="green", label=r"3 eMBB Users", marker='s')
-#axis[1,0].plot(timesteps[window_size-1:], F_L_inverse_7_embb_users_smooth, color="red", label=r"7 eMBB Users")
-#axis[1,0].plot(timesteps[window_size-1:], F_L_inverse_11_embb_users_smooth, color="brown", label=r"11 eMBB Users")
+axis[1,0].plot(number_of_embb_users, outage_probabilities_0_1, color="green", label=r"p=0.1", marker='s')
+axis[1,0].plot(number_of_embb_users, outage_probabilities_0_5, color="red", label=r"p=0.5", marker='s')
+axis[1,0].plot(number_of_embb_users, outage_probabilities_0_9, color="brown", label=r"p=0.9", marker='s')
 #axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
 axis[1,0].set_title('Outage Probabilities Inference')
 axis[1,0].grid()
