@@ -192,6 +192,7 @@ class SBS():
         self.q_action = q_action[0]
         self.q_action = 10^6
         self.urllc_reliability_reward = urllc_reliability_reward
+        #print('self.urllc_reliability_reward: ',self.urllc_reliability_reward)
         individual_channel_rates = []
         self.throughput_rmin_reward=0
         self.individual_offload_stability_constraint_reward = []
@@ -713,15 +714,17 @@ class SBS():
             #print('self.urllc_reliability_constraint_max: ', self.urllc_reliability_constraint_max)
             #print('stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival): ', stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival))
             self.F_L_inverse = urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival)
-            #print('self.F_L_inverse: ', self.F_L_inverse)
+            
             reliability_reward = urllc_total_rate-urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival)
-            #print('urllc_total_rate: ', urllc_total_rate)
+            print('urllc_total_rate: ', urllc_total_rate)
+            print('self.F_L_inverse: ', self.F_L_inverse)
             #print('rllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival): ', urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival))
             #print('K*(1-self.urllc_reliability_constraint_max): ', K*(1-self.urllc_reliability_constraint_max))
             if reliability_reward < 0:
                 reliability_reward = reliability_reward
             else:
                 reliability_reward = 1
+            print('reliability_reward: ', reliability_reward)
             average_rate_prev_slots, std_rate = self.urllc_rate_expectation_over_prev_T_slot(10,urllc_total_rate)
             self.average_rate_prev_slots = average_rate_prev_slots
             #print('average_rate_prev_slots: ', average_rate_prev_slots, 'std_rate: ', std_rate)
