@@ -724,7 +724,7 @@ class SBS():
                 reliability_reward = reliability_reward
             else:
                 reliability_reward = 1
-            # print('reliability_reward: ', reliability_reward)
+            #print('reliability_reward: ', reliability_reward)
             average_rate_prev_slots, std_rate = self.urllc_rate_expectation_over_prev_T_slot(10,urllc_total_rate)
             self.average_rate_prev_slots = average_rate_prev_slots
             #print('average_rate_prev_slots: ', average_rate_prev_slots, 'std_rate: ', std_rate)

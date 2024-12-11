@@ -71,7 +71,7 @@ class URLLC_UE(User_Equipment):
         self.puncturing_embb_user_transmit_power = 0
         self.puncturing_embb_user_small_scale_gain = 0
         self.puncturing_embb_user_large_scale_gain = 0
-        self.transmit_power = 100*10**(-3)
+        self.transmit_power = 10 # 20 dbm #100*10**(-3)
         self.achieved_channel_rate_per_slot = 0
         self.channel_rate_per_second_without_penalty = 0
         self.channel_rate_per_second_penalty= 0
