@@ -28,6 +28,7 @@ outage_probabilities_smooth = moving_average(outage_probabilities, window_size)
 urllc_reliability_reward_smooth = moving_average(urllc_reliability_reward, window_size)
 
 axis[0,0].plot(timesteps[window_size-1:], urllc_reliability_reward_smooth)
+#axis[0,0].plot(timesteps, urllc_reliability_reward)
 #axis[0,0].plot(timesteps, overall_users_reward)
 axis[0,0].set_xlabel('Timestep')
 axis[0,0].set_ylabel('Reward Value')
