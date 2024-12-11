@@ -1115,10 +1115,10 @@ class NetworkEnv(gym.Env):
         self.URLLC_Users.append(self.URLLC_UE_5)
         self.URLLC_Users.append(self.URLLC_UE_6)
         self.URLLC_Users.append(self.URLLC_UE_7)
-        #self.URLLC_Users.append(self.URLLC_UE_8)
-        #self.URLLC_Users.append(self.URLLC_UE_9)
-        #self.URLLC_Users.append(self.URLLC_UE_10)
-        #self.URLLC_Users.append(self.URLLC_UE_11)
+        self.URLLC_Users.append(self.URLLC_UE_8)
+        self.URLLC_Users.append(self.URLLC_UE_9)
+        self.URLLC_Users.append(self.URLLC_UE_10)
+        self.URLLC_Users.append(self.URLLC_UE_11)
         #self.URLLC_Users.append(self.URLLC_UE_12)
 
 
