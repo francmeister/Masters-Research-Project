@@ -47,9 +47,16 @@ urllc_reliability_reward_11_embb_users_smooth = moving_average(urllc_reliability
 
 number_of_embb_users = [3,7,11]
 #number of URLLC users = 8
-outage_probabilities_0_1 = [0.108051,0.083359,0.115015]
-outage_probabilities_0_5 = [0.753837,0.697037,0.617304]
-outage_probabilities_0_9 = [0.985717,0.983289,0.976260]
+# #Models trained with p=0.1
+# outage_probabilities_0_1 = [0.108051,0.083359,0.115015]
+# outage_probabilities_0_5 = [0.753837,0.697037,0.617304]
+# outage_probabilities_0_9 = [0.985717,0.983289,0.976260]
+
+#number of URLLC users = 8
+#Models trained with p=0.5
+outage_probabilities_0_1 = [0.001254,0.005182,0.018992]
+outage_probabilities_0_5 = [0.112898,0.146539,0.245808] #0.093959 (3 users)
+outage_probabilities_0_9 = [0.480960,0.553509,0.659966]
 
 figure, axis = plt.subplots(2,2)
 
@@ -80,7 +87,7 @@ axis[1,0].set_title('Outage Probabilities Inference')
 axis[1,0].grid()
 axis[1,0].set_xlabel('Number of eMBB users')
 axis[1,0].set_ylabel('Outage Probability Value')
-#axis[1,0].legend(loc="lower right")
+axis[1,0].legend(loc="lower right")
 
 # axis[1,0].plot(timesteps[window_size-1:], F_L_inverse_3_embb_users_smooth, color="green", label=r"3 eMBB Users")
 # axis[1,0].plot(timesteps[window_size-1:], F_L_inverse_7_embb_users_smooth, color="red", label=r"7 eMBB Users")

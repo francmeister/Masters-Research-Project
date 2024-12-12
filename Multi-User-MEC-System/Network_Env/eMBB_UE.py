@@ -61,6 +61,7 @@ class eMBB_UE(User_Equipment):
         self.cycles_per_packet = self.packet_size_bits*self.cycles_per_bit
         self.max_allowable_latency_ = 2000
         self.local_queue_delay_violation_probability_constraint = 0.5
+        #num_puncturing_users
 
         self.calculate_offloading_rate()
 
@@ -258,6 +259,7 @@ class eMBB_UE(User_Equipment):
         self.battery_energy_level = self.max_battery_capacity#(random.randint(15000,25000))
         self.energy_harvesting_constant = 5
         self.numbers_of_puncturing_users = 0
+        self.number_of_allocated_RBs = 0
         #self.large_scale_gain_
     
   
@@ -514,6 +516,9 @@ class eMBB_UE(User_Equipment):
         self.find_puncturing_users(communication_channel,URLLC_users)
         #print('embb user: ', self.eMBB_UE_label, "puncturing urllc users: ", self.puncturing_urllc_users_)
         #print('')
+        #print('self.allocated_RBs: ', self.allocated_RBs)
+        self.number_of_allocated_RBs = sum(self.allocated_RBs)
+        #print('self.number_of_allocated_RBs: ', self.number_of_allocated_RBs)
         reshaped_allocated_RBs = np.array(self.allocated_RBs)
         reshaped_allocated_RBs = reshaped_allocated_RBs.squeeze()#.reshape(1,communication_channel.time_divisions_per_slot*communication_channel.num_allocate_RBs_upper_bound)
         reshaped_allocated_RBs = reshaped_allocated_RBs.reshape(communication_channel.time_divisions_per_slot,communication_channel.num_allocate_RBs_upper_bound)

@@ -232,6 +232,7 @@ class SBS():
 
         self.individual_embb_puncturing_users_sum_data_rates = []
         self.individual_embb_num_puncturing_users = []
+        self.individual_num_of_allocated_RBs = []
 
         for urllc_user in urllc_users:
             self.individual_urllc_channel_rate_per_slot_with_penalty.append(urllc_user.achieved_channel_rate_per_slot)
@@ -357,7 +358,8 @@ class SBS():
             self.individual_local_queueing_violation_prob_reward.append(eMBB_User.queueing_violation_prob_reward)
             self.individual_offload_ratio_reward.append(eMBB_User.offloa_ratio_reward)
             self.individual_embb_puncturing_users_sum_data_rates.append(eMBB_User.puncturing_users_sum_data_rates)
-            self.individual_embb_num_puncturing_users.append(eMBB_User.num_puncturing_users)
+            self.individual_embb_num_puncturing_users.append(eMBB_User.numbers_of_puncturing_users)
+            self.individual_num_of_allocated_RBs.append(eMBB_User.number_of_allocated_RBs)
             #delays
 
     
@@ -557,6 +559,7 @@ class SBS():
         self.individual_urllc_channel_rate_per_second_with_penalty = []
         self.individual_embb_puncturing_users_sum_data_rates = []
         self.individual_embb_num_puncturing_users = []
+        self.individual_num_of_allocated_RBs = []
         
 
     def calculate_fairness(self,eMBB_Users):
