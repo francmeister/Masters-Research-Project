@@ -61,6 +61,7 @@ class eMBB_UE(User_Equipment):
         self.cycles_per_packet = self.packet_size_bits*self.cycles_per_bit
         self.max_allowable_latency_ = 2000
         self.local_queue_delay_violation_probability_constraint = 0.5
+        self.num_of_clustered_urllc_users = 0
         #num_puncturing_users
 
         self.calculate_offloading_rate()
@@ -518,7 +519,9 @@ class eMBB_UE(User_Equipment):
         #print('')
         #print('self.allocated_RBs: ', self.allocated_RBs)
         self.number_of_allocated_RBs = sum(self.allocated_RBs)
-        #print('self.number_of_allocated_RBs: ', self.number_of_allocated_RBs)
+        # print('embb user: ', self.UE_label, 'self.number_of_allocated_RBs: ', self.number_of_allocated_RBs)
+        # print('number of clustered urllc users: ', self.num_of_clustered_urllc_users)
+        # print('')
         reshaped_allocated_RBs = np.array(self.allocated_RBs)
         reshaped_allocated_RBs = reshaped_allocated_RBs.squeeze()#.reshape(1,communication_channel.time_divisions_per_slot*communication_channel.num_allocate_RBs_upper_bound)
         reshaped_allocated_RBs = reshaped_allocated_RBs.reshape(communication_channel.time_divisions_per_slot,communication_channel.num_allocate_RBs_upper_bound)

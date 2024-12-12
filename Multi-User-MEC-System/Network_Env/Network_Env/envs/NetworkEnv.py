@@ -58,6 +58,7 @@ class NetworkEnv(gym.Env):
         self.RB_allocation_matrix = []
         self.resource_block_allocation_matrix = []
         self.resource_allocation_constraint_violation = 0
+        self.num_of_clustered_urllc_users = 0
 
         #Define upper and lower bounds of observation and action spaces
         
@@ -1099,10 +1100,10 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.append(self.eMBB_UE_1)
         self.eMBB_Users.append(self.eMBB_UE_2)
         self.eMBB_Users.append(self.eMBB_UE_3)
-        #self.eMBB_Users.append(self.eMBB_UE_4)
-        #self.eMBB_Users.append(self.eMBB_UE_5)
-        #self.eMBB_Users.append(self.eMBB_UE_6)
-        #self.eMBB_Users.append(self.eMBB_UE_7)
+        self.eMBB_Users.append(self.eMBB_UE_4)
+        self.eMBB_Users.append(self.eMBB_UE_5)
+        self.eMBB_Users.append(self.eMBB_UE_6)
+        self.eMBB_Users.append(self.eMBB_UE_7)
         #self.eMBB_Users.append(self.eMBB_UE_8)
         #self.eMBB_Users.append(self.eMBB_UE_9)
         #self.eMBB_Users.append(self.eMBB_UE_10)
@@ -1115,7 +1116,7 @@ class NetworkEnv(gym.Env):
         self.URLLC_Users.append(self.URLLC_UE_5)
         self.URLLC_Users.append(self.URLLC_UE_6)
         self.URLLC_Users.append(self.URLLC_UE_7)
-        #self.URLLC_Users.append(self.URLLC_UE_8)
+        self.URLLC_Users.append(self.URLLC_UE_8)
         #self.URLLC_Users.append(self.URLLC_UE_9)
         #self.URLLC_Users.append(self.URLLC_UE_10)
         #self.URLLC_Users.append(self.URLLC_UE_11)

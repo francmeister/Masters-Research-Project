@@ -233,6 +233,7 @@ class SBS():
         self.individual_embb_puncturing_users_sum_data_rates = []
         self.individual_embb_num_puncturing_users = []
         self.individual_num_of_allocated_RBs = []
+        self.individual_num_of_clustered_urllc_users=[]
 
         for urllc_user in urllc_users:
             self.individual_urllc_channel_rate_per_slot_with_penalty.append(urllc_user.achieved_channel_rate_per_slot)
@@ -360,6 +361,7 @@ class SBS():
             self.individual_embb_puncturing_users_sum_data_rates.append(eMBB_User.puncturing_users_sum_data_rates)
             self.individual_embb_num_puncturing_users.append(eMBB_User.numbers_of_puncturing_users)
             self.individual_num_of_allocated_RBs.append(eMBB_User.number_of_allocated_RBs)
+            self.individual_num_of_clustered_urllc_users.append(eMBB_User.num_of_clustered_urllc_users)
             #delays
 
     
@@ -560,6 +562,7 @@ class SBS():
         self.individual_embb_puncturing_users_sum_data_rates = []
         self.individual_embb_num_puncturing_users = []
         self.individual_num_of_allocated_RBs = []
+        self.individual_num_of_clustered_urllc_users = []
         
 
     def calculate_fairness(self,eMBB_Users):
@@ -608,13 +611,16 @@ class SBS():
             urllc_user.assigned_resource_block = 0
             urllc_user.assigned_code_block = 0
 
+        for embb_user in embb_users:
+            embb_user.num_of_clustered_urllc_users = 0
+
         #for embb_user in embb_users:
             #print('embb user: ', embb_user.UE_label, 'embb_user.available_resource_time_code_block: ', embb_user.available_resource_time_code_block)
         for urllc_user in URLLC_Users:
             for embb_user in embb_users:
                 #print('embb user: ', embb_user.UE_label, 'embb_user.available_resource_time_code_block: ', embb_user.available_resource_time_code_block)
                 if urllc_user.embb_user_in_close_proximity == embb_user.UE_label:
-                    embb_user.numbers_of_puncturing_users+=1
+                    embb_user.num_of_clustered_urllc_users+=1
                     #print('urllc user: ', urllc_user.UE_label, 'embb user in proximity: ', embb_user.UE_label)
                     if len(embb_user.available_resource_time_code_block) > 0:
                        # print('urllc user: ', urllc_user.UE_label, 'embb user in proximity: ', embb_user.UE_label)
