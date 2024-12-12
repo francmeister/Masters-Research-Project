@@ -569,8 +569,8 @@ class eMBB_UE(User_Equipment):
                     #achieved_RB_channel_rates_.append(achieved_RB_channel_rate_)
 
             self.achieved_channel_rate = sum(achieved_RB_channel_rates)
-            # print('achieved_channel_rate: ', self.achieved_channel_rate)
-            # print('')
+            #print('achieved_channel_rate: ', self.achieved_channel_rate)
+            #print('')
             #print('')
             #print('offload queue service rate: ', self.achieved_channel_rate, ' bits/s')
             #self.achieved_channel_rate_ = sum(achieved_RB_channel_rates_)
@@ -593,12 +593,23 @@ class eMBB_UE(User_Equipment):
         # print('self.assigned_transmit_power_W: ', self.assigned_transmit_power_W)
         # print('RB_channel_gain: ', RB_channel_gain)
         channel_rate_denominator = noise_spectral_density*RB_bandwidth
+        # print('channel_rate_numerator: ', channel_rate_numerator)
+        # print('channel_rate_denominator: ', channel_rate_denominator)
         half_num_mini_slots_per_rb = communication_channel.num_of_mini_slots/2
         if current_rb_occupied == False:
             channel_rate = RB_indicator*(RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator)))
+            # print('RB_indicator: ',RB_indicator)
+            # print('channel_rate: ',channel_rate)
+            # print('current_rb_occupied: ',current_rb_occupied)
         elif current_rb_occupied == True:
-            channel_rate = RB_indicator*RB_bandwidth*(1-(1/punture_counts))*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
-        #return (channel_rate/500)
+            channel_rate = RB_indicator*RB_bandwidth*(1-(punture_counts/communication_channel.num_of_mini_slots))*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
+            #print('punture_counts: ', punture_counts)
+            #og_channel_rate = RB_indicator*RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator))
+        #     print('RB_indicator: ',RB_indicator)
+        #     print('channel_rate: ',channel_rate)
+        #     print('current_rb_occupied: ',current_rb_occupied)
+        #     print('1-(1/punture_counts): ',1-(punture_counts/communication_channel.num_of_mini_slots))
+        # # #return (channel_rate/500)
         return (channel_rate)
     
     # def calculate_channel_rate_(self, communication_channel,RB_indicator,RB_channel_gain,current_rb_occupied):
