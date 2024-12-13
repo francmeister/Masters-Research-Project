@@ -378,7 +378,7 @@ class SBS():
         q_delay = 10**5
         q_energy = 10**8
         q_total_users_battery_energies_reward = 10**4
-        q_urllc_reliability_reward = 30**8
+        q_urllc_reliability_reward = 15**8
         q_total_offload_traffic_reward = 10**7
         q_throughput_log_reward = 10**6
         q_throughput = 1#0**(-7)
