@@ -450,16 +450,16 @@ class NetworkEnv(gym.Env):
         box_actions = action['box_actions']
         binary_actions = action['binary_actions']
         q_action = action['q_action']
-        print('binary actions')
-        print(binary_actions)
+        # print('binary actions')
+        # print(binary_actions)
         #matrix = [[[random.uniform(0, 1) for _ in range(6)] for _ in range(2)] for _ in range(3)]
         #matrix = np.array(matrix)
         #print('matrix')
         #print(matrix)
         resource_block_action_matrix = binary_actions.reshape(self.number_of_users, self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
         resource_block_action_matrix_size = self.number_of_users*self.time_divisions_per_slot*self.num_allocate_RB_upper_bound
-        print('resource_block_action_matrix')
-        print(resource_block_action_matrix)
+        # print('resource_block_action_matrix')
+        # print(resource_block_action_matrix)
         #resource_block_action_matrix = resource_block_action_matrix.squeeze()
         #print(resource_block_action_matrix[:,:,0])
         # if mode == 'inference':
@@ -516,9 +516,9 @@ class NetworkEnv(gym.Env):
             # print('resource_block_action_matrix after:')
             # print(resource_block_action_matrix)
             # print('')
-        print('resource_block_action_matrix')
-        print(resource_block_action_matrix)
-        print('')
+        # print('resource_block_action_matrix')
+        # print(resource_block_action_matrix)
+        # print('')
         resource_block_action_matrix = binary_actions.reshape(1, self.number_of_users * self.time_divisions_per_slot * self.num_allocate_RB_upper_bound)
         resource_block_action_matrix = resource_block_action_matrix.squeeze()
         self.resource_block_action_matrix = resource_block_action_matrix
@@ -1106,15 +1106,15 @@ class NetworkEnv(gym.Env):
         #Group all eMBB Users
         self.eMBB_Users.append(self.eMBB_UE_1)
         self.eMBB_Users.append(self.eMBB_UE_2)
-        #self.eMBB_Users.append(self.eMBB_UE_3)
-        #self.eMBB_Users.append(self.eMBB_UE_4)
-        #self.eMBB_Users.append(self.eMBB_UE_5)
-        #self.eMBB_Users.append(self.eMBB_UE_6)
-        #self.eMBB_Users.append(self.eMBB_UE_7)
-        #self.eMBB_Users.append(self.eMBB_UE_8)
-        #self.eMBB_Users.append(self.eMBB_UE_9)
-        #self.eMBB_Users.append(self.eMBB_UE_10)
-        #self.eMBB_Users.append(self.eMBB_UE_11)
+        self.eMBB_Users.append(self.eMBB_UE_3)
+        self.eMBB_Users.append(self.eMBB_UE_4)
+        self.eMBB_Users.append(self.eMBB_UE_5)
+        self.eMBB_Users.append(self.eMBB_UE_6)
+        self.eMBB_Users.append(self.eMBB_UE_7)
+        self.eMBB_Users.append(self.eMBB_UE_8)
+        self.eMBB_Users.append(self.eMBB_UE_9)
+        self.eMBB_Users.append(self.eMBB_UE_10)
+        self.eMBB_Users.append(self.eMBB_UE_11)
 
         self.URLLC_Users.append(self.URLLC_UE_1)
         self.URLLC_Users.append(self.URLLC_UE_2)
