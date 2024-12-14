@@ -25,6 +25,7 @@ class NetworkEnv(gym.Env):
     metadata = {'render.modes': ['human']}
     def __init__(self):
         self.timestep_counter = 0
+        self.step_counter = 0
         self.create_objects()
         self.reset()
         #Action Space Bound Paramaters
@@ -544,7 +545,8 @@ class NetworkEnv(gym.Env):
         
     #     binary_actions_mapped = np.array(binary_actions_mapped)
     #     resource_block_action_matrix = binary_actions_mapped.reshape(self.time_divisions_per_slot, self.num_allocate_RB_upper_bound)
-
+    def reset_step_counter(self):
+        self.step_counter = 0
     def step(self,action):
         #g = self.reshape_action_space_for_model(action)
         #print('action reshaped')
@@ -714,7 +716,8 @@ class NetworkEnv(gym.Env):
             eMBB_User.split_tasks()
             eMBB_User.available_resource_time_code_block_fn(self.Communication_Channel_1)
        
-        self.SBS1.allocate_resource_blocks_URLLC(self.Communication_Channel_1, self.URLLC_Users, self.eMBB_Users)
+        self.SBS1.allocate_resource_blocks_URLLC(self.Communication_Channel_1, self.URLLC_Users, self.eMBB_Users, self.step_counter)
+        self.step_counter+=1
         # for urllc_user in self.URLLC_Users:
         #     print('urllc_user.assigned_resource_block: ', urllc_user.assigned_resource_block, 'urllc_user.assigned_time_block: ', urllc_user.assigned_time_block,
         #           'urllc_user.assigned_code_block: ', urllc_user.assigned_code_block)
@@ -982,7 +985,7 @@ class NetworkEnv(gym.Env):
 
         self.Communication_Channel_1.get_SBS_and_Users(self.SBS1)
         self.Communication_Channel_1.initiate_RBs()
-        self.SBS1.allocate_resource_blocks_URLLC(self.Communication_Channel_1, self.URLLC_Users,self.eMBB_Users)
+        self.SBS1.allocate_resource_blocks_URLLC(self.Communication_Channel_1, self.URLLC_Users,self.eMBB_Users, self.step_counter)
         
         info = {'reward': 0}
         #print('battery enegy: ', self.SBS1.system_state_space[4])
@@ -1107,14 +1110,14 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.append(self.eMBB_UE_1)
         self.eMBB_Users.append(self.eMBB_UE_2)
         self.eMBB_Users.append(self.eMBB_UE_3)
-        self.eMBB_Users.append(self.eMBB_UE_4)
-        self.eMBB_Users.append(self.eMBB_UE_5)
-        self.eMBB_Users.append(self.eMBB_UE_6)
-        self.eMBB_Users.append(self.eMBB_UE_7)
-        self.eMBB_Users.append(self.eMBB_UE_8)
-        self.eMBB_Users.append(self.eMBB_UE_9)
-        self.eMBB_Users.append(self.eMBB_UE_10)
-        self.eMBB_Users.append(self.eMBB_UE_11)
+        #self.eMBB_Users.append(self.eMBB_UE_4)
+        #self.eMBB_Users.append(self.eMBB_UE_5)
+        #self.eMBB_Users.append(self.eMBB_UE_6)
+        #self.eMBB_Users.append(self.eMBB_UE_7)
+        #self.eMBB_Users.append(self.eMBB_UE_8)
+        #self.eMBB_Users.append(self.eMBB_UE_9)
+        #self.eMBB_Users.append(self.eMBB_UE_10)
+        #self.eMBB_Users.append(self.eMBB_UE_11)
 
         self.URLLC_Users.append(self.URLLC_UE_1)
         self.URLLC_Users.append(self.URLLC_UE_2)

@@ -23,7 +23,7 @@
 # embb_delay_20_8_urllc_reliability_reward = [,,951.401470]
 # embb_delay_30_8_urllc_reliability_reward = [,606.964678,951.395289]
 
-outage_probabilites = [0.112898, 0.112898]
+outage_probabilites = [0.112898, 0.112898,0.112898]
 urllc_reward_values = [10**8, 15**8, 20**8, 30**8]
 
 import matplotlib.pyplot as plt
@@ -38,6 +38,20 @@ outage_probabilties_3_embb_users_10_8 = np.load('outage_probabilties_3_embb_user
 outage_probabilties_3_embb_users_15_8 = np.load('outage_probabilties_3_embb_users_15_8.npy')
 outage_probabilties_3_embb_users_20_8 = np.load('outage_probabilties_3_embb_users_20_8.npy')
 outage_probabilties_3_embb_users_30_8 = np.load('outage_probabilties_3_embb_users_30_8.npy')
+
+timestep_rewards_energy_throughput_3_embb_users_10_0 = np.load('timestep_rewards_energy_throughput_3_embb_users_10_0.npy')
+timestep_rewards_energy_throughput_3_embb_users_10_8 = np.load('timestep_rewards_energy_throughput_3_embb_users_10_8.npy')
+timestep_rewards_energy_throughput_3_embb_users_15_8 = np.load('timestep_rewards_energy_throughput_3_embb_users_15_8.npy')
+timestep_rewards_energy_throughput_3_embb_users_20_8 = np.load('timestep_rewards_energy_throughput_3_embb_users_20_8.npy')
+timestep_rewards_energy_throughput_3_embb_users_30_8 = np.load('timestep_rewards_energy_throughput_3_embb_users_30_8.npy')
+
+throughputs_3_embb_users_10_0 = timestep_rewards_energy_throughput_3_embb_users_10_0[:,3]
+throughputs_3_embb_users_10_8 = timestep_rewards_energy_throughput_3_embb_users_10_8[:,3]
+throughputs_3_embb_users_15_8 = timestep_rewards_energy_throughput_3_embb_users_15_8[:,3]
+throughputs_3_embb_users_20_8 = timestep_rewards_energy_throughput_3_embb_users_20_8[:,3]
+throughputs_3_embb_users_30_8 = timestep_rewards_energy_throughput_3_embb_users_30_8[:,3]
+
+timesteps_3_embb_users_10_0 = timestep_rewards_energy_throughput_3_embb_users_10_0[:,0]
 
 F_L_inverse_3_embb_users = np.load('F_L_inverse_3_embb_users.npy')
 F_L_inverse_7_embb_users = np.load('F_L_inverse_3_embb_users.npy')
@@ -84,7 +98,11 @@ outage_probabilties_3_embb_users_20_8 = moving_average(outage_probabilties_3_emb
 outage_probabilties_3_embb_users_30_8 = moving_average(outage_probabilties_3_embb_users_30_8, window_size)
 # urllc_reliability_reward_7_embb_users_smooth = moving_average(urllc_reliability_reward_7_embb_users, window_size)
 # urllc_reliability_reward_11_embb_users_smooth = moving_average(urllc_reliability_reward_11_embb_users, window_size)
-
+throughputs_3_embb_users_10_0 =  moving_average(throughputs_3_embb_users_10_0, window_size)
+throughputs_3_embb_users_10_8 =  moving_average(throughputs_3_embb_users_10_8, window_size)
+throughputs_3_embb_users_15_8 =  moving_average(throughputs_3_embb_users_15_8, window_size)
+throughputs_3_embb_users_20_8 =  moving_average(throughputs_3_embb_users_20_8, window_size)
+throughputs_3_embb_users_30_8 =  moving_average(throughputs_3_embb_users_30_8, window_size)
 
 number_of_embb_users = [3,7,11]
 #number of URLLC users = 8
@@ -99,38 +117,40 @@ outage_probabilities_0_1 = [0.001254,0.005182,0.018992]
 outage_probabilities_0_5 = [0.112898,0.146539,0.245808] #0.093959 (3 users)
 outage_probabilities_0_9 = [0.480960,0.553509,0.659966]
 
-figure, axis = plt.subplots(1,2)
+figure, axis = plt.subplots(2,2)
 
-axis[0].plot(timesteps[window_size-1:], urllc_reliability_reward_3_embb_users_10_8, color="green", label=r"10^8 reward")
-axis[0].plot(timesteps[window_size-1:], urllc_reliability_reward_3_embb_users_15_8, color="red", label=r"15^8 reward")
-axis[0].plot(timesteps[window_size-1:], urllc_reliability_reward_3_embb_users_20_8, color="brown", label=r"20^8 reward")
-axis[0].plot(timesteps[window_size-1:], urllc_reliability_reward_3_embb_users_30_8, color="blue", label=r"30^8 reward")
+axis[0,0].plot(timesteps[window_size-1:], urllc_reliability_reward_3_embb_users_10_8, color="green", label=r"$10^{8}$ reliability reward")
+axis[0,0].plot(timesteps[window_size-1:], urllc_reliability_reward_3_embb_users_15_8, color="red", label=r"$15^{8}$ reliability reward")
+axis[0,0].plot(timesteps[window_size-1:], urllc_reliability_reward_3_embb_users_20_8, color="brown", label=r"$20^{8}$ reliability reward")
+axis[0,0].plot(timesteps[window_size-1:], urllc_reliability_reward_3_embb_users_30_8, color="blue", label=r"$30^{8}$ reliability reward")
 #axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
-axis[0].set_title('Reliability Constraint Rewards')
-axis[0].grid()
-axis[0].set_xlabel('Timestep')
-axis[0].legend(loc="lower right")
+axis[0,0].set_title('Reliability Constraint Rewards')
+axis[0,0].grid()
+axis[0,0].set_xlabel('Timestep')
+axis[0,0].legend(loc="lower right")
 
-axis[1].plot(timesteps[window_size-1:], outage_probabilties_3_embb_users_10_8, color="green", label=r"10^8 reward")
-axis[1].plot(timesteps[window_size-1:], outage_probabilties_3_embb_users_15_8, color="red", label=r"15^8 reward")
-axis[1].plot(timesteps[window_size-1:], outage_probabilties_3_embb_users_20_8, color="brown", label=r"20^8 reward")
-axis[1].plot(timesteps[window_size-1:], outage_probabilties_3_embb_users_30_8, color="blue", label=r"30^8 reward")
+axis[0,1].plot(timesteps[window_size-1:], outage_probabilties_3_embb_users_10_8, color="green", label=r"$10^{8}$ reliability reward")
+axis[0,1].plot(timesteps[window_size-1:], outage_probabilties_3_embb_users_15_8, color="red", label=r"$15^{8}$ reliability reward")
+axis[0,1].plot(timesteps[window_size-1:], outage_probabilties_3_embb_users_20_8, color="brown", label=r"$20^{8}$ reliability reward")
+axis[0,1].plot(timesteps[window_size-1:], outage_probabilties_3_embb_users_30_8, color="blue", label=r"$30^{8}$ reliability reward")
 #axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
-axis[1].set_title('Outage Probabilities')
-axis[1].grid()
-axis[1].set_xlabel('Timestep')
+axis[0,1].set_title('Outage Probabilities')
+axis[0,1].grid()
+axis[0,1].set_xlabel('Timestep')
 # axis[0,1].set_ylabel('Sum Data Rate (bits/slot)')
-axis[1].legend(loc="upper right")
+axis[0,1].legend(loc="upper right")
 
-# axis[1,0].plot(number_of_embb_users, outage_probabilities_0_1, color="green", label=r"p=0.1", marker='s')
-# axis[1,0].plot(number_of_embb_users, outage_probabilities_0_5, color="red", label=r"p=0.5", marker='s')
-# axis[1,0].plot(number_of_embb_users, outage_probabilities_0_9, color="brown", label=r"p=0.9", marker='s')
-# #axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
-# axis[1,0].set_title('Outage Probabilities Inference')
-# axis[1,0].grid()
-# axis[1,0].set_xlabel('Number of eMBB users')
-# axis[1,0].set_ylabel('Outage Probability Value')
-# axis[1,0].legend(loc="lower right")
+axis[1,0].plot(timesteps_3_embb_users_10_0[window_size-1:], throughputs_3_embb_users_10_0, color="orange", label=r"No Multiplexing")
+axis[1,0].plot(timesteps[window_size-1:], throughputs_3_embb_users_10_8, color="green", label=r"$10^{8}$ reliability reward")
+axis[1,0].plot(timesteps[window_size-1:], throughputs_3_embb_users_15_8, color="red", label=r"$15^{8}$ reliability reward")
+axis[1,0].plot(timesteps[window_size-1:], throughputs_3_embb_users_20_8, color="brown", label=r"$20^{8}$ reliability reward")
+axis[1,0].plot(timesteps[window_size-1:], throughputs_3_embb_users_30_8, color="blue", label=r"$30^{8}$ reliability reward")
+#axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
+axis[1,0].set_title('eMBB Users Sum Data Rates')
+axis[1,0].grid()
+axis[1,0].set_xlabel('Timestep')
+axis[1,0].set_ylabel('Data Rate (bps)')
+axis[1,0].legend(loc="upper right")
 
 # axis[1,0].plot(timesteps[window_size-1:], F_L_inverse_3_embb_users_smooth, color="green", label=r"3 eMBB Users")
 # axis[1,0].plot(timesteps[window_size-1:], F_L_inverse_7_embb_users_smooth, color="red", label=r"7 eMBB Users")
