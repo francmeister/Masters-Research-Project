@@ -639,7 +639,7 @@ class SBS():
                             urllc_user.assigned_code_block = embb_user.available_resource_time_code_block[0][2]
                             embb_user.available_resource_time_code_block.pop(0)
 
-        elif type_of_clustering == 'random_based' and timestep == 0:
+        elif type_of_clustering == 'random_based': #and timestep == 0:
             number_of_embb_users = len(embb_users)
             for urllc_user in URLLC_Users:
                 urllc_user.embb_user_in_close_proximity = random.randint(1, number_of_embb_users)
