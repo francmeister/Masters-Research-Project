@@ -620,8 +620,8 @@ class SBS():
 
         # print('')
 
-        #type_of_clustering = 'distance_based'
-        type_of_clustering = 'random_based'
+        type_of_clustering = 'distance_based'
+        #type_of_clustering = 'random_based'
 
         if type_of_clustering == 'distance_based':
 
