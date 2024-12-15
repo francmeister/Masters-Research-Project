@@ -33,6 +33,7 @@ class URLLC_UE(User_Equipment):
         self.distance_from_embb_user_in_close_proximity = 10000
         self.total_gain_ = []
         self.distance_from_SBS_ = 0
+        self.failed_transmission = False
         #task_size_per_slot_bits
         self.set_properties_URLLC()
 
@@ -160,7 +161,8 @@ class URLLC_UE(User_Equipment):
         # elif self.small_scale_gain_on_allocated_rb > self.small_scale_channel_gain_threshold and len(self.task_queue) > 0:
         if len(self.task_queue) > 0:
             self.offload_task_queue.append(self.task_queue[0])
-            self.has_transmitted_this_time_slot = True
+            #print('len(self.offload_task_queue): ', len(self.offload_task_queue))
+            #self.has_transmitted_this_time_slot = True
             self.task_queue.clear()
 
     def find_puncturing_embb_users(self,eMBB_users):
@@ -240,6 +242,8 @@ class URLLC_UE(User_Equipment):
     def calculate_achieved_channel_rate(self,eMBB_users,communication_channel):
         self.channel_rate_per_second_without_penalty = 0
         self.channel_rate_per_second_penalty = 0
+        self.has_transmitted_this_time_slot = False
+        self.failed_transmission = False
             #self.achieved_channel_rate = channel_rate/500
         self.achieved_channel_rate_per_slot = 0
         if self.assigned_resource_block > 0:
@@ -256,6 +260,15 @@ class URLLC_UE(User_Equipment):
             self.channel_rate_per_second_penalty = math.sqrt((channel_dispersion/code_block_length_symbols))*inverse_Q
             #self.achieved_channel_rate = channel_rate/500
             self.achieved_channel_rate_per_slot = channel_rate/1000
+
+            if len(self.offload_task_queue) > 0:
+                self.offload_task_queue.pop(0)
+                self.has_transmitted_this_time_slot = True
+                self.failed_transmission = False
+
+        elif self.assigned_resource_block == 0 and len(self.offload_task_queue):
+            self.failed_transmission = True
+
         return self.achieved_channel_rate_per_slot
         #print('urllc user id: ', self.URLLC_UE_label, 'achieved channel rate: ', self.achieved_channel_rate)
 

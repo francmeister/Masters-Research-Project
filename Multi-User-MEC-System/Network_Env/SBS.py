@@ -563,6 +563,7 @@ class SBS():
         self.individual_embb_num_puncturing_users = []
         self.individual_num_of_allocated_RBs = []
         self.individual_num_of_clustered_urllc_users = []
+        self.failed_urllc_transmissions = 0
         
 
     def calculate_fairness(self,eMBB_Users):
@@ -679,9 +680,14 @@ class SBS():
 
     def count_num_arriving_urllc_packets(self, urllc_users):
         self.num_arriving_urllc_packets = 0
+        self.failed_urllc_transmissions = 0
         for urllc_user in urllc_users:
             if urllc_user.has_transmitted_this_time_slot == True:
                 self.num_arriving_urllc_packets += 1
+            if urllc_user.failed_transmission == True:
+                self.failed_urllc_transmissions+=1
+
+        #print('self.failed_urllc_transmissions: ', self.failed_urllc_transmissions)
 
 
         
@@ -722,6 +728,7 @@ class SBS():
     def calculate_urllc_reliability_reward(self, urllc_users):
         reliability_reward = 0
         reliability_reward_normalized = 0
+        #print('self.num_arriving_urllc_packets: ',  self.num_arriving_urllc_packets)
         if len(urllc_users) > 0:
             num_arriving_urllc_packets = self.num_arriving_urllc_packets
             #print('num_arriving_urllc_packets: ', num_arriving_urllc_packets)

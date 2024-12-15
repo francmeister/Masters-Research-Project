@@ -121,54 +121,53 @@ number_of_embb_users = [3,7,11]
 
 #number of URLLC users = 8
 #Models trained with p=0.5
-outage_probabilities_0_1 = [0.001254,0.005182,0.018992]
-outage_probabilities_0_5 = [0.112898,0.146539,0.245808] #0.093959 (3 users)
-outage_probabilities_0_9 = [0.480960,0.553509,0.659966]
+outage_probabilities_random = [0.008779,0.113049,0.181745]
+outage_probabilities_distance = [0.112898,0.146539,0.245808] #0.093959 (3 users)
 
 figure, axis = plt.subplots(2,2)
 
 axis[0,0].plot(timesteps[window_size-1:], outage_probabilties_3_embb_users_random, color="green", label=r"Random Clustering")
-axis[0,0].plot(timesteps[window_size-1:], outage_probabilties_3_embb_users_distance, color="red", label=r"$Distance Clustering")
+axis[0,0].plot(timesteps[window_size-1:], outage_probabilties_3_embb_users_distance, color="red", label=r"Near Distance Clustering")
 # axis[0,0].plot(timesteps[window_size-1:], urllc_reliability_reward_3_embb_users_20_8, color="brown", label=r"$20^{8}$ reliability reward")
 # axis[0,0].plot(timesteps[window_size-1:], urllc_reliability_reward_3_embb_users_30_8, color="blue", label=r"$30^{8}$ reliability reward")
 # #axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
-axis[0,0].set_title('3 Users Outage Probability')
+axis[0,0].set_title('3 Users Outage Probability Training')
 axis[0,0].grid()
 axis[0,0].set_xlabel('Timestep')
-axis[0,0].legend(loc="lower right")
+axis[0,0].legend(loc="upper right")
 
 axis[0,1].plot(timesteps[window_size-1:], outage_probabilties_7_embb_users_random, color="green", label=r"Random Clustering")
-axis[0,1].plot(timesteps[window_size-1:], outage_probabilties_7_embb_users_distance, color="red", label=r"Distance Clustering")
+axis[0,1].plot(timesteps[window_size-1:], outage_probabilties_7_embb_users_distance, color="red", label=r"Near Distance Clustering")
 # axis[0,1].plot(timesteps[window_size-1:], outage_probabilties_3_embb_users_20_8, color="brown", label=r"$20^{8}$ reliability reward")
 # axis[0,1].plot(timesteps[window_size-1:], outage_probabilties_3_embb_users_30_8, color="blue", label=r"$30^{8}$ reliability reward")
 #axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
-axis[0,1].set_title('7 Users Outage Probabilities')
+axis[0,1].set_title('7 Users Outage Probabilities Training')
 axis[0,1].grid()
 axis[0,1].set_xlabel('Timestep')
 # axis[0,1].set_ylabel('Sum Data Rate (bits/slot)')
 axis[0,1].legend(loc="upper right")
 
-axis[1,0].plot(timesteps[window_size-1:], outage_probabilties_11_embb_users_random, color="orange", label=r"Random Clustering")
-axis[1,0].plot(timesteps[window_size-1:], outage_probabilties_11_embb_users_distance, color="green", label=r"Distance Clustering")
+axis[1,0].plot(timesteps[window_size-1:], outage_probabilties_11_embb_users_random, color="green", label=r"Random Clustering")
+axis[1,0].plot(timesteps[window_size-1:], outage_probabilties_11_embb_users_distance, color="red", label=r"Near Distance Clustering")
 # axis[1,0].plot(timesteps[window_size-1:], throughputs_3_embb_users_15_8, color="red", label=r"$15^{8}$ reliability reward")
 # axis[1,0].plot(timesteps[window_size-1:], throughputs_3_embb_users_20_8, color="brown", label=r"$20^{8}$ reliability reward")
 # axis[1,0].plot(timesteps[window_size-1:], throughputs_3_embb_users_30_8, color="blue", label=r"$30^{8}$ reliability reward")
 #axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
-axis[1,0].set_title('11 Users Outage Probability')
+axis[1,0].set_title('11 Users Outage Probability Training')
 axis[1,0].grid()
 axis[1,0].set_xlabel('Timestep')
 #axis[1,0].set_ylabel('Data Rate (bps)')
 axis[1,0].legend(loc="upper right")
 
-# axis[1,0].plot(timesteps[window_size-1:], F_L_inverse_3_embb_users_smooth, color="green", label=r"3 eMBB Users")
-# axis[1,0].plot(timesteps[window_size-1:], F_L_inverse_7_embb_users_smooth, color="red", label=r"7 eMBB Users")
-# axis[1,0].plot(timesteps[window_size-1:], F_L_inverse_11_embb_users_smooth, color="brown", label=r"11 eMBB Users")
-# #axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
-# axis[1,0].set_title('F_L_inverse')
-# axis[1,0].grid()
-# axis[1,0].set_xlabel('Timestep')
-# axis[1,0].set_ylabel('F_L_inverse Value')
-# axis[1,0].legend(loc="lower right")
+axis[1,1].plot(number_of_embb_users, outage_probabilities_random, color="green", label=r"Random Clustering", marker='o')
+axis[1,1].plot(number_of_embb_users, outage_probabilities_distance, color="red", label=r"Near Distance Clustering", marker='o')
+#axis[1,0].plot(timesteps[window_size-1:], F_L_inverse_11_embb_users_smooth, color="brown", label=r"11 eMBB Users")
+#axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
+axis[1,1].set_title('Outage Probabilities Inference')
+axis[1,1].grid()
+axis[1,1].set_xlabel('Number of Users')
+axis[1,1].set_ylabel('Outage Probability')
+axis[1,1].legend(loc="upper left")
 
 
 
