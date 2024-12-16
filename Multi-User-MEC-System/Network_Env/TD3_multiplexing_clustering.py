@@ -29,6 +29,14 @@ urllc_reward_values = [10**8, 15**8, 20**8, 30**8]
 import matplotlib.pyplot as plt
 import numpy as np
 
+urllc_failed_transmissions_3_embb_users_random = np.load('failed_urllc_transmissions_3_embb_users_random.npy')
+urllc_failed_transmissions_7_embb_users_random = np.load('failed_urllc_transmissions_7_embb_users_random.npy')
+urllc_failed_transmissions_11_embb_users_random = np.load('failed_urllc_transmissions_11_embb_users_random.npy')
+
+urllc_failed_transmissions_3_embb_users_distance = np.load('failed_urllc_transmissions_3_embb_users_distance.npy')
+urllc_failed_transmissions_7_embb_users_distance = np.load('failed_urllc_transmissions_7_embb_users_distance.npy')
+urllc_failed_transmissions_11_embb_users_distance = np.load('failed_urllc_transmissions_11_embb_users_distance.npy')
+
 urllc_reliability_reward_3_embb_users_10_8 = np.load('urllc_reliability_reward_3_embb_users_10_8.npy')
 urllc_reliability_reward_3_embb_users_15_8 = np.load('urllc_reliability_reward_3_embb_users_15_8.npy')
 urllc_reliability_reward_3_embb_users_20_8 = np.load('urllc_reliability_reward_3_embb_users_20_8.npy')
@@ -112,6 +120,16 @@ throughputs_3_embb_users_15_8 =  moving_average(throughputs_3_embb_users_15_8, w
 throughputs_3_embb_users_20_8 =  moving_average(throughputs_3_embb_users_20_8, window_size)
 throughputs_3_embb_users_30_8 =  moving_average(throughputs_3_embb_users_30_8, window_size)
 
+
+
+urllc_failed_transmissions_3_embb_users_random =  moving_average(urllc_failed_transmissions_3_embb_users_random, window_size)
+urllc_failed_transmissions_7_embb_users_random =  moving_average(urllc_failed_transmissions_7_embb_users_random, window_size)
+urllc_failed_transmissions_11_embb_users_random =  moving_average(urllc_failed_transmissions_11_embb_users_random, window_size)
+
+urllc_failed_transmissions_3_embb_users_distance =  moving_average(urllc_failed_transmissions_3_embb_users_distance, window_size)
+urllc_failed_transmissions_7_embb_users_distance =  moving_average(urllc_failed_transmissions_7_embb_users_distance, window_size)
+urllc_failed_transmissions_11_embb_users_distance =  moving_average(urllc_failed_transmissions_11_embb_users_distance, window_size)
+
 number_of_embb_users = [3,7,11]
 #number of URLLC users = 8
 # #Models trained with p=0.1
@@ -121,8 +139,8 @@ number_of_embb_users = [3,7,11]
 
 #number of URLLC users = 8
 #Models trained with p=0.5
-outage_probabilities_random = [0.008779,0.113049,0.181745]
-outage_probabilities_distance = [0.112898,0.146539,0.245808] #0.093959 (3 users)
+outage_probabilities_random = [0.009754,0.119233,0.171798]
+outage_probabilities_distance = [0.016399,0.154544,0.234804] #0.093959 (3 users)
 
 figure, axis = plt.subplots(2,2)
 
@@ -169,6 +187,16 @@ axis[1,1].set_xlabel('Number of Users')
 axis[1,1].set_ylabel('Outage Probability')
 axis[1,1].legend(loc="upper left")
 
+# axis[0,2].plot(timesteps[window_size-1:], outage_probabilities_random, color="green", label=r"Random Clustering", marker='o')
+# axis[0,2].plot(timesteps[window_size-1:], outage_probabilities_distance, color="red", label=r"Near Distance Clustering", marker='o')
+# #axis[1,0].plot(timesteps[window_size-1:], F_L_inverse_11_embb_users_smooth, color="brown", label=r"11 eMBB Users")
+# #axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
+# axis[0,2].set_title('Outage Probabilities Inference')
+# axis[0,2].grid()
+# axis[0,2].set_xlabel('Number of Users')
+# axis[0,2].set_ylabel('Outage Probability')
+# axis[0,2].legend(loc="upper left")
+
 
 
 # axis[1,1].plot(timesteps[window_size-1:], outage_probabilties_3_embb_users_smooth, color="green", label=r"3 eMBB Users")
@@ -185,3 +213,37 @@ axis[1,1].legend(loc="upper left")
 plt.tight_layout()
 plt.show()
 
+figure, axis = plt.subplots(2,2)
+
+axis[0,0].plot(timesteps[window_size-1:], urllc_failed_transmissions_3_embb_users_random, color="green", label=r"Random Clustering")
+axis[0,0].plot(timesteps[window_size-1:], urllc_failed_transmissions_3_embb_users_distance, color="red", label=r"Near Distance Clustering")
+#axis[1,0].plot(timesteps[window_size-1:], F_L_inverse_11_embb_users_smooth, color="brown", label=r"11 eMBB Users")
+#axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
+axis[0,0].set_title('Number of failed urllc transmissions 3 users')
+axis[0,0].grid()
+axis[0,0].set_xlabel('Timestep')
+#axis[0,0].set_ylabel('f')
+axis[0,0].legend(loc="upper left")
+
+axis[0,1].plot(timesteps[window_size-1:], urllc_failed_transmissions_7_embb_users_random, color="green", label=r"Random Clustering")
+axis[0,1].plot(timesteps[window_size-1:], urllc_failed_transmissions_7_embb_users_distance, color="red", label=r"Near Distance Clustering")
+#axis[1,0].plot(timesteps[window_size-1:], F_L_inverse_11_embb_users_smooth, color="brown", label=r"11 eMBB Users")
+#axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
+axis[0,1].set_title('Number of failed urllc transmissions 7 users')
+axis[0,1].grid()
+axis[0,1].set_xlabel('Timestep')
+#axis[0,0].set_ylabel('f')
+axis[0,1].legend(loc="upper left")
+
+axis[1,0].plot(timesteps[window_size-1:], urllc_failed_transmissions_11_embb_users_random, color="green", label=r"Random Clustering")
+axis[1,0].plot(timesteps[window_size-1:], urllc_failed_transmissions_11_embb_users_distance, color="red", label=r"Near Distance Clustering")
+#axis[1,0].plot(timesteps[window_size-1:], F_L_inverse_11_embb_users_smooth, color="brown", label=r"11 eMBB Users")
+#axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
+axis[1,0].set_title('Number of failed urllc transmissions 11 users')
+axis[1,0].grid()
+axis[1,0].set_xlabel('Timestep')
+#axis[0,0].set_ylabel('f')
+axis[1,0].legend(loc="upper left")
+
+plt.tight_layout()
+plt.show()

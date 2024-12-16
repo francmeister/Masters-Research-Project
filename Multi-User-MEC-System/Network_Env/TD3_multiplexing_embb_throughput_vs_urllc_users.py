@@ -23,6 +23,10 @@ embb_throughput_values_with_multiplexing_0_1_prob = [24437778.331512, 20052684.6
 embb_throughput_values_with_multiplexing_0_5_prob = [22130133.288503, 17851856.473591, 18105049.722109]
 embb_throughput_values_with_multiplexing_0_9_prob = [20852953.718298, 17203101.086708, 17015689.744271]
 
+# embb_throughput_values_with_multiplexing_0_1_prob = [31497189.760301, 23396740.413687, 24992584.402866]
+# embb_throughput_values_with_multiplexing_0_5_prob = [31497189.760301, 23396740.413687, 24992584.402866]
+# embb_throughput_values_with_multiplexing_0_9_prob = [28881229.136653, 23396740.413687, 24992584.402866]
+
 number_of_embb_users = [3, 7, 11]
 embb_energy_values_with_multiplexing = [0.190019, 0.443501, 0.696766]
 embb_energy_values_without_multiplexing = [0.067788, 0.161190, 0.254607]
@@ -130,3 +134,8 @@ plt.show()
 # 4. eMBB Throughput vs. Probability of Generating Packets:
 #    - Throughput decreases as the probability of generating packets increases.
 #    - Larger numbers of URLLC users result in a more pronounced decrease in throughput.
+
+number_of_urllc_users = [3, 7, 11]   
+embb_throughput_values_with_multiplexing_0_1_prob = [31497189.760301, 23396740.413687, 24992584.402866]
+embb_throughput_values_with_multiplexing_0_5_prob = [31497189.760301, 23396740.413687, 24992584.402866]
+embb_throughput_values_with_multiplexing_0_9_prob = [28881229.136653, 23396740.413687, 24992584.402866]
