@@ -917,7 +917,7 @@ class eMBB_UE(User_Equipment):
         g_l = np.random.normal(loc=0, scale=8, size=num_samples)
         # Calculate g
         #print('************************************************************')
-        #print('self.distance_from_SBS: ', self.distance_from_SBS_)
+        # print('self.distance_from_SBS: ', self.distance_from_SBS_)
         #print('g_l: ', g_l)
         g = 35.3 + 37.8 * np.log10(self.distance_from_SBS_) + g_l
         #print('g: ', g)

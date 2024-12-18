@@ -659,7 +659,7 @@ class NetworkEnv(gym.Env):
         
         #print('Action after interpolation transposed')
         #offload_decisions_actions_mapped = [0,0,0,0,0,0,0,0,0,0,0]#[0, 0, 0.5, 0.5, 1, 1, 1]
-        #transmit_power_actions_mapped = [20]#,20,20,20,20,20,20]
+        #transmit_power_actions_mapped = [20,20,20,20,20,20]#,20,20,20,20,20,20]
         #RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])#, [0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0]])
         #print('RB_allocation_actions: ', RB_allocation_actions)
         #print(RB_allocation_actions)
@@ -1123,10 +1123,10 @@ class NetworkEnv(gym.Env):
         self.URLLC_Users.append(self.URLLC_UE_1)
         self.URLLC_Users.append(self.URLLC_UE_2)
         self.URLLC_Users.append(self.URLLC_UE_3)
-        # self.URLLC_Users.append(self.URLLC_UE_4)
-        # self.URLLC_Users.append(self.URLLC_UE_5)
-        # self.URLLC_Users.append(self.URLLC_UE_6)
-        # self.URLLC_Users.append(self.URLLC_UE_7)
+        self.URLLC_Users.append(self.URLLC_UE_4)
+        self.URLLC_Users.append(self.URLLC_UE_5)
+        self.URLLC_Users.append(self.URLLC_UE_6)
+        self.URLLC_Users.append(self.URLLC_UE_7)
         # self.URLLC_Users.append(self.URLLC_UE_8)
         # self.URLLC_Users.append(self.URLLC_UE_9)
         # self.URLLC_Users.append(self.URLLC_UE_10)

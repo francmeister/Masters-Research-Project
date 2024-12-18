@@ -144,11 +144,11 @@ plt.show()
 # outage_probabilities_0_5 = []
 # outage_probabilities_0_9 = [,,0.563455]
 
-number_of_urllc_users = [3, 7, 11]                  
-embb_throughput_values_with_multiplexing_0_1_prob = [24437778.331512, 20052684.695653, 22597040.363259]
-embb_throughput_values_with_multiplexing_0_5_prob = [22130133.288503, 17851856.473591, 18105049.722109]
-embb_throughput_values_with_multiplexing_0_9_prob = [20852953.718298, 17203101.086708, 17015689.744271]
+number_of_urllc_users = [3, 7, 11]                  23324014.348767
+embb_throughput_values_with_multiplexing_0_1_prob = [26376640.654661, 21027447.105985, 22597040.363259]
+embb_throughput_values_with_multiplexing_0_5_prob = [24982482.129859, 17851856.473591, 18105049.722109]
+embb_throughput_values_with_multiplexing_0_9_prob = [24424910.124819, 17203101.086708, 17015689.744271]
 
-embb_outage_prob_values_with_multiplexing_0_1_prob = [24437778.331512, 20052684.695653, 22597040.363259]
-embb_outage_prob_values_with_multiplexing_0_5_prob = [22130133.288503, 17851856.473591, 18105049.722109]
-embb_outage_prob_values_with_multiplexing_0_9_prob = [20852953.718298, 17203101.086708, 17015689.744271]
+embb_outage_prob_values_with_multiplexing_0_1_prob = [0.035644, 0.015095, 22597040.363259]
+embb_outage_prob_values_with_multiplexing_0_5_prob = [0.143812, 17851856.473591, 18105049.722109]
+embb_outage_prob_values_with_multiplexing_0_9_prob = [0.514256, 17203101.086708, 17015689.744271]
