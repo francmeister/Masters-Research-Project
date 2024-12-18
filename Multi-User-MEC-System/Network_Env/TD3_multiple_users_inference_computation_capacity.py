@@ -102,7 +102,7 @@ axes[0, 0].bar(x + width / 2, local_energy, width, label='Local Computing', colo
 axes[0, 0].set_title("Energy Consumption: TD3 vs Local Computing")
 axes[0, 0].set_xticks(x)
 axes[0, 0].set_xticklabels(frequencies)
-axes[0, 0].set_ylabel("Energy (arbitrary units)")
+axes[0, 0].set_ylabel("Energy (J)")
 axes[0, 0].legend()
 axes[0, 0].grid(axis='y', linestyle='--', alpha=0.7)
 
@@ -122,7 +122,7 @@ axes[1, 0].bar(x + width / 2, offload_energy, width, label='Full Offloading', co
 axes[1, 0].set_title("Energy Consumption: TD3 vs Full Offloading")
 axes[1, 0].set_xticks(x)
 axes[1, 0].set_xticklabels(frequencies)
-axes[1, 0].set_ylabel("Energy (arbitrary units)")
+axes[1, 0].set_ylabel("Energy (J)")
 axes[1, 0].legend()
 axes[1, 0].grid(axis='y', linestyle='--', alpha=0.7)
 

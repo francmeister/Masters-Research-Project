@@ -761,6 +761,7 @@ class SBS():
             #print('stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival): ', stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival))
             self.F_L_inverse = urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival)
             
+            #print('urllc_users[0].prob_packet_arrival: ', urllc_users[0].prob_packet_arrival,'self.F_L_inverse: ', self.F_L_inverse)
             reliability_reward = urllc_total_rate-urllc_task_size*stats.binom.ppf((1-self.urllc_reliability_constraint_max),len(urllc_users),urllc_users[0].prob_packet_arrival)
             # print('urllc_total_rate: ', urllc_total_rate)
             # print('self.F_L_inverse: ', self.F_L_inverse)
@@ -786,7 +787,8 @@ class SBS():
             L = stats.binom(len(urllc_users),urllc_users[0].prob_packet_arrival)
             self.outage_probability = 1 - L.cdf(urllc_total_rate/urllc_task_size)#stats.binom.cdf(num_arriving_urllc_packets,len(urllc_users),urllc_users[0].prob_packet_arrival)
             # print('urllc_total_rate: ', urllc_total_rate)
-            # print('self.outage_probability: ', self.outage_probability )
+            #print('self.outage_probability: ', self.outage_probability )
+            #print('')
             # print('reliability_reward: ', reliability_reward)
             # print('self.outage_probability: ', self.outage_probability)
             #print('reliability_reward: ', reliability_reward)
