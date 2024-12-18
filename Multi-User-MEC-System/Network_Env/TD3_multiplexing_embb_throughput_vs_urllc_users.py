@@ -137,5 +137,9 @@ plt.show()
 
 number_of_urllc_users = [3, 7, 11]   
 embb_throughput_values_with_multiplexing_0_1_prob = [31497189.760301, 23396740.413687, 24992584.402866]
-embb_throughput_values_with_multiplexing_0_5_prob = [31497189.760301, 23396740.413687, 24992584.402866]
+embb_throughput_values_with_multiplexing_0_5_prob = [31497189.760301, 23396740.413687, 22269987.023548]
 embb_throughput_values_with_multiplexing_0_9_prob = [28881229.136653, 23396740.413687, 24992584.402866]
+
+outage_probabilities_0_1 = []
+outage_probabilities_0_5 = []
+outage_probabilities_0_9 = [,,0.563455]
