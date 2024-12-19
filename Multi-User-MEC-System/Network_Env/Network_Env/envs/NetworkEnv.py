@@ -245,8 +245,9 @@ class NetworkEnv(gym.Env):
         # print('observation_space after squeeze')
         # print(observation_space.shape)
 
-        observation_channel_gains_urllc = np.transpose(observation_channel_gains_urllc)
-        observation_channel_gains_urllc = observation_channel_gains_urllc.reshape(1,len(observation_channel_gains_urllc)*len(observation_channel_gains_urllc[0]))
+        if len(observation_channel_gains_urllc) > 0:
+            observation_channel_gains_urllc = np.transpose(observation_channel_gains_urllc)
+            observation_channel_gains_urllc = observation_channel_gains_urllc.reshape(1,len(observation_channel_gains_urllc)*len(observation_channel_gains_urllc[0]))
         #observation_channel_gains_urllc = np.transpose(observation_channel_gains_urllc)
 
         # print('observation_space.shape: ', observation_space.shape)
@@ -255,7 +256,8 @@ class NetworkEnv(gym.Env):
         # print('observation_space')
         # print(observation_space)
         # print('shape: ', observation_space.shape)
-        observation_space = np.column_stack((observation_space,observation_channel_gains_urllc))
+        if len(observation_channel_gains_urllc) > 0:
+            observation_space = np.column_stack((observation_space,observation_channel_gains_urllc))
         observation_space = observation_space.squeeze()
         # print('observation_space.shape: ', observation_space.shape)
         # print('')
@@ -1120,7 +1122,7 @@ class NetworkEnv(gym.Env):
         #self.eMBB_Users.append(self.eMBB_UE_10)
         #self.eMBB_Users.append(self.eMBB_UE_11)
 
-        self.URLLC_Users.append(self.URLLC_UE_1)
+        #self.URLLC_Users.append(self.URLLC_UE_1)
         #self.URLLC_Users.append(self.URLLC_UE_2)
         #self.URLLC_Users.append(self.URLLC_UE_3)
         #self.URLLC_Users.append(self.URLLC_UE_4)
