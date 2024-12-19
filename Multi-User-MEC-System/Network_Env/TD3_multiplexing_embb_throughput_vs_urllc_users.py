@@ -19,9 +19,14 @@ import matplotlib.pyplot as plt
 
 # Data Models trained with p=0.5
 number_of_urllc_users = [3, 7, 11]                  
-embb_throughput_values_with_multiplexing_0_1_prob = [24437778.331512, 20052684.695653, 22597040.363259]
-embb_throughput_values_with_multiplexing_0_5_prob = [22130133.288503, 17851856.473591, 18105049.722109]
-embb_throughput_values_with_multiplexing_0_9_prob = [20852953.718298, 17203101.086708, 17015689.744271]
+# embb_throughput_values_with_multiplexing_0_1_prob = [24437778.331512, 20052684.695653, 22597040.363259]
+# embb_throughput_values_with_multiplexing_0_5_prob = [22130133.288503, 17851856.473591, 18105049.722109]
+# embb_throughput_values_with_multiplexing_0_9_prob = [20852953.718298, 17203101.086708, 17015689.744271]
+
+number_of_urllc_users = [3, 7, 11]  
+embb_throughput_values_with_multiplexing_0_1_prob = [26376640.654661, 24085755.803915, 23633107.103424] #0.1 probability of urllc users generating packets
+embb_throughput_values_with_multiplexing_0_5_prob = [24982482.129859, 23324014.348767, 23588152.986448]
+embb_throughput_values_with_multiplexing_0_9_prob = [24424910.124819, 21027447.105985, 21636806.699102]
 
 # embb_throughput_values_with_multiplexing_0_1_prob = [31497189.760301, 23396740.413687, 24992584.402866]
 # embb_throughput_values_with_multiplexing_0_5_prob = [31497189.760301, 23396740.413687, 24992584.402866]
@@ -35,7 +40,7 @@ embb_delay_values_without_multiplexing = [3.198654, 7.425685, 11.754907]
 embb_throughput_values_with_multiplexing = [26870817.032178,20149314.265330,19673293.132581]
 embb_throughput_values_without_multiplexing = [36181414.966455,31511069.986704,34897126.303756]
 
-probabilities = [0.1, 0.5, 0.9]
+probabilities = [0.1, 0.5, 0.9] #probability of urllc users generating packets
 throughput_3_users = [embb_throughput_values_with_multiplexing_0_1_prob[0], embb_throughput_values_with_multiplexing_0_5_prob[0], embb_throughput_values_with_multiplexing_0_9_prob[0]]
 throughput_7_users = [embb_throughput_values_with_multiplexing_0_1_prob[1], embb_throughput_values_with_multiplexing_0_5_prob[1], embb_throughput_values_with_multiplexing_0_9_prob[1]]
 throughput_11_users = [embb_throughput_values_with_multiplexing_0_1_prob[2], embb_throughput_values_with_multiplexing_0_5_prob[2], embb_throughput_values_with_multiplexing_0_9_prob[2]]
@@ -144,11 +149,27 @@ plt.show()
 # outage_probabilities_0_5 = []
 # outage_probabilities_0_9 = [,,0.563455]
 
-number_of_urllc_users = [3, 7, 11]                 
-embb_throughput_values_with_multiplexing_0_1_prob = [26376640.654661, 24085755.803915, 22597040.363259]
-embb_throughput_values_with_multiplexing_0_5_prob = [24982482.129859, 23324014.348767, 18105049.722109]
-embb_throughput_values_with_multiplexing_0_9_prob = [24424910.124819, 21027447.105985, 17015689.744271]
+# number_of_urllc_users = [3, 7, 11]              
+# embb_throughput_values_with_multiplexing_0_1_prob = [26376640.654661, 24085755.803915, 23633107.103424]
+# embb_throughput_values_with_multiplexing_0_5_prob = [24982482.129859, 23324014.348767, 23588152.986448]
+# embb_throughput_values_with_multiplexing_0_9_prob = [24424910.124819, 21027447.105985, 21636806.699102]
 
-embb_outage_prob_values_with_multiplexing_0_1_prob = [0.035644, 0.015095, 22597040.363259]
-embb_outage_prob_values_with_multiplexing_0_5_prob = [0.143812, 17851856.473591, 18105049.722109]
-embb_outage_prob_values_with_multiplexing_0_9_prob = [0.514256, 17203101.086708, 17015689.744271]
+# embb_outage_prob_values_with_multiplexing_0_1_prob = [0.035644, 0.015095, 22597040.363259]
+# embb_outage_prob_values_with_multiplexing_0_5_prob = [0.143812, 17851856.473591, 18105049.722109]
+# embb_outage_prob_values_with_multiplexing_0_9_prob = [0.514256, 17203101.086708, 17015689.744271]
+
+# Insights from the Plot
+# Trend Analysis:
+
+# Throughput decreases as the probability of URLLC users generating packets increases. This trend is consistent across all user counts (3, 7, 11).
+# The rate of decrease in throughput is more pronounced for higher user counts, particularly when moving from a 0.1 to a 0.9 probability.
+# Numerical Summary:
+
+# 3 Users: Throughput drops by ~7.4% (from 26.37 Mbps to 24.42 Mbps) as the probability increases from 0.1 to 0.9.
+# 7 Users: Throughput decreases by ~12.7% (from 24.08 Mbps to 21.03 Mbps).
+# 11 Users: Throughput declines by ~8.4% (from 23.63 Mbps to 21.64 Mbps).
+# Key Observations:
+
+# The contention for resources becomes more critical with higher probabilities and user counts.
+# Systems with fewer URLLC users (e.g., 3 users) are less affected by increasing probabilities, as the overall resource demand remains manageable.
+# At higher user counts (e.g., 7 and 11 users), the throughput impact is more severe due to increased packet arrivals and competition for shared resources.

@@ -70,6 +70,9 @@ class eMBB_UE(User_Equipment):
         self.set_properties_eMBB()
 
     def set_properties_eMBB(self):
+        self.queuing_latency = 0
+        self.local_queueing_latency = 0
+        self.offload_queueing_latency = 0
         self.offlaod_traffic_numerator = 0
         self.offload_stability_constraint_reward = 0
         #State Space Limits
@@ -431,7 +434,7 @@ class eMBB_UE(User_Equipment):
                     local_task_sizes_bits.append(task.slot_task_size)
                     local_required_cycles.append(task.required_computation_cycles)
                     local_latency_requirements.append(task.QOS_requirement.max_allowable_latency)
-
+            #increment_queue_timer
             local_data = {
                 'Task Identity':local_task_identities,
                 'Task Size Bits':local_task_sizes_bits,
@@ -684,6 +687,7 @@ class eMBB_UE(User_Equipment):
         task_attained_queueing_latency = []
         dequeued_task_size = []
         total_sum_size_dequeued_tasks = []
+        lc_cpu_service_rate = []
 
         if len(self.dequeued_local_tasks) > 0:
             for dequeued_local_task in self.dequeued_local_tasks:
@@ -691,6 +695,7 @@ class eMBB_UE(User_Equipment):
                 task_latency_requirements.append(dequeued_local_task.QOS_requirement.max_allowable_latency)
                 task_attained_queueing_latency.append(dequeued_local_task.queue_timer)
                 dequeued_task_size.append(dequeued_local_task.slot_task_size)
+                lc_cpu_service_rate
 
             for dequeued_local_task in self.dequeued_local_tasks:
                 total_sum_size_dequeued_tasks.append(sum(dequeued_task_size))
@@ -776,8 +781,8 @@ class eMBB_UE(User_Equipment):
                 task_identities.append(dequeued_offload_task.task_identifier)
                 task_latency_requirements.append(dequeued_offload_task.QOS_requirement.max_allowable_latency)
                 task_attained_queueing_latency.append(dequeued_offload_task.queue_timer)
-                achieved_throughput.append(self.achieved_channel_rate)
-                number_of_allocated_RBs.append(len(self.allocated_RBs))
+                achieved_throughput.append(self.achieved_channel_rate/1000)
+                number_of_allocated_RBs.append(sum(self.allocated_RBs))
                 task_sizes.append(dequeued_offload_task.slot_task_size)
                 
 
@@ -835,7 +840,7 @@ class eMBB_UE(User_Equipment):
 
         # Find tasks dequeued from the local queue which are not present in the offloading queue (completed on local)
         for local_dequeued_task in self.dequeued_local_tasks:
-            if local_dequeued_task.task_identifier not in offload_queue_task_identities and local_dequeued_task.task_identifier not in dequeued_offload_task_identities:
+            if local_dequeued_task.task_identifier not in offload_queue_task_identities: #and local_dequeued_task.task_identifier not in dequeued_offload_task_identities:
                 self.completed_tasks.append(local_dequeued_task)
 
         for offload_dequeued_task in self.dequeued_offload_tasks:
@@ -845,33 +850,54 @@ class eMBB_UE(User_Equipment):
         task_identities = []
         task_latency_requirements = []
         task_attained_queueing_latency = []
+        task_local_queue_latency = []
+        task_offload_queue_latency = []
         if len(self.completed_tasks) > 0:
             for completed_task in self.completed_tasks:
                 task_identities.append(completed_task.task_identifier)
                 task_latency_requirements.append(completed_task.QOS_requirement.max_allowable_latency)
-                task_attained_queueing_latency.append(completed_task.queue_timer)              
+                task_attained_queueing_latency.append(completed_task.queue_timer)    
+                task_local_queue_latency.append(completed_task.local_queue_timer)
+                task_offload_queue_latency.append(completed_task.offload_queue_timer)          
 
             data = {
                 "Task Identity" : task_identities,
                 "Latency Requirement" : task_latency_requirements,
-                "Attained Queue Latency" : task_attained_queueing_latency
+                "Attained Queue Latency" : task_attained_queueing_latency,
+                "Local Queue Latency" : task_local_queue_latency,
+                "Offload Queue Latency" : task_offload_queue_latency
             }
 
 
             df = pd.DataFrame(data=data)
 
-            #print('Completed Tasks')
-            #print(df)
-            #print(' ')
-            #print(' ')
+            # print('Completed Tasks')
+            # print(df)
+            # print(' ')
+            # print(' ')
 
         sum_latency = 0
+        offload_latency = 0
+        local_latency = 0
+    
         for completed_task in self.completed_tasks:
-            if completed_task.QOS_requirement.max_allowable_latency < completed_task.queue_timer:
-                sum_latency+= (completed_task.QOS_requirement.max_allowable_latency - completed_task.queue_timer)
+            # if completed_task.QOS_requirement.max_allowable_latency < completed_task.queue_timer:
+            #     sum_latency+= (completed_task.QOS_requirement.max_allowable_latency - completed_task.queue_timer)
+            sum_latency+=completed_task.queue_timer
+            offload_latency+=completed_task.offload_queue_timer
+            local_latency+=completed_task.local_queue_timer
 
         self.queuing_delay = sum_latency
         #print('self.queuing_delay', self.queuing_delay)
+        if len(self.completed_tasks) > 0:
+            self.queuing_latency = sum_latency/len(self.completed_tasks)
+            self.local_queueing_latency = local_latency/len(self.completed_tasks)
+            self.offload_queueing_latency = offload_latency/len(self.completed_tasks)
+        else:
+            self.queuing_latency = 0
+            self.local_queueing_latency = 0
+            self.offload_queueing_latency = 0
+        #print('self.queuing_latency: ', self.queuing_latency)
         
 
     def total_energy_consumed(self):
@@ -1146,10 +1172,13 @@ class eMBB_UE(User_Equipment):
         if len(self.local_queue) > 0:
             for local_task in self.local_queue:
                 local_task.increment_queue_timer()
+                local_task.local_queue_timer+=1
 
         if len(self.communication_queue) > 0:
             for offload_task in self.communication_queue:
                 offload_task.increment_queue_timer()
+                offload_task.offload_queue_timer+=1
+                #print('emBB User: ', self.UE_label,'Task Identity: ', offload_task.task_identifier, 'offload_queue_timer: ', offload_task.offload_queue_timer)
 
     def queueing_delay_reward(self):
         min_queueing_delay = -3000

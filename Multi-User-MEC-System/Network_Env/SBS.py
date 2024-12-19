@@ -200,7 +200,7 @@ class SBS():
         self.individual_offload_ratio_reward = []
 
 
-
+        self.sum_queueing_latency = 0
         self.energy_efficiency_rewards = 0
         self.battery_energy_rewards = 0
         self.throughput_rewards = 0
@@ -234,6 +234,9 @@ class SBS():
         self.individual_embb_num_puncturing_users = []
         self.individual_num_of_allocated_RBs = []
         self.individual_num_of_clustered_urllc_users=[]
+        self.individual_simulation_total_delay = []
+        self.individual_simulation_offload_queueing_delay = []
+        self.individual_simulation_local_queueing_delay = []
 
         for urllc_user in urllc_users:
             self.individual_urllc_channel_rate_per_slot_with_penalty.append(urllc_user.achieved_channel_rate_per_slot)
@@ -253,6 +256,7 @@ class SBS():
             self.users_lc_service_rates.append(eMBB_User.service_rate_bits_per_second)
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
             self.total_delay += eMBB_User_delay 
+            self.sum_queueing_latency+=eMBB_User.queuing_latency
             #print('self.total_delay: ', self.total_delay)
             #eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
             self.total_users_energy_not_normalized+=eMBB_User.achieved_total_energy_consumption
@@ -362,6 +366,10 @@ class SBS():
             self.individual_embb_num_puncturing_users.append(eMBB_User.numbers_of_puncturing_users)
             self.individual_num_of_allocated_RBs.append(eMBB_User.number_of_allocated_RBs)
             self.individual_num_of_clustered_urllc_users.append(eMBB_User.num_of_clustered_urllc_users)
+            self.individual_simulation_total_delay.append(eMBB_User.queuing_latency)
+            self.individual_simulation_offload_queueing_delay.append(eMBB_User.offload_queueing_latency)
+            self.individual_simulation_local_queueing_delay.append(eMBB_User.local_queueing_latency)
+
             #delays
 
     
@@ -565,6 +573,10 @@ class SBS():
         self.individual_num_of_allocated_RBs = []
         self.individual_num_of_clustered_urllc_users = []
         self.failed_urllc_transmissions = 0
+        self.sum_queueing_latency = 0  
+        self.individual_simulation_total_delay = []
+        self.individual_simulation_offload_queueing_delay = []
+        self.individual_simulation_local_queueing_delay = []
         
 
     def calculate_fairness(self,eMBB_Users):

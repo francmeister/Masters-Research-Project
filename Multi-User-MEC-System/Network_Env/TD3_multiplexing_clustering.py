@@ -245,5 +245,5 @@ axis[1,0].set_xlabel('Timestep')
 #axis[0,0].set_ylabel('f')
 axis[1,0].legend(loc="upper left")
 
-plt.tight_layout()
-plt.show()
+# plt.tight_layout()
+# plt.show()

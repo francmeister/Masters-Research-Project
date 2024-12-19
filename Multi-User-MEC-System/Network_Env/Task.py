@@ -14,6 +14,8 @@ class Task():
         self.bits = random.getrandbits(self.slot_task_size)
         self.queue_timer = queue_timer
         self.task_identifier = task_identifier
+        self.local_queue_timer = 0
+        self.offload_queue_timer = 0
         
 
     #Specify slot task size, computation cycles and latency requirement

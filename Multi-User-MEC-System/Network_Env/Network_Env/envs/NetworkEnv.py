@@ -658,7 +658,7 @@ class NetworkEnv(gym.Env):
         #collect the final action - number of URLLC users per RB
         
         #print('Action after interpolation transposed')
-        #offload_decisions_actions_mapped = [0,0,0,0,0,0,0,0,0,0,0]#[0, 0, 0.5, 0.5, 1, 1, 1]
+        #offload_decisions_actions_mapped = [1,1,1,1,1,1,1,1,1,1,1]#[0, 0, 0.5, 0.5, 1, 1, 1]
         #transmit_power_actions_mapped = [20,20,20,20,20,20]#,20,20,20,20,20,20]
         #RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])#, [0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0]])
         #print('RB_allocation_actions: ', RB_allocation_actions)
@@ -1091,7 +1091,7 @@ class NetworkEnv(gym.Env):
         #self.eMBB_UE_4.set_channel_gain_scaling_factor(40)
         #self.eMBB_UE_4.set_channel_gain_scaling_factor(20)
 
-
+        #increment_task_queue_timers
         #Communication Channel
         self.Communication_Channel_1 = Communication_Channel(self.SBS1.SBS_label)
 
@@ -1114,11 +1114,11 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.append(self.eMBB_UE_4)
         self.eMBB_Users.append(self.eMBB_UE_5)
         self.eMBB_Users.append(self.eMBB_UE_6)
-        #self.eMBB_Users.append(self.eMBB_UE_7)
-        #self.eMBB_Users.append(self.eMBB_UE_8)
-        #self.eMBB_Users.append(self.eMBB_UE_9)
-        #self.eMBB_Users.append(self.eMBB_UE_10)
-        #self.eMBB_Users.append(self.eMBB_UE_11)
+        self.eMBB_Users.append(self.eMBB_UE_7)
+        self.eMBB_Users.append(self.eMBB_UE_8)
+        self.eMBB_Users.append(self.eMBB_UE_9)
+        self.eMBB_Users.append(self.eMBB_UE_10)
+        self.eMBB_Users.append(self.eMBB_UE_11)
 
         self.URLLC_Users.append(self.URLLC_UE_1)
         self.URLLC_Users.append(self.URLLC_UE_2)
