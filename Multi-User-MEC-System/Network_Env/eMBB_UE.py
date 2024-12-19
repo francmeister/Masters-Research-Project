@@ -740,7 +740,7 @@ class eMBB_UE(User_Equipment):
             self.communication_queue_size_before_offloading += offloading_task.slot_task_size
             self.average_packet_size_bits+=offloading_task.slot_task_size
 
-        print('embb user: ', self.UE_label, 'offload queue bits: ', self.average_packet_size_bits, 'channel rate bits/slot: ', self.achieved_channel_rate/1000)
+        #print('embb user: ', self.UE_label, 'offload queue bits: ', self.average_packet_size_bits, 'channel rate bits/slot: ', self.achieved_channel_rate/1000)
 
         if len(self.communication_queue) > 0:
             self.average_packet_size_bits = self.average_packet_size_bits/len(self.communication_queue)
