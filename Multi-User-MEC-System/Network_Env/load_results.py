@@ -54,6 +54,8 @@ total_offload_traffic_reward = np.load('total_offload_traffic_reward.npy')
 total_local_queueing_violation_prob_reward = np.load('total_local_queueing_violation_prob_reward.npy')
 total_offload_ratio_reward = np.load('total_offload_ratio_reward.npy')
 
+sum_simulation_qeueing_latencies = np.load('sum_qeueing_latencies.npy')
+
 
 
 
@@ -262,6 +264,7 @@ total_local_queueing_violation_prob_reward_smooth = moving_average(total_local_q
 total_offload_ratio_reward_smooth = moving_average(total_offload_ratio_reward, window_size)
 urllc_reliability_reward_smooth = moving_average(urllc_reliability_reward,window_size)
 outage_probabilities_smooth = moving_average(outage_probabilities,window_size)
+sum_simulation_qeueing_latencies_smooth = moving_average(sum_simulation_qeueing_latencies,window_size)
 print('len(overall_users_reward): ', len(throughputs))
 print('len(throughputs): ', len(overall_users_reward))
 print('len(energies): ', len(energies))
@@ -317,11 +320,19 @@ axis[0,2].set_xlabel('Timestep')
 #axis[3,0].set_ylabel('Throughput Constraint Value')
 axis[0,2].grid()
 
-axis[1,2].plot(timesteps[window_size-1:], battery_energy_rewards_smooth)
-axis[1,2].set_title('Battery Energy Constraint Sum Reward')
+# axis[1,2].plot(timesteps[window_size-1:], battery_energy_rewards_smooth)
+# axis[1,2].set_title('Battery Energy Constraint Sum Reward')
+# axis[1,2].set_xlabel('Timestep')
+# #axis[3,0].set_ylabel('Throughput Constraint Value')
+# axis[1,2].grid()
+axis[1,2].plot(timesteps[window_size-1:], sum_simulation_qeueing_latencies_smooth)
+axis[1,2].set_title('Simulation Sum Delay')
 axis[1,2].set_xlabel('Timestep')
+axis[1,2].set_ylabel('Delay (ms)')
 #axis[3,0].set_ylabel('Throughput Constraint Value')
 axis[1,2].grid()
+
+sum_simulation_qeueing_latencies_smooth
 
 axis[2,2].plot(timesteps[window_size-1:], total_offload_traffic_reward_smooth)
 axis[2,2].set_title('Offload Traffic Constraint Sum Reward')

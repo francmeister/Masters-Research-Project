@@ -740,6 +740,8 @@ class eMBB_UE(User_Equipment):
             self.communication_queue_size_before_offloading += offloading_task.slot_task_size
             self.average_packet_size_bits+=offloading_task.slot_task_size
 
+        print('embb user: ', self.UE_label, 'offload queue bits: ', self.average_packet_size_bits, 'channel rate bits/slot: ', self.achieved_channel_rate/1000)
+
         if len(self.communication_queue) > 0:
             self.average_packet_size_bits = self.average_packet_size_bits/len(self.communication_queue)
         else:
@@ -751,7 +753,7 @@ class eMBB_UE(User_Equipment):
             self.achieved_transmission_delay = 0
         else:
             #left_bits = communication_channel.long_TTI*self.achieved_channel_rate
-            left_bits = 0.001*self.achieved_channel_rate
+            left_bits = self.achieved_channel_rate/1000
             for offloading_task in self.communication_queue:
                 if offloading_task.slot_task_size < left_bits:
                     offloading_bits += offloading_task.slot_task_size
