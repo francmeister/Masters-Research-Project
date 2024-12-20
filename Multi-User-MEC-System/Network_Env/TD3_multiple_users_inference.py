@@ -60,3 +60,14 @@ axis[1,0].legend(loc="upper left")
 
 plt.tight_layout()
 plt.show()
+
+
+
+energy_constant_values = [10**(-15), 10**(-20), 10**(-25)]
+TD3_11_users_energy_consumption = []
+full_offloading_11_users_energy_consumption = [0.00017020171405865783,0.00017184682307770817,0.00017180129674813666]
+full_local_computing_11_users_energy_consumption = [0.6971090259495076,0.000177694962177874,0.00016864597938528702]
+
+TD3_11_users_delay = []
+full_offloading_11_users_delay = [80.57803242653766,83.4328370381999,82.34608374687323]
+full_local_computing_11_users_delay = [381.26419141914175,378.80330033003315,379.4546204620462]
