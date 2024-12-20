@@ -63,11 +63,54 @@ plt.show()
 
 
 
+
 energy_constant_values = [10**(-15), 10**(-20), 10**(-25)]
-TD3_11_users_energy_consumption = []
+#energy_constant_values = np.log10(energy_constant_values)
+TD3_11_users_energy_consumption = [0.254597,0.000453,0.000450]
 full_offloading_11_users_energy_consumption = [0.00017020171405865783,0.00017184682307770817,0.00017180129674813666]
 full_local_computing_11_users_energy_consumption = [0.6971090259495076,0.000177694962177874,0.00016864597938528702]
 
-TD3_11_users_delay = []
+TD3_11_users_delay = [41.154899,46.574979,46.560401]
 full_offloading_11_users_delay = [80.57803242653766,83.4328370381999,82.34608374687323]
 full_local_computing_11_users_delay = [381.26419141914175,378.80330033003315,379.4546204620462]
+
+# Adjusted Bar Graph Visualization for Zoomed-In Energy Consumption
+fig, axs = plt.subplots(2, 3, figsize=(18, 10))
+
+# Titles for each subplot
+titles = ["Energy Constant Value = 10^(-15)", 
+          "Energy Constant Value = 10^(-20)", 
+          "Energy Constant Value = 10^(-25)"]
+
+# Energy data and delay data
+energy_data = [TD3_11_users_energy_consumption, 
+               full_offloading_11_users_energy_consumption, 
+               full_local_computing_11_users_energy_consumption]
+
+delay_data = [TD3_11_users_delay, 
+              full_offloading_11_users_delay, 
+              full_local_computing_11_users_delay]
+
+labels = ['TD3', 'Full Offloading', 'Full Local Computing']
+
+# Bar plot for energy consumption
+for i, energy in enumerate(zip(*energy_data)):
+    axs[0, i].bar(labels, energy, color=['blue', 'orange', 'green'])
+    axs[0, i].set_title(f"Energy Consumption\n{titles[i]}")
+    axs[0, i].set_ylabel("Energy Consumption")
+    if i == 0:
+        axs[0, i].set_ylim(0, max(max(energy_data)) * 1.2)  # Default for 10^(-15)
+    else:
+        axs[0, i].set_ylim(0, 0.001)  # Zoomed-in for 10^(-20) and 10^(-25)
+    axs[0, i].grid(axis='y')
+
+# Bar plot for delay
+for i, delay in enumerate(zip(*delay_data)):
+    axs[1, i].bar(labels, delay, color=['blue', 'orange', 'green'])
+    axs[1, i].set_title(f"Delay\n{titles[i]}")
+    axs[1, i].set_ylabel("Delay")
+    axs[1, i].set_ylim(0, max(max(delay_data)) * 1.2)
+    axs[1, i].grid(axis='y')
+
+plt.tight_layout()
+plt.show()
