@@ -148,7 +148,7 @@ class eMBB_UE(User_Equipment):
         self.has_transmitted_this_time_slot = False
         self.communication_queue = []
         #self.energy_consumption_coefficient = math.pow(10,-12.3)
-        self.energy_consumption_coefficient = math.pow(10,-20)
+        self.energy_consumption_coefficient = math.pow(10,-15)
         self.achieved_transmission_energy_consumption = 0
         self.achieved_local_processing_delay = 0
         self.achieved_total_energy_consumption = 0
@@ -777,8 +777,9 @@ class eMBB_UE(User_Equipment):
         number_of_allocated_RBs = []
         total_size_bits_offloaded = []
         task_sizes = []
-
+        has_transmitted = False
         if len(self.dequeued_offload_tasks) > 0:
+            has_transmitted = True
             for dequeued_offload_task in self.dequeued_offload_tasks:
                 task_identities.append(dequeued_offload_task.task_identifier)
                 task_latency_requirements.append(dequeued_offload_task.QOS_requirement.max_allowable_latency)
@@ -811,7 +812,8 @@ class eMBB_UE(User_Equipment):
 
         self.check_completed_tasks()
         #self.achieved_transmission_delay = 1
-        self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*(1/communication_channel.time_divisions_per_slot)*(10**-3)*sum(self.allocated_RBs)
+        if has_transmitted == True:
+            self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*(1/communication_channel.time_divisions_per_slot)*(10**-3)*sum(self.allocated_RBs)
         #print('self.achieved_transmission_energy_consumption: ', self.achieved_transmission_energy_consumption)
         #self.achieved_transmission_energy_consumption = self.assigned_transmit_power_W*self.achieved_transmission_delay
         #print('self.achieved_transmission_energy_consumption: ', self.achieved_transmission_energy_consumption)
