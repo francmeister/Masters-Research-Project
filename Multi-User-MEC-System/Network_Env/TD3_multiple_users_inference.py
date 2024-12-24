@@ -66,8 +66,8 @@ plt.show()
 
 energy_constant_values = [10**(-15), 10**(-20), 10**(-25)]
 #energy_constant_values = np.log10(energy_constant_values)
-TD3_11_users_energy_consumption = [0.254597,0.000453,0.000450]
-full_offloading_11_users_energy_consumption = [0.00017020171405865783,0.00017184682307770817,0.00017180129674813666]
+TD3_11_users_energy_consumption = [0.254799,0.000658,0.000656]
+full_offloading_11_users_energy_consumption = [0.0008680693069307004,0.0008680693069307004,0.0008680693069307004]
 full_local_computing_11_users_energy_consumption = [0.6968477472133169,6.96908042078842e-06,6.969839291191688e-11]
 
 TD3_11_users_delay = [41.154899,46.574979,46.560401]

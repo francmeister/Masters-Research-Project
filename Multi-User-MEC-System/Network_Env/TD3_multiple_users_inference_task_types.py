@@ -91,16 +91,18 @@ import numpy as np
 # Data for energy consumption (all values are lists with single elements)
 user_types = ['Type 1', 'Type 2', 'Type 3', 'Type 4']
 
-TD3_energy = [0.211393, 0.017973, 0.020441, 0.001014]
-full_offloading_energy = [0.0001685293140755837, 0.00016864831330618704, 0.00016949044389031852, 0.00017052497605641608]
-local_computing_energy = [0.6970100705150036, 0.019562666682258506, 0.17643995683736277, 0.00788278921588087]
+task_sizes = ['50 bits/task', '500 bits/task', '1000 bits/task']
+
+TD3_energy = [0.020642, 0.211591, 0.416773]
+full_offloading_energy = [0.0008600990099009983, 0.0008649504950495118, 0.000870049504950502]
+local_computing_energy = [0.17663618515910118,0.6966616493624364, 0.6969728707135012]
 
 # Data for delay
-TD3_delay = [11.269698, 331.243528, 11.000582, 11.000582]
-full_offloading_delay = [11.13430555707121, 11.151867970605862, 11.000624421136479, 11.000629801767891]
-local_computing_delay = [880.5434067607023, 4690.532855966992, 11.0, 12.669311027674155]
+TD3_delay = [8.895596, 25.541444, 143.752507]
+full_offloading_delay = [9.11727291287328, 29.68475815866853, 146.690621812883]
+local_computing_delay = [10.814851485148514,343.96287128712873, 439.91980198019803]
 
-x = np.arange(len(user_types))  # label locations
+x = np.arange(len(task_sizes))  # label locations
 width = 0.25  # width of the bars
 # Plot for Energy and Delay Comparisons (4 Subplots)
 fig, ax = plt.subplots(2, 2, figsize=(16, 12))
@@ -113,7 +115,7 @@ ax[0, 0].set_xlabel('User Types')
 ax[0, 0].set_ylabel('Energy Consumption (J)')
 ax[0, 0].set_title('Energy: TD3 vs Local Computing')
 ax[0, 0].set_xticks(x)
-ax[0, 0].set_xticklabels(user_types)
+ax[0, 0].set_xticklabels(task_sizes)
 ax[0, 0].legend()
 ax[0, 0].grid(True, linestyle='--', alpha=0.6)
 
@@ -125,7 +127,7 @@ ax[0, 1].set_xlabel('User Types')
 ax[0, 1].set_ylabel('Delay (ms)')
 ax[0, 1].set_title('Delay: TD3 vs Local Computing')
 ax[0, 1].set_xticks(x)
-ax[0, 1].set_xticklabels(user_types)
+ax[0, 1].set_xticklabels(task_sizes)
 ax[0, 1].legend()
 ax[0, 1].grid(True, linestyle='--', alpha=0.6)
 
@@ -137,7 +139,7 @@ ax[1, 0].set_xlabel('User Types')
 ax[1, 0].set_ylabel('Energy Consumption (J)')
 ax[1, 0].set_title('Energy: TD3 vs Full Offloading')
 ax[1, 0].set_xticks(x)
-ax[1, 0].set_xticklabels(user_types)
+ax[1, 0].set_xticklabels(task_sizes)
 ax[1, 0].legend()
 ax[1, 0].grid(True, linestyle='--', alpha=0.6)
 
@@ -149,7 +151,7 @@ ax[1, 1].set_xlabel('User Types')
 ax[1, 1].set_ylabel('Delay (ms)')
 ax[1, 1].set_title('Delay: TD3 vs Full Offloading')
 ax[1, 1].set_xticks(x)
-ax[1, 1].set_xticklabels(user_types)
+ax[1, 1].set_xticklabels(task_sizes)
 ax[1, 1].legend()
 ax[1, 1].grid(True, linestyle='--', alpha=0.6)
 
