@@ -1,19 +1,17 @@
----------------------------------------
-Average Reward over the Evaluation Step: 2854435544.804395
----------------------------------------
-
----------------------------------------
-Average Energy over the Evaluation Step: 0.000922
+Average Reward over the Evaluation Step: -7033121360536.943359
 ---------------------------------------
 
 ---------------------------------------
-Average Throughput over the Evaluation Step: 34309197.737593
+Average Energy over the Evaluation Step: 696.685543
 ---------------------------------------
 
 ---------------------------------------
-Average Fairness Index over the Evaluation Step: 0.247864
+Average Throughput over the Evaluation Step: 26865061.027919
 ---------------------------------------
 
 ---------------------------------------
-Average task delay over the Evaluation Step: 36.643500
+Average Fairness Index over the Evaluation Step: 0.505324
 ---------------------------------------
+
+---------------------------------------
+Average task delay over the Evaluation Step: 354.193430

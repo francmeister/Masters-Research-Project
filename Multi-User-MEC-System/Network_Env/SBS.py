@@ -386,7 +386,7 @@ class SBS():
         self.q_action = 10**1
         q_delay = 10**5
         #q_energy = 10**8 #10**11
-        q_energy = 10**8 #10**11
+        q_energy = 10**5
         q_total_users_battery_energies_reward = 10**4
         q_urllc_reliability_reward = 10**8
         q_total_offload_traffic_reward = 10**7
