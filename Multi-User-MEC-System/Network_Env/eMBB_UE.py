@@ -35,7 +35,7 @@ class eMBB_UE(User_Equipment):
         #self.max_service_rate_cycles_per_slot = random.randint(5000,650000)#620000
         #self.max_service_rate_cycles_per_slot = 620000
         #self.service_rate_bits_per_second = 2500000 #2.5MB/s(random.randint(5,5000))
-        self.service_rate_bits_per_second = 969700   #121212.121212#120000#random.randint(100000,300000)#120000
+        self.service_rate_bits_per_second = 2666666   #2909090 #969700   #121212.121212#120000#random.randint(100000,300000)#120000
         self.service_rate_bits_per_slot = self.service_rate_bits_per_second/1000 
         self.max_service_rate_cycles_per_slot = self.service_rate_bits_per_slot*self.cycles_per_bit
         self.max_bits_process_per_slot = self.max_service_rate_cycles_per_slot/self.cycles_per_bit
@@ -148,7 +148,7 @@ class eMBB_UE(User_Equipment):
         self.has_transmitted_this_time_slot = False
         self.communication_queue = []
         #self.energy_consumption_coefficient = math.pow(10,-12.3)
-        self.energy_consumption_coefficient = math.pow(10,-12)
+        self.energy_consumption_coefficient = math.pow(10,-18)
         self.achieved_transmission_energy_consumption = 0
         self.achieved_local_processing_delay = 0
         self.achieved_total_energy_consumption = 0
