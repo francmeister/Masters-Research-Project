@@ -390,7 +390,7 @@ class SBS():
         q_total_users_battery_energies_reward = 10**4
         q_urllc_reliability_reward = 10**8
         q_total_offload_traffic_reward = 10**7
-        q_throughput_log_reward = 10**2
+        q_throughput_log_reward = 10**3
         q_throughput = 1#0**(-7)
         q_local_queueing_violation_prob_reward = 10**6
         q_offload_ratio_reward = 10**6
