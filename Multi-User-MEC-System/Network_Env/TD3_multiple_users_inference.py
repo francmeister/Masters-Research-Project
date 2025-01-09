@@ -68,27 +68,33 @@ energy_constant_values = [10**(-15), 10**(-18) , 10**(-20), 10**(-25)]
 #energy_constant_values = np.log10(energy_constant_values)
 
 #-------------------------------------Model trained with 40 MHz-------------------------------------
-TD3_11_users_energy_consumption = [0.254799, 0.000910,0.000658,0.000656]
-full_offloading_11_users_energy_consumption = [0.0008680693069307004,0.00087797029702971,0.0008680693069307004,0.0008680693069307004]
-full_local_computing_11_users_energy_consumption = [0.6968477472133169,0.000696927813996256,6.96908042078842e-06,6.969839291191688e-11]
+# TD3_11_users_energy_consumption = [0.254799, 0.000910,0.000658,0.000656]
+# full_offloading_11_users_energy_consumption = [0.0008680693069307004,0.00087797029702971,0.0008680693069307004,0.0008680693069307004]
+# full_local_computing_11_users_energy_consumption = [0.6968477472133169,0.000696927813996256,6.96908042078842e-06,6.969839291191688e-11]
 
-TD3_11_users_delay = [41.154899,46.572479,46.574979,46.560401]
-full_offloading_11_users_delay = [80.57803242653766, 80.57803242653766,83.4328370381999,82.34608374687323]
-full_local_computing_11_users_delay = [381.26419141914175,379.5909240924093,378.80330033003315,379.4546204620462]
+# TD3_11_users_delay = [41.154899,46.572479,46.574979,46.560401]
+# full_offloading_11_users_delay = [80.57803242653766, 80.57803242653766,83.4328370381999,82.34608374687323]
+# full_local_computing_11_users_delay = [381.26419141914175,379.5909240924093,378.80330033003315,379.4546204620462]
 
 #-------------------------------------Model trained with 110 MHz-------------------------------------
-TD3_11_users_energy_consumption = [1.931876, 0.002587,0.000675,0.000656]
+energy_constant_values = [10**(-15), 10**(-19) , 10**(-20), 10**(-25)]
+TD3_11_users_energy_consumption = [1.931876, 0.000777,0.000675,0.000656]
 full_offloading_11_users_energy_consumption = [0.0008680693069307004,0.00087797029702971,0.0008680693069307004,0.0008680693069307004]
-full_local_computing_11_users_energy_consumption = [14.369465130305837,0.014393208459102622,0.00014391352639153224,1.4366189850960628e-09]
+full_local_computing_11_users_energy_consumption = [14.369465130305837,0.000907708891766546,0.00014391352639153224,1.4366189850960628e-09]
 
-TD3_11_users_delay = [45.981812,45.982021,45.975727,45.993555]
+TD3_11_users_delay = [45.981812,45.966488,45.975727,45.993555]
 full_offloading_11_users_delay = [80.57803242653766, 80.57803242653766,83.4328370381999,82.34608374687323]
 full_local_computing_11_users_delay = [75.30400990099005,74.2597029702971,79.11912541254124,74.13587458745876]
 # Adjusted Bar Graph Visualization for Zoomed-In Energy Consumption
 fig, axs = plt.subplots(2, 4, figsize=(18, 10))
 
 # Titles for each subplot
-titles = ["Energy Constant Value = 10^(-15)", 
+titles_110_MHz = ["Energy Constant Value = 10^(-15)", 
+          "Energy Constant Value = 10^(-19)",
+          "Energy Constant Value = 10^(-20)", 
+          "Energy Constant Value = 10^(-25)"]
+
+titles_40_MHz = ["Energy Constant Value = 10^(-15)", 
           "Energy Constant Value = 10^(-18)",
           "Energy Constant Value = 10^(-20)", 
           "Energy Constant Value = 10^(-25)"]
@@ -107,18 +113,18 @@ labels = ['TD3', 'Full Offloading', 'Full Local Computing']
 # Bar plot for energy consumption
 for i, energy in enumerate(zip(*energy_data)):
     axs[0, i].bar(labels, energy, color=['blue', 'orange', 'green'])
-    axs[0, i].set_title(f"Energy Consumption\n{titles[i]}")
+    axs[0, i].set_title(f"Energy Consumption\n{titles_110_MHz[i]}")
     axs[0, i].set_ylabel("Energy Consumption")
-    if i == 0:
-        axs[0, i].set_ylim(0, max(max(energy_data)) * 1.2)  # Default for 10^(-15)
-    else:
-        axs[0, i].set_ylim(0, 0.001)  # Zoomed-in for 10^(-20) and 10^(-25)
+    # if i == 0:
+    #     axs[0, i].set_ylim(0, max(max(energy_data)) * 1.2)  # Default for 10^(-15)
+    # else:
+    #     axs[0, i].set_ylim(0, 0.001)  # Zoomed-in for 10^(-20) and 10^(-25)
     axs[0, i].grid(axis='y')
 
 # Bar plot for delay
 for i, delay in enumerate(zip(*delay_data)):
     axs[1, i].bar(labels, delay, color=['blue', 'orange', 'green'])
-    axs[1, i].set_title(f"Delay\n{titles[i]}")
+    axs[1, i].set_title(f"Delay\n{titles_110_MHz[i]}")
     axs[1, i].set_ylabel("Delay")
     axs[1, i].set_ylim(0, max(max(delay_data)) * 1.2)
     axs[1, i].grid(axis='y')

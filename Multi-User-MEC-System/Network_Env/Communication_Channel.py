@@ -70,6 +70,12 @@ class Communication_Channel():
         self.noise_spectral_density_dbm = -174 # -174dBM/Hz
         self.noise_spectral_density_W = (math.pow(10,(self.noise_spectral_density_dbm/10)))/1000
         #print('self.noise_spectral_density_W: ', self.noise_spectral_density_W)
+
+        # -164 = 3.9810717e-20
+        # -174 = 3.9810717e-21
+        # -184 = 3.9810717e-22
+        # y_axis = [-184,-174, -164]
+        # x_axis = [3.9810717e-22, 3.9810717e-21, 3.9810717e-20]
         self.single_side_standard_deviation = 5
         self.eMBB_Users = []
         self.RBs = []

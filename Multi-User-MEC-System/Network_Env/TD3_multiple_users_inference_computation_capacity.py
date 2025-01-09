@@ -106,15 +106,15 @@ axes[0, 0].set_ylabel("Energy (J)")
 axes[0, 0].legend()
 axes[0, 0].grid(axis='y', linestyle='--', alpha=0.7)
 
-# TD3 vs Local Computing (Delay)
-axes[0, 1].bar(x - width / 2, td3_delay, width, label='TD3', color='blue')
-axes[0, 1].bar(x + width / 2, local_delay, width, label='Local Computing', color='orange')
-axes[0, 1].set_title("Delay: TD3 vs Local Computing")
-axes[0, 1].set_xticks(x)
-axes[0, 1].set_xticklabels(frequencies)
-axes[0, 1].set_ylabel("Delay (ms)")
-axes[0, 1].legend()
-axes[0, 1].grid(axis='y', linestyle='--', alpha=0.7)
+# # TD3 vs Local Computing (Delay)
+# axes[0, 1].bar(x - width / 2, td3_delay, width, label='TD3', color='blue')
+# axes[0, 1].bar(x + width / 2, local_delay, width, label='Local Computing', color='orange')
+# axes[0, 1].set_title("Delay: TD3 vs Local Computing")
+# axes[0, 1].set_xticks(x)
+# axes[0, 1].set_xticklabels(frequencies)
+# axes[0, 1].set_ylabel("Delay (ms)")
+# axes[0, 1].legend()
+# axes[0, 1].grid(axis='y', linestyle='--', alpha=0.7)
 
 # TD3 vs Full Offloading (Energy)
 axes[1, 0].bar(x - width / 2, td3_energy, width, label='TD3', color='blue')
@@ -127,9 +127,13 @@ axes[1, 0].legend()
 axes[1, 0].grid(axis='y', linestyle='--', alpha=0.7)
 
 # TD3 vs Full Offloading (Delay)
-axes[1, 1].bar(x - width / 2, td3_delay, width, label='TD3', color='blue')
-axes[1, 1].bar(x + width / 2, offload_delay, width, label='Full Offloading', color='green')
-axes[1, 1].set_title("Delay: TD3 vs Full Offloading")
+# Adjust the positions of the bars
+axes[1, 1].bar(x - width, td3_delay, width, label='TD3', color='blue')               # Shift TD3 to the left
+axes[1, 1].bar(x, offload_delay, width, label='Full Offloading', color='green')     # Center Full Offloading
+axes[1, 1].bar(x + width, local_delay, width, label='Local Computing', color='orange')  # Shift Local Computing to the right
+
+# Add title, labels, and grid
+axes[1, 1].set_title("Delay: TD3 vs Full Offloading vs Local Computing")
 axes[1, 1].set_xticks(x)
 axes[1, 1].set_xticklabels(frequencies)
 axes[1, 1].set_ylabel("Delay (ms)")
