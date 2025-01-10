@@ -1,24 +1,25 @@
+10**6
 ---------------------------------------
-Average Reward over the Evaluation Step: 22604939.227780
----------------------------------------
-
----------------------------------------
-Average Energy over the Evaluation Step: 0.000711
+Average Reward over the Evaluation Step: -137339332.802443
 ---------------------------------------
 
 ---------------------------------------
-Average Throughput over the Evaluation Step: 35599584.341944
+Average Energy over the Evaluation Step: 0.000733
 ---------------------------------------
 
 ---------------------------------------
-Average Fairness Index over the Evaluation Step: 0.211196
+Average Throughput over the Evaluation Step: 20681846.554856
 ---------------------------------------
 
 ---------------------------------------
-Average task delay over the Evaluation Step: 9.763027
+Average Fairness Index over the Evaluation Step: 0.522659
+---------------------------------------
+
+---------------------------------------
+Average task delay over the Evaluation Step: 170.990001
 ---------------------------------------
 ---------------------------------------
-Average Number of allocated RBs over the Evaluation Step: 6.009091
+Average Number of allocated RBs over the Evaluation Step: 1.103960
 ---------------------------------------
 ---------------------------------------
 Average Outage Probability over the Evaluation Step: 0.000000
@@ -27,30 +28,31 @@ Average Outage Probability over the Evaluation Step: 0.000000
 Average Outage Probability over the Evaluation Step: 0.000000
 ---------------------------------------
 ---------------------------------------
-Average Individual Channel Rates over the Evaluation Step:  [12742951.33140592 10894843.72250421  3591168.60688066  3799597.96202139
-        0.                0.                0.                0.
-        0.          2246027.44489641        0.        ]
+Average Individual Channel Rates over the Evaluation Step:  [ 875784.56302229 1128345.57493865 3137494.38568207       0.
+ 1326000.72916457 3946463.39744325 6498276.73883081       0.
+ 2063288.96357575       0.         3081966.19993133]
 ---------------------------------------
 ---------------------------------------
-Average Local Queue Lengths Bits:  140.56336088154268
+Average Local Queue Lengths Bits:  82297.47101710172
 ---------------------------------------
 ---------------------------------------
-Average Offload Queue Lengths Bits:  25346.628925619832
+Average Offload Queue Lengths Bits:  236.7707470747074
 ---------------------------------------
 ---------------------------------------
-Average Local Queue Lengths Tasks:  0.690633608815427
+Average Local Queue Lengths Tasks:  156.7084608460846
 ---------------------------------------
 ---------------------------------------
-Average Offload Queue Lengths Tasks:  47.954545454545446
+Average Offload Queue Lengths Tasks:  1.4879387938793882
 ---------------------------------------
 ---------------------------------------
-Average Offloading Ratios:  0.8831771873408637
+Average Offloading Ratios:  0.12092881192753979
 ---------------------------------------
 ---------------------------------------
-Average Individual Number of allocated RBs:  [3. 5. 2. 1. 0. 0. 0. 0. 0. 1. 0.]
+Average Individual Number of allocated RBs:  [1. 1. 2. 0. 1. 1. 3. 0. 1. 0. 2.]
 ---------------------------------------
 ---------------------------------------
 Average Individual Number of Punctruring users:  [0 0 0 0 0 0 0 0 0 0 0]
 ---------------------------------------
 ---------------------------------------
 Average Individual Number of Clustered Urllc users:  [0 0 0 0 0 0 0 0 0 0 0]
+---------------------------------------
