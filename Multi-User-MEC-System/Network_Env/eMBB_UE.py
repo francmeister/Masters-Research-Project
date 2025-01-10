@@ -391,7 +391,7 @@ class eMBB_UE(User_Equipment):
             # print('task queue data')
             # print(df)
             # print(' ')
-            #self.allocated_offloading_ratio = 0.9
+            self.allocated_offloading_ratio = 0.9
             # print('self.allocated_offloading_ratio')
             # print(self.allocated_offloading_ratio)
            # print('')
@@ -420,8 +420,8 @@ class eMBB_UE(User_Equipment):
             # print('-------------------------------------------------------------------------------------------------------------------')
             # print('Number of tasks generated: ', len(self.task_queue), 'Total Size bits: ', total_bits)
             # print('Offloading Ratio: ', self.allocated_offloading_ratio)
-            # print('Total Offload Queue Bits: ', offloading_bits)
-            # print('Total Local Queue Bits: ', local_bits)
+            # print('Total Offload Queue Bits: ', round(self.allocated_offloading_ratio*total_bits))
+            # print('Total Local Queue Bits: ', round((1-self.allocated_offloading_ratio)*total_bits))
             # print('Number of tasks on Offload queue: ', len(self.communication_queue))
             # print('Number of tasks on local Queue: ', len(self.local_queue))
             # print('')
@@ -460,6 +460,7 @@ class eMBB_UE(User_Equipment):
 
            # print('local queue arrival rate: ',local_bits*1000, ' bits/s')
             df = pd.DataFrame(data=local_data)
+            # print('-----------------------------------------------------------------------------')
             # print('local queue data')
             # print(df)
             # print(' ')
@@ -483,10 +484,12 @@ class eMBB_UE(User_Equipment):
                 'Latency requirement':offload_latency_requirements
             }
         #   #  print('offload queue arrival rate: ', offloading_bits*1000, ' bits/s')
-        #     df = pd.DataFrame(data=offload_data)
-        #     print('offload queue data')
-        #     print(df)
-        #     print(' ')
+            # print('-----------------------------------------------------------------------------')
+            # df = pd.DataFrame(data=offload_data)
+            # print('offload queue data')
+            # print(df)
+            # print(' ')
+            
         
             # print('Size of offloading queue: ',sum(offload_task_sizes_bits))
     
@@ -661,12 +664,13 @@ class eMBB_UE(User_Equipment):
 
         self.loc_queue_length = len(self.local_queue)
         #print('total_bits_size: ', total_bits_size)
-
+        processed_bits = 0
         for local_task in self.local_queue:
             # print('cycles left: ', cpu_cycles_left)
             # print('local_task.required_computation_cycles: ', local_task.required_computation_cycles)
             if cpu_cycles_left > local_task.required_computation_cycles:
                 #print('cycles left: ', cpu_cycles_left)
+                processed_bits+=local_task.slot_task_size
                 #self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(local_task.required_computation_cycles,2)*local_task.required_computation_cycles
                 cpu_cycles_left-=local_task.required_computation_cycles
                 self.dequeued_local_tasks.append(local_task)
@@ -677,6 +681,7 @@ class eMBB_UE(User_Equipment):
                 # print('local_task.required_computation_cycles: ', local_task.required_computation_cycles)
                 #print('task_identifier: ', local_task.task_identifier)#, 'self.bits: ', local_task.bits)
                 bits_that_can_be_processed = cpu_cycles_left/self.cycles_per_bit
+                processed_bits+=bits_that_can_be_processed
                 cpu_cycles_left = 0
                 #print("bits_that_can_be_processed: ", bits_that_can_be_processed)
                 #self.achieved_local_energy_consumption += self.energy_consumption_coefficient*math.pow(cpu_cycles_left,2)*cpu_cycles_left
@@ -706,6 +711,7 @@ class eMBB_UE(User_Equipment):
         dequeued_task_size = []
         total_sum_size_dequeued_tasks = []
         lc_cpu_service_rate = []
+        processed_bits_ = []
 
         if len(self.dequeued_local_tasks) > 0:
             for dequeued_local_task in self.dequeued_local_tasks:
@@ -730,6 +736,7 @@ class eMBB_UE(User_Equipment):
             df = pd.DataFrame(data=data)
 
             # print('Completed From Local Queue')
+            # print('Total processed bits this frame: ', processed_bits)
             # print(df)
             # print(' ')
             # print('Local Computation energy consumed in this slot: ', self.achieved_local_energy_consumption)
@@ -825,7 +832,8 @@ class eMBB_UE(User_Equipment):
 
             df = pd.DataFrame(data=data)
 
-            # print('Dequeued Offload Tasks')
+            # print('Completed from offloading queue')
+            # print('Offloaded bits: ', offloading_bits)
             # print(df)
             # print(' ')
             # print('Achieved TTI channel rate: ', self.achieved_channel_rate)
