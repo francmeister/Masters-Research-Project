@@ -154,7 +154,7 @@ class NetworkEnv(gym.Env):
         self.action_space_high = 1
         self.action_space_low = 0
 
-        self.STEP_LIMIT = 200
+        self.STEP_LIMIT = 500
         self.sleep = 0
         self.steps = 0
         self.initial_RB_bandwidth = self.Communication_Channel_1.RB_bandwidth_Hz
