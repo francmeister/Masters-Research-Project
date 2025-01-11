@@ -154,7 +154,7 @@ class NetworkEnv(gym.Env):
         self.action_space_high = 1
         self.action_space_low = 0
 
-        self.STEP_LIMIT = 100
+        self.STEP_LIMIT = 200
         self.sleep = 0
         self.steps = 0
         self.initial_RB_bandwidth = self.Communication_Channel_1.RB_bandwidth_Hz
@@ -662,7 +662,7 @@ class NetworkEnv(gym.Env):
         #print('Action after interpolation transposed')
         #offload_decisions_actions_mapped = [0,0,0,0,0,0,0,0,0,0,0]#[0, 0, 0.5, 0.5, 1, 1, 1]
         #transmit_power_actions_mapped = [20,20,20,20,20,20,20,20,20,20,20]#,20,20,20,20,20,20]
-        #RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])#, [0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0]])
+        #RB_allocation_actions = np.array([[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])#, [0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0]])
         #print('RB_allocation_actions: ', RB_allocation_actions)
         #print(RB_allocation_actions)
         #RB_allocation_actions_mapped = [6]#,10,15,15,20,20,20]
@@ -1258,7 +1258,7 @@ class NetworkEnv(gym.Env):
         #print('Action after interpolation transposed')
         #offload_decisions_actions_mapped = [1,1,1,1,1,1,1,1,1]#[0, 0, 0.5, 0.5, 1, 1, 1]
         #transmit_power_actions_mapped = [20]#,20,20,20,20,20,20]
-        #RB_allocation_actions = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])#, [0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0]])
+        #RB_allocation_actions = np.array([[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])#, [0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0]])
         #print('RB_allocation_actions: ', RB_allocation_actions)
         #print(RB_allocation_actions)
         #RB_allocation_actions_mapped = [6]#,10,15,15,20,20,20]
