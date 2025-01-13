@@ -266,6 +266,13 @@ class eMBB_UE(User_Equipment):
         self.energy_harvesting_constant = 5
         self.numbers_of_puncturing_users = 0
         self.number_of_allocated_RBs = 0
+        self.local_traffic_intensity = 0
+
+        self.battery_energy_constraint_violation_count = 0
+        self.local_queueing_traffic_constraint_violation_count = 0
+        self.offload_queueing_traffic_constaint_violation_count = 0
+        self.local_time_delay_violation_prob_constraint_violation_count = 0
+        self.rmin_constraint_violation_count = 0
         #self.large_scale_gain_
     
   
@@ -660,7 +667,23 @@ class eMBB_UE(User_Equipment):
     #     channel_rate = RB_indicator*(RB_bandwidth*math.log2(1+(channel_rate_numerator/channel_rate_denominator)))
  
     #     return (channel_rate/1000)
+    def local_queueing_traffic_reward(self):
+        arrival_rate_tasks_per_slot = (1-self.allocated_offloading_ratio)*self.task_arrival_rate_tasks_per_second
+        service_rate_tasks_per_slot = len(self.dequeued_local_tasks)
+        local_traffic_intensity = arrival_rate_tasks_per_slot/service_rate_tasks_per_slot
+        self.local_traffic_intensity = local_traffic_intensity
+
+        reward = 0
+        if local_traffic_intensity <= 1:
+            reward = 1
+            self.local_queueing_traffic_constraint_violation_count = 0
+        else:
+            reward = 1 - local_traffic_intensity
+            self.local_queueing_traffic_constraint_violation_count = 1
+        return reward
     
+
+
     def local_processing(self):
         cpu_cycles_left = self.max_service_rate_cycles_per_slot #check if 
         self.achieved_local_energy_consumption = 0
@@ -1203,10 +1226,13 @@ class eMBB_UE(User_Equipment):
         min_energy_reward = -10000
 
         #energy_reward_normalized = 0
+
         if energy_reward >= 0:
             energy_reward = 1
+            self.battery_energy_constraint_violation_count = 0
         else:
             energy_reward = energy_reward
+            self.battery_energy_constraint_violation_count = 1
 
         return energy_reward
     
@@ -1582,8 +1608,11 @@ class eMBB_UE(User_Equipment):
 
         if reward < 0:
             reward = reward
+            self.offload_queueing_traffic_constaint_violation_count = 1
         else:
             reward = 1
+            self.offload_queueing_traffic_constaint_violation_count = 0
+
         self.offlaod_traffic_numerator = self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits
         self.offload_stability_constraint_reward = reward
         return reward#offload_traffic
@@ -1614,7 +1643,7 @@ class eMBB_UE(User_Equipment):
         sum_violation_probability = 1 - sum_violation_probability
         max_sum_violation_probability = 0.5
         min_sum_violation_probability = -12
-
+        #local_queue_delay_violation_probability
         sum_violation_probability_norm = interp(sum_violation_probability,[min_sum_violation_probability,max_sum_violation_probability],[0,1])
         violation_reward = self.max_lc_queue_delay_violation_probability - sum_violation_probability_norm
         return violation_reward#sum_violation_probability_norm
@@ -1712,10 +1741,11 @@ class eMBB_UE(User_Equipment):
         queueing_violation_prob_reward = 0
         if (self.local_queue_delay_violation_probability_constraint-(queueing_violation_prob)) < 0:
             queueing_violation_prob_reward = (self.local_queue_delay_violation_probability_constraint-(queueing_violation_prob))
-
+            self.local_time_delay_violation_prob_constraint_violation_count = 1
         else:
             queueing_violation_prob_reward = 1
-
+            self.local_time_delay_violation_prob_constraint_violation_count = 0
+        #local_queue_delay_violation_probability
         self.queueing_violation_prob_reward = queueing_violation_prob_reward
         return queueing_violation_prob_reward
 
