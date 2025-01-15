@@ -670,15 +670,22 @@ class eMBB_UE(User_Equipment):
     def local_queueing_traffic_reward(self):
         arrival_rate_tasks_per_slot = (1-self.allocated_offloading_ratio)*self.task_arrival_rate_tasks_per_second
         service_rate_tasks_per_slot = len(self.dequeued_local_tasks)
-        local_traffic_intensity = arrival_rate_tasks_per_slot/service_rate_tasks_per_slot
+        local_traffic_intensity = 0
+        reward = 0
+        if len(self.dequeued_local_tasks) > 0:
+            if arrival_rate_tasks_per_slot <= service_rate_tasks_per_slot:
+                reward = 1
+            else:
+                local_traffic_intensity = arrival_rate_tasks_per_slot/service_rate_tasks_per_slot
+                reward = 1-local_traffic_intensity
+        else:
+            reward = -1
+
         self.local_traffic_intensity = local_traffic_intensity
 
-        reward = 0
-        if local_traffic_intensity <= 1:
-            reward = 1
+        if arrival_rate_tasks_per_slot <= service_rate_tasks_per_slot:
             self.local_queueing_traffic_constraint_violation_count = 0
         else:
-            reward = 1 - local_traffic_intensity
             self.local_queueing_traffic_constraint_violation_count = 1
         return reward
     
@@ -1601,21 +1608,33 @@ class eMBB_UE(User_Equipment):
         self.offload_stability_constraint_reward = 0
         #if self.achieved_channel_rate > 0:
         #offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/self.achieved_channel_rate
-        offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/(self.average_offloading_rate)
-        #else:
-        #    offload_traffic
-        reward = 1-offload_traffic
-
-        if reward < 0:
-            reward = reward
-            self.offload_queueing_traffic_constaint_violation_count = 1
+        reward = 0
+        offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/(self.average_offloading_rate/1000)
+        if self.achieved_channel_rate > 0:
+            if (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits) <= self.achieved_channel_rate/1000:
+                reward = 1
+            else:
+                offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/(self.achieved_channel_rate/1000)
+                reward = 1-offload_traffic
         else:
-            reward = 1
-            self.offload_queueing_traffic_constaint_violation_count = 0
+            reward = -1
+
+        # if reward < 0:
+        #     reward = reward
+        #     #self.offload_queueing_traffic_constaint_violation_count = 1
+        # else:
+        #     reward = 1
+        #     #self.offload_queueing_traffic_constaint_violation_count = 0
 
         self.offlaod_traffic_numerator = self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits
         self.offload_stability_constraint_reward = reward
+
+        if (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits) >= self.achieved_channel_rate/1000:
+            self.offload_queueing_traffic_constaint_violation_count = 1
+        else:
+            self.offload_queueing_traffic_constaint_violation_count = 0
         return reward#offload_traffic
+        #return reward#offload_traffic
     
     def local_queue_violation_constraint_reward(self):
         average_packet_size_bits = 0
