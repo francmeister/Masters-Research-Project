@@ -22,7 +22,7 @@ overall_users_reward_DDPG_3_users = np.load('overall_users_reward_DDPG_3_users.n
 overall_users_reward_DDPG_7_users = np.load('overall_users_reward_DDPG_7_users.npy')
 overall_users_reward_DDPG_11_users = np.load('overall_users_reward_DDPG_11_users.npy')
 
-rewards_throughput_energy = np.load('timestep_rewards_energy_throughput.npy')
+rewards_throughput_energy = np.load('timestep_rewards_energy_throughput_TD3_3_users.npy')
 
 #print('rewards_throughput_energy: ', rewards_throughput_energy)
 # timesteps_1_users = rewards_throughput_energy_1_user[:,0]
