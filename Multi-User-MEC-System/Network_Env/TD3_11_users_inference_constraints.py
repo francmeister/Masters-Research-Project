@@ -125,7 +125,7 @@ plt.suptitle(r"Constraint (3.32): $H_d^{(m)}[t-1] + \omega_d^{(m)}[t] > E_d^{(m)
              fontsize=16, fontweight='bold')
 
 # Reward values
-plt.subplot(3, 3, 1)
+plt.subplot(3, 2, 1)
 plt.plot(constraint_multiplier, reward_values, marker='o', label="Reward")
 plt.title("Reward vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -134,7 +134,7 @@ plt.grid(True)
 plt.legend()
 
 # Energy values
-plt.subplot(3, 3, 2)
+plt.subplot(3, 2, 2)
 plt.plot(constraint_multiplier, energy_values, marker='o', color='orange', label="Energy")
 plt.title("Energy vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -143,7 +143,7 @@ plt.grid(True)
 plt.legend()
 
 # Throughput values
-plt.subplot(3, 3, 3)
+plt.subplot(3, 2, 3)
 plt.plot(constraint_multiplier, throughput_values, marker='o', color='green', label="Throughput")
 plt.title("Throughput vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -151,17 +151,17 @@ plt.ylabel("Throughput Values")
 plt.grid(True)
 plt.legend()
 
-# Fairness index
-plt.subplot(3, 3, 4)
-plt.plot(constraint_multiplier, fairness_index, marker='o', color='red', label="Fairness Index")
-plt.title("Fairness Index vs Constraint Multiplier")
-plt.xlabel("Log10(Constraint Multiplier)")
-plt.ylabel("Fairness Index")
-plt.grid(True)
-plt.legend()
+# # Fairness index
+# plt.subplot(3, 3, 4)
+# plt.plot(constraint_multiplier, fairness_index, marker='o', color='red', label="Fairness Index")
+# plt.title("Fairness Index vs Constraint Multiplier")
+# plt.xlabel("Log10(Constraint Multiplier)")
+# plt.ylabel("Fairness Index")
+# plt.grid(True)
+# plt.legend()
 
 # Delay values
-plt.subplot(3, 3, 5)
+plt.subplot(3, 2, 4)
 plt.plot(constraint_multiplier, delay_values, marker='o', color='purple', label="Delay")
 plt.title("Delay vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -170,7 +170,7 @@ plt.grid(True)
 plt.legend()
 
 # Offloading ratios
-plt.subplot(3, 3, 6)
+plt.subplot(3, 2, 5)
 plt.plot(constraint_multiplier, offloading_ratios, marker='o', color='brown', label="Offloading Ratio")
 plt.title("Offloading Ratio vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -178,7 +178,7 @@ plt.ylabel("Offloading Ratios")
 plt.grid(True)
 plt.legend()
 
-plt.subplot(3, 3, 7)
+plt.subplot(3, 2, 6)
 plt.plot(constraint_multiplier, constraint_violation_count, marker='o', color='blue', label="Constraint Violation Count")
 plt.title("Constraint Violation Count vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -219,7 +219,7 @@ plt.suptitle(r"Constraint (3.34): $\rho_{d,{off}}^{(m)} \leq 1, \, \forall d \in
              fontsize=16, fontweight='bold')
 
 # Reward values
-plt.subplot(3, 3, 1)
+plt.subplot(3, 2, 1)
 plt.plot(constraint_multiplier, reward_values, marker='o', label="Reward")
 plt.title("Reward vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -228,7 +228,7 @@ plt.grid(True)
 plt.legend()
 
 # Energy values
-plt.subplot(3, 3, 2)
+plt.subplot(3, 2, 2)
 plt.plot(constraint_multiplier, energy_values, marker='o', color='orange', label="Energy")
 plt.title("Energy vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -237,7 +237,7 @@ plt.grid(True)
 plt.legend()
 
 # Throughput values
-plt.subplot(3, 3, 3)
+plt.subplot(3, 2, 3)
 plt.plot(constraint_multiplier, throughput_values, marker='o', color='green', label="Throughput")
 plt.title("Throughput vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -245,17 +245,17 @@ plt.ylabel("Throughput Values")
 plt.grid(True)
 plt.legend()
 
-# Fairness index
-plt.subplot(3, 3, 4)
-plt.plot(constraint_multiplier, fairness_index, marker='o', color='red', label="Fairness Index")
-plt.title("Fairness Index vs Constraint Multiplier")
-plt.xlabel("Log10(Constraint Multiplier)")
-plt.ylabel("Fairness Index")
-plt.grid(True)
-plt.legend()
+# # Fairness index
+# plt.subplot(3, 3, 4)
+# plt.plot(constraint_multiplier, fairness_index, marker='o', color='red', label="Fairness Index")
+# plt.title("Fairness Index vs Constraint Multiplier")
+# plt.xlabel("Log10(Constraint Multiplier)")
+# plt.ylabel("Fairness Index")
+# plt.grid(True)
+# plt.legend()
 
 # Delay values
-plt.subplot(3, 3, 5)
+plt.subplot(3, 2, 4)
 plt.plot(constraint_multiplier, delay_values, marker='o', color='purple', label="Delay")
 plt.title("Delay vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -264,7 +264,7 @@ plt.grid(True)
 plt.legend()
 
 # Offloading ratios
-plt.subplot(3, 3, 6)
+plt.subplot(3, 2, 5)
 plt.plot(constraint_multiplier, offloading_ratios, marker='o', color='brown', label="Offloading Ratio")
 plt.title("Offloading Ratio vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -272,7 +272,7 @@ plt.ylabel("Offloading Ratios")
 plt.grid(True)
 plt.legend()
 
-plt.subplot(3, 3, 7)
+plt.subplot(3, 2, 6)
 plt.plot(constraint_multiplier, constraint_violation_count, marker='o', color='blue', label="Constraint Violation Count")
 plt.title("Constraint Violation Count vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -312,7 +312,7 @@ plt.suptitle(r"Constraint (3.33): $\rho_{d,{lc}}^{(m)} \leq 1, \, \forall d \in 
              fontsize=16, fontweight='bold')
 
 # Reward values
-plt.subplot(3, 3, 1)
+plt.subplot(3, 2, 1)
 plt.plot(constraint_multiplier, reward_values, marker='o', label="Reward")
 plt.title("Reward vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -321,7 +321,7 @@ plt.grid(True)
 plt.legend()
 
 # Energy values
-plt.subplot(3, 3, 2)
+plt.subplot(3, 2, 2)
 plt.plot(constraint_multiplier, energy_values, marker='o', color='orange', label="Energy")
 plt.title("Energy vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -330,7 +330,7 @@ plt.grid(True)
 plt.legend()
 
 # Throughput values
-plt.subplot(3, 3, 3)
+plt.subplot(3, 2, 3)
 plt.plot(constraint_multiplier, throughput_values, marker='o', color='green', label="Throughput")
 plt.title("Throughput vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -339,16 +339,16 @@ plt.grid(True)
 plt.legend()
 
 # Fairness index
-plt.subplot(3, 3, 4)
-plt.plot(constraint_multiplier, fairness_index, marker='o', color='red', label="Fairness Index")
-plt.title("Fairness Index vs Constraint Multiplier")
-plt.xlabel("Log10(Constraint Multiplier)")
-plt.ylabel("Fairness Index")
-plt.grid(True)
-plt.legend()
+# plt.subplot(3, 3, 4)
+# plt.plot(constraint_multiplier, fairness_index, marker='o', color='red', label="Fairness Index")
+# plt.title("Fairness Index vs Constraint Multiplier")
+# plt.xlabel("Log10(Constraint Multiplier)")
+# plt.ylabel("Fairness Index")
+# plt.grid(True)
+# plt.legend()
 
 # Delay values
-plt.subplot(3, 3, 5)
+plt.subplot(3, 2, 4)
 plt.plot(constraint_multiplier, delay_values, marker='o', color='purple', label="Delay")
 plt.title("Delay vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -357,7 +357,7 @@ plt.grid(True)
 plt.legend()
 
 # Offloading ratios
-plt.subplot(3, 3, 6)
+plt.subplot(3, 2, 5)
 plt.plot(constraint_multiplier, offloading_ratios, marker='o', color='brown', label="Offloading Ratio")
 plt.title("Offloading Ratio vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -365,7 +365,7 @@ plt.ylabel("Offloading Ratios")
 plt.grid(True)
 plt.legend()
 
-plt.subplot(3, 3, 7)
+plt.subplot(3, 2, 6)
 plt.plot(constraint_multiplier, constraint_violation_count, marker='o', color='blue', label="Constraint Violation Count")
 plt.title("Constraint Violation Count vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -397,7 +397,7 @@ plt.suptitle(r"Constraint (3.35): $\Pr(L_d^{(m)}[t] > L_d^*) < \epsilon^{{max}},
              fontsize=16, fontweight='bold')
 
 # Reward values
-plt.subplot(3, 3, 1)
+plt.subplot(3, 2, 1)
 plt.plot(constraint_multiplier, reward_values, marker='o', label="Reward")
 plt.title("Reward vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -406,7 +406,7 @@ plt.grid(True)
 plt.legend()
 
 # Energy values
-plt.subplot(3, 3, 2)
+plt.subplot(3, 2, 2)
 plt.plot(constraint_multiplier, energy_values, marker='o', color='orange', label="Energy")
 plt.title("Energy vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -415,7 +415,7 @@ plt.grid(True)
 plt.legend()
 
 # Throughput values
-plt.subplot(3, 3, 3)
+plt.subplot(3, 2, 3)
 plt.plot(constraint_multiplier, throughput_values, marker='o', color='green', label="Throughput")
 plt.title("Throughput vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -423,17 +423,17 @@ plt.ylabel("Throughput Values")
 plt.grid(True)
 plt.legend()
 
-# Fairness index
-plt.subplot(3, 3, 4)
-plt.plot(constraint_multiplier, fairness_index, marker='o', color='red', label="Fairness Index")
-plt.title("Fairness Index vs Constraint Multiplier")
-plt.xlabel("Log10(Constraint Multiplier)")
-plt.ylabel("Fairness Index")
-plt.grid(True)
-plt.legend()
+# # Fairness index
+# plt.subplot(3, 3, 4)
+# plt.plot(constraint_multiplier, fairness_index, marker='o', color='red', label="Fairness Index")
+# plt.title("Fairness Index vs Constraint Multiplier")
+# plt.xlabel("Log10(Constraint Multiplier)")
+# plt.ylabel("Fairness Index")
+# plt.grid(True)
+# plt.legend()
 
 # Delay values
-plt.subplot(3, 3, 5)
+plt.subplot(3, 2, 4)
 plt.plot(constraint_multiplier, delay_values, marker='o', color='purple', label="Delay")
 plt.title("Delay vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -442,7 +442,7 @@ plt.grid(True)
 plt.legend()
 
 # Offloading ratios
-plt.subplot(3, 3, 6)
+plt.subplot(3, 2, 5)
 plt.plot(constraint_multiplier, offloading_ratios, marker='o', color='brown', label="Offloading Ratio")
 plt.title("Offloading Ratio vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")
@@ -450,7 +450,7 @@ plt.ylabel("Offloading Ratios")
 plt.grid(True)
 plt.legend()
 
-plt.subplot(3, 3, 7)
+plt.subplot(3, 2, 6)
 plt.plot(constraint_multiplier, constraint_violation_count, marker='o', color='blue', label="Constraint Violation Count")
 plt.title("Constraint Violation Count vs Constraint Multiplier")
 plt.xlabel("Log10(Constraint Multiplier)")

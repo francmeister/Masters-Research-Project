@@ -16,7 +16,7 @@ offloading_ratios = [0.5223319215621657, 0.7082332962124606, 0.7535654580171486,
 # Plotting
 plt.figure(figsize=(10, 7))
 
-plt.suptitle('Effect of Task arrival rate')
+plt.suptitle('Effect of Task arrival rate on perfomance metrics',fontsize=16, fontweight='bold')
 
 # Subplot 1: Reward
 plt.subplot(3, 2, 1)
@@ -96,12 +96,12 @@ battery_energy_levels = [26639.995633741353,26639.99899376778,26639.99971747164,
 
 # Plotting
 plt.figure(figsize=(10, 7))
-plt.suptitle('Effect of gNB Transmission Power on perfomance metrics')
+plt.suptitle('Effect of gNB Transmission Power on perfomance metrics',fontsize=16, fontweight='bold')
 # Subplot 1: Reward
 plt.subplot(4, 2, 1)
 plt.plot(gnb_transmit_powers, reward, marker='o', color='blue', label='Reward')
 plt.title('Effect on Reward')
-plt.xlabel('gNB Transmit Power (dBm)')
+plt.xlabel('gNB Transmit Power (W)')
 plt.ylabel('Reward')
 plt.grid(True)
 
@@ -109,7 +109,7 @@ plt.grid(True)
 plt.subplot(4, 2, 2)
 plt.plot(gnb_transmit_powers, energy, marker='o', color='orange', label='Energy')
 plt.title('Effect on Energy')
-plt.xlabel('gNB Transmit Power (dBm)')
+plt.xlabel('gNB Transmit Power (W)')
 plt.ylabel('Energy (Joules)')
 plt.grid(True)
 
@@ -117,7 +117,7 @@ plt.grid(True)
 plt.subplot(4, 2, 3)
 plt.plot(gnb_transmit_powers, throughput, marker='o', color='green', label='Throughput')
 plt.title('Effect on Throughput')
-plt.xlabel('gNB Transmit Power (dBm)')
+plt.xlabel('gNB Transmit Power (W)')
 plt.ylabel('Throughput')
 plt.grid(True)
 
@@ -125,7 +125,7 @@ plt.grid(True)
 plt.subplot(4, 2, 4)
 plt.plot(gnb_transmit_powers, fairness_index, marker='o', color='red', label='Fairness Index')
 plt.title('Effect on Fairness Index')
-plt.xlabel('gNB Transmit Power (dBm)')
+plt.xlabel('gNB Transmit Power (W)')
 plt.ylabel('Fairness Index')
 plt.grid(True)
 
@@ -133,7 +133,7 @@ plt.grid(True)
 plt.subplot(4, 2, 5)
 plt.plot(gnb_transmit_powers, delay, marker='o', color='purple', label='Delay')
 plt.title('Effect on Delay')
-plt.xlabel('gNB Transmit Power (dBm)')
+plt.xlabel('gNB Transmit Power (W)')
 plt.ylabel('Delay (ms)')
 plt.grid(True)
 
@@ -141,7 +141,7 @@ plt.grid(True)
 plt.subplot(4, 2, 6)
 plt.plot(gnb_transmit_powers, offloading_ratios, marker='o', color='brown', label='Offloading Ratios')
 plt.title('Effect on Offloading Ratios')
-plt.xlabel('gNB Transmit Power (dBm)')
+plt.xlabel('gNB Transmit Power (W)')
 plt.ylabel('Offloading Ratios')
 plt.grid(True)
 
@@ -149,7 +149,7 @@ plt.grid(True)
 plt.subplot(4, 2, 7)
 plt.plot(gnb_transmit_powers, energy_harvested, marker='o', color='cyan', label='Energy Harvested')
 plt.title('Effect on Energy Harvested')
-plt.xlabel('gNB Transmit Power (dBm)')
+plt.xlabel('gNB Transmit Power (W)')
 plt.ylabel('Energy Harvested (Joules)')
 plt.grid(True)
 
@@ -157,8 +157,67 @@ plt.grid(True)
 plt.subplot(4, 2, 8)
 plt.plot(gnb_transmit_powers, battery_energy_levels, marker='o', color='magenta', label='Battery Energy Levels')
 plt.title('Effect on Battery Energy Levels')
-plt.xlabel('gNB Transmit Power (dBm)')
+plt.xlabel('gNB Transmit Power (W)')
 plt.ylabel('Battery Energy Levels')
+plt.grid(True)
+
+plt.tight_layout()
+plt.show()
+
+
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------
+# Effect of changing number of users on Reward, energy, throughput, fairness and delay
+#  
+
+number_of_users = [3,7,11] #x-axis
+reward = [27061671.594047,24738542.987665,-62529259.317639]#y-axis
+energy = [0.000535,0.000701,0.000953]#y-axis
+throughput = [36792406.942830,40040386.882232,28761606.819416]#y-axis
+fairness_index = [0.668313,0.617915,0.503658]#y-axis
+delay = [3.410925,9.577313,154.003384]#y-axis
+
+# Plotting
+plt.figure(figsize=(15, 8))
+plt.suptitle('Effect of varying number of users on perfomance metrics',fontsize=16, fontweight='bold')
+# Subplot 1: Reward
+plt.subplot(3, 2, 1)
+plt.plot(number_of_users, reward, marker='o', color='blue', label='Reward')
+plt.title('Effect on Reward')
+plt.xlabel('Number of Users')
+plt.ylabel('Reward')
+plt.grid(True)
+
+# Subplot 2: Energy
+plt.subplot(3, 2, 2)
+plt.plot(number_of_users, energy, marker='o', color='orange', label='Energy')
+plt.title('Effect on Energy')
+plt.xlabel('Number of Users')
+plt.ylabel('Energy (Joules)')
+plt.grid(True)
+
+# Subplot 3: Throughput
+plt.subplot(3, 2, 3)
+plt.plot(number_of_users, throughput, marker='o', color='green', label='Throughput')
+plt.title('Effect on Throughput')
+plt.xlabel('Number of Users')
+plt.ylabel('Throughput')
+plt.grid(True)
+
+# Subplot 4: Fairness Index
+plt.subplot(3, 2, 4)
+plt.plot(number_of_users, fairness_index, marker='o', color='red', label='Fairness Index')
+plt.title('Effect on Fairness Index')
+plt.xlabel('Number of Users')
+plt.ylabel('Fairness Index')
+plt.grid(True)
+
+# Subplot 5: Delay
+plt.subplot(3, 2, 5)
+plt.plot(number_of_users, delay, marker='o', color='purple', label='Delay')
+plt.title('Effect on Delay')
+plt.xlabel('Number of Users')
+plt.ylabel('Delay (ms)')
 plt.grid(True)
 
 plt.tight_layout()
