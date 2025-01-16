@@ -24,6 +24,7 @@ class SBS():
         self.q_throughput_log_reward = 10**3
         self.q_throughput = 1#0**(-7)
         self.q_local_queueing_violation_prob_reward = 10**4
+        self.q_offload_queueing_violation_prob_reward = 10**4
         self.q_offload_ratio_reward = 10**6
         self.set_properties()
 
@@ -233,6 +234,7 @@ class SBS():
         r_min_reward = 0
         temp_reward = 0
         self.total_local_queueing_violation_prob_reward = 0
+        self.total_offload_queueing_violation_prob_reward = 0
         self.total_offload_ratio_reward = 0
         self.urllc_total_rate_per_second = 0
         self.urllc_total_rate_per_slot = 0
@@ -254,6 +256,7 @@ class SBS():
         self.offload_queueing_traffic_constaint_violation_count = 0
         self.local_time_delay_violation_prob_constraint_violation_count = 0
         self.rmin_constraint_violation_count = 0
+        self.offload_time_delay_violation_prob_constraint_violation_count = 0
 
         for urllc_user in urllc_users:
             self.individual_urllc_channel_rate_per_slot_with_penalty.append(urllc_user.achieved_channel_rate_per_slot)
@@ -271,11 +274,13 @@ class SBS():
             self.local_queueing_traffic_constraint_violation_count+=eMBB_User.local_queueing_traffic_constraint_violation_count
             self.offload_queueing_traffic_constaint_violation_count+=eMBB_User.offload_queueing_traffic_constaint_violation_count
             self.local_time_delay_violation_prob_constraint_violation_count+=eMBB_User.local_time_delay_violation_prob_constraint_violation_count
+            self.offload_time_delay_violation_prob_constraint_violation_count+=eMBB_User.offload_time_delay_violation_prob_constraint_violation_count
     
-            queueing_delay_violation_probability = eMBB_User.local_queue_delay_violation_probability()
+            #queueing_delay_violation_probability = eMBB_User.local_queue_delay_violation_probability()
             total_local_traffic_reward+=eMBB_User.local_queueing_traffic_reward()
             self.total_local_traffic_reward+=eMBB_User.local_queueing_traffic_reward()
             self.total_local_queueing_violation_prob_reward += eMBB_User.local_queue_delay_violation_probability()
+            self.total_offload_queueing_violation_prob_reward+=eMBB_User.offload_queue_delay_violation_probability()
             self.total_offload_ratio_reward += eMBB_User.offload_ratio_reward()
             #print('queueing_delay_violation_probability reward: ', queueing_delay_violation_probability)
             self.users_lc_service_rates.append(eMBB_User.service_rate_bits_per_second)
@@ -389,7 +394,7 @@ class SBS():
             self.individual_offload_queue_length_num_tasks.append(eMBB_User.offload_queue_length_num_tasks)
             self.individual_offload_stability_constraint_reward.append(eMBB_User.offload_stability_constraint_reward)
             self.individual_offload_traffic_numerator.append(eMBB_User.offlaod_traffic_numerator)
-            self.individual_local_queueing_violation_prob_reward.append(eMBB_User.queueing_violation_prob_reward)
+            self.individual_local_queueing_violation_prob_reward.append(eMBB_User.local_queueing_violation_prob_reward)
             self.individual_offload_ratio_reward.append(eMBB_User.offloa_ratio_reward)
             self.individual_embb_puncturing_users_sum_data_rates.append(eMBB_User.puncturing_users_sum_data_rates)
             self.individual_embb_num_puncturing_users.append(eMBB_User.numbers_of_puncturing_users)
@@ -614,6 +619,8 @@ class SBS():
         self.offload_queueing_traffic_constaint_violation_count = 0
         self.local_time_delay_violation_prob_constraint_violation_count = 0
         self.rmin_constraint_violation_count = 0
+        self.total_offload_queueing_violation_prob_reward = 0
+        self.offload_time_delay_violation_prob_constraint_violation_count = 0
         
 
     def calculate_fairness(self,eMBB_Users):

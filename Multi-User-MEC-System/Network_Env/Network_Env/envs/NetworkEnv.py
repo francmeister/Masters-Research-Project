@@ -717,6 +717,7 @@ class NetworkEnv(gym.Env):
             eMBB_User.increment_task_queue_timers()
             eMBB_User.split_tasks()
             eMBB_User.available_resource_time_code_block_fn(self.Communication_Channel_1)
+            eMBB_User.max_queue_length = self.max_local_queue_length
        
         self.SBS1.allocate_resource_blocks_URLLC(self.Communication_Channel_1, self.URLLC_Users, self.eMBB_Users, self.step_counter)
         self.step_counter+=1
@@ -1116,11 +1117,11 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.append(self.eMBB_UE_4)
         self.eMBB_Users.append(self.eMBB_UE_5)
         self.eMBB_Users.append(self.eMBB_UE_6)
-        # self.eMBB_Users.append(self.eMBB_UE_7)
-        # self.eMBB_Users.append(self.eMBB_UE_8)
-        # self.eMBB_Users.append(self.eMBB_UE_9)
-        # self.eMBB_Users.append(self.eMBB_UE_10)
-        # self.eMBB_Users.append(self.eMBB_UE_11)
+        self.eMBB_Users.append(self.eMBB_UE_7)
+        self.eMBB_Users.append(self.eMBB_UE_8)
+        self.eMBB_Users.append(self.eMBB_UE_9)
+        self.eMBB_Users.append(self.eMBB_UE_10)
+        self.eMBB_Users.append(self.eMBB_UE_11)
 
         #self.URLLC_Users.append(self.URLLC_UE_1)
         #self.URLLC_Users.append(self.URLLC_UE_2)
