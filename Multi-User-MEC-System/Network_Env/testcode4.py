@@ -162,6 +162,8 @@ energy_consumed = []
 local_energy = []
 tasks_dropped = []
 delays = []
+local_queue_violation_probabilities = []
+offload_ratios = []
 
 
 obs = env.reset()
@@ -221,6 +223,8 @@ for timestep in timesteps:
     local_energies.append(env.eMBB_UE_1.achieved_local_energy_consumption)
     transmit_energies.append(env.eMBB_UE_1.achieved_transmission_energy_consumption)
     delays.append(env.SBS1.delays)
+    local_queue_violation_probabilities.append(env.eMBB_UE_1.local_queue_delay_violation_probability_)
+    offload_ratios.append(env.eMBB_UE_1.allocated_offloading_ratio)
     #print('action: ', action)
     #print('reward: ', reward)
     rewards.append(reward)
@@ -265,14 +269,14 @@ print('max reward: ', max(rewards), 'min reward: ', min(rewards))
 #print('latencies: ', latencies)
 #print('Max Throughput: ', max(throughputs), 'Min Throughput: ', min(throughputs))
 #print(transmit_energies)
-plt.plot(timesteps, rewards, color ="red")
+plt.plot(offload_ratios, local_queue_violation_probabilities, color ="red")
 #plt.plot(timesteps,throughputs, color = "blue")
 #plt.scatter(timesteps,transmit_energies,color = "green")
 #plt.scatter(timesteps,latencies,color = "green")
 #plt.plot(offload_ratios,throughput,color = "black")
 #plt.legend(["rewards", "transmit energies", "latencies"])
-#plt.xlabel("timesteps")
-#plt.ylabel("battery energies")
+plt.xlabel("offloading ratio")
+plt.ylabel("probability of violation")
 #plt.title("Throughput vs Number of Allocated RBs")
 #figure, axis = plt.subplots(1,1)
 

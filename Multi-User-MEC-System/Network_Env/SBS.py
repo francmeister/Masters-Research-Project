@@ -275,7 +275,7 @@ class SBS():
             self.offload_queueing_traffic_constaint_violation_count+=eMBB_User.offload_queueing_traffic_constaint_violation_count
             self.local_time_delay_violation_prob_constraint_violation_count+=eMBB_User.local_time_delay_violation_prob_constraint_violation_count
             self.offload_time_delay_violation_prob_constraint_violation_count+=eMBB_User.offload_time_delay_violation_prob_constraint_violation_count
-    
+            #offload_queue_delay_violation_probability
             #queueing_delay_violation_probability = eMBB_User.local_queue_delay_violation_probability()
             total_local_traffic_reward+=eMBB_User.local_queueing_traffic_reward()
             self.total_local_traffic_reward+=eMBB_User.local_queueing_traffic_reward()
