@@ -73,6 +73,7 @@ class eMBB_UE(User_Equipment):
         self.task_arrival_rate_tasks_per_second = 0
         self.average_task_arrival_rate = 5
         self.Pr_Qs = []
+        self.average_data_rate = 0
         #num_puncturing_users
 
         self.calculate_offloading_rate()
@@ -81,6 +82,7 @@ class eMBB_UE(User_Equipment):
         self.set_properties_eMBB()
 
     def set_properties_eMBB(self):
+        self.average_data_rate = 0
         self.queuing_latency = 0
         self.local_queueing_latency = 0
         self.offload_queueing_latency = 0
@@ -295,9 +297,9 @@ class eMBB_UE(User_Equipment):
         self.computation_time_per_bit = self.cycles_per_bit/self.max_service_rate_cycles_per_slot
         self.T_max_lc = 0.01
         self.Ld_max = round(self.T_max_lc/self.computation_time_per_bit)
-        print('self.computation_time_per_bit: ', self.computation_time_per_bit)
-        print('self.T_max_lc: ', self.T_max_lc)
-        print('self.Ld_max: ', self.Ld_max)
+        # print('self.computation_time_per_bit: ', self.computation_time_per_bit)
+        # print('self.T_max_lc: ', self.T_max_lc)
+        # print('self.Ld_max: ', self.Ld_max)
 
         #self.large_scale_gain_
     
@@ -648,6 +650,7 @@ class eMBB_UE(User_Equipment):
                     #achieved_RB_channel_rates_.append(achieved_RB_channel_rate_)
 
             self.achieved_channel_rate = sum(achieved_RB_channel_rates)
+            self.embb_rate_expectation_over_prev_T_slot_(10,self.achieved_channel_rate)
             #print('achieved_channel_rate: ', self.achieved_channel_rate)
             #print('')
             #print('')
@@ -1770,7 +1773,7 @@ class eMBB_UE(User_Equipment):
         # print('T_max_lc: ', T_max_lc)
         # print('Ld_max: ', Ld_max)
         mew = self.max_service_rate_cycles_per_slot/self.cycles_per_bit
-        self.allocated_offloading_ratio = 0.8
+        self.allocated_offloading_ratio = 0.5
         rho = (self.average_bits_tasks_arriving*(1-self.allocated_offloading_ratio)*self.task_arrival_rate_tasks_per_second)/mew
         #print('rho: ', rho)
         Pr_Lds = []
@@ -1905,10 +1908,11 @@ class eMBB_UE(User_Equipment):
             self.previous_rates_.append(embb_total_rate)
 
         average_rate = sum(self.previous_rates_)/len(self.previous_rates_)
+        self.average_data_rate = average_rate
         return average_rate
     
     def Pr_Qd_off(self,Q):
-        mew = self.embb_rate_expectation_over_prev_T_slot_(10,self.achieved_channel_rate)/1000
+        mew = self.average_data_rate/1000#self.embb_rate_expectation_over_prev_T_slot_(10,self.achieved_channel_rate)/1000
         #print('self.allocated_offloading_ratio: ', self.allocated_offloading_ratio)
         #self.allocated_offloading_ratio =0.8
         if mew > 0:
@@ -1946,8 +1950,83 @@ class eMBB_UE(User_Equipment):
         # print('self.computation_time_per_bit: ', self.computation_time_per_bit)
         # print('T_max_lc: ', T_max_lc)
         # print('Ld_max: ', Ld_max)
+        self.allocated_offloading_ratio = 0.5
+        mew = self.average_data_rate/1000#self.embb_rate_expectation_over_prev_T_slot_(10,self.achieved_channel_rate)/1000
+            #print('self.allocated_offloading_ratio: ', self.allocated_offloading_ratio)
+            #self.allocated_offloading_ratio =0.8
+        if mew > 0:
+            rho = (self.average_task_size*(self.allocated_offloading_ratio)*self.average_task_arrival_rate)/mew
+        else:
+            rho = 0.99
+
+        original_rho = rho
+        if rho >= 1:
+            rho = 0.99
+        else:
+            rho = rho
+
+        self.rho = rho
+
+        if self.UE_label == 1:
+            print('embb user: ', self.UE_label)
+            print('mew: ', mew)
+            print('original_rho: ',original_rho)
+            print('rho: ', rho)
+            print('data rates:',self.previous_rates_)
+            print('Slot data rate: ', self.achieved_channel_rate/1000)
+        Pr_Lds = []
+        queueing_violation_prob = 0
+        
+        # if self.Qd_lc > 0:
+        for Ld_off in range(0,Ld_max+1):
+            Pr_Ld = self.Pr_Ld_off(Ld_off)
+            Pr_Lds.append(Pr_Ld)
+        #print('len(Pr_Lds): ', Pr_Lds)
+        sum_Pr_Lds = sum(Pr_Lds)
+        if sum_Pr_Lds >= 1:
+            sum_Pr_Lds = 0.999876
+        # print('self.Pr_Qs:')
+        # print(self.Pr_Qs)
+
+        queueing_violation_prob = 1 - sum_Pr_Lds
+
+        if self.rho == 0.99:
+            queueing_violation_prob = 0.9419094427221881
+            sum_Pr_Lds = 1-queueing_violation_prob
+
+        self.offload_queue_delay_violation_probability_ = queueing_violation_prob
+        if self.UE_label == 1:
+            print('offload queueing_violation_prob: ',queueing_violation_prob,'sum(sum_Pr_Lds): ', sum_Pr_Lds)
+            print('---------------------------------------------------------------------------------')
+        if queueing_violation_prob > 1:
+            queueing_violation_prob = 1
+        elif queueing_violation_prob < 0:
+            queueing_violation_prob = 0
+
+        #print('local queueing_violation_prob: ', queueing_violation_prob)
+        #print('---------------------------------------------------------------------')
+        queueing_violation_prob_reward = 0
+        if (self.local_queue_delay_violation_probability_constraint-(queueing_violation_prob)) < 0:
+            queueing_violation_prob_reward = (self.local_queue_delay_violation_probability_constraint-(queueing_violation_prob))
+            self.offload_time_delay_violation_prob_constraint_violation_count = 1
+        else:
+            queueing_violation_prob_reward = 1
+            self.offload_time_delay_violation_prob_constraint_violation_count = 0
+        self.offload_queueing_violation_prob_reward = queueing_violation_prob_reward
+        return queueing_violation_prob_reward
+    
+    def offload_queue_delay_violation_probability__(self):
+        T_max_lc = 10*(self.average_task_size*self.computation_time_per_bit)
+        #T_max_lc = 2*((1-self.allocated_offloading_ratio)*self.average_bits_tasks_arriving*self.computation_time_per_bit)
+        Ld_max = round(T_max_lc/self.computation_time_per_bit)
+        Ld_max = 1000
+
+        # print('self.average_bits_tasks_arriving: ', self.average_bits_tasks_arriving)
+        # print('self.computation_time_per_bit: ', self.computation_time_per_bit)
+        # print('T_max_lc: ', T_max_lc)
+        # print('Ld_max: ', Ld_max)
         self.allocated_offloading_ratio = 0.8
-        mew = self.embb_rate_expectation_over_prev_T_slot_(10,self.achieved_channel_rate)/1000
+        mew = self.average_data_rate/1000#self.embb_rate_expectation_over_prev_T_slot_(10,self.achieved_channel_rate)/1000
             #print('self.allocated_offloading_ratio: ', self.allocated_offloading_ratio)
             #self.allocated_offloading_ratio =0.8
         if mew > 0:
@@ -1976,16 +2055,12 @@ class eMBB_UE(User_Equipment):
             Pr_Lds.append(Pr_Ld)
         #print('len(Pr_Lds): ', Pr_Lds)
         sum_Pr_Lds = sum(Pr_Lds)
-        if sum_Pr_Lds >= 1:
-            sum_Pr_Lds = 0.999876
+
         # print('self.Pr_Qs:')
         # print(self.Pr_Qs)
 
         queueing_violation_prob = 1 - sum_Pr_Lds
 
-        if self.rho == 0.99:
-            queueing_violation_prob = 0.9419094427221881
-            sum_Pr_Lds = 1-queueing_violation_prob
 
         self.offload_queue_delay_violation_probability_ = queueing_violation_prob
         if self.UE_label == 1:
