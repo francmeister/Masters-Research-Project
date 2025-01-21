@@ -1768,10 +1768,10 @@ class eMBB_UE(User_Equipment):
         Ld_max = 50#1000
         #Ld_max = 1000
 
-        print('self.average_bits_tasks_arriving: ', self.average_bits_tasks_arriving)
-        print('self.computation_time_per_bit: ', self.computation_time_per_bit)
-        print('T_max_lc: ', T_max_lc)
-        print('Ld_max: ', Ld_max)
+        # print('self.average_bits_tasks_arriving: ', self.average_bits_tasks_arriving)
+        # print('self.computation_time_per_bit: ', self.computation_time_per_bit)
+        # print('T_max_lc: ', T_max_lc)
+        # print('Ld_max: ', Ld_max)
         mew = self.max_service_rate_cycles_per_slot/self.cycles_per_bit
         #self.allocated_offloading_ratio = 0.5
         rho = (self.average_bits_tasks_arriving*(1-self.allocated_offloading_ratio)*self.task_arrival_rate_tasks_per_second)/mew
