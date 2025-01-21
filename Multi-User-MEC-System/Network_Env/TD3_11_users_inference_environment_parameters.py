@@ -222,3 +222,70 @@ plt.grid(True)
 
 plt.tight_layout()
 plt.show()
+
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------
+# Effect of changing task arrival rate on Reward, energy, throughput, fairness, delay and other constraints
+#  
+
+task_arrival_rates = [1, 5, 10, 15, 20]
+reward = []
+energy = []
+throughput = []
+fairness_index = []
+delay = []
+offloading_ratios = []
+battery_energy_constraint = []
+local_traffic_intensity_constraint = []
+offload_traffic_intensity_constraint = []
+rmin_constraint = []
+local_queue_delay_violation_probability_constraint = []
+offload_queue_delay_violation_probability_constraint = []
+
+
+# Plotting
+plt.figure(figsize=(15, 8))
+plt.suptitle('Effect of varying number of users on perfomance metrics',fontsize=16, fontweight='bold')
+# Subplot 1: Reward
+plt.subplot(3, 2, 1)
+plt.plot(number_of_users, reward, marker='o', color='blue', label='Reward')
+plt.title('Effect on Reward')
+plt.xlabel('Number of Users')
+plt.ylabel('Reward')
+plt.grid(True)
+
+# Subplot 2: Energy
+plt.subplot(3, 2, 2)
+plt.plot(number_of_users, energy, marker='o', color='orange', label='Energy')
+plt.title('Effect on Energy')
+plt.xlabel('Number of Users')
+plt.ylabel('Energy (Joules)')
+plt.grid(True)
+
+# Subplot 3: Throughput
+plt.subplot(3, 2, 3)
+plt.plot(number_of_users, throughput, marker='o', color='green', label='Throughput')
+plt.title('Effect on Throughput')
+plt.xlabel('Number of Users')
+plt.ylabel('Throughput')
+plt.grid(True)
+
+# Subplot 4: Fairness Index
+plt.subplot(3, 2, 4)
+plt.plot(number_of_users, fairness_index, marker='o', color='red', label='Fairness Index')
+plt.title('Effect on Fairness Index')
+plt.xlabel('Number of Users')
+plt.ylabel('Fairness Index')
+plt.grid(True)
+
+# Subplot 5: Delay
+plt.subplot(3, 2, 5)
+plt.plot(number_of_users, delay, marker='o', color='purple', label='Delay')
+plt.title('Effect on Delay')
+plt.xlabel('Number of Users')
+plt.ylabel('Delay (ms)')
+plt.grid(True)
+
+plt.tight_layout()
+plt.show()
+

@@ -250,6 +250,8 @@ class SBS():
         self.individual_simulation_total_delay = []
         self.individual_simulation_offload_queueing_delay = []
         self.individual_simulation_local_queueing_delay = []
+        self.individual_local_queue_delay_violation_probability = []
+        self.individual_offload_queue_delay_violation_probability = []
 
         self.battery_energy_constraint_violation_count = 0
         self.local_queueing_traffic_constraint_violation_count = 0
@@ -281,6 +283,8 @@ class SBS():
             self.total_local_traffic_reward+=eMBB_User.local_queueing_traffic_reward()
             self.total_local_queueing_violation_prob_reward += eMBB_User.local_queue_delay_violation_probability()
             self.total_offload_queueing_violation_prob_reward+=eMBB_User.offload_queue_delay_violation_probability()
+            self.individual_local_queue_delay_violation_probability.append(eMBB_User.local_queue_delay_violation_probability_)
+            self.individual_offload_queue_delay_violation_probability.append(eMBB_User.offload_queue_delay_violation_probability_)
             self.total_offload_ratio_reward += eMBB_User.offload_ratio_reward()
             #print('queueing_delay_violation_probability reward: ', queueing_delay_violation_probability)
             self.users_lc_service_rates.append(eMBB_User.service_rate_bits_per_second)
@@ -477,7 +481,7 @@ class SBS():
         #self.achieved_system_reward = fairness_index_normalized
         #return self.achieved_system_reward, urllc_reliability_reward_normalized, self.energy_rewards,self.throughput_rewards
         #print('self.achieved_system_reward: ', self.achieved_system_reward)
-        normalized_reward = self.total_throughput_normalized/self.total_energy_normalized + r_min_reward
+        #normalized_reward = self.total_throughput_normalized/self.total_energy_normalized + r_min_reward
         #return self.achieved_system_reward, temp_reward, self.energy_rewards,self.throughput_rewards
         #print('self.throughput_rewards: ', self.throughput_rewards)
         return self.achieved_system_reward, self.overall_users_reward, self.energy_rewards,self.throughput_rewards
@@ -613,6 +617,8 @@ class SBS():
         self.individual_simulation_total_delay = []
         self.individual_simulation_offload_queueing_delay = []
         self.individual_simulation_local_queueing_delay = []
+        self.individual_local_queue_delay_violation_probability = []
+        self.individual_offload_queue_delay_violation_probability = []
 
         self.battery_energy_constraint_violation_count = 0
         self.local_queueing_traffic_constraint_violation_count = 0
