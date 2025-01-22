@@ -243,27 +243,27 @@ plt.show()
 # offload_queue_delay_violation_probability_constraint = [0.061580055612746036,0.2983827655602641,0.5864354473353665,0.7704808891937528,0.8596693651218752]
 
 task_arrival_rates = [1, 3, 5, 7, 9]
-reward = [15554198.183456,,12092255.675169]
-energy = [0.000715,,0.000700]
-throughput = [29468204.121219,,29391935.651208]
-fairness_index = [0.247918,,0.253474]
-delay = [6.378884,,13.605389]
-offloading_ratios = [,,0.8824378286804184]
-battery_energy_constraint = []
-local_traffic_intensity_constraint = [,,0.008550855085508551]
-offload_traffic_intensity_constraint = [,,0.6377137713771377]
-rmin_constraint = [,,0.6395139513951394]
-local_queue_delay_violation_probability_constraint = [,,0.2151215121512151]
-offload_queue_delay_violation_probability_constraint = [,,0.7808280828082808]
-local_queue_delay_violation_probability = [,,0.10382860515109904]
-offload_queue_delay_violation_probability = [,,0.6570524640443933]
+reward_policy_1 = []
+energy_policy_1 = []
+throughput_policy_1 = []
+fairness_index_policy_1 = []
+delay_policy_1 = []
+offloading_ratios_policy_1 = []
+battery_energy_constraint_policy_1 = []
+local_traffic_intensity_constraint_policy_1 = []
+offload_traffic_intensity_constraint_policy_1 = []
+rmin_constraint_policy_1 = []
+local_queue_delay_violation_probability_constraint_policy_1 = []
+offload_queue_delay_violation_probability_constraint_policy_1 = []
+local_queue_delay_violation_probability_policy_1 = []
+offload_queue_delay_violation_probability_policy_1 = []
 
 # Plotting
 plt.figure(figsize=(15, 8))
 plt.suptitle('Effect of varying Task Arrival Rate on perfomance metrics',fontsize=16, fontweight='bold')
 # Subplot 1: Reward
 plt.subplot(3, 4, 1)
-plt.plot(task_arrival_rates, reward, marker='o', color='blue', label='Reward')
+plt.plot(task_arrival_rates, reward_policy_1, marker='o', color='blue', label='Reward')
 plt.title('Effect on Reward')
 plt.xlabel('Task arrival rate')
 plt.ylabel('Reward')
@@ -271,7 +271,7 @@ plt.grid(True)
 
 # Subplot 2: Energy
 plt.subplot(3, 4, 2)
-plt.plot(task_arrival_rates, energy, marker='o', color='orange', label='Energy')
+plt.plot(task_arrival_rates, energy_policy_1, marker='o', color='orange', label='Energy')
 plt.title('Effect on Energy')
 plt.xlabel('Task arrival rate')
 plt.ylabel('Energy (Joules)')
@@ -279,7 +279,7 @@ plt.grid(True)
 
 # Subplot 3: Throughput
 plt.subplot(3, 4, 3)
-plt.plot(task_arrival_rates, throughput, marker='o', color='green', label='Throughput')
+plt.plot(task_arrival_rates, throughput_policy_1, marker='o', color='green', label='Throughput')
 plt.title('Effect on Throughput')
 plt.xlabel('Task arrival rate')
 plt.ylabel('Throughput')
@@ -287,7 +287,7 @@ plt.grid(True)
 
 # Subplot 4: Fairness Index
 plt.subplot(3, 4, 4)
-plt.plot(task_arrival_rates, fairness_index, marker='o', color='red', label='Fairness Index')
+plt.plot(task_arrival_rates, fairness_index_policy_1, marker='o', color='red', label='Fairness Index')
 plt.title('Effect on Fairness Index')
 plt.xlabel('Task arrival rate')
 plt.ylabel('Fairness Index')
@@ -295,7 +295,7 @@ plt.grid(True)
 
 # Subplot 5: Delay
 plt.subplot(3, 4, 5)
-plt.plot(task_arrival_rates, delay, marker='o', color='purple', label='Delay')
+plt.plot(task_arrival_rates, delay_policy_1, marker='o', color='purple', label='Delay')
 plt.title('Effect on Delay')
 plt.xlabel('Task arrival rate')
 plt.ylabel('Delay (ms)')
@@ -303,56 +303,56 @@ plt.grid(True)
 
 # Subplot 5: Delay
 plt.subplot(3, 4, 6)
-plt.plot(task_arrival_rates, offloading_ratios, marker='o', color='purple', label='Offloading Ratio')
+plt.plot(task_arrival_rates, offloading_ratios_policy_1, marker='o', color='purple', label='Offloading Ratio')
 plt.title('Effect on Offloading Ratio')
 plt.xlabel('Task arrival rate')
 plt.ylabel('Offloading Ratio')
 plt.grid(True)
 
 plt.subplot(3, 4, 7)
-plt.plot(task_arrival_rates, local_traffic_intensity_constraint, marker='o', color='purple', label='Local Traffic Load')
+plt.plot(task_arrival_rates, local_traffic_intensity_constraint_policy_1, marker='o', color='purple', label='Local Traffic Load')
 plt.title('Effect on Local Traffic Load Violation Count')
 plt.xlabel('Task arrival rate')
 plt.ylabel('Local Traffic Load Violation Count')
 plt.grid(True)
 
 plt.subplot(3, 4, 8)
-plt.plot(task_arrival_rates, offload_traffic_intensity_constraint, marker='o', color='purple', label='Offload Traffic Load')
+plt.plot(task_arrival_rates, offload_traffic_intensity_constraint_policy_1, marker='o', color='purple', label='Offload Traffic Load')
 plt.title('Effect on Offload Traffic Load Violation Count')
 plt.xlabel('Task arrival rate')
 plt.ylabel('Offload Traffic Load Violation Count')
 plt.grid(True)
 
 plt.subplot(3, 4, 9)
-plt.plot(task_arrival_rates, rmin_constraint, marker='o', color='purple', label='Rmin Constaint Violation Count')
+plt.plot(task_arrival_rates, rmin_constraint_policy_1, marker='o', color='purple', label='Rmin Constaint Violation Count')
 plt.title('Effect on Rmin Constaint Violation Count')
 plt.xlabel('Task arrival rate')
 plt.ylabel('Rmin Constaint Violation Count')
 plt.grid(True)
 
 plt.subplot(3, 4, 10)
-plt.plot(task_arrival_rates, local_queue_delay_violation_probability, marker='o', color='purple', label='Local Delay Violation Probability')
+plt.plot(task_arrival_rates, local_queue_delay_violation_probability_policy_1, marker='o', color='purple', label='Local Delay Violation Probability')
 plt.title('Effect on Local Delay Violation Probability')
 plt.xlabel('Task arrival rate')
 plt.ylabel('Local Delay Violation Probability')
 plt.grid(True)
 
 plt.subplot(3, 4, 11)
-plt.plot(task_arrival_rates, offload_queue_delay_violation_probability, marker='o', color='purple', label='Offload Delay Violation Probability')
+plt.plot(task_arrival_rates, offload_queue_delay_violation_probability_policy_1, marker='o', color='purple', label='Offload Delay Violation Probability')
 plt.title('Effect on Offload Delay Violation Probability')
 plt.xlabel('Task arrival rate')
 plt.ylabel('Offload Delay Violation Probability')
 plt.grid(True)
 
 plt.subplot(3, 4, 12)
-plt.plot(task_arrival_rates, local_queue_delay_violation_probability_constraint, marker='o', color='purple', label='Local Delay Violation Probability Count')
+plt.plot(task_arrival_rates, local_queue_delay_violation_probability_constraint_policy_1, marker='o', color='purple', label='Local Delay Violation Probability Count')
 plt.title('Effect on Local Delay Violation Probability Constraint')
 plt.xlabel('Task arrival rate')
 plt.ylabel('Local Delay Violation Probability')
 plt.grid(True)
 
 plt.subplot(3, 4, 13)
-plt.plot(task_arrival_rates, offload_queue_delay_violation_probability_constraint, marker='o', color='purple', label='Offload Delay Violation Probability Count')
+plt.plot(task_arrival_rates, offload_queue_delay_violation_probability_constraint_policy_1, marker='o', color='purple', label='Offload Delay Violation Probability Count')
 plt.title('Effect on Offload Delay Violation Probability Constraint')
 plt.xlabel('Task arrival rate')
 plt.ylabel('Offload Delay Violation Probability')

@@ -1496,3 +1496,7 @@ class NetworkEnv(gym.Env):
         self.max_local_queue_length = max_local_queueing_length
         self.min_offloading_queue_length = min_offloading_queueing_length
         self.max_offloading_queue_length = max_offloading_queueing_length
+
+    def change_users_task_arrival_rate(self,new_arrival_rate):
+        for embb_user in self.eMBB_Users:
+            embb_user.average_task_arrival_rate = new_arrival_rate
