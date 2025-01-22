@@ -16,8 +16,8 @@ class SBS():
         self.y_coordinate = np.random.uniform(low=30, high=100)
         self.individual_rewards = []
         self.users_lc_service_rates = []
-        self.q_energy = 1.5*10**10
-        self.q_delay = 5*10**5
+        self.q_energy = 1.5*10**10#1.5*10**10
+        self.q_delay = 10**6
         self.q_total_users_battery_energies_reward = 10**4
         self.q_urllc_reliability_reward = 10**8
         self.q_total_offload_traffic_reward = 10**7
