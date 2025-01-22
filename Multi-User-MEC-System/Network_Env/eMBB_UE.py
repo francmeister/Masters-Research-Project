@@ -66,7 +66,7 @@ class eMBB_UE(User_Equipment):
         self.packet_size_bits = 100 # 12000 bits per packet
         self.cycles_per_packet = self.packet_size_bits*self.cycles_per_bit
         self.max_allowable_latency_ = 2000
-        self.local_queue_delay_violation_probability_constraint = 0.5
+        self.local_queue_delay_violation_probability_constraint = 0.2
         self.num_of_clustered_urllc_users = 0
         self.average_task_size = 200
         self.geometric_probability = 1/self.average_task_size
@@ -74,6 +74,7 @@ class eMBB_UE(User_Equipment):
         self.average_task_arrival_rate = 5
         self.Pr_Qs = []
         self.average_data_rate = 0
+        
         #num_puncturing_users
 
         self.calculate_offloading_rate()
@@ -330,7 +331,7 @@ class eMBB_UE(User_Equipment):
 
         #Specify slot task size, computation cycles and latency requirement
         #self.task_arrival_rate_tasks_per_second = random.randint(self.min_task_arrival_rate_tasks_per_second,self.max_task_arrival_rate_tasks_per_second)
-        self.task_arrival_rate_tasks_per_second = np.random.poisson(5,1)#np.random.poisson(25,1)#np.random.poisson(5,1)
+        self.task_arrival_rate_tasks_per_second = np.random.poisson(self.average_task_arrival_rate,1)#np.random.poisson(25,1)#np.random.poisson(5,1)
         self.task_arrival_rate_tasks_per_second = self.task_arrival_rate_tasks_per_second[0]
         self.task_arrival_rate = self.task_arrival_rate_tasks_per_second
         self.previous_arrival_rate = self.task_arrival_rate_tasks_per_second
@@ -409,7 +410,7 @@ class eMBB_UE(User_Equipment):
             task_sizes_bits = []
             required_cycles = []
             latency_requirements = []
-            #print('self.max_service_rate_cycles_per_slot: ', self.max_service_rate_cycles_per_slot)
+
             if len(self.task_queue) > 0:
                 for task in self.task_queue:
                     task_identities.append(task.task_identifier)
@@ -706,17 +707,17 @@ class eMBB_UE(User_Equipment):
     #     return (channel_rate/1000)
     def local_queueing_traffic_reward(self):
         arrival_rate_tasks_per_slot = (1-self.allocated_offloading_ratio)*self.task_arrival_rate_tasks_per_second
-        service_rate_tasks_per_slot = len(self.dequeued_local_tasks)
+        service_rate_tasks_per_slot = self.max_bits_process_per_slot/self.average_task_size#len(self.dequeued_local_tasks)
         local_traffic_intensity = 0
         reward = 0
-        if len(self.dequeued_local_tasks) > 0:
-            if arrival_rate_tasks_per_slot <= service_rate_tasks_per_slot:
-                reward = 1
-            else:
-                local_traffic_intensity = arrival_rate_tasks_per_slot/service_rate_tasks_per_slot
-                reward = 1-local_traffic_intensity
+        #if len(self.dequeued_local_tasks) > 0:
+        if arrival_rate_tasks_per_slot <= service_rate_tasks_per_slot:
+            reward = 1
         else:
-            reward = -1
+            local_traffic_intensity = arrival_rate_tasks_per_slot/service_rate_tasks_per_slot
+            reward = 1-local_traffic_intensity
+        # else:
+        #     reward = -1
 
         self.local_traffic_intensity = local_traffic_intensity
 
@@ -2042,10 +2043,10 @@ class eMBB_UE(User_Equipment):
 
         self.rho = rho
 
-        # if self.UE_label == 1:
-        #     print('mew: ', mew)
-        #     print('original_rho: ',original_rho)
-        #     print('rho: ', rho)
+        if self.UE_label == 1:
+            print('mew: ', mew)
+            print('original_rho: ',original_rho)
+            print('rho: ', rho)
         Pr_Lds = []
         queueing_violation_prob = 0
         
@@ -2063,9 +2064,9 @@ class eMBB_UE(User_Equipment):
 
 
         self.offload_queue_delay_violation_probability_ = queueing_violation_prob
-        # if self.UE_label == 1:
-        #     print('offload queueing_violation_prob: ',queueing_violation_prob,'sum(sum_Pr_Lds): ', sum_Pr_Lds)
-        #     print('---------------------------------------------------------------------------------')
+        if self.UE_label == 1:
+            print('offload queueing_violation_prob: ',queueing_violation_prob,'sum(sum_Pr_Lds): ', sum_Pr_Lds)
+            print('---------------------------------------------------------------------------------')
         if queueing_violation_prob > 1:
             queueing_violation_prob = 1
         elif queueing_violation_prob < 0:
