@@ -283,6 +283,8 @@ print('throughput - q_energy*energy: ', throughputs[len(throughputs)-1] - energi
 #print(rewards_smooth)
 #axis[0,0].plot(timesteps[window_size-1:], overall_users_reward_smooth)
 axis[0,0].plot(timesteps[window_size-1:], overall_users_reward_smooth)
+#axis[0,0].plot(timesteps[window_size-1:], rewards_smooth)
+rewards_smooth
 #axis[0,0].plot(timesteps, overall_users_reward)
 axis[0,0].set_title('total reward')
 axis[0,0].grid()
