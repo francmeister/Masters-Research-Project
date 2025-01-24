@@ -7,7 +7,6 @@ import pybullet_envs
 import matplotlib.pyplot as plt
 #import pygame, sys, time, random
 import pandas as pd
-
 from numpy import interp
 
 env = gym.make('NetworkEnv-v0')

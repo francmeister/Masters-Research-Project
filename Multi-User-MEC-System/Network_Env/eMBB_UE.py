@@ -1786,7 +1786,7 @@ class eMBB_UE(User_Equipment):
         T_max_lc = 10*(self.average_task_size*self.computation_time_per_bit)
         #T_max_lc = 2*((1-self.allocated_offloading_ratio)*self.average_bits_tasks_arriving*self.computation_time_per_bit)
         Ld_max = round(T_max_lc/self.computation_time_per_bit)
-        Ld_max = 50#1000
+        Ld_max = 30#1000
         #Ld_max = 1000
 
         # print('self.average_bits_tasks_arriving: ', self.average_bits_tasks_arriving)
@@ -1965,7 +1965,7 @@ class eMBB_UE(User_Equipment):
         T_max_lc = 10*(self.average_task_size*self.computation_time_per_bit)
         #T_max_lc = 2*((1-self.allocated_offloading_ratio)*self.average_bits_tasks_arriving*self.computation_time_per_bit)
         Ld_max = round(T_max_lc/self.computation_time_per_bit)
-        Ld_max = 50#1000
+        Ld_max = 30#1000
 
         # print('self.average_bits_tasks_arriving: ', self.average_bits_tasks_arriving)
         # print('self.computation_time_per_bit: ', self.computation_time_per_bit)
