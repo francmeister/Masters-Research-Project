@@ -259,6 +259,12 @@ class SBS():
         self.local_time_delay_violation_prob_constraint_violation_count = 0
         self.rmin_constraint_violation_count = 0
         self.offload_time_delay_violation_prob_constraint_violation_count = 0
+        self.total_local_delay = 0
+        self.total_offload_delay = 0
+        self.total_local_queue_length_tasks = 0
+        self.total_offload_queue_length_tasks = 0
+        self.total_local_queue_length_bits = 0
+        self.total_offload_queue_length_bits = 0
 
         for urllc_user in urllc_users:
             self.individual_urllc_channel_rate_per_slot_with_penalty.append(urllc_user.achieved_channel_rate_per_slot)
@@ -292,6 +298,12 @@ class SBS():
             eMBB_User_delay = eMBB_User.queuing_latency
             self.total_delay += eMBB_User_delay 
             self.sum_queueing_latency+=eMBB_User.queuing_latency
+            self.total_local_delay+=eMBB_User.local_queue_delay_
+            self.total_offload_delay+=eMBB_User.offload_queue_delay_
+            self.total_local_queue_length_tasks+=eMBB_User.local_queue_length_num_tasks
+            self.total_offload_queue_length_tasks+=eMBB_User.offload_queue_length_num_tasks
+            self.total_local_queue_length_bits+=eMBB_User.average_local_queue_length
+            self.total_offload_queue_length_bits+=eMBB_User.average_offload_queue_length
             #print('self.total_delay: ', self.total_delay)
             #eMBB_User_energy_consumption = eMBB_User.achieved_total_energy_consumption_normalized 
             self.total_users_energy_not_normalized+=eMBB_User.achieved_total_energy_consumption
@@ -628,6 +640,12 @@ class SBS():
         self.rmin_constraint_violation_count = 0
         self.total_offload_queueing_violation_prob_reward = 0
         self.offload_time_delay_violation_prob_constraint_violation_count = 0
+        self.total_local_delay = 0
+        self.total_offload_delay = 0
+        self.total_local_queue_length_bits = 0
+        self.total_offload_queue_length_bits = 0
+        self.total_local_queue_length_tasks = 0
+        self.total_offload_queue_length_tasks = 0
         
 
     def calculate_fairness(self,eMBB_Users):

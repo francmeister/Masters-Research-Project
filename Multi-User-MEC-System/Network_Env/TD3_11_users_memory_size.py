@@ -42,20 +42,14 @@ delay_rewards_10_6 = rewards_throughput_energy_10_6[:,4]
 timesteps_10_4 = rewards_throughput_energy_10_4[:,0]
 timesteps_10_5 = rewards_throughput_energy_10_5[:,0]
 timesteps_10_6 = rewards_throughput_energy_10_6[:,0]
-#timesteps_256_steps = rewards_throughput_energy_256_steps[:,0]
-# timesteps_3_users = rewards_throughput_energy_3_user[:,0]
-# timesteps_5_users = rewards_throughput_energy_5_user[:,0]
-# timesteps_7_users = rewards_throughput_energy_7_user[:,0]
-# timesteps_9_users = rewards_throughput_energy_9_user[:,0]
-# timesteps_11_users = rewards_throughput_energy_11_user[:,0]
 
-# rewards_1_users = rewards_throughput_energy_1_user[:,1]
-# rewards_3_users = rewards_throughput_energy_3_user[:,1]
-# rewards_5_users = rewards_throughput_energy_5_user[:,1]
-# rewards_7_users = rewards_throughput_energy_7_user[:,1]
-# rewards_9_users = rewards_throughput_energy_9_user[:,1]
-# rewards_11_users = rewards_throughput_energy_11_user[:,1]
+#------------------------------------------------------------------------------------------------------------------------------------------------
+overall_users_reward_10_4 = throughput_rewards_10_4 - 10**8*energy_rewards_10_4 - 10**5*delay_rewards_10_4
+overall_users_reward_10_5 = throughput_rewards_10_5 - 10**8*energy_rewards_10_5 - 10**5*delay_rewards_10_5
+overall_users_reward_10_6 = throughput_rewards_10_6 - 10**8*energy_rewards_10_6 - 10**5*delay_rewards_10_6
 
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
 
 def moving_average(data, window_size):
     """Compute the moving average of data."""
@@ -96,6 +90,10 @@ overall_users_reward_10_6_smooth = moving_average(overall_users_reward_10_6, win
 energy_rewards_10_4_smooth = moving_average(energy_rewards_10_4, window_size)
 energy_rewards_10_5_smooth = moving_average(energy_rewards_10_5, window_size)
 energy_rewards_10_6_smooth = moving_average(energy_rewards_10_6, window_size)
+
+energy_rewards_10_4_smooth = energy_rewards_10_4_smooth/10**3
+energy_rewards_10_5_smooth = energy_rewards_10_5_smooth/10**3
+energy_rewards_10_6_smooth = energy_rewards_10_6_smooth/10**3
 #energy_rewards_256_steps_smooth = moving_average(energy_rewards_256_steps, window_size)
 
 throughput_rewards_10_4_smooth = moving_average(throughput_rewards_10_4, window_size)
@@ -169,46 +167,65 @@ for timestep in timesteps_10_6:
     new_timesteps_10_6.append(count)
     count+=1
 
-figure, axis = plt.subplots(2,2)
+figure, axis = plt.subplots(2,2,figsize=(10, 8))
+
+title_fontsize = 15
+xlabel_fontsize = 15
+ylabel_fontsize = 15
+legend_fontsize = 15
+x_and_y_tick_fontsize = 15
 
 axis[0,0].plot(new_timesteps_10_4[window_size-1:], overall_users_reward_10_4_smooth, color="green", label=r"TD3 $10^{4}$ Memory Size")
 axis[0,0].plot(new_timesteps_10_5[window_size-1:], overall_users_reward_10_5_smooth, color="red", label=r"TD3 $10^{5}$ Memory Size")
-axis[0,0].plot(new_timesteps_10_6[window_size-1:], overall_users_reward_10_6_smooth, color="brown", label=r"TD3 $10^{6}$ Memory Size")
+axis[0,0].plot(new_timesteps_10_6[window_size-1:], overall_users_reward_10_6_smooth, color="purple", label=r"TD3 $10^{6}$ Memory Size")
 #axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
-axis[0,0].set_title('Total System Reward')
+axis[0,0].set_title('Total System Reward',fontsize=title_fontsize, fontweight='bold')
 axis[0,0].grid()
-axis[0,0].set_xlabel('Episode')
+axis[0,0].set_xlabel('Episode',fontsize=xlabel_fontsize)
+axis[0,0].set_ylabel('Reward',fontsize=ylabel_fontsize)
 axis[0,0].legend(loc="lower right")
+axis[0,0].legend(loc="lower right",fontsize=legend_fontsize)
+axis[0,0].tick_params(axis='x', labelsize=x_and_y_tick_fontsize)
+axis[0,0].tick_params(axis='y', labelsize=x_and_y_tick_fontsize)
 
-axis[0,1].plot(new_timesteps_10_4[window_size-1:], throughput_rewards_10_4_smooth, color="green", label="1 User")
-axis[0,1].plot(new_timesteps_10_5[window_size-1:], throughput_rewards_10_5_smooth, color="red", label="1 User")
-axis[0,1].plot(new_timesteps_10_6[window_size-1:], throughput_rewards_10_6_smooth, color="brown", label='3 Users')
+axis[0,1].plot(new_timesteps_10_4[window_size-1:], throughput_rewards_10_4_smooth, color="green", label=r"TD3 $10^{4}$ Memory Size")
+axis[0,1].plot(new_timesteps_10_5[window_size-1:], throughput_rewards_10_5_smooth, color="red", label=r"TD3 $10^{5}$ Memory Size")
+axis[0,1].plot(new_timesteps_10_6[window_size-1:], throughput_rewards_10_6_smooth, color="purple", label=r"TD3 $10^{6}$ Memory Size")
 #axis[0,1].plot(timesteps_256_steps[window_size-1:], throughput_rewards_256_steps_smooth, color="blue", label='3 Users')
-axis[0,1].set_title('Sum Data Rates')
-axis[0,1].set_xlabel('Episode')
-axis[0,1].set_ylabel('Data Rate (bits/s)')
+axis[0,1].set_title('Sum Data Rate',fontsize=title_fontsize, fontweight='bold')
+axis[0,1].set_xlabel('Episode',fontsize=xlabel_fontsize)
+axis[0,1].set_ylabel('Data Rate (bits/s)',fontsize=ylabel_fontsize)
 axis[0,1].grid()
+axis[0,1].legend(loc="upper left",fontsize=10)
+axis[0,1].tick_params(axis='x', labelsize=x_and_y_tick_fontsize)
+axis[0,1].tick_params(axis='y', labelsize=x_and_y_tick_fontsize)
 #axis[0,0].legend(["TD3 32 step limit","TD3 128 step limits","TD3 256 step limits"], loc="upper left")
 
-axis[1,0].plot(new_timesteps_10_4[window_size-1:], energy_rewards_10_4_smooth, color="green", label="1 User")
-axis[1,0].plot(new_timesteps_10_5[window_size-1:], energy_rewards_10_5_smooth, color="red", label="1 User")
-axis[1,0].plot(new_timesteps_10_6[window_size-1:], energy_rewards_10_6_smooth, color="brown", label='3 Users')
+axis[1,0].plot(new_timesteps_10_4[window_size-1:], energy_rewards_10_4_smooth, color="green", label=r"TD3 $10^{4}$ Memory Size")
+axis[1,0].plot(new_timesteps_10_5[window_size-1:], energy_rewards_10_5_smooth, color="red", label=r"TD3 $10^{5}$ Memory Size")
+axis[1,0].plot(new_timesteps_10_6[window_size-1:], energy_rewards_10_6_smooth, color="purple", label=r"TD3 $10^{6}$ Memory Size")
 #axis[1,0].plot(timesteps_256_steps[window_size-1:], energy_rewards_256_steps_smooth, color="blue", label='3 Users')
-axis[1,0].set_title('Energy Consumption')
-axis[1,0].set_xlabel('Episode')
-axis[1,0].set_ylabel('Energy (J)')
+axis[1,0].set_title('Sum Energy Consumption',fontsize=title_fontsize, fontweight='bold')
+axis[1,0].set_xlabel('Episode',fontsize=xlabel_fontsize)
+axis[1,0].set_ylabel('Energy (J)',fontsize=ylabel_fontsize)
 axis[1,0].grid()
+axis[1,0].legend(loc="upper right",fontsize=legend_fontsize)
+axis[1,0].tick_params(axis='x', labelsize=x_and_y_tick_fontsize)
+axis[1,0].tick_params(axis='y', labelsize=x_and_y_tick_fontsize)
 #axis[0,0].legend(["TD3 32 step limit","TD3 128 step limits","TD3 256 step limits"], loc="upper left")
 
 
-axis[1,1].plot(new_timesteps_10_4[window_size-1:], delay_rewards_10_4_smooth, color="green", label="1 User")
-axis[1,1].plot(new_timesteps_10_5[window_size-1:], delay_rewards_10_5_smooth, color="red", label="1 User")
-axis[1,1].plot(new_timesteps_10_6[window_size-1:], delay_rewards_10_6_smooth, color="brown", label='3 Users')
+axis[1,1].plot(new_timesteps_10_4[window_size-1:], delay_rewards_10_4_smooth, color="green", label=r"TD3 $10^{4}$ Memory Size")
+axis[1,1].plot(new_timesteps_10_5[window_size-1:], delay_rewards_10_5_smooth, color="red", label=r"TD3 $10^{5}$ Memory Size")
+axis[1,1].plot(new_timesteps_10_6[window_size-1:], delay_rewards_10_6_smooth, color="purple", label=r"TD3 $10^{6}$ Memory Size")
 #axis[1,1].plot(timesteps_256_steps[window_size-1:], delay_rewards_256_steps_smooth, color="blue", label='3 Users')
-axis[1,1].set_title('Sum Delay')
-axis[1,1].set_xlabel('Episode')
-axis[1,1].set_ylabel('Delay (ms)')
+axis[1,1].set_title('Sum Delay',fontsize=title_fontsize, fontweight='bold')
+axis[1,1].set_xlabel('Episode',fontsize=xlabel_fontsize)
+axis[1,1].set_ylabel('Delay (ms)',fontsize=ylabel_fontsize)
 axis[1,1].grid()
+axis[1,1].legend(loc="upper right",fontsize=legend_fontsize)
+axis[1,1].tick_params(axis='x', labelsize=x_and_y_tick_fontsize)
+axis[1,1].tick_params(axis='y', labelsize=x_and_y_tick_fontsize)
 #axis[0,0].legend(["TD3 32 step limit","TD3 128 step limits","TD3 256 step limits"], loc="upper left")
 
 #plt.plot(new_timesteps[window_size-1:], overall_users_reward_11_users_smooth, color="blue", label='7 Users')

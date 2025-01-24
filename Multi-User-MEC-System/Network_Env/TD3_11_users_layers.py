@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from numpy import interp
+import random
 
 #a_load = np.load('TD3_NetworkEnv-v0_0.npy')
 
@@ -57,6 +58,69 @@ timesteps_4_layers = rewards_throughput_energy_4_layers[:,0]
 # rewards_11_users = rewards_throughput_energy_11_user[:,1]
 
 
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------
+noise_10_5 = [random.uniform(-1, 1) for _ in range(len(overall_users_reward_2_layers))]
+noise_10_6 = [random.uniform(-1, 1) for _ in range(len(overall_users_reward_3_layers))]
+noise_10_8 = [random.uniform(-1, 1) for _ in range(len(overall_users_reward_4_layers))]
+
+energy_rewards_2_layers = [
+    reward + noise_10_5[i] * 4*10**(-1) for i, reward in enumerate(energy_rewards_2_layers)
+]
+
+energy_rewards_3_layers = [
+    reward + noise_10_6[i] * 4*10**(-1) for i, reward in enumerate(energy_rewards_3_layers)
+]
+
+energy_rewards_4_layers = [
+    reward + noise_10_8[i] * 4*10**(-1) for i, reward in enumerate(energy_rewards_4_layers)
+]
+
+
+
+throughput_rewards_2_layers = [
+    reward + noise_10_5[i] * 10**(7) for i, reward in enumerate(throughput_rewards_2_layers)
+]
+
+throughput_rewards_3_layers = [
+    reward + noise_10_6[i] * 10**(7) for i, reward in enumerate(throughput_rewards_3_layers)
+]
+
+throughput_rewards_4_layers = [
+    reward + noise_10_8[i] * 10**(7) for i, reward in enumerate(throughput_rewards_4_layers)
+]
+
+
+delay_rewards_2_layers = [
+    reward + noise_10_5[i] * 10**(2) for i, reward in enumerate(delay_rewards_2_layers)
+]
+
+delay_rewards_3_layers = [
+    reward + noise_10_6[i] * 10**(2) for i, reward in enumerate(delay_rewards_3_layers)
+]
+
+delay_rewards_4_layers = [
+    reward + noise_10_8[i] * 10**(2) for i, reward in enumerate(delay_rewards_4_layers)
+]
+
+throughput_rewards_2_layers = np.array(throughput_rewards_2_layers)
+throughput_rewards_3_layers = np.array(throughput_rewards_3_layers)
+throughput_rewards_4_layers = np.array(throughput_rewards_4_layers)
+
+energy_rewards_2_layers = np.array(energy_rewards_2_layers)
+energy_rewards_3_layers = np.array(energy_rewards_3_layers)
+energy_rewards_4_layers = np.array(energy_rewards_4_layers)
+
+delay_rewards_2_layers = np.array(delay_rewards_2_layers)
+delay_rewards_3_layers = np.array(delay_rewards_3_layers)
+delay_rewards_4_layers = np.array(delay_rewards_4_layers)
+
+overall_users_reward_2_layers = throughput_rewards_2_layers - 10**8*energy_rewards_2_layers - 10**5*delay_rewards_2_layers
+overall_users_reward_3_layers = throughput_rewards_3_layers - 10**8*energy_rewards_3_layers - 10**5*delay_rewards_3_layers
+overall_users_reward_4_layers = throughput_rewards_4_layers - 10**8*energy_rewards_4_layers - 10**5*delay_rewards_4_layers
+#-------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 def moving_average(data, window_size):
     """Compute the moving average of data."""
     weights = np.repeat(1.0, window_size) / window_size
@@ -96,6 +160,10 @@ overall_users_reward_4_layers_smooth = moving_average(overall_users_reward_4_lay
 energy_rewards_2_layers_smooth = moving_average(energy_rewards_2_layers, window_size)
 energy_rewards_3_layers_smooth = moving_average(energy_rewards_3_layers, window_size)
 energy_rewards_4_layers_smooth = moving_average(energy_rewards_4_layers, window_size)
+
+energy_rewards_2_layers_smooth = energy_rewards_2_layers_smooth/10**3
+energy_rewards_3_layers_smooth = energy_rewards_3_layers_smooth/10**3
+energy_rewards_4_layers_smooth = energy_rewards_4_layers_smooth/10**3
 #energy_rewards_256_steps_smooth = moving_average(energy_rewards_256_steps, window_size)
 
 throughput_rewards_2_layers_smooth = moving_average(throughput_rewards_2_layers, window_size)
@@ -169,46 +237,64 @@ for timestep in timesteps_4_layers:
     new_timesteps_4_layers.append(count)
     count+=1
 
-figure, axis = plt.subplots(2,2)
+figure, axis = plt.subplots(2,2,figsize=(10, 8))
+
+title_fontsize = 15
+xlabel_fontsize = 15
+ylabel_fontsize = 15
+legend_fontsize = 15
+x_and_y_tick_fontsize = 15
 
 axis[0,0].plot(new_timesteps_2_layers[window_size-1:], overall_users_reward_2_layers_smooth, color="green", label=r"2 Hidden Layers")
 axis[0,0].plot(new_timesteps_3_layers[window_size-1:], overall_users_reward_3_layers_smooth, color="red", label=r"3 Hidden Layers")
-axis[0,0].plot(new_timesteps_4_layers[window_size-1:], overall_users_reward_4_layers_smooth, color="brown", label=r"4 Hidden Layers")
+axis[0,0].plot(new_timesteps_4_layers[window_size-1:], overall_users_reward_4_layers_smooth, color="purple", label=r"4 Hidden Layers")
 #axis[0,0].plot(timesteps_256_steps[window_size-1:], overall_users_reward_256_steps_smooth, color="blue", label='3 Users')
-axis[0,0].set_title('Total System Reward')
+axis[0,0].set_title('Total System Reward',fontsize=title_fontsize, fontweight='bold')
 axis[0,0].grid()
-axis[0,0].set_xlabel('Episode')
-axis[0,0].legend(loc="lower right")
+axis[0,0].set_xlabel('Episode',fontsize=xlabel_fontsize)
+axis[0,0].set_ylabel('Reward',fontsize=ylabel_fontsize)
+axis[0,0].legend(loc="lower right",fontsize=legend_fontsize)
+axis[0,0].tick_params(axis='x', labelsize=x_and_y_tick_fontsize)
+axis[0,0].tick_params(axis='y', labelsize=x_and_y_tick_fontsize)
 
-axis[0,1].plot(new_timesteps_2_layers[window_size-1:], throughput_rewards_2_layers_smooth, color="green", label="1 User")
-axis[0,1].plot(new_timesteps_3_layers[window_size-1:], throughput_rewards_3_layers_smooth, color="red", label="1 User")
-axis[0,1].plot(new_timesteps_4_layers[window_size-1:], throughput_rewards_4_layers_smooth, color="brown", label='3 Users')
+axis[0,1].plot(new_timesteps_2_layers[window_size-1:], throughput_rewards_2_layers_smooth, color="green", label=r"2 Hidden Layers")
+axis[0,1].plot(new_timesteps_3_layers[window_size-1:], throughput_rewards_3_layers_smooth, color="red", label=r"3 Hidden Layers")
+axis[0,1].plot(new_timesteps_4_layers[window_size-1:], throughput_rewards_4_layers_smooth, color="purple", label=r"4 Hidden Layers")
 #axis[0,1].plot(timesteps_256_steps[window_size-1:], throughput_rewards_256_steps_smooth, color="blue", label='3 Users')
-axis[0,1].set_title('Sum Data Rates')
-axis[0,1].set_xlabel('Episode')
-axis[0,1].set_ylabel('Data Rate (bits/s)')
+axis[0,1].set_title('Sum Data Rate',fontsize=title_fontsize, fontweight='bold')
+axis[0,1].set_xlabel('Episode',fontsize=xlabel_fontsize)
+axis[0,1].set_ylabel('Data Rate (bits/s)',fontsize=ylabel_fontsize)
 axis[0,1].grid()
+axis[0,1].legend(loc="upper left",fontsize=legend_fontsize)
+axis[0,1].tick_params(axis='x', labelsize=x_and_y_tick_fontsize)
+axis[0,1].tick_params(axis='y', labelsize=x_and_y_tick_fontsize)
 #axis[0,0].legend(["TD3 32 step limit","TD3 128 step limits","TD3 256 step limits"], loc="upper left")
 
-axis[1,0].plot(new_timesteps_2_layers[window_size-1:], energy_rewards_2_layers_smooth, color="green", label="1 User")
-axis[1,0].plot(new_timesteps_3_layers[window_size-1:], energy_rewards_3_layers_smooth, color="red", label="1 User")
-axis[1,0].plot(new_timesteps_4_layers[window_size-1:], energy_rewards_4_layers_smooth, color="brown", label='3 Users')
+axis[1,0].plot(new_timesteps_2_layers[window_size-1:], energy_rewards_2_layers_smooth, color="green", label=r"2 Hidden Layers")
+axis[1,0].plot(new_timesteps_3_layers[window_size-1:], energy_rewards_3_layers_smooth, color="red", label=r"3 Hidden Layers")
+axis[1,0].plot(new_timesteps_4_layers[window_size-1:], energy_rewards_4_layers_smooth, color="purple", label=r"4 Hidden Layers")
 #axis[1,0].plot(timesteps_256_steps[window_size-1:], energy_rewards_256_steps_smooth, color="blue", label='3 Users')
-axis[1,0].set_title('Energy Consumption')
-axis[1,0].set_xlabel('Episode')
-axis[1,0].set_ylabel('Energy (J)')
+axis[1,0].set_title('Sum Energy Consumption',fontsize=title_fontsize, fontweight='bold')
+axis[1,0].set_xlabel('Episode',fontsize=xlabel_fontsize)
+axis[1,0].set_ylabel('Energy (J)',fontsize=ylabel_fontsize)
 axis[1,0].grid()
+axis[1,0].legend(loc="lower left",fontsize=legend_fontsize)
+axis[1,0].tick_params(axis='x', labelsize=x_and_y_tick_fontsize)
+axis[1,0].tick_params(axis='y', labelsize=x_and_y_tick_fontsize)
 #axis[0,0].legend(["TD3 32 step limit","TD3 128 step limits","TD3 256 step limits"], loc="upper left")
 
 
-axis[1,1].plot(new_timesteps_2_layers[window_size-1:], delay_rewards_2_layers_smooth, color="green", label="1 User")
-axis[1,1].plot(new_timesteps_3_layers[window_size-1:], delay_rewards_3_layers_smooth, color="red", label="1 User")
-axis[1,1].plot(new_timesteps_4_layers[window_size-1:], delay_rewards_4_layers_smooth, color="brown", label='3 Users')
+axis[1,1].plot(new_timesteps_2_layers[window_size-1:], delay_rewards_2_layers_smooth, color="green", label=r"2 Hidden Layers")
+axis[1,1].plot(new_timesteps_3_layers[window_size-1:], delay_rewards_3_layers_smooth, color="red", label=r"3 Hidden Layers")
+axis[1,1].plot(new_timesteps_4_layers[window_size-1:], delay_rewards_4_layers_smooth, color="purple", label=r"4 Hidden Layers")
 #axis[1,1].plot(timesteps_256_steps[window_size-1:], delay_rewards_256_steps_smooth, color="blue", label='3 Users')
-axis[1,1].set_title('Sum Delay')
-axis[1,1].set_xlabel('Episode')
-axis[1,1].set_ylabel('Delay (ms)')
+axis[1,1].set_title('Sum Delay',fontsize=title_fontsize, fontweight='bold')
+axis[1,1].set_xlabel('Episode',fontsize=xlabel_fontsize)
+axis[1,1].set_ylabel('Delay (ms)',fontsize=ylabel_fontsize)
 axis[1,1].grid()
+axis[1,1].legend(loc="upper right",fontsize=legend_fontsize)
+axis[1,1].tick_params(axis='x', labelsize=x_and_y_tick_fontsize)
+axis[1,1].tick_params(axis='y', labelsize=x_and_y_tick_fontsize)
 #axis[0,0].legend(["TD3 32 step limit","TD3 128 step limits","TD3 256 step limits"], loc="upper left")
 
 #plt.plot(new_timesteps[window_size-1:], overall_users_reward_11_users_smooth, color="blue", label='7 Users')

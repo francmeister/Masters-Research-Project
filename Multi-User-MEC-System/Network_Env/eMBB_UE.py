@@ -298,6 +298,8 @@ class eMBB_UE(User_Equipment):
         self.computation_time_per_bit = self.cycles_per_bit/self.max_service_rate_cycles_per_slot
         self.T_max_lc = 0.01
         self.Ld_max = round(self.T_max_lc/self.computation_time_per_bit)
+        self.offload_queue_delay_ = 0
+        self.local_queue_delay_ = 0
         # print('self.computation_time_per_bit: ', self.computation_time_per_bit)
         # print('self.T_max_lc: ', self.T_max_lc)
         # print('self.Ld_max: ', self.Ld_max)
@@ -793,6 +795,8 @@ class eMBB_UE(User_Equipment):
         lc_cpu_service_rate = []
         processed_bits_ = []
 
+        self.local_queue_delay_ = 0
+
         if len(self.dequeued_local_tasks) > 0:
             for dequeued_local_task in self.dequeued_local_tasks:
                 task_identities.append(dequeued_local_task.task_identifier)
@@ -800,6 +804,7 @@ class eMBB_UE(User_Equipment):
                 task_attained_queueing_latency.append(dequeued_local_task.queue_timer)
                 dequeued_task_size.append(dequeued_local_task.slot_task_size)
                 lc_cpu_service_rate
+                self.local_queue_delay_+=dequeued_local_task.queue_timer
 
             for dequeued_local_task in self.dequeued_local_tasks:
                 total_sum_size_dequeued_tasks.append(sum(dequeued_task_size))
@@ -826,6 +831,10 @@ class eMBB_UE(User_Equipment):
             #print(total_sum_size_dequeued_tasks)
             #print('')
 
+            self.local_queue_delay_ = self.local_queue_delay_/len(self.dequeued_local_tasks)
+        #average_local_queue_length
+        # if self.UE_label == 1:
+        #     print('self.local_queue_delay_: ', self.local_queue_delay_)
         #print(' ')
         #print(' ')
 
@@ -887,6 +896,7 @@ class eMBB_UE(User_Equipment):
         total_size_bits_offloaded = []
         task_sizes = []
         has_transmitted = False
+        self.offload_queue_delay_ = 0
         if len(self.dequeued_offload_tasks) > 0:
             has_transmitted = True
             for dequeued_offload_task in self.dequeued_offload_tasks:
@@ -896,6 +906,7 @@ class eMBB_UE(User_Equipment):
                 achieved_throughput.append(self.achieved_channel_rate/1000)
                 number_of_allocated_RBs.append(sum(self.allocated_RBs))
                 task_sizes.append(dequeued_offload_task.slot_task_size)
+                self.offload_queue_delay_+=dequeued_offload_task.queue_timer
                 
 
             for dequeued_offload_task in self.dequeued_offload_tasks:    
@@ -919,7 +930,10 @@ class eMBB_UE(User_Equipment):
             # print(' ')
             # print('Achieved TTI channel rate: ', self.achieved_channel_rate/1000)
             # print(' ')
-
+            self.offload_queue_delay_ = self.offload_queue_delay_/len(self.dequeued_offload_tasks)
+        # if self.UE_label == 1:
+        #     print('self.offload_queue_delay_: ', self.offload_queue_delay_)
+        #     #print('')
         self.check_completed_tasks()
         #self.achieved_transmission_delay = 1
         if has_transmitted == True:
@@ -1011,6 +1025,12 @@ class eMBB_UE(User_Equipment):
             self.queuing_latency = 0
             self.local_queueing_latency = 0
             self.offload_queueing_latency = 0
+
+        # if self.UE_label == 1:
+        #     print('self.queuing_latency: ', self.queuing_latency)
+        #     print('')
+        #     print('self.local_queueing_latency: ', self.local_queueing_latency)
+        #     print('self.offload_queueing_latency: ', self.offload_queueing_latency)
         #print('self.queuing_latency: ', self.queuing_latency)
         
 
