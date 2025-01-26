@@ -288,6 +288,29 @@ rmin_constraint_policy_1 = [0.3357335733573357,0.32043204320432045,0.33303330333
 local_queue_delay_violation_probability_policy_1 = [0.06925805858144,0.21146634612378362,0.2981881850018293,0.3608381977213665,0.38301869344785555]
 offload_queue_delay_violation_probability_policy_1 = [0.21989117920332524,0.612311386319155,0.8242036145319931,0.9024564529449094,0.9262015445206567]
 
+
+reward_policy_2 = []
+energy_policy_2 = []
+throughput_policy_2 = []
+fairness_index_policy_2 = []
+delay_policy_2 = []
+
+local_delay_policy_2 = []
+offload_delay_policy_2 = []
+local_queue_length_tasks_policy_2 = []
+offload_queue_length_tasks_policy_2 = []
+local_queue_length_bits_policy_2 = []
+offload_queue_length_bits_policy_2 = []
+
+offloading_ratios_policy_2 = []
+battery_energy_constraint_policy_2 = [0.0,0.0,0.0,0.0,0.0]
+local_traffic_intensity_constraint_policy_2 = []
+offload_traffic_intensity_constraint_policy_2 = []
+local_queue_delay_violation_probability_constraint_policy_2 = []
+offload_queue_delay_violation_probability_constraint_policy_2 = []
+rmin_constraint_policy_2 = []
+local_queue_delay_violation_probability_policy_2 = []
+offload_queue_delay_violation_probability_policy_2 = []
 # Plotting
 plt.figure(figsize=(15, 8))
 plt.suptitle('Effect of varying Task Arrival Rate on perfomance metrics',fontsize=16, fontweight='bold')
