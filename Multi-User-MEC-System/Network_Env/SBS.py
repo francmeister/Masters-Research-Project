@@ -20,7 +20,7 @@ class SBS():
         self.q_delay = 10**5
         self.q_total_users_battery_energies_reward = 10**4
         self.q_urllc_reliability_reward = 10**8
-        self.q_total_offload_traffic_reward = 1.5*10**6
+        self.q_total_offload_traffic_reward = 1.5*10**7
         self.q_total_local_traffic_reward = 10**7
         self.q_throughput_log_reward = 2*10**6
         self.q_throughput = 1#0**(-7)
@@ -296,7 +296,7 @@ class SBS():
             #print('queueing_delay_violation_probability reward: ', queueing_delay_violation_probability)
             self.users_lc_service_rates.append(eMBB_User.service_rate_bits_per_second)
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
-            eMBB_User_delay = eMBB_User.queuing_latency
+            #eMBB_User_delay = eMBB_User.queuing_latency
             self.total_delay += eMBB_User_delay 
             self.sum_queueing_latency+=eMBB_User.queuing_latency
             self.total_local_delay+=eMBB_User.local_queue_delay_

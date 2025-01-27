@@ -1572,13 +1572,16 @@ class eMBB_UE(User_Equipment):
 
     def new_time_delay_calculation(self):
         average_task_cycles_per_packet = 0
+        self.computation_time_per_bit
+        queue_length_bits = 0
         if len(self.local_queue) > 0:
             for task in self.local_queue:
                 average_task_cycles_per_packet+=task.required_computation_cycles
+                queue_length_bits+=task.slot_task_size
             average_task_cycles_per_packet = average_task_cycles_per_packet/len(self.local_queue)
 
         local_computation_time = average_task_cycles_per_packet/self.max_service_rate_cycles_per_slot
-        local_queueing_time = len(self.local_queue)*local_computation_time
+        local_queueing_time = queue_length_bits*self.computation_time_per_bit#len(self.local_queue)*local_computation_time
         local_delay = local_computation_time+local_queueing_time
 
         average_packet_size_bits = 0
@@ -1598,9 +1601,10 @@ class eMBB_UE(User_Equipment):
         #print('expected_rate_over_prev_T_slot_ms: ', expected_rate_over_prev_T_slot_ms)
         #print('average_packet_size_bits: ', average_packet_size_bits)
         #print('len(self.communication_queue): ', len(self.communication_queue))
-
+        #print('expected_rate_over_prev_T_slot_ms: ', expected_rate_over_prev_T_slot_ms)
         #if expected_rate_over_prev_T_slot_ms > 0:
-        offload_queueing_time = (average_packet_size_bits/self.average_offloading_rate)*len(self.communication_queue)
+        offload_queueing_time = (average_packet_size_bits/expected_rate_over_prev_T_slot_ms)*len(self.communication_queue)
+        #print('eMBB: ', self.UE_label, 'offload_queueing_time: ', offload_queueing_time)
         #else:
             #offload_queueing_time = (average_packet_size_bits)*len(self.communication_queue)
         offloading_delay = offload_queueing_time + 1
@@ -1626,6 +1630,7 @@ class eMBB_UE(User_Equipment):
         # print('self.offload_queue_length: ', self.offload_queue_length)
         # print('local_delay: ', local_delay)
         # print('offloading_delay: ', offloading_delay)
+        #print('eMBB UE: ', self.UE_label, 'local_delay: ', local_delay, 'offloading_delay: ', offloading_delay)
 
         # self.local_queue_delay = local_delay
         # self.offload_queue_delay = offloading_delay
