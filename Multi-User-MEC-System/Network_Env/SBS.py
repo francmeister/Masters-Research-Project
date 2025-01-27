@@ -22,7 +22,7 @@ class SBS():
         self.q_urllc_reliability_reward = 10**8
         self.q_total_offload_traffic_reward = 10**7
         self.q_total_local_traffic_reward = 2*10**6
-        self.q_throughput_log_reward = 10**3
+        self.q_throughput_log_reward = 2*10**6
         self.q_throughput = 1#0**(-7)
         self.q_local_queueing_violation_prob_reward = 10**7
         self.q_offload_queueing_violation_prob_reward = 10**7
@@ -288,8 +288,8 @@ class SBS():
             #queueing_delay_violation_probability = eMBB_User.local_queue_delay_violation_probability()
             total_local_traffic_reward+=eMBB_User.local_queueing_traffic_reward()
             self.total_local_traffic_reward+=eMBB_User.local_queueing_traffic_reward()
-            self.total_local_queueing_violation_prob_reward += eMBB_User.local_queue_delay_violation_probability()
-            self.total_offload_queueing_violation_prob_reward+=eMBB_User.offload_queue_delay_violation_probability()
+            # self.total_local_queueing_violation_prob_reward += eMBB_User.local_queue_delay_violation_probability()
+            # self.total_offload_queueing_violation_prob_reward+=eMBB_User.offload_queue_delay_violation_probability()
             self.individual_local_queue_delay_violation_probability.append(eMBB_User.local_queue_delay_violation_probability_)
             self.individual_offload_queue_delay_violation_probability.append(eMBB_User.offload_queue_delay_violation_probability_)
             self.total_offload_ratio_reward += eMBB_User.offload_ratio_reward()
@@ -327,6 +327,8 @@ class SBS():
             queue_delay_reward,delay = eMBB_User.calculate_queuing_delays()
             tasks_dropped = eMBB_User.tasks_dropped
             total_offload_traffic_reward += eMBB_User.offloading_queue_stability_constraint_reward()
+            if eMBB_User.UE_label == 1:
+                print('eMBB_User.offloading_queue_stability_constraint_reward(): ', eMBB_User.offloading_queue_stability_constraint_reward())
             self.total_offload_traffic_reward += eMBB_User.offload_stability_constraint_reward
             #total_lc_delay_violation_probability+=eMBB_User.local_queue_violation_constraint_reward()
 
@@ -446,11 +448,12 @@ class SBS():
         #self.q_offload_queueing_violation_prob_reward = 10**4
         # self.q_offload_ratio_reward = 10**6
         #offloading_queue_stability_constraint_reward
+        #total_offload_traffic_reward
         #print('total_users_delay_rewards*total_users_energy_reward: ', total_users_delay_rewards*total_users_energy_reward)
         self.individual_channel_rates.append(individual_channel_rates)
         #self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------
         #print('total_users_throughput_reward: ', total_users_throughput_reward)
-        self.overall_users_reward = self.q_throughput*total_users_throughput_reward - (self.q_energy*total_users_energy_reward) - (self.q_delay*total_users_delay_rewards) + (self.q_total_local_traffic_reward*total_local_traffic_reward)#+self.q_offload_queueing_violation_prob_reward*self.total_offload_queueing_violation_prob_reward + self.q_local_queueing_violation_prob_reward*self.total_local_queueing_violation_prob_reward#+ (self.q_throughput_log_reward*throughput_log_reward) #+ (self.q_total_users_battery_energies_reward*total_users_battery_energies_reward) + (self.q_total_offload_traffic_reward*total_offload_traffic_reward) + (self.q_local_queueing_violation_prob_reward*self.total_local_queueing_violation_prob_reward) + (self.q_offload_ratio_reward*self.total_offload_ratio_reward) + (self.q_urllc_reliability_reward*urllc_reliability_reward) 
+        self.overall_users_reward = self.q_throughput*total_users_throughput_reward - (self.q_energy*total_users_energy_reward) - (self.q_delay*total_users_delay_rewards) + (self.q_total_local_traffic_reward*total_local_traffic_reward)+(self.q_throughput_log_reward*throughput_log_reward)#+self.q_offload_queueing_violation_prob_reward*self.total_offload_queueing_violation_prob_reward + self.q_local_queueing_violation_prob_reward*self.total_local_queueing_violation_prob_reward#+ (self.q_throughput_log_reward*throughput_log_reward) #+ (self.q_total_users_battery_energies_reward*total_users_battery_energies_reward) + (self.q_total_offload_traffic_reward*total_offload_traffic_reward) + (self.q_local_queueing_violation_prob_reward*self.total_local_queueing_violation_prob_reward) + (self.q_offload_ratio_reward*self.total_offload_ratio_reward) + (self.q_urllc_reliability_reward*urllc_reliability_reward) 
         if self.energy_rewards > 0:
             self.energy_efficiency_rewards = self.throughput_rewards/self.energy_rewards#(q_throughput*total_users_throughput_reward)/(q_energy*total_users_energy_reward)#/self.throughput_rewards/self.energy_rewards
         else:

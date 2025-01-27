@@ -708,7 +708,7 @@ class eMBB_UE(User_Equipment):
  
     #     return (channel_rate/1000)
     def local_queueing_traffic_reward(self):
-        arrival_rate_tasks_per_slot = (1-self.allocated_offloading_ratio)*self.task_arrival_rate_tasks_per_second
+        arrival_rate_tasks_per_slot = (1-self.allocated_offloading_ratio)*self.task_arrival_rate_tasks_per_second#*self.average_task_size
         service_rate_tasks_per_slot = self.max_bits_process_per_slot/self.average_task_size#len(self.dequeued_local_tasks)
         local_traffic_intensity = 0
         reward = 0
@@ -1667,12 +1667,16 @@ class eMBB_UE(User_Equipment):
         #if self.achieved_channel_rate > 0:
         #offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/self.achieved_channel_rate
         reward = 0
-        offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/(self.average_offloading_rate/1000)
-        if self.achieved_channel_rate > 0:
-            if (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits) <= self.achieved_channel_rate/1000:
+        average_rate = self.embb_rate_expectation_over_prev_T_slot_(10,self.achieved_channel_rate)/1000
+
+        # if self.UE_label == 1:
+        #     print('average_rate: ',average_rate)
+        offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_task_size)/(self.average_offloading_rate/1000)
+        if average_rate > 0:
+            if (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_task_size) <= average_rate:#self.achieved_channel_rate/1000:
                 reward = 1
             else:
-                offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_packet_size_bits)/(self.achieved_channel_rate/1000)
+                offload_traffic = (self.allocated_offloading_ratio*self.task_arrival_rate*self.average_task_size)/average_rate#(self.achieved_channel_rate/1000)
                 reward = 1-offload_traffic
         else:
             reward = -1
