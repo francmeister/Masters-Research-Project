@@ -20,8 +20,8 @@ class SBS():
         self.q_delay = 10**5
         self.q_total_users_battery_energies_reward = 10**4
         self.q_urllc_reliability_reward = 10**8
-        self.q_total_offload_traffic_reward = 1.5*10**6
-        self.q_total_local_traffic_reward = 10**7
+        self.q_total_offload_traffic_reward = 10**6
+        self.q_total_local_traffic_reward = 10**6
         self.q_throughput_log_reward = 2*10**6
         self.q_throughput = 1#0**(-7)
         self.q_local_queueing_violation_prob_reward = 10**7
@@ -288,8 +288,8 @@ class SBS():
             #queueing_delay_violation_probability = eMBB_User.local_queue_delay_violation_probability()
             total_local_traffic_reward+=eMBB_User.local_queueing_traffic_reward()
             self.total_local_traffic_reward+=eMBB_User.local_queueing_traffic_reward()
-            self.total_local_queueing_violation_prob_reward += eMBB_User.local_queue_delay_violation_probability()
-            self.total_offload_queueing_violation_prob_reward+=eMBB_User.offload_queue_delay_violation_probability()
+            # self.total_local_queueing_violation_prob_reward += eMBB_User.local_queue_delay_violation_probability()
+            # self.total_offload_queueing_violation_prob_reward+=eMBB_User.offload_queue_delay_violation_probability()
             self.individual_local_queue_delay_violation_probability.append(eMBB_User.local_queue_delay_violation_probability_)
             self.individual_offload_queue_delay_violation_probability.append(eMBB_User.offload_queue_delay_violation_probability_)
             self.total_offload_ratio_reward += eMBB_User.offload_ratio_reward()
