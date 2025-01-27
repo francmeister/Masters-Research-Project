@@ -327,8 +327,6 @@ class SBS():
             queue_delay_reward,delay = eMBB_User.calculate_queuing_delays()
             tasks_dropped = eMBB_User.tasks_dropped
             total_offload_traffic_reward += eMBB_User.offloading_queue_stability_constraint_reward()
-            if eMBB_User.UE_label == 1:
-                print('eMBB_User.offloading_queue_stability_constraint_reward(): ', eMBB_User.offloading_queue_stability_constraint_reward())
             self.total_offload_traffic_reward += eMBB_User.offload_stability_constraint_reward
             #total_lc_delay_violation_probability+=eMBB_User.local_queue_violation_constraint_reward()
 
