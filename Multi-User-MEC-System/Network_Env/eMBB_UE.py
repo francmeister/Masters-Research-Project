@@ -1594,7 +1594,7 @@ class eMBB_UE(User_Equipment):
             average_packet_size_bits =  total_packet_size_bits/len(self.communication_queue)
 
         self.average_task_size_offload_queue = average_packet_size_bits
-        expected_rate_over_prev_T_slot = self.embb_rate_expectation_over_prev_T_slot(5,self.achieved_channel_rate)
+        expected_rate_over_prev_T_slot = self.embb_rate_expectation_over_prev_T_slot(10,self.achieved_channel_rate)
         expected_rate_over_prev_T_slot_ms = expected_rate_over_prev_T_slot/1000
         self.expected_rate_over_prev_T_slot = expected_rate_over_prev_T_slot_ms
         
@@ -1603,7 +1603,10 @@ class eMBB_UE(User_Equipment):
         #print('len(self.communication_queue): ', len(self.communication_queue))
         #print('expected_rate_over_prev_T_slot_ms: ', expected_rate_over_prev_T_slot_ms)
         #if expected_rate_over_prev_T_slot_ms > 0:
-        offload_queueing_time = (average_packet_size_bits/expected_rate_over_prev_T_slot_ms)*len(self.communication_queue)
+        if expected_rate_over_prev_T_slot_ms == 0:
+            offload_queueing_time = self.offload_queueing_latency
+        else:
+            offload_queueing_time = (average_packet_size_bits/expected_rate_over_prev_T_slot_ms)*len(self.communication_queue)
         #print('eMBB: ', self.UE_label, 'offload_queueing_time: ', offload_queueing_time)
         #else:
             #offload_queueing_time = (average_packet_size_bits)*len(self.communication_queue)
