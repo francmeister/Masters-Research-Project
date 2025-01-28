@@ -296,7 +296,7 @@ class SBS():
             #print('queueing_delay_violation_probability reward: ', queueing_delay_violation_probability)
             self.users_lc_service_rates.append(eMBB_User.service_rate_bits_per_second)
             eMBB_User_delay, eMBB_User_delay_normalized = eMBB_User.new_time_delay_calculation()
-            #eMBB_User_delay = eMBB_User.queuing_latency
+            eMBB_User_delay = eMBB_User.queuing_latency
             self.total_delay += eMBB_User_delay 
             self.sum_queueing_latency+=eMBB_User.queuing_latency
             self.total_local_delay+=eMBB_User.local_queue_delay_
