@@ -308,7 +308,7 @@ class NetworkEnv(gym.Env):
         # print('box_action: ')
         # print(box_action)
         # print('')
-        box_action = np.random.uniform(0.4, 0.7, size=box_action.shape)
+        #box_action = np.random.uniform(0.4, 0.7, size=box_action.shape)
         #len_box_actions = len(box_action) * len(box_action[0])
         #self.box_action_space_len = len_box_actions
 
