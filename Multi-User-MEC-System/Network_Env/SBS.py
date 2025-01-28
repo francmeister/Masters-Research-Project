@@ -20,7 +20,7 @@ class SBS():
         self.q_delay = 2*10**3
         self.q_total_users_battery_energies_reward = 10**4
         self.q_urllc_reliability_reward = 10**8
-        self.q_total_offload_traffic_reward = 1.5*10**7
+        self.q_total_offload_traffic_reward = 10**7
         self.q_total_local_traffic_reward = 10**7
         self.q_throughput_log_reward = 2*10**6
         self.q_throughput = 1#0**(-7)
