@@ -305,6 +305,9 @@ class NetworkEnv(gym.Env):
         binary_actions = np.array(action['binary_actions'])
         q_action = np.array(action['q_action'])
 
+        print('binary_actions: ')
+        print(binary_actions)
+        print('')
         #len_box_actions = len(box_action) * len(box_action[0])
         #self.box_action_space_len = len_box_actions
 
