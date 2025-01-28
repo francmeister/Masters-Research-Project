@@ -17,7 +17,7 @@ class SBS():
         self.individual_rewards = []
         self.users_lc_service_rates = []
         self.q_energy = 1.5*10**10
-        self.q_delay = 10**3
+        self.q_delay = 10**5
         self.q_total_users_battery_energies_reward = 10**4
         self.q_urllc_reliability_reward = 10**8
         self.q_total_offload_traffic_reward = 10**7
