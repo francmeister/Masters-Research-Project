@@ -68,10 +68,10 @@ class eMBB_UE(User_Equipment):
         self.max_allowable_latency_ = 2000
         self.local_queue_delay_violation_probability_constraint = 0.2
         self.num_of_clustered_urllc_users = 0
-        self.average_task_size = 600#200
+        self.average_task_size = (0.25)*600#200
         self.geometric_probability = 1/self.average_task_size
         self.task_arrival_rate_tasks_per_second = 0
-        self.average_task_arrival_rate = 5
+        self.average_task_arrival_rate = 2
         self.Pr_Qs = []
         self.average_data_rate = 0
         
@@ -341,50 +341,50 @@ class eMBB_UE(User_Equipment):
         qeueu_timer = 0
     
 
-        if len(self.task_queue) >= self.max_queue_length_number:
-            for x in range(0,self.task_arrival_rate_tasks_per_second):
-                #np.random.poisson(10)
-                #task_size_per_second_kilobytes = random.randint(self.min_task_size_KB_per_second,self.max_task_size_KB_per_second) #choose between 50 and 100 kilobytes
-                #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
-                #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
-                #task_size_per_slot_bits = int(np.random.uniform(400,800))#int(np.random.uniform(500,1500))#Average of 1000 bits per task in slot #int(task_size_per_slot_kilobytes*8000) #8000 bits in a KB----------
-                task_size_per_slot_bits = int(np.random.geometric(self.geometric_probability))
-                #task_size_per_slot_bits = self.average_task_size
-                #task_size_per_slot_bits = int(np.random.uniform(2000,5000))
-                #task_size_per_slot_bits = 1000#int(np.random.uniform(400,800))
-                self.packet_size_bits = 100 # 12000 bits per packet
-                self.cycles_per_packet = self.packet_size_bits*self.cycles_per_bit
-                self.previous_task_size_bits = task_size_per_slot_bits
-                #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
-                latency_requirement = 10#latency required is 10 ms for every task#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
-                reliability_requirement = 0
-                QOS_requirement_ = QOS_requirement(latency_requirement,reliability_requirement)
-                user_task = Task(330,task_size_per_slot_bits,QOS_requirement_,qeueu_timer,self.task_identifier)
-                self.task_identifier+=1
-                #print('task identifier: ', self.task_identifier)
+        # if len(self.task_queue) >= self.max_queue_length_number:
+        #     for x in range(0,self.task_arrival_rate_tasks_per_second):
+        #         #np.random.poisson(10)
+        #         #task_size_per_second_kilobytes = random.randint(self.min_task_size_KB_per_second,self.max_task_size_KB_per_second) #choose between 50 and 100 kilobytes
+        #         #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
+        #         #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
+        #         #task_size_per_slot_bits = int(np.random.uniform(400,800))#int(np.random.uniform(500,1500))#Average of 1000 bits per task in slot #int(task_size_per_slot_kilobytes*8000) #8000 bits in a KB----------
+        #         task_size_per_slot_bits = int(np.random.geometric(self.geometric_probability))
+        #         #task_size_per_slot_bits = self.average_task_size
+        #         #task_size_per_slot_bits = int(np.random.uniform(2000,5000))
+        #         #task_size_per_slot_bits = 1000#int(np.random.uniform(400,800))
+        #         self.packet_size_bits = 100 # 12000 bits per packet
+        #         self.cycles_per_packet = self.packet_size_bits*self.cycles_per_bit
+        #         self.previous_task_size_bits = task_size_per_slot_bits
+        #         #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
+        #         latency_requirement = 10#latency required is 10 ms for every task#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
+        #         reliability_requirement = 0
+        #         QOS_requirement_ = QOS_requirement(latency_requirement,reliability_requirement)
+        #         user_task = Task(330,task_size_per_slot_bits,QOS_requirement_,qeueu_timer,self.task_identifier)
+        #         self.task_identifier+=1
+        #         #print('task identifier: ', self.task_identifier)
 
-                self.storage[int(self.ptr)] = user_task
-                self.ptr = (self.ptr + 1) % self.max_queue_length_number
-        else:
-            for x in range(0,self.task_arrival_rate_tasks_per_second):
-                #task_size_per_second_kilobytes = random.randint(self.min_task_size_KB_per_second,self.max_task_size_KB_per_second) #choose between 50 and 100 kilobytes
-                #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
-                #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
-                #task_size_per_slot_bits = self.average_task_size
-                task_size_per_slot_bits = int(np.random.geometric(self.geometric_probability))#int(np.random.uniform(500,1500)) #8000 bits in a KB----------
-                #task_size_per_slot_bits = int(np.random.uniform(2000,5000))
-                #task_size_per_slot_bits = 1000#int(np.random.uniform(400,800))
-                self.packet_size_bits = 100 # 12000 bits per packet
-                self.cycles_per_packet = self.packet_size_bits*self.cycles_per_bit
-                self.previous_task_size_bits = task_size_per_slot_bits
-                #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
-                latency_requirement = 10#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
-                reliability_requirement = 0
-                QOS_requirement_ = QOS_requirement(latency_requirement,reliability_requirement)
-                user_task = Task(330,task_size_per_slot_bits,QOS_requirement_,qeueu_timer,self.task_identifier)
-                self.task_identifier+=1
-                #print('task identifier: ', self.task_identifier)
-                self.task_queue.append(user_task)
+        #         self.storage[int(self.ptr)] = user_task
+        #         self.ptr = (self.ptr + 1) % self.max_queue_length_number
+        # else:
+        for x in range(0,self.task_arrival_rate_tasks_per_second):
+            #task_size_per_second_kilobytes = random.randint(self.min_task_size_KB_per_second,self.max_task_size_KB_per_second) #choose between 50 and 100 kilobytes
+            #task_arrival_rate_tasks_slot = (communication_channel.long_TTI/1000)*self.task_arrival_rate_tasks_per_second
+            #task_size_per_slot_kilobytes = task_size_per_second_kilobytes*task_arrival_rate_tasks_slot
+            #task_size_per_slot_bits = self.average_task_size
+            task_size_per_slot_bits = int(np.random.geometric(self.geometric_probability))#int(np.random.uniform(500,1500)) #8000 bits in a KB----------
+            #task_size_per_slot_bits = int(np.random.uniform(2000,5000))
+            #task_size_per_slot_bits = 1000#int(np.random.uniform(400,800))
+            self.packet_size_bits = 100 # 12000 bits per packet
+            self.cycles_per_packet = self.packet_size_bits*self.cycles_per_bit
+            self.previous_task_size_bits = task_size_per_slot_bits
+            #task_cycles_required = self.cycles_per_bit*task_size_per_slot_bits#-------------
+            latency_requirement = 10#random.randint(self.min_allowable_latency,self.max_allowable_latency) #[1,2] s
+            reliability_requirement = 0
+            QOS_requirement_ = QOS_requirement(latency_requirement,reliability_requirement)
+            user_task = Task(330,task_size_per_slot_bits,QOS_requirement_,qeueu_timer,self.task_identifier)
+            self.task_identifier+=1
+            #print('task identifier: ', self.task_identifier)
+            self.task_queue.append(user_task)
         
 
     def calculate_distance_from_SBS(self, SBS_x_pos, SBS_y_pos):
@@ -1798,7 +1798,7 @@ class eMBB_UE(User_Equipment):
         T_max_lc = 10*(self.average_task_size*self.computation_time_per_bit)
         #T_max_lc = 2*((1-self.allocated_offloading_ratio)*self.average_bits_tasks_arriving*self.computation_time_per_bit)
         Ld_max = round(T_max_lc/self.computation_time_per_bit)
-        Ld_max = 30#1000
+        Ld_max = 1000
         #Ld_max = 1000
 
         # print('self.average_bits_tasks_arriving: ', self.average_bits_tasks_arriving)
@@ -1977,7 +1977,7 @@ class eMBB_UE(User_Equipment):
         T_max_lc = 10*(self.average_task_size*self.computation_time_per_bit)
         #T_max_lc = 2*((1-self.allocated_offloading_ratio)*self.average_bits_tasks_arriving*self.computation_time_per_bit)
         Ld_max = round(T_max_lc/self.computation_time_per_bit)
-        Ld_max = 30#1000
+        Ld_max = 1000
 
         # print('self.average_bits_tasks_arriving: ', self.average_bits_tasks_arriving)
         # print('self.computation_time_per_bit: ', self.computation_time_per_bit)
