@@ -264,7 +264,7 @@ import matplotlib.pyplot as plt
 # local_queue_delay_violation_probability_policy_1 = [0.07326449000891345,0.20000689324641513,0.3049411835399544,0.344642792230233,0.3896012230530385]
 # offload_queue_delay_violation_probability_policy_1 = [0.23465933429001073,0.6498917142398961,0.8510417192793062,0.9099704272102933,0.9294927637741527]
 
-task_arrival_rates = [1, 3, 5, 7, 9]
+task_arrival_rates = [0.5,1,1.5,2,2.5]
 reward_policy_1 = []
 energy_policy_1 = []
 throughput_policy_1 = []

@@ -68,7 +68,8 @@ class eMBB_UE(User_Equipment):
         self.max_allowable_latency_ = 2000
         self.local_queue_delay_violation_probability_constraint = 0.2
         self.num_of_clustered_urllc_users = 0
-        self.average_task_size = (0.25)*600#200
+        self.task_arrival_rate_multiplier = 0.25
+        self.average_task_size = 600#200
         self.geometric_probability = 1/self.average_task_size
         self.task_arrival_rate_tasks_per_second = 0
         self.average_task_arrival_rate = 2

@@ -1504,3 +1504,9 @@ class NetworkEnv(gym.Env):
     def change_users_task_arrival_rate(self,new_arrival_rate):
         for embb_user in self.eMBB_Users:
             embb_user.average_task_arrival_rate = new_arrival_rate
+
+    def change_users_task_sizes(self,new_task_size_multiplier):
+        original_task_size = 600
+        for embb_user in self.eMBB_Users:
+            embb_user.average_task_size = new_task_size_multiplier*original_task_size
+            embb_user.geometric_probability = 1/embb_user.average_task_size
