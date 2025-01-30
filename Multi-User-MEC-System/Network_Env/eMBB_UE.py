@@ -404,6 +404,11 @@ class eMBB_UE(User_Equipment):
         return self.user_state_space
 
     def split_tasks(self):
+
+        self.local_queue_length_num_tasks = 0
+        self.offload_queue_length_num_tasks = 0
+        self.average_local_queue_length = 0
+        self.average_offload_queue_length = 0
         
         if len(self.task_queue) > 0:
             local_bits = 0
@@ -502,6 +507,7 @@ class eMBB_UE(User_Equipment):
             self.Ld_lc = 0
             self.Qd_lc = 0
             if len(self.local_queue) > 0:
+                local_queue_length_bits = 0
                 for task in self.local_queue:
                     local_task_identities.append(task.task_identifier)
                     local_task_sizes_bits.append(task.slot_task_size)
@@ -509,6 +515,10 @@ class eMBB_UE(User_Equipment):
                     local_latency_requirements.append(task.QOS_requirement.max_allowable_latency)
                     self.Ld_lc+=task.slot_task_size
                     self.Qd_lc+=1
+                    local_queue_length_bits+=task.slot_task_size
+
+                self.local_queue_length_num_tasks = len(self.local_queue)
+                self.average_local_queue_length = local_queue_length_bits
             #increment_queue_timer
             local_data = {
                 'Task Identity':local_task_identities,
@@ -530,11 +540,16 @@ class eMBB_UE(User_Equipment):
             offload_latency_requirements = []
 
             if len(self.communication_queue) > 0:
+                offload_queue_length_bits = 0
                 for task in self.communication_queue:
                     offload_task_identities.append(task.task_identifier)
                     offload_task_sizes_bits.append(task.slot_task_size)
                     offload_required_cycles.append(task.required_computation_cycles)
                     offload_latency_requirements.append(task.QOS_requirement.max_allowable_latency)
+                    offload_queue_length_bits+=task.slot_task_size
+
+                self.offload_queue_length_num_tasks = len(self.communication_queue)
+                self.average_offload_queue_length = offload_queue_length_bits
 
             offload_data = {
                 'Task Identity':offload_task_identities,
@@ -1628,26 +1643,26 @@ class eMBB_UE(User_Equipment):
         self.local_queue_length = local_queue_size_bits
         self.offload_queue_length = offload_queue_size_bits
 
-        self.local_queue_length_num_tasks = len(self.local_queue)
-        self.offload_queue_length_num_tasks = len(self.communication_queue)
-        # print('self.local_queue_length: ', self.local_queue_length)
-        # print('self.offload_queue_length: ', self.offload_queue_length)
-        # print('local_delay: ', local_delay)
-        # print('offloading_delay: ', offloading_delay)
-        #print('eMBB UE: ', self.UE_label, 'local_delay: ', local_delay, 'offloading_delay: ', offloading_delay)
+        # self.local_queue_length_num_tasks = len(self.local_queue)
+        # self.offload_queue_length_num_tasks = len(self.communication_queue)
+        # # print('self.local_queue_length: ', self.local_queue_length)
+        # # print('self.offload_queue_length: ', self.offload_queue_length)
+        # # print('local_delay: ', local_delay)
+        # # print('offloading_delay: ', offloading_delay)
+        # #print('eMBB UE: ', self.UE_label, 'local_delay: ', local_delay, 'offloading_delay: ', offloading_delay)
 
-        # self.local_queue_delay = local_delay
-        # self.offload_queue_delay = offloading_delay
+        # # self.local_queue_delay = local_delay
+        # # self.offload_queue_delay = offloading_delay
 
-        # self.local_queue_lengths.append(len(self.local_queue))
-        # self.offload_queue_lengths.append(len(self.communication_queue))
+        # # self.local_queue_lengths.append(len(self.local_queue))
+        # # self.offload_queue_lengths.append(len(self.communication_queue))
 
-        # self.local_queue_delays.append(local_delay)
-        # self.offload_queue_delays.append(offloading_delay)
-        #self.average_local_queue_length, self.average_offload_queue_length, self.average_local_delays, self.average_offload_delays = self.avg_queue_length_delays_over_T_slots(5, self.local_queue_length, self.offload_queue_length, local_delay, offloading_delay)
+        # # self.local_queue_delays.append(local_delay)
+        # # self.offload_queue_delays.append(offloading_delay)
+        # #self.average_local_queue_length, self.average_offload_queue_length, self.average_local_delays, self.average_offload_delays = self.avg_queue_length_delays_over_T_slots(5, self.local_queue_length, self.offload_queue_length, local_delay, offloading_delay)
 
-        self.average_local_queue_length = self.local_queue_length 
-        self.average_offload_queue_length = self.offload_queue_length
+        # self.average_local_queue_length = self.local_queue_length 
+        # self.average_offload_queue_length = self.offload_queue_length
         self.average_local_delays = local_delay
         self.average_offload_delays = offloading_delay
         # print('local_delay: ', local_delay)

@@ -27,6 +27,7 @@ class SBS():
         self.q_local_queueing_violation_prob_reward = 10**7
         self.q_offload_queueing_violation_prob_reward = 10**7
         self.q_offload_ratio_reward = 10**6
+        self.average_offloading_ratio = 0
         self.set_properties()
 
     def associate_users(self, eMBB_Users, URLLC_users):
@@ -87,9 +88,14 @@ class SBS():
 
     def allocate_offlaoding_ratios(self,eMBB_Users, action):
         index = 0
+        self.average_offloading_ratio = 0
+        number_of_users = len(eMBB_Users)
         for eMBB_User in eMBB_Users:
             eMBB_User.allocated_offloading_ratio = action[index]
+            self.average_offloading_ratio+=action[index]
             index+=1
+
+        self.average_offloading_ratio = self.average_offloading_ratio/number_of_users
 
     def count_num_arriving_URLLC_packet(self,URLLC_Users):
         self.num_arriving_URLLC_packets = 0
@@ -451,7 +457,7 @@ class SBS():
         self.individual_channel_rates.append(individual_channel_rates)
         #self.overall_users_reward = total_users_throughput_reward - self.q_action* (total_users_delay_rewards*total_users_energy_reward) + total_users_battery_energies_reward + urllc_reliability_reward + total_offload_traffic_reward#---------
         #print('total_users_throughput_reward: ', total_users_throughput_reward)
-        self.overall_users_reward = self.q_throughput*total_users_throughput_reward - (self.q_energy*total_users_energy_reward) - (self.q_delay*total_users_delay_rewards)#+ (self.q_total_local_traffic_reward*total_local_traffic_reward)+(self.q_total_offload_traffic_reward*total_offload_traffic_reward)#+self.q_offload_queueing_violation_prob_reward*self.total_offload_queueing_violation_prob_reward + self.q_local_queueing_violation_prob_reward*self.total_local_queueing_violation_prob_reward#+ (self.q_throughput_log_reward*throughput_log_reward) #+ (self.q_total_users_battery_energies_reward*total_users_battery_energies_reward) + (self.q_total_offload_traffic_reward*total_offload_traffic_reward) + (self.q_local_queueing_violation_prob_reward*self.total_local_queueing_violation_prob_reward) + (self.q_offload_ratio_reward*self.total_offload_ratio_reward) + (self.q_urllc_reliability_reward*urllc_reliability_reward) 
+        self.overall_users_reward = self.q_throughput*total_users_throughput_reward - (self.q_energy*total_users_energy_reward) - (self.q_delay*total_users_delay_rewards)+ (self.q_total_local_traffic_reward*total_local_traffic_reward)+(self.q_total_offload_traffic_reward*total_offload_traffic_reward)#+self.q_offload_queueing_violation_prob_reward*self.total_offload_queueing_violation_prob_reward + self.q_local_queueing_violation_prob_reward*self.total_local_queueing_violation_prob_reward#+ (self.q_throughput_log_reward*throughput_log_reward) #+ (self.q_total_users_battery_energies_reward*total_users_battery_energies_reward) + (self.q_total_offload_traffic_reward*total_offload_traffic_reward) + (self.q_local_queueing_violation_prob_reward*self.total_local_queueing_violation_prob_reward) + (self.q_offload_ratio_reward*self.total_offload_ratio_reward) + (self.q_urllc_reliability_reward*urllc_reliability_reward) 
         if self.energy_rewards > 0:
             self.energy_efficiency_rewards = self.throughput_rewards/self.energy_rewards#(q_throughput*total_users_throughput_reward)/(q_energy*total_users_energy_reward)#/self.throughput_rewards/self.energy_rewards
         else:
@@ -648,6 +654,7 @@ class SBS():
         self.total_offload_queue_length_bits = 0
         self.total_local_queue_length_tasks = 0
         self.total_offload_queue_length_tasks = 0
+        self.average_offloading_ratio = 0
         
 
     def calculate_fairness(self,eMBB_Users):
