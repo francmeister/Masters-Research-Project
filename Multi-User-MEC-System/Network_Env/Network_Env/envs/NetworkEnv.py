@@ -1510,3 +1510,7 @@ class NetworkEnv(gym.Env):
         for embb_user in self.eMBB_Users:
             embb_user.average_task_size = new_task_size_multiplier*original_task_size
             embb_user.geometric_probability = 1/embb_user.average_task_size
+
+    def change_Ld_max(self,new_Ld_max):
+        for embb_user in self.eMBB_Users:
+            embb_user.Ld_max = new_Ld_max
