@@ -181,6 +181,8 @@ env.change_state_limits(min_small_scale_channel_gain,max_small_scale_channel_gai
                             min_battery_energy_level,max_battery_energy_level,
                             min_local_queue_length,max_local_queue_length,
                             min_offloading_queue_length,max_offloading_queue_length)
+
+env.include_urllc_users(0)
 for timestep in timesteps:
     print('----------------------------------------------------------------------------------------------------------------------------------------------------')
     action = env.action_space.sample()
@@ -228,6 +230,7 @@ for timestep in timesteps:
     #print('reward: ', reward)
     rewards.append(reward)
     tasks_dropped.append(env.SBS1.tasks_dropped)
+    #print('env.SBS1.outage_probability: ', env.SBS1.outage_probability)
     
   
 

@@ -819,6 +819,10 @@ class SBS():
     def calculate_urllc_reliability_reward(self, urllc_users):
         reliability_reward = 0
         reliability_reward_normalized = 0
+        self.outage_probability = 0
+        self.urllc_total_rate = 0
+        self.F_L_inverse = 0
+        #print('len(urllc_users): ', len(urllc_users))
         #print('self.num_arriving_urllc_packets: ',  self.num_arriving_urllc_packets)
         if len(urllc_users) > 0:
             num_arriving_urllc_packets = self.num_arriving_urllc_packets

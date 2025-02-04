@@ -723,6 +723,8 @@ class NetworkEnv(gym.Env):
             eMBB_User.split_tasks()
             eMBB_User.available_resource_time_code_block_fn(self.Communication_Channel_1)
             eMBB_User.max_queue_length = self.max_local_queue_length
+
+        #print('len(self.URLLC_Users): ',len(self.URLLC_Users))
        
         self.SBS1.allocate_resource_blocks_URLLC(self.Communication_Channel_1, self.URLLC_Users, self.eMBB_Users, self.step_counter)
         self.step_counter+=1
@@ -732,6 +734,8 @@ class NetworkEnv(gym.Env):
                         
         for URLLC_user in self.URLLC_Users:
             URLLC_user.calculate_achieved_channel_rate(self.eMBB_Users,self.Communication_Channel_1)
+
+        self.SBS1.count_num_arriving_urllc_packets(self.URLLC_Users)
 
         for eMBB_User in self.eMBB_Users:
             #if eMBB_User.has_transmitted_this_time_slot == True:
@@ -745,7 +749,6 @@ class NetworkEnv(gym.Env):
         #print('')
             #print('urllc user id: ', URLLC_user.URLLC_UE_label, 'achieved channel rate: ', URLLC_user.achieved_channel_rate)
 
-        self.SBS1.count_num_arriving_urllc_packets(self.URLLC_Users)
         #print('')
         for eMBB_User in self.eMBB_Users: 
             eMBB_User.urllc_puncturing_users_sum_data_rates(self.URLLC_Users)
@@ -1529,20 +1532,21 @@ class NetworkEnv(gym.Env):
             self.URLLC_Users.clear()
 
         elif decision == 1:
-            self.URLLC_Users.append(self.URLLC_UE_1)
-            self.URLLC_Users.append(self.URLLC_UE_2)
-            self.URLLC_Users.append(self.URLLC_UE_3)
-            self.URLLC_Users.append(self.URLLC_UE_4)
-            self.URLLC_Users.append(self.URLLC_UE_5)
-            self.URLLC_Users.append(self.URLLC_UE_6)
-            self.URLLC_Users.append(self.URLLC_UE_7)
-            self.URLLC_Users.append(self.URLLC_UE_8)
-            self.URLLC_Users.append(self.URLLC_UE_9)
-            self.URLLC_Users.append(self.URLLC_UE_10)
-            self.URLLC_Users.append(self.URLLC_UE_11)
-            self.URLLC_Users.append(self.URLLC_UE_12)
-            self.URLLC_Users.append(self.URLLC_UE_13)
-            self.URLLC_Users.append(self.URLLC_UE_14)
-            self.URLLC_Users.append(self.URLLC_UE_15)
-            self.URLLC_Users.append(self.URLLC_UE_16)
+            if len(self.URLLC_Users) == 0:
+                self.URLLC_Users.append(self.URLLC_UE_1)
+                self.URLLC_Users.append(self.URLLC_UE_2)
+                self.URLLC_Users.append(self.URLLC_UE_3)
+                self.URLLC_Users.append(self.URLLC_UE_4)
+                self.URLLC_Users.append(self.URLLC_UE_5)
+                self.URLLC_Users.append(self.URLLC_UE_6)
+                self.URLLC_Users.append(self.URLLC_UE_7)
+                self.URLLC_Users.append(self.URLLC_UE_8)
+                self.URLLC_Users.append(self.URLLC_UE_9)
+                self.URLLC_Users.append(self.URLLC_UE_10)
+                self.URLLC_Users.append(self.URLLC_UE_11)
+                self.URLLC_Users.append(self.URLLC_UE_12)
+                self.URLLC_Users.append(self.URLLC_UE_13)
+                self.URLLC_Users.append(self.URLLC_UE_14)
+                self.URLLC_Users.append(self.URLLC_UE_15)
+                self.URLLC_Users.append(self.URLLC_UE_16)
 
