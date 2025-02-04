@@ -26,6 +26,7 @@ class NetworkEnv(gym.Env):
     def __init__(self):
         self.timestep_counter = 0
         self.step_counter = 0
+        self.include_urllc_users_ = 1
         self.create_objects()
         self.reset()
         #Action Space Bound Paramaters
@@ -60,7 +61,6 @@ class NetworkEnv(gym.Env):
         self.resource_block_allocation_matrix = []
         self.resource_allocation_constraint_violation = 0
         self.num_of_clustered_urllc_users = 0
-        self.include_urllc_users_ = 1
 
         #Define upper and lower bounds of observation and action spaces
         
