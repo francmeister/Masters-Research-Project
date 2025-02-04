@@ -26,7 +26,7 @@ class URLLC_UE(User_Equipment):
         self.assigned_access_point = 0
         self.assigned_access_point_label_matrix = []
         self.assigned_access_point_label_matrix_integers = []
-        self.prob_packet_arrival = 0.9
+        self.prob_packet_arrival = 0.5
         self.x_coordinate = np.random.uniform(low=30, high=100)
         self.y_coordinate = np.random.uniform(low=30, high=100)
         self.embb_user_in_close_proximity = 0
@@ -261,13 +261,23 @@ class URLLC_UE(User_Equipment):
             #self.achieved_channel_rate = channel_rate/500
             self.achieved_channel_rate_per_slot = channel_rate/1000
 
-            if len(self.offload_task_queue) > 0:
-                self.offload_task_queue.pop(0)
+            #print('len(self.offload_task_queue): ', len(self.offload_task_queue))
+            if len(self.offload_task_queue) > 0 and self.achieved_channel_rate_per_slot > self.task_size_per_slot_bits:
+                #self.offload_task_queue.pop(0)
                 self.has_transmitted_this_time_slot = True
                 self.failed_transmission = False
 
-        elif self.assigned_resource_block == 0 and len(self.offload_task_queue):
+            elif len(self.offload_task_queue) > 0 and self.achieved_channel_rate_per_slot < self.task_size_per_slot_bits:
+                self.has_transmitted_this_time_slot = False
+                self.failed_transmission = True
+
+        elif self.assigned_resource_block == 0 and len(self.offload_task_queue) > 0:
             self.failed_transmission = True
+
+        if len(self.offload_task_queue) > 0:
+            self.offload_task_queue.pop(0)
+
+        #print('self.has_transmitted_this_time_slot: ', self.has_transmitted_this_time_slot)
 
         return self.achieved_channel_rate_per_slot
         #print('urllc user id: ', self.URLLC_UE_label, 'achieved channel rate: ', self.achieved_channel_rate)

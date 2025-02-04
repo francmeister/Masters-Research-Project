@@ -632,7 +632,7 @@ class eMBB_UE(User_Equipment):
         # print(self.occupied_resource_time_blocks)
         occupied_resource_time_blocks_counts, occupied_resource_time_blocks_unique_array = self.count_and_make_unique_tuples(self.occupied_resource_time_blocks)
         # print('counts: ', counts)
-        #print('occupied_resource_time_blocks_unique_array: ', occupied_resource_time_blocks_unique_array)
+        #print('occupied_resource_time_blocks_unique_array: ', occupied_resource_time_blocks_unique_array,'occupied_resource_time_blocks_counts: ', occupied_resource_time_blocks_counts)
 
         if self.battery_energy_level > 0:
             for tb in range(0,communication_channel.time_divisions_per_slot):
@@ -1493,14 +1493,18 @@ class eMBB_UE(User_Equipment):
         self.puncturing_urllc_users_.clear()
         self.occupied_resource_time_blocks.clear()
         #self.numbers_of_puncturing_users = 0
+        #print('embb: ', self.UE_label, 'self.allocated_resource_blocks_numbered: ', self.allocated_resource_blocks_numbered)
         for allocated_resource_block in self.allocated_resource_blocks_numbered:
             
             time_blocks_at_this_rb = self.time_matrix[allocated_resource_block-1]
+            #print('embb: ', self.UE_label, 'time_blocks_at_this_rb: ', time_blocks_at_this_rb)
             if time_blocks_at_this_rb == 1 or time_blocks_at_this_rb == 2:
                 for urllc_user in urllc_users:
                     if urllc_user.assigned_resource_block == allocated_resource_block and urllc_user.assigned_time_block == time_blocks_at_this_rb:
                         #print('urllc_user.assigned_resource_block: ', urllc_user.assigned_resource_block, 'urllc_user.assigned_time_block: ', urllc_user.assigned_time_block)
                         self.puncturing_urllc_users_.append(urllc_user.URLLC_UE_label)
+                        #print('self.puncturing_urllc_users_ ***: ', self.puncturing_urllc_users_)
+                        #print('urllc_user.has_transmitted_this_time_slot: ', urllc_user.has_transmitted_this_time_slot)
                         if urllc_user.has_transmitted_this_time_slot == True:
                             self.occupied_resource_time_blocks.append((time_blocks_at_this_rb,allocated_resource_block,1))
                         elif urllc_user.has_transmitted_this_time_slot == False:
@@ -1513,6 +1517,7 @@ class eMBB_UE(User_Equipment):
                         if urllc_user.assigned_resource_block == allocated_resource_block and urllc_user.assigned_time_block == time_block_at_this_rb:
                             #print('urllc_user.assigned_resource_block: ', urllc_user.assigned_resource_block, 'urllc_user.assigned_time_block: ', urllc_user.assigned_time_block)
                             self.puncturing_urllc_users_.append(urllc_user.URLLC_UE_label)
+                            #print('urllc_user.has_transmitted_this_time_slot: ', urllc_user.has_transmitted_this_time_slot)
                             if urllc_user.has_transmitted_this_time_slot == True:
                                 self.occupied_resource_time_blocks.append((time_block_at_this_rb,allocated_resource_block,1))
                             elif urllc_user.has_transmitted_this_time_slot == False:
@@ -1527,9 +1532,10 @@ class eMBB_UE(User_Equipment):
         #print('embb user id: ', self.eMBB_UE_label, 'allocated rb: ', self.allocated_resource_blocks_numbered)
         # print('allocated time blocks: ', self.time_matrix)
         # print('')
-        #print('self.puncturing_urllc_users_: ', self.puncturing_urllc_users_)
+        #print('self.puncturing_urllc_users_: ', self.puncturing_urllc_users_, 'self.occupied_resource_time_blocks: ', self.occupied_resource_time_blocks)
         # print('occupied resource blocks: ', self.occupied_resource_time_blocks)
         #print('')
+        #print('embb: ', self.UE_label, 'Puncturing URLLC users: ', self.puncturing_urllc_users_)
 
         # for urllc_user in urllc_users:
         #     print('urllc_user id: ', urllc_user.URLLC_UE_label)

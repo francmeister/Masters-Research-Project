@@ -729,6 +729,8 @@ class NetworkEnv(gym.Env):
         #     print('urllc_user.assigned_resource_block: ', urllc_user.assigned_resource_block, 'urllc_user.assigned_time_block: ', urllc_user.assigned_time_block,
         #           'urllc_user.assigned_code_block: ', urllc_user.assigned_code_block)
                         
+        for URLLC_user in self.URLLC_Users:
+            URLLC_user.calculate_achieved_channel_rate(self.eMBB_Users,self.Communication_Channel_1)
 
         for eMBB_User in self.eMBB_Users:
             #if eMBB_User.has_transmitted_this_time_slot == True:
@@ -740,8 +742,6 @@ class NetworkEnv(gym.Env):
             eMBB_User.total_processing_delay()
 
         #print('')
-        for URLLC_user in self.URLLC_Users:
-            URLLC_user.calculate_achieved_channel_rate(self.eMBB_Users,self.Communication_Channel_1)
             #print('urllc user id: ', URLLC_user.URLLC_UE_label, 'achieved channel rate: ', URLLC_user.achieved_channel_rate)
 
         self.SBS1.count_num_arriving_urllc_packets(self.URLLC_Users)
@@ -1093,6 +1093,10 @@ class NetworkEnv(gym.Env):
         self.URLLC_UE_10 = URLLC_UE(10,21,100,600)
         self.URLLC_UE_11 = URLLC_UE(11,22,100,600)
         self.URLLC_UE_12 = URLLC_UE(12,23,100,600)
+        self.URLLC_UE_13 = URLLC_UE(13,24,100,600)
+        self.URLLC_UE_14 = URLLC_UE(14,25,100,600)
+        self.URLLC_UE_15 = URLLC_UE(15,26,100,600)
+        self.URLLC_UE_16 = URLLC_UE(16,27,100,600)
 
         # Set channel gain scaling factorsS
         #self.eMBB_UE_4.set_channel_gain_scaling_factor(40)
@@ -1127,18 +1131,22 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.append(self.eMBB_UE_10)
         self.eMBB_Users.append(self.eMBB_UE_11)
 
-        #self.URLLC_Users.append(self.URLLC_UE_1)
-        #self.URLLC_Users.append(self.URLLC_UE_2)
-        #self.URLLC_Users.append(self.URLLC_UE_3)
-        #self.URLLC_Users.append(self.URLLC_UE_4)
-        #self.URLLC_Users.append(self.URLLC_UE_5)
-        #self.URLLC_Users.append(self.URLLC_UE_6)
-        #self.URLLC_Users.append(self.URLLC_UE_7)
-        # self.URLLC_Users.append(self.URLLC_UE_8)
-        # self.URLLC_Users.append(self.URLLC_UE_9)
-        # self.URLLC_Users.append(self.URLLC_UE_10)
-        # self.URLLC_Users.append(self.URLLC_UE_11)
-        # self.URLLC_Users.append(self.URLLC_UE_12)
+        self.URLLC_Users.append(self.URLLC_UE_1)
+        self.URLLC_Users.append(self.URLLC_UE_2)
+        self.URLLC_Users.append(self.URLLC_UE_3)
+        self.URLLC_Users.append(self.URLLC_UE_4)
+        self.URLLC_Users.append(self.URLLC_UE_5)
+        self.URLLC_Users.append(self.URLLC_UE_6)
+        self.URLLC_Users.append(self.URLLC_UE_7)
+        self.URLLC_Users.append(self.URLLC_UE_8)
+        self.URLLC_Users.append(self.URLLC_UE_9)
+        self.URLLC_Users.append(self.URLLC_UE_10)
+        self.URLLC_Users.append(self.URLLC_UE_11)
+        self.URLLC_Users.append(self.URLLC_UE_12)
+        self.URLLC_Users.append(self.URLLC_UE_13)
+        self.URLLC_Users.append(self.URLLC_UE_14)
+        self.URLLC_Users.append(self.URLLC_UE_15)
+        self.URLLC_Users.append(self.URLLC_UE_16)
 
 
     def check_timestep(self):
