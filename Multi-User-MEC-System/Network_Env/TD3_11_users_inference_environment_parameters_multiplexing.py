@@ -38,6 +38,12 @@ delay_policy_3_multiplexing = []
 
 local_delay_policy_3_multiplexing = []
 offload_delay_policy_3_multiplexing = []
+
+outage_probability_policy_3_multiplexing = []
+failed_urllc_transmissions_policy_multiplexing = []
+urllc_throughput_policy_3_multiplexing = []
+
+
 local_queue_length_tasks_policy_3_multiplexing = []
 offload_queue_length_tasks_policy_3_multiplexing = []
 local_queue_length_bits_policy_3_multiplexing = []

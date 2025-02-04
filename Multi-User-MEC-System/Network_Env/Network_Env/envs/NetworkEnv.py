@@ -1523,3 +1523,26 @@ class NetworkEnv(gym.Env):
     def change_Ld_max(self,new_Ld_max):
         for embb_user in self.eMBB_Users:
             embb_user.Ld_max = new_Ld_max
+
+    def include_urllc_users(self,decision):
+        if decision == 0:
+            self.URLLC_Users.clear()
+
+        elif decision == 1:
+            self.URLLC_Users.append(self.URLLC_UE_1)
+            self.URLLC_Users.append(self.URLLC_UE_2)
+            self.URLLC_Users.append(self.URLLC_UE_3)
+            self.URLLC_Users.append(self.URLLC_UE_4)
+            self.URLLC_Users.append(self.URLLC_UE_5)
+            self.URLLC_Users.append(self.URLLC_UE_6)
+            self.URLLC_Users.append(self.URLLC_UE_7)
+            self.URLLC_Users.append(self.URLLC_UE_8)
+            self.URLLC_Users.append(self.URLLC_UE_9)
+            self.URLLC_Users.append(self.URLLC_UE_10)
+            self.URLLC_Users.append(self.URLLC_UE_11)
+            self.URLLC_Users.append(self.URLLC_UE_12)
+            self.URLLC_Users.append(self.URLLC_UE_13)
+            self.URLLC_Users.append(self.URLLC_UE_14)
+            self.URLLC_Users.append(self.URLLC_UE_15)
+            self.URLLC_Users.append(self.URLLC_UE_16)
+
