@@ -195,11 +195,11 @@ class NetworkEnv(gym.Env):
         for x in range(0,self.number_of_users):
             observation_space_high.append(self.max_lc_queue_length)
 
-        for x in range(0,self.number_of_urllc_users*self.num_allocate_RB_upper_bound):
-            observation_space_high.append(self.channel_gain_max)
+        # for x in range(0,self.number_of_urllc_users*self.num_allocate_RB_upper_bound):
+        #     observation_space_high.append(self.channel_gain_max)
 
-        for x in range(0,self.number_of_urllc_users*self.num_allocate_RB_upper_bound):
-            observation_space_high.append(self.channel_gain_max)
+        # for x in range(0,self.number_of_urllc_users*self.num_allocate_RB_upper_bound):
+        #     observation_space_high.append(self.channel_gain_max)
 
 
         observation_space_low = []
@@ -218,11 +218,11 @@ class NetworkEnv(gym.Env):
         for x in range(0,self.number_of_users):
             observation_space_low.append(self.min_lc_queue_length)
 
-        for x in range(0,self.number_of_urllc_users*self.num_allocate_RB_upper_bound):
-            observation_space_low.append(self.channel_gain_min)
+        # for x in range(0,self.number_of_urllc_users*self.num_allocate_RB_upper_bound):
+        #     observation_space_low.append(self.channel_gain_min)
 
-        for x in range(0,self.number_of_urllc_users*self.num_allocate_RB_upper_bound):
-            observation_space_low.append(self.channel_gain_min)
+        # for x in range(0,self.number_of_urllc_users*self.num_allocate_RB_upper_bound):
+        #     observation_space_low.append(self.channel_gain_min)
 
         observation_space_high = np.array(observation_space_high)
         observation_space_low = np.array(observation_space_low)
@@ -234,6 +234,7 @@ class NetworkEnv(gym.Env):
         
         
     def reshape_observation_space_for_model(self,observation_space,observation_channel_gains_urllc):
+        observation_channel_gains_urllc = []
     
         observation_space = np.transpose(observation_space)
         # print('observation_space after transpose: ', observation_space.shape)
