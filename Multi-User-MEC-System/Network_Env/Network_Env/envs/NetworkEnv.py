@@ -60,6 +60,7 @@ class NetworkEnv(gym.Env):
         self.resource_block_allocation_matrix = []
         self.resource_allocation_constraint_violation = 0
         self.num_of_clustered_urllc_users = 0
+        self.include_urllc_users_ = 1
 
         #Define upper and lower bounds of observation and action spaces
         
@@ -991,6 +992,8 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.clear()
         self.URLLC_Users.clear()
         self.group_users()
+        self.include_urllc_users(self.include_urllc_users_)
+        self.include_urllc_users_
 
         self.SBS1.associate_users(self.eMBB_Users, self.URLLC_Users)
         self.Communication_Channel_1.set_properties()
@@ -1529,9 +1532,11 @@ class NetworkEnv(gym.Env):
 
     def include_urllc_users(self,decision):
         if decision == 0:
+            self.include_urllc_users_ = 0
             self.URLLC_Users.clear()
 
         elif decision == 1:
+            self.include_urllc_users_ = 1
             if len(self.URLLC_Users) == 0:
                 self.URLLC_Users.append(self.URLLC_UE_1)
                 self.URLLC_Users.append(self.URLLC_UE_2)
