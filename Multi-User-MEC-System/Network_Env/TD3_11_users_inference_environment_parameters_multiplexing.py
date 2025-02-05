@@ -316,14 +316,16 @@ inf_individual_number_of_arriving_urllc_packets = np.load('inf_individual_number
 inf_individual_number_of_dropped_urllc_packets_due_to_resource_allocation = np.load('inf_individual_number_of_dropped_urllc_packets_due_to_resource_allocation.npy')
 inf_individual_number_of_dropped_urllc_packets_due_to_channel_rate = np.load('inf_individual_number_of_dropped_urllc_packets_due_to_channel_rate.npy')
 inf_individual_urllc_data_rate = np.load('inf_individual_urllc_data_rate.npy')
-inf_individual_successful_transmissions = np.load('inf_individual_successful_transmissions')
+inf_individual_successful_transmissions = np.load('inf_individual_successful_transmissions.npy')
 
 # Define timesteps
 len_inf_individual_urllc_data_rate = len(inf_individual_urllc_data_rate)
 timesteps = np.arange(1, len_inf_individual_urllc_data_rate + 1)
 
+#max_index = 910#np.argmax(inf_total_urllc_data_rate)
+
 # Specify the timestep at which to place markers
-marker_timestep = 520  # Change this to any valid timestep
+marker_timestep = 625#max_index  # Change this to any valid timestep
 marker_index = np.where(timesteps == marker_timestep)[0][0]  # Get index in array
 
 # Create subplots

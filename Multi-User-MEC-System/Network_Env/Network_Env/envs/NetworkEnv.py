@@ -1555,3 +1555,8 @@ class NetworkEnv(gym.Env):
                 self.URLLC_Users.append(self.URLLC_UE_15)
                 self.URLLC_Users.append(self.URLLC_UE_16)
 
+
+    def change_URLLC_users_task_arrival_rate(self,new_arrival_rate):
+        for urllc_user in self.URLLC_Users:
+            urllc_user.prob_packet_arrival = new_arrival_rate
+
