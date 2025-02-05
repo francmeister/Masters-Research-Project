@@ -279,6 +279,7 @@ class SBS():
         self.individual_number_of_arriving_urllc_packets = []
         self.individual_number_of_dropped_urllc_packets_due_to_resource_allocation = []
         self.individual_number_of_dropped_urllc_packets_due_to_channel_rate = []
+        self.urllc_successful_transmissions = 0
 
 
         for urllc_user in urllc_users:
@@ -296,6 +297,8 @@ class SBS():
             self.individual_number_of_arriving_urllc_packets.append(urllc_user.number_of_arriving_packets)
             self.individual_number_of_dropped_urllc_packets_due_to_resource_allocation.append(urllc_user.dropped_packets_due_to_resource_allocation)
             self.individual_number_of_dropped_urllc_packets_due_to_channel_rate.append(urllc_user.dropped_packets_due_to_channel_rate)
+            self.urllc_successful_transmissions+=urllc_user.successful_transmission
+            
 
             
 
@@ -680,6 +683,7 @@ class SBS():
         self.individual_number_of_arriving_urllc_packets = []
         self.individual_number_of_dropped_urllc_packets_due_to_resource_allocation = []
         self.individual_number_of_dropped_urllc_packets_due_to_channel_rate = []
+        self.urllc_successful_transmissions = 0
         
 
     def calculate_fairness(self,eMBB_Users):

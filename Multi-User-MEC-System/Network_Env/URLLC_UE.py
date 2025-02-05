@@ -37,6 +37,7 @@ class URLLC_UE(User_Equipment):
         self.number_of_arriving_packets = 0
         self.dropped_packets_due_to_resource_allocation = 0
         self.dropped_packets_due_to_channel_rate = 0
+        self.successful_transmission = 0
         #task_size_per_slot_bits
         self.set_properties_URLLC()
 
@@ -250,6 +251,7 @@ class URLLC_UE(User_Equipment):
         self.failed_transmission = False
         self.dropped_packets_due_to_resource_allocation = 0
         self.dropped_packets_due_to_channel_rate = 0
+        self.successful_transmission = 0
             #self.achieved_channel_rate = channel_rate/500
         self.achieved_channel_rate_per_slot = 0
         if self.assigned_resource_block > 0:
@@ -272,14 +274,19 @@ class URLLC_UE(User_Equipment):
                 #self.offload_task_queue.pop(0)
                 self.has_transmitted_this_time_slot = True
                 self.failed_transmission = False
+                self.successful_transmission = 1
 
             elif len(self.offload_task_queue) > 0 and self.achieved_channel_rate_per_slot < self.task_size_per_slot_bits:
                 self.has_transmitted_this_time_slot = False
                 self.failed_transmission = True
+                self.dropped_packets_due_to_channel_rate = 1
+                self.successful_transmission = 0
 
         elif self.assigned_resource_block == 0 and len(self.offload_task_queue) > 0:
             self.failed_transmission = True
             self.dropped_packets_due_to_resource_allocation = 1
+            self.has_transmitted_this_time_slot = False
+            self.successful_transmission = 0
 
         if len(self.offload_task_queue) > 0:
             self.offload_task_queue.pop(0)
