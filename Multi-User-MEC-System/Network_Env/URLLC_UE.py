@@ -34,6 +34,9 @@ class URLLC_UE(User_Equipment):
         self.total_gain_ = []
         self.distance_from_SBS_ = 0
         self.failed_transmission = False
+        self.number_of_arriving_packets = 0
+        self.dropped_packets_due_to_resource_allocation = 0
+        self.dropped_packets_due_to_channel_rate = 0
         #task_size_per_slot_bits
         self.set_properties_URLLC()
 
@@ -86,6 +89,7 @@ class URLLC_UE(User_Equipment):
         #self.task_arrival_rate_tasks_per_second = random.randint(self.min_task_arrival_rate_tasks_per_second,self.max_task_arrival_rate_tasks_per_second)
         self.task_arrival_rate_tasks_per_slot = np.random.binomial(size=1,n=1,p=self.prob_packet_arrival)#np.random.poisson(5,1)
         self.task_arrival_rate_tasks_per_slot = self.task_arrival_rate_tasks_per_slot[0]
+        self.number_of_arriving_packets = self.task_arrival_rate_tasks_per_slot
         #self.task_size_per_slot_bits = 10#10 bits per task in slot 
         qeueu_timer = 0
         
@@ -244,6 +248,8 @@ class URLLC_UE(User_Equipment):
         self.channel_rate_per_second_penalty = 0
         self.has_transmitted_this_time_slot = False
         self.failed_transmission = False
+        self.dropped_packets_due_to_resource_allocation = 0
+        self.dropped_packets_due_to_channel_rate = 0
             #self.achieved_channel_rate = channel_rate/500
         self.achieved_channel_rate_per_slot = 0
         if self.assigned_resource_block > 0:
@@ -273,6 +279,7 @@ class URLLC_UE(User_Equipment):
 
         elif self.assigned_resource_block == 0 and len(self.offload_task_queue) > 0:
             self.failed_transmission = True
+            self.dropped_packets_due_to_resource_allocation = 1
 
         if len(self.offload_task_queue) > 0:
             self.offload_task_queue.pop(0)

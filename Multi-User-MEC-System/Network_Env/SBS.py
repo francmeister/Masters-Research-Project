@@ -273,6 +273,14 @@ class SBS():
         self.total_local_queue_length_bits = 0
         self.total_offload_queue_length_bits = 0
 
+        self.number_of_arriving_urllc_packets = 0
+        self.number_of_dropped_urllc_packets_due_to_resource_allocation = 0
+        self.number_of_dropped_urllc_packets_due_to_channel_rate = 0
+        self.individual_number_of_arriving_urllc_packets = []
+        self.individual_number_of_dropped_urllc_packets_due_to_resource_allocation = []
+        self.individual_number_of_dropped_urllc_packets_due_to_channel_rate = []
+
+
         for urllc_user in urllc_users:
             self.individual_urllc_channel_rate_per_slot_with_penalty.append(urllc_user.achieved_channel_rate_per_slot)
             self.individual_urllc_channel_rate_per_second_penalties.append(urllc_user.channel_rate_per_second_penalty)
@@ -280,6 +288,15 @@ class SBS():
             self.individual_urllc_channel_rate_per_second_with_penalty.append(urllc_user.achieved_channel_rate_per_slot*1000)
             self.urllc_total_rate_per_second+=(urllc_user.achieved_channel_rate_per_slot*1000)
             self.urllc_total_rate_per_slot+=urllc_user.achieved_channel_rate_per_slot
+
+            self.number_of_arriving_urllc_packets+=urllc_user.number_of_arriving_packets
+            self.number_of_dropped_urllc_packets_due_to_resource_allocation+=urllc_user.dropped_packets_due_to_resource_allocation
+            self.number_of_dropped_urllc_packets_due_to_channel_rate+=urllc_user.dropped_packets_due_to_channel_rate
+
+            self.individual_number_of_arriving_urllc_packets.append(urllc_user.number_of_arriving_packets)
+            self.individual_number_of_dropped_urllc_packets_due_to_resource_allocation.append(urllc_user.dropped_packets_due_to_resource_allocation)
+            self.individual_number_of_dropped_urllc_packets_due_to_channel_rate.append(urllc_user.dropped_packets_due_to_channel_rate)
+
             
 
 
@@ -655,6 +672,14 @@ class SBS():
         self.total_local_queue_length_tasks = 0
         self.total_offload_queue_length_tasks = 0
         self.average_offloading_ratio = 0
+
+        self.number_of_arriving_urllc_packets = 0
+        self.number_of_dropped_urllc_packets_due_to_resource_allocation = 0
+        self.number_of_dropped_urllc_packets_due_to_channel_rate = 0
+
+        self.individual_number_of_arriving_urllc_packets = []
+        self.individual_number_of_dropped_urllc_packets_due_to_resource_allocation = []
+        self.individual_number_of_dropped_urllc_packets_due_to_channel_rate = []
         
 
     def calculate_fairness(self,eMBB_Users):
