@@ -281,6 +281,7 @@ class URLLC_UE(User_Equipment):
                 self.failed_transmission = True
                 self.dropped_packets_due_to_channel_rate = 1
                 self.successful_transmission = 0
+                #self.achieved_channel_rate_per_slot = 0
 
         elif self.assigned_resource_block == 0 and len(self.offload_task_queue) > 0:
             self.failed_transmission = True

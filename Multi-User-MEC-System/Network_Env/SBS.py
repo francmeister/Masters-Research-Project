@@ -280,6 +280,7 @@ class SBS():
         self.individual_number_of_dropped_urllc_packets_due_to_resource_allocation = []
         self.individual_number_of_dropped_urllc_packets_due_to_channel_rate = []
         self.urllc_successful_transmissions = 0
+        self.individual_successful_transmissions = []
 
 
         for urllc_user in urllc_users:
@@ -298,6 +299,7 @@ class SBS():
             self.individual_number_of_dropped_urllc_packets_due_to_resource_allocation.append(urllc_user.dropped_packets_due_to_resource_allocation)
             self.individual_number_of_dropped_urllc_packets_due_to_channel_rate.append(urllc_user.dropped_packets_due_to_channel_rate)
             self.urllc_successful_transmissions+=urllc_user.successful_transmission
+            self.individual_successful_transmissions.append(urllc_user.successful_transmission)
             
 
             
@@ -314,8 +316,8 @@ class SBS():
             #queueing_delay_violation_probability = eMBB_User.local_queue_delay_violation_probability()
             total_local_traffic_reward+=eMBB_User.local_queueing_traffic_reward()
             self.total_local_traffic_reward+=eMBB_User.local_queueing_traffic_reward()
-            self.total_local_queueing_violation_prob_reward += eMBB_User.local_queue_delay_violation_probability()
-            self.total_offload_queueing_violation_prob_reward+=eMBB_User.offload_queue_delay_violation_probability()
+            # self.total_local_queueing_violation_prob_reward += eMBB_User.local_queue_delay_violation_probability()
+            # self.total_offload_queueing_violation_prob_reward+=eMBB_User.offload_queue_delay_violation_probability()
             self.individual_local_queue_delay_violation_probability.append(eMBB_User.local_queue_delay_violation_probability_)
             self.individual_offload_queue_delay_violation_probability.append(eMBB_User.offload_queue_delay_violation_probability_)
             self.total_offload_ratio_reward += eMBB_User.offload_ratio_reward()
@@ -684,6 +686,7 @@ class SBS():
         self.individual_number_of_dropped_urllc_packets_due_to_resource_allocation = []
         self.individual_number_of_dropped_urllc_packets_due_to_channel_rate = []
         self.urllc_successful_transmissions = 0
+        self.individual_successful_transmissions = []
         
 
     def calculate_fairness(self,eMBB_Users):

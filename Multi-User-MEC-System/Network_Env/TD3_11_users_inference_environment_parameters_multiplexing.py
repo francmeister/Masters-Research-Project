@@ -179,8 +179,8 @@ plt.ylabel('Data Rate (bits/s)')
 plt.grid(True)
 plt.legend(loc="upper left")
 
-plt.tight_layout()
-plt.show()
+#plt.tight_layout()
+#plt.show()
 
 
 
@@ -300,7 +300,10 @@ plt.show()
 # plt.legend(loc="upper left")
 
 
+import numpy as np
+import matplotlib.pyplot as plt
 
+# Load data
 inf_number_of_arriving_urllc_packets = np.load('inf_number_of_arriving_urllc_packets.npy')
 inf_number_of_dropped_urllc_packets_due_to_resource_allocation = np.load('inf_number_of_dropped_urllc_packets_due_to_resource_allocation.npy')
 inf_number_of_dropped_urllc_packets_due_to_channel_rate = np.load('inf_number_of_dropped_urllc_packets_due_to_channel_rate.npy')
@@ -313,118 +316,59 @@ inf_individual_number_of_arriving_urllc_packets = np.load('inf_individual_number
 inf_individual_number_of_dropped_urllc_packets_due_to_resource_allocation = np.load('inf_individual_number_of_dropped_urllc_packets_due_to_resource_allocation.npy')
 inf_individual_number_of_dropped_urllc_packets_due_to_channel_rate = np.load('inf_individual_number_of_dropped_urllc_packets_due_to_channel_rate.npy')
 inf_individual_urllc_data_rate = np.load('inf_individual_urllc_data_rate.npy')
+inf_individual_successful_transmissions = np.load('inf_individual_successful_transmissions')
 
-
-
+# Define timesteps
 len_inf_individual_urllc_data_rate = len(inf_individual_urllc_data_rate)
-timesteps = np.arange(1,len_inf_individual_urllc_data_rate+1)
+timesteps = np.arange(1, len_inf_individual_urllc_data_rate + 1)
 
+# Specify the timestep at which to place markers
+marker_timestep = 520  # Change this to any valid timestep
+marker_index = np.where(timesteps == marker_timestep)[0][0]  # Get index in array
 
+# Create subplots
 plt.figure(figsize=(15, 8))
-#plt.suptitle('Effect of varying Task Arrival Rate on perfomance metrics',fontsize=16, fontweight='bold')
 
-plt.subplot(3, 4, 1)
-plt.plot(timesteps, inf_outage_probability)
-#plt.plot(task_arrival_rates, local_queue_length_tasks_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Outage Probability vs Time')
-plt.xlabel('Timestep')
-#plt.ylabel('Queue length')
-plt.grid(True)
-#plt.legend(loc="upper left")
+def plot_with_marker(position, y_data, title, ylabel=None):
+    """Helper function to plot with a marker at the specified timestep and annotate it."""
+    plt.subplot(3, 4, position)
+    plt.plot(timesteps, y_data, label=title)
+    
+    # Get y-value at the marker point
+    y_marker_value = y_data[marker_index]
+    
+    # Plot marker
+    plt.plot(marker_timestep, y_marker_value, 'ro', markersize=8)  # Red circle marker
+    
+    # Annotate value next to the marker
+    plt.text(marker_timestep, y_marker_value, f"{y_marker_value:.2f}", fontsize=12, fontweight='bold', verticalalignment='bottom', horizontalalignment='right', color='black')
+    
+    plt.title(title)
+    plt.xlabel('Timestep')
+    if ylabel:
+        plt.ylabel(ylabel)
+    plt.grid(True)
+    #plt.legend()
 
-plt.subplot(3, 4, 2)
-plt.plot(timesteps, inf_total_urllc_data_rate)
-#plt.plot(task_arrival_rates, local_queue_length_bits_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Total URLLC Data Rate')
-plt.xlabel('Timestep')
-plt.ylabel('Data Rate (bits/s)')
-plt.grid(True)
-#plt.legend(loc="upper left")
+    # Print value at marker point
+    print(f"{title} at timestep {marker_timestep}: {y_marker_value}")
 
-plt.subplot(3, 4, 3)
-plt.plot(timesteps, inf_number_of_arriving_urllc_packets)
-#plt.plot(task_arrival_rates, offload_queue_length_bits_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Total Arriving Packets')
-plt.xlabel('Timestep')
-#plt.ylabel('Queue Le')
-plt.grid(True)
-#plt.legend(loc="upper left")
-
-plt.subplot(3, 4, 4)
-plt.plot(timesteps, inf_failed_urllc_transmissions)
-#plt.plot(task_arrival_rates, offload_queue_length_tasks_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Total failed transmissions')
-plt.xlabel('Timestep')
-#plt.ylabel('Queue Length')
-plt.grid(True)
-#plt.legend(loc="upper left")
-
-plt.subplot(3, 4, 5)
-plt.plot(timesteps, inf_urllc_successful_transmissions)
-#plt.plot(task_arrival_rates, offload_queue_length_tasks_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Total Successful transmissions')
-plt.xlabel('Timestep')
-#plt.ylabel('Queue Length')
-plt.grid(True)
-#plt.legend(loc="upper left")
-
-
-
-plt.subplot(3, 4, 6)
-plt.plot(timesteps, inf_number_of_dropped_urllc_packets_due_to_resource_allocation)
-#plt.plot(task_arrival_rates, local_traffic_intensity_constraint_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Total Packets Dropped (Resource Allocation)')
-plt.xlabel('Timestep')
-#plt.ylabel('Violation Probability')
-plt.grid(True)
-#plt.legend(loc="upper left")
-
-plt.subplot(3, 4, 7)
-plt.plot(timesteps, inf_number_of_dropped_urllc_packets_due_to_channel_rate)
-#plt.plot(task_arrival_rates, offload_traffic_intensity_constraint_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Total Packets Dropped (Insufficient Channel Rate)')
-plt.xlabel('Timestep')
-#plt.ylabel('Violation Probability')
-plt.grid(True)
-#plt.legend(loc="upper left")
-
-plt.subplot(3, 4, 8)
-plt.plot(timesteps, inf_individual_urllc_data_rate[:,0])
-#plt.plot(task_arrival_rates, rmin_constraint_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('URLLC User 1 (Channel Rate)')
-plt.xlabel('Timestep')
-plt.ylabel('Channel Rate (bits/s)')
-plt.grid(True)
-#plt.legend(loc="upper left")
-
-
-plt.subplot(3, 4, 9)
-plt.plot(timesteps, inf_individual_number_of_arriving_urllc_packets[:,0])
-#plt.plot(task_arrival_rates, rmin_constraint_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('URLLC User 1 (Number of Arriving Packets)')
-plt.xlabel('Timestep')
-#plt.ylabel('Violation Probability')
-plt.grid(True)
-#plt.legend(loc="upper left")
-
-plt.subplot(3, 4, 10)
-plt.plot(timesteps, inf_individual_number_of_dropped_urllc_packets_due_to_resource_allocation[:,0])
-#plt.plot(task_arrival_rates, rmin_constraint_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('URLLC User 1 (Dropped Packets due to Resource Allocation)')
-plt.xlabel('Timestep')
-#plt.ylabel('Violation Probability')
-plt.grid(True)
-#plt.legend(loc="upper left")
-
-plt.subplot(3, 4, 11)
-plt.plot(timesteps, inf_individual_number_of_dropped_urllc_packets_due_to_channel_rate[:,0])
-#plt.plot(task_arrival_rates, rmin_constraint_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('URLLC User 1 (Dropped Packets due to Channel Rate)')
-plt.xlabel('Timestep')
-#plt.ylabel('Violation Probability')
-plt.grid(True)
-#plt.legend(loc="upper left")
-
+# Plot each graph with markers and annotations
+plot_with_marker(1, inf_outage_probability, 'Outage Probability vs Time')
+plot_with_marker(2, inf_total_urllc_data_rate, 'Total URLLC Data Rate', ylabel='Data Rate (bits/s)')
+plot_with_marker(3, inf_number_of_arriving_urllc_packets, 'Total Arriving Packets')
+plot_with_marker(4, inf_failed_urllc_transmissions, 'Total Failed Transmissions')
+plot_with_marker(5, inf_urllc_successful_transmissions, 'Total Successful Transmissions')
+plot_with_marker(6, inf_number_of_dropped_urllc_packets_due_to_resource_allocation, 'Packets Dropped (Resource Allocation)')
+plot_with_marker(7, inf_number_of_dropped_urllc_packets_due_to_channel_rate, 'Packets Dropped (Channel Rate)')
+plot_with_marker(8, inf_individual_urllc_data_rate[:, 0], 'User 1: Channel Rate', ylabel='Channel Rate (bits/s)')
+plot_with_marker(9, inf_individual_number_of_arriving_urllc_packets[:, 0], 'User 1: Arriving Packets')
+plot_with_marker(10, inf_individual_number_of_dropped_urllc_packets_due_to_resource_allocation[:, 0], 'User 1: Dropped Packets (Resource Allocation)')
+plot_with_marker(11, inf_individual_number_of_dropped_urllc_packets_due_to_channel_rate[:, 0], 'User 1: Dropped Packets (Channel Rate)')
+plot_with_marker(12, inf_individual_successful_transmissions[:, 0], 'User 1: Successful Transmission')
+# Adjust layout and show plot
+plt.tight_layout()
+plt.show()
 
 # plt.subplot(4, 3, 8)
 # plt.plot(task_arrival_rates, local_queue_delay_violation_probability_policy_3, marker='o', color='red', label=r"$\pi_3$")
@@ -463,8 +407,8 @@ plt.grid(True)
 # plt.legend(loc="upper left")
 
 
-plt.tight_layout()
-plt.show()
+# plt.tight_layout()
+# plt.show()
 
 
 
