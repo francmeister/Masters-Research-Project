@@ -72,112 +72,112 @@ local_queue_delay_violation_probability_policy_3_multiplexing = [0.1955400291357
 offload_queue_delay_violation_probability_policy_3_multiplexing = [0.04042339074721322,0.08008560878116566,0.10951908492438976,0.14812792104461123]
 
 
-plt.figure(figsize=(15, 8))
-plt.suptitle('Effect of varying Task Arrival Rate on perfomance metrics',fontsize=16, fontweight='bold')
-# Subplot 1: Reward
-plt.subplot(3, 4, 1)
-plt.plot(task_arrival_rates, reward_policy_3, marker='o', color='red', label=r"$\pi_3$")
-plt.plot(task_arrival_rates, reward_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Effect on Reward')
-plt.xlabel('Task arrival rate')
-plt.ylabel('Reward')
-plt.grid(True)
-plt.legend(loc="lower left")
+# plt.figure(figsize=(15, 8))
+# plt.suptitle('Effect of varying Task Arrival Rate on perfomance metrics',fontsize=16, fontweight='bold')
+# # Subplot 1: Reward
+# plt.subplot(3, 4, 1)
+# plt.plot(task_arrival_rates, reward_policy_3, marker='o', color='red', label=r"$\pi_3$")
+# plt.plot(task_arrival_rates, reward_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
+# plt.title('Effect on Reward')
+# plt.xlabel('Task arrival rate')
+# plt.ylabel('Reward')
+# plt.grid(True)
+# plt.legend(loc="lower left")
 
-# Subplot 2: Energy
-plt.subplot(3, 4, 2)
-plt.plot(task_arrival_rates, energy_policy_3, marker='o', color='red', label=r"$\pi_3$")
-plt.plot(task_arrival_rates, energy_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Effect on Energy')
-plt.xlabel('Task arrival rate')
-plt.ylabel('Energy (Joules)')
-plt.grid(True)
-plt.legend(loc="lower right")
+# # Subplot 2: Energy
+# plt.subplot(3, 4, 2)
+# plt.plot(task_arrival_rates, energy_policy_3, marker='o', color='red', label=r"$\pi_3$")
+# plt.plot(task_arrival_rates, energy_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
+# plt.title('Effect on Energy')
+# plt.xlabel('Task arrival rate')
+# plt.ylabel('Energy (Joules)')
+# plt.grid(True)
+# plt.legend(loc="lower right")
 
-# Subplot 3: Throughput
-plt.subplot(3, 4, 3)
-plt.plot(task_arrival_rates, throughput_policy_3, marker='o', color='red', label=r"$\pi_3$")
-plt.plot(task_arrival_rates, throughput_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Effect on Throughput')
-plt.xlabel('Task arrival rate')
-plt.ylabel('Throughput')
-plt.grid(True)
-plt.legend(loc="lower right")
+# # Subplot 3: Throughput
+# plt.subplot(3, 4, 3)
+# plt.plot(task_arrival_rates, throughput_policy_3, marker='o', color='red', label=r"$\pi_3$")
+# plt.plot(task_arrival_rates, throughput_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
+# plt.title('Effect on Throughput')
+# plt.xlabel('Task arrival rate')
+# plt.ylabel('Throughput')
+# plt.grid(True)
+# plt.legend(loc="lower right")
 
-# Subplot 4: Fairness Index
-plt.subplot(3, 4, 4)
-plt.plot(task_arrival_rates, fairness_index_policy_3, marker='o', color='red', label=r"$\pi_3$")
-plt.plot(task_arrival_rates, fairness_index_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Effect on Fairness Index')
-plt.xlabel('Task arrival rate')
-plt.ylabel('Fairness Index')
-plt.grid(True)
-plt.legend(loc="lower left")
+# # Subplot 4: Fairness Index
+# plt.subplot(3, 4, 4)
+# plt.plot(task_arrival_rates, fairness_index_policy_3, marker='o', color='red', label=r"$\pi_3$")
+# plt.plot(task_arrival_rates, fairness_index_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
+# plt.title('Effect on Fairness Index')
+# plt.xlabel('Task arrival rate')
+# plt.ylabel('Fairness Index')
+# plt.grid(True)
+# plt.legend(loc="lower left")
 
-# Subplot 5: Delay
-plt.subplot(3, 4, 5)
-plt.plot(task_arrival_rates, delay_policy_3, marker='o', color='red', label=r"$\pi_3$")
-plt.plot(task_arrival_rates, delay_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Effect on Delay')
-plt.xlabel('Task arrival rate')
-plt.ylabel('Delay (ms)')
-plt.grid(True)
-plt.legend(loc="upper left")
+# # Subplot 5: Delay
+# plt.subplot(3, 4, 5)
+# plt.plot(task_arrival_rates, delay_policy_3, marker='o', color='red', label=r"$\pi_3$")
+# plt.plot(task_arrival_rates, delay_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
+# plt.title('Effect on Delay')
+# plt.xlabel('Task arrival rate')
+# plt.ylabel('Delay (ms)')
+# plt.grid(True)
+# plt.legend(loc="upper left")
 
-# Subplot 5: Delay
-plt.subplot(3, 4, 6)
-plt.plot(task_arrival_rates, offloading_ratios_policy_3, marker='o', color='red', label=r"$\pi_3$")
-plt.plot(task_arrival_rates, offloading_ratios_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Effect on Offloading Ratio')
-plt.xlabel('Task arrival rate')
-plt.ylabel('Offloading Ratio')
-plt.grid(True)
-plt.legend(loc="lower left")
+# # Subplot 5: Delay
+# plt.subplot(3, 4, 6)
+# plt.plot(task_arrival_rates, offloading_ratios_policy_3, marker='o', color='red', label=r"$\pi_3$")
+# plt.plot(task_arrival_rates, offloading_ratios_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
+# plt.title('Effect on Offloading Ratio')
+# plt.xlabel('Task arrival rate')
+# plt.ylabel('Offloading Ratio')
+# plt.grid(True)
+# plt.legend(loc="lower left")
 
-plt.subplot(3, 4, 7)
-plt.plot(task_arrival_rates, local_delay_policy_3, marker='o', color='red', label=r"$\pi_3$")
-plt.plot(task_arrival_rates, local_delay_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Sum Local Delay')
-plt.xlabel('Task arrival rate')
-plt.ylabel('Sum Local Delay')
-plt.grid(True)
-plt.legend(loc="upper left")
+# plt.subplot(3, 4, 7)
+# plt.plot(task_arrival_rates, local_delay_policy_3, marker='o', color='red', label=r"$\pi_3$")
+# plt.plot(task_arrival_rates, local_delay_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
+# plt.title('Sum Local Delay')
+# plt.xlabel('Task arrival rate')
+# plt.ylabel('Sum Local Delay')
+# plt.grid(True)
+# plt.legend(loc="upper left")
 
-plt.subplot(3, 4, 8)
-plt.plot(task_arrival_rates, offload_delay_policy_3, marker='o', color='red', label=r"$\pi_3$")
-plt.plot(task_arrival_rates, offload_delay_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Sum Offload Delay')
-plt.xlabel('Task arrival rate')
-plt.ylabel('Sum Offload Delay')
-plt.grid(True)
-plt.legend(loc="upper left")
+# plt.subplot(3, 4, 8)
+# plt.plot(task_arrival_rates, offload_delay_policy_3, marker='o', color='red', label=r"$\pi_3$")
+# plt.plot(task_arrival_rates, offload_delay_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
+# plt.title('Sum Offload Delay')
+# plt.xlabel('Task arrival rate')
+# plt.ylabel('Sum Offload Delay')
+# plt.grid(True)
+# plt.legend(loc="upper left")
 
-plt.subplot(3, 4, 9)
-#plt.plot(task_arrival_rates, offload_delay_policy_3, marker='o', color='red', label=r"$\pi_3$")
-plt.plot(task_arrival_rates, outage_probability_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Outage Probability')
-plt.xlabel('Task arrival rate')
-plt.ylabel('Outage Probability')
-plt.grid(True)
-plt.legend(loc="upper left")
+# plt.subplot(3, 4, 9)
+# #plt.plot(task_arrival_rates, offload_delay_policy_3, marker='o', color='red', label=r"$\pi_3$")
+# plt.plot(task_arrival_rates, outage_probability_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
+# plt.title('Outage Probability')
+# plt.xlabel('Task arrival rate')
+# plt.ylabel('Outage Probability')
+# plt.grid(True)
+# plt.legend(loc="upper left")
 
-plt.subplot(3, 4, 10)
-#plt.plot(task_arrival_rates, offload_delay_policy_3, marker='o', color='red', label=r"$\pi_3$")
-plt.plot(task_arrival_rates, failed_urllc_transmissions_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('Number of Dropped Transmissions')
-plt.xlabel('Task arrival rate')
-#plt.ylabel('Sum Offload Delay')
-plt.grid(True)
-plt.legend(loc="upper left")
+# plt.subplot(3, 4, 10)
+# #plt.plot(task_arrival_rates, offload_delay_policy_3, marker='o', color='red', label=r"$\pi_3$")
+# plt.plot(task_arrival_rates, failed_urllc_transmissions_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
+# plt.title('Number of Dropped Transmissions')
+# plt.xlabel('Task arrival rate')
+# #plt.ylabel('Sum Offload Delay')
+# plt.grid(True)
+# plt.legend(loc="upper left")
 
-plt.subplot(3, 4, 11)
-#plt.plot(task_arrival_rates, offload_delay_policy_3, marker='o', color='red', label=r"$\pi_3$")
-plt.plot(task_arrival_rates, urllc_throughput_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
-plt.title('URLLC Sum Data Rate')
-plt.xlabel('Task arrival rate')
-plt.ylabel('Data Rate (bits/s)')
-plt.grid(True)
-plt.legend(loc="upper left")
+# plt.subplot(3, 4, 11)
+# #plt.plot(task_arrival_rates, offload_delay_policy_3, marker='o', color='red', label=r"$\pi_3$")
+# plt.plot(task_arrival_rates, urllc_throughput_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
+# plt.title('URLLC Sum Data Rate')
+# plt.xlabel('Task arrival rate')
+# plt.ylabel('Data Rate (bits/s)')
+# plt.grid(True)
+# plt.legend(loc="upper left")
 
 #plt.tight_layout()
 #plt.show()
@@ -411,6 +411,143 @@ plt.show()
 
 # plt.tight_layout()
 # plt.show()
+
+
+
+#-------------------------------------------------------------------------------------------------
+task_arrival_rates = [0.1,0.2,0.3,0.4,0.5]
+
+throughput_policy_3_multiplexing = [23519968.206958,23388521.182457,23224525.972719,22983403.060768,22930902.268947]
+fairness_index_policy_3_multiplexing = [0.526857,0.529248,0.519982,0.527532,0.521553]
+outage_probability_policy_3_multiplexing = [0.002293,0.018301,0.065473,0.125250,0.253280]
+failed_urllc_transmissions_policy_3_multiplexing = [0.996040,2.000000,3.144554,4.029703,5.175248]
+urllc_throughput_policy_3_multiplexing = [2882056.549439,2879323.436229,2812820.270929,2903565.987765,2839120.937516]
+urllc_arriving_packets_policy_3_multiplexing = [1.629703,3.144554,4.800000,6.386139,8.041584]
+urllc_dropped_packets_resource_allocation_policy_3_multiplexing = [0.583168,1.205941,1.951485,2.380198,3.063366]
+urllc_dropped_packets_channel_rate_policy_3_multiplexing = [0.412871,0.794059,1.193069,1.649505,2.111881]
+urllc_successful_transmissions_policy_3_multiplexing = [0.615842,1.116832,1.606931,2.291089,2.791089]
+offloading_ratios_policy_3_multiplexing = [0.1937689188308986,0.19665145899048386,0.19201698283652677,0.19355456873137825,0.19152883704277743]
+
+throughput_policy_2_multiplexing = [24773791.471006,24549116.300087,24313272.036482,24421899.283341,24430706.705216]
+fairness_index_policy_2_multiplexing = [0.288577,0.288080,0.294306,0.287238,0.284221]
+outage_probability_policy_2_multiplexing = [0.008947,0.066277,0.177419,0.356919,0.536628]
+failed_urllc_transmissions_policy_2_multiplexing = [1.212871,2.358416,3.468317,4.708911,6.000000]
+urllc_throughput_policy_2_multiplexing = [2027907.910071,2049252.344470,2042827.509050,2041191.642018,2049137.276187]
+urllc_arriving_packets_policy_2_multiplexing = [1.638614,3.184158,4.700000,6.340594,8.033663]
+urllc_dropped_packets_resource_allocation_policy_2_multiplexing = [0.896040,1.769307,2.512871,3.471287,4.398020]
+urllc_dropped_packets_channel_rate_policy_2_multiplexing = [0.316832,0.589109,0.955446,1.237624,1.601980]
+urllc_successful_transmissions_policy_2_multiplexing = [0.402970,0.801980,1.187129,1.568317,1.953465]
+offloading_ratios_policy_2_multiplexing = [0.20004509703913625,0.19466166423448755,0.19373112978716292,0.1916621501716979,0.1952534814620856]
+
+
+plt.figure(figsize=(15, 8))
+plt.suptitle('Effect of varying Task Arrival Rate on perfomance metrics',fontsize=16, fontweight='bold')
+# Subplot 1: Reward
+plt.subplot(3, 4, 1)
+plt.plot(task_arrival_rates, throughput_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
+plt.plot(task_arrival_rates, throughput_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
+plt.title('eMBB Data Rate')
+plt.xlabel('URLLC Task Arrival Probability')
+plt.ylabel('Data Rate (bits/s)')
+plt.grid(True)
+plt.legend(loc="lower left")
+
+# Subplot 5: Delay
+plt.subplot(3, 4, 2)
+plt.plot(task_arrival_rates, offloading_ratios_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
+plt.plot(task_arrival_rates, offloading_ratios_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
+plt.title('eMBB Offloading Ratios')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Delay (ms)')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+# Subplot 4: Fairness Index
+plt.subplot(3, 4, 3)
+plt.plot(task_arrival_rates, fairness_index_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
+plt.plot(task_arrival_rates, fairness_index_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
+plt.title('Effect on Fairness Index')
+plt.xlabel('URLLC Task Arrival Probability')
+plt.ylabel('Fairness Index')
+plt.grid(True)
+plt.legend(loc="lower left")
+
+# Subplot 2: Energy
+plt.subplot(3, 4, 4)
+plt.plot(task_arrival_rates, urllc_throughput_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
+plt.plot(task_arrival_rates, urllc_throughput_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
+plt.title('URLLC Data Rate')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Energy (Joules)')
+plt.grid(True)
+plt.legend(loc="lower right")
+
+# Subplot 3: Throughput
+plt.subplot(3, 4, 5)
+plt.plot(task_arrival_rates, outage_probability_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
+plt.plot(task_arrival_rates, outage_probability_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
+plt.title('URLLC Outage Probability')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Throughput')
+plt.grid(True)
+plt.legend(loc="lower right")
+
+
+plt.subplot(3, 4, 6)
+plt.plot(task_arrival_rates, urllc_arriving_packets_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
+plt.plot(task_arrival_rates, urllc_arriving_packets_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
+plt.title('URLLC Arriving Packets')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Sum Local Delay')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+plt.subplot(3, 4, 7)
+plt.plot(task_arrival_rates, failed_urllc_transmissions_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
+plt.plot(task_arrival_rates, failed_urllc_transmissions_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
+plt.title('URLLC Failed Transmissions')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Sum Offload Delay')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+plt.subplot(3, 4, 8)
+plt.plot(task_arrival_rates, urllc_successful_transmissions_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
+plt.plot(task_arrival_rates, urllc_successful_transmissions_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
+plt.title('URLLC Successful Transmissions')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Sum Offload Delay')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+plt.subplot(3, 4, 9)
+plt.plot(task_arrival_rates, urllc_dropped_packets_resource_allocation_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
+plt.plot(task_arrival_rates, urllc_dropped_packets_resource_allocation_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
+plt.title('URLLC Failed Transmissions (Resource Allocation)')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Outage Probability')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+plt.subplot(3, 4, 11)
+plt.plot(task_arrival_rates, urllc_dropped_packets_channel_rate_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
+plt.plot(task_arrival_rates, urllc_dropped_packets_channel_rate_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
+plt.title('URLLC Failed Transmissions (Channel Rate)')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Sum Offload Delay')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+plt.tight_layout()
+plt.show()
+# plt.subplot(3, 4, 11)
+# #plt.plot(task_arrival_rates, offload_delay_policy_3, marker='o', color='red', label=r"$\pi_3$")
+# plt.plot(task_arrival_rates, urllc_throughput_policy_3_multiplexing, marker='o', color='blue', label=r"$\pi_3$ multiplexing")
+# plt.title('URLLC Sum Data Rate')
+# plt.xlabel('Task arrival rate')
+# plt.ylabel('Data Rate (bits/s)')
+# plt.grid(True)
+# plt.legend(loc="upper left")
 
 
 
