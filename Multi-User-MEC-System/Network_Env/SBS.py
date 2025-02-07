@@ -687,6 +687,7 @@ class SBS():
         self.individual_number_of_dropped_urllc_packets_due_to_channel_rate = []
         self.urllc_successful_transmissions = 0
         self.individual_successful_transmissions = []
+        self.cb_allocations_count = 0
         
 
     def calculate_fairness(self,eMBB_Users):
@@ -723,6 +724,7 @@ class SBS():
         return 1/sum_square_error
     
     def allocate_resource_blocks_URLLC(self,communication_channel, URLLC_Users, embb_users, timestep):
+        self.cb_allocations_count = 0
         for URLLC_user in URLLC_Users:
             URLLC_user.calculate_channel_gain_on_all_resource_blocks(communication_channel)
 
@@ -762,6 +764,7 @@ class SBS():
                             urllc_user.assigned_resource_block = embb_user.available_resource_time_code_block[0][1]
                             urllc_user.assigned_code_block = embb_user.available_resource_time_code_block[0][2]
                             embb_user.available_resource_time_code_block.pop(0)
+                            self.cb_allocations_count+=1
 
         elif type_of_clustering == 'random_based': #and timestep == 0:
             number_of_embb_users = len(embb_users)
