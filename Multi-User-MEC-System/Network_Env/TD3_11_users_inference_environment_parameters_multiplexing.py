@@ -318,6 +318,9 @@ inf_individual_number_of_dropped_urllc_packets_due_to_channel_rate = np.load('in
 inf_individual_urllc_data_rate = np.load('inf_individual_urllc_data_rate.npy')
 inf_individual_successful_transmissions = np.load('inf_individual_successful_transmissions.npy')
 
+inf_L_values = np.load('inf_L_values.npy')
+inf_cdf_values = np.load('inf_cdf_values.npy')
+
 # Define timesteps
 len_inf_individual_urllc_data_rate = len(inf_individual_urllc_data_rate)
 timesteps = np.arange(1, len_inf_individual_urllc_data_rate + 1)
@@ -438,27 +441,32 @@ task_arrival_rates = [0.1,0.2,0.3,0.4,0.5]
 # urllc_dropped_packets_channel_rate_policy_2_multiplexing = [0.316832,0.589109,0.955446,1.237624,1.601980]
 # urllc_successful_transmissions_policy_2_multiplexing = [0.402970,0.801980,1.187129,1.568317,1.953465]
 # offloading_ratios_policy_2_multiplexing = [0.20004509703913625,0.19466166423448755,0.19373112978716292,0.1916621501716979,0.1952534814620856]
-throughput_policy_3_multiplexing = []
-fairness_index_policy_3_multiplexing = []
-outage_probability_policy_3_multiplexing = []
-failed_urllc_transmissions_policy_3_multiplexing = []
-urllc_throughput_policy_3_multiplexing = []
-urllc_arriving_packets_policy_3_multiplexing = []
-urllc_dropped_packets_resource_allocation_policy_3_multiplexing = []
-urllc_dropped_packets_channel_rate_policy_3_multiplexing = []
-urllc_successful_transmissions_policy_3_multiplexing = []
-offloading_ratios_policy_3_multiplexing = []
+throughput_policy_3_multiplexing = [26055989.413315,26141644.798566,25666780.073476,25616517.092900,25747475.643823]
+fairness_index_policy_3_multiplexing = [0.344939,0.339367,0.342452,0.339908,0.341447]
+outage_probability_policy_3_multiplexing = [0.001557,0.015538,0.044205,0.093633,0.193520]
+failed_urllc_transmissions_policy_3_multiplexing = [0.595758,0.637042,0.618786,0.625483,0.631657]
+urllc_throughput_policy_3_multiplexing = [3009658.962059,2959191.467821,2998482.614563,3023319.050738,2964893.941599]
+urllc_arriving_packets_policy_3_multiplexing = [1.587129,3.186139,4.680198,6.402970,7.975248]
+urllc_dropped_packets_resource_allocation_policy_3_multiplexing = [0.259513,0.286513,0.277131,0.278491,0.280695]
+urllc_dropped_packets_channel_rate_policy_3_multiplexing = [0.336245,0.350528,0.341654,0.346992,0.350962]
+urllc_dropped_packets_channel_rate_normalized_policy_3_multiplexing = [0.029126,0.030684,0.029799,0.030127,0.030685]
+urllc_successful_transmissions_policy_3_multiplexing = [0.393013,0.355500,0.371906,0.364466,0.359156]
+urllc_code_blocks_allocation_policy_3_multiplexing = [11.544554,11.423762,11.465347,11.517822,11.437624]
+offloading_ratios_policy_3_multiplexing = [0.19734782334083506,0.19152996122992938,0.19374182417445543,0.19257744881699448,0.1943328811035819]
 
-throughput_policy_2_multiplexing = []
-fairness_index_policy_2_multiplexing = []
-outage_probability_policy_2_multiplexing = []
-failed_urllc_transmissions_policy_2_multiplexing = []
-urllc_throughput_policy_2_multiplexing = []
-urllc_arriving_packets_policy_2_multiplexing = []
-urllc_dropped_packets_resource_allocation_policy_2_multiplexing = []
-urllc_dropped_packets_channel_rate_policy_2_multiplexing = []
-urllc_successful_transmissions_policy_2_multiplexing = []
-offloading_ratios_policy_2_multiplexing = []
+
+throughput_policy_2_multiplexing = [28976485.641096,29050629.857899,28535625.807299,28682629.958113,28560980.840404]
+fairness_index_policy_2_multiplexing = [0.462364,0.456957,0.464761,0.450561,0.465193]
+outage_probability_policy_2_multiplexing = [0.005134,0.046631,0.104546,0.249503,0.400373]
+failed_urllc_transmissions_policy_2_multiplexing = [0.717807,0.712054,0.692836,0.713707,0.713547]
+urllc_throughput_policy_2_multiplexing = [2329865.069970,2308734.550171,2415939.144192,2299263.781503,2344023.106419]
+urllc_arriving_packets_policy_2_multiplexing = [1.606931,3.104950,4.754455,6.349505,8.039604]
+urllc_dropped_packets_resource_allocation_policy_2_multiplexing = [0.475046,0.463329,0.445231,0.470763,0.458867]
+urllc_dropped_packets_channel_rate_policy_2_multiplexing = [0.242760,0.248724,0.247605,0.242944,0.254680]
+urllc_dropped_packets_channel_rate_normalized_policy_2_multiplexing = [0.028238,0.028868,0.028188,0.028813,0.029556]
+urllc_successful_transmissions_policy_2_multiplexing = [0.268022,0.277742,0.296335,0.276782,0.276970]
+urllc_code_blocks_allocation_policy_2_multiplexing = [8.597030,8.615842,8.784158,8.431683,8.616832]
+offloading_ratios_policy_2_multiplexing = [0.1962780915187864,0.19806346672530062,0.19648169967867882,0.1972022774722136,0.19630124660866402]
 
 plt.figure(figsize=(15, 8))
 plt.suptitle('Effect of varying Task Arrival Rate on perfomance metrics',fontsize=16, fontweight='bold')
@@ -549,7 +557,7 @@ plt.xlabel('URLLC Task Arrival Probability')
 plt.grid(True)
 plt.legend(loc="upper left")
 
-plt.subplot(3, 4, 11)
+plt.subplot(3, 4, 10)
 plt.plot(task_arrival_rates, urllc_dropped_packets_channel_rate_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
 plt.plot(task_arrival_rates, urllc_dropped_packets_channel_rate_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
 plt.title('URLLC Failed Transmissions (Channel Rate)')
@@ -557,6 +565,25 @@ plt.xlabel('URLLC Task Arrival Probability')
 #plt.ylabel('Sum Offload Delay')
 plt.grid(True)
 plt.legend(loc="upper left")
+
+plt.subplot(3, 4, 11)
+plt.plot(task_arrival_rates, urllc_code_blocks_allocation_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
+plt.plot(task_arrival_rates, urllc_code_blocks_allocation_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
+plt.title('URLLC CBs allocation')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Sum Offload Delay')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+plt.subplot(3, 4, 12)
+plt.plot(task_arrival_rates, urllc_dropped_packets_channel_rate_normalized_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
+plt.plot(task_arrival_rates, urllc_dropped_packets_channel_rate_normalized_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
+plt.title('URLLC Failed Transmissions (Channel Rate) Normalized')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Sum Offload Delay')
+plt.grid(True)
+plt.legend(loc="upper left")
+
 
 plt.tight_layout()
 plt.show()
@@ -569,7 +596,83 @@ plt.show()
 # plt.grid(True)
 # plt.legend(loc="upper left")
 
+# ---------------------------------------
+# Average Individual Number of allocated RBs:  [1. 0. 0. 0. 3. 2. 2. 0. 1. 1. 2.]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Punctruring users:  [1 0 0 0 1 6 1 0 1 1 0]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Clustered Urllc users:  [1 1 0 0 1 7 1 3 1 1 0]
+number_of_allocated_RBs_11_embb_users_3_multiplexing = [1, 0, 0, 0, 3, 2, 2, 0, 1, 1, 2]
+number_of_clustered_urllc_users_11_embb_users_3_multiplexing = [1, 1, 0, 0, 1, 7, 1, 3, 1, 1, 0]
 
 
 
+# Average Individual Number of allocated RBs:  [1. 0. 2. 1. 0. 1. 1. 0. 0. 5. 1.]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Punctruring users:  [1 0 0 0 0 3 1 0 0 1 0]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Clustered Urllc users:  [1 1 0 0 1 7 1 3 1 1 0]
+
+number_of_allocated_RBs_11_embb_users_2_multiplexing = [1, 0, 2, 1, 0, 1, 1, 0, 0, 5, 1]
+number_of_clustered_urllc_users_11_embb_users_2_multiplexing = [1, 1, 0, 0, 1, 7, 1, 3, 1, 1, 0]
+
+
+embb_users_11_users = ['1', '2', '3','4', '5', '6','7','8', '9', '10','11']
+
+fig, axes = plt.subplots(2, 2)
+axes = axes.flatten()
+# Allocated RBs Plot
+axes[0].bar(embb_users_11_users, number_of_allocated_RBs_11_embb_users_3_multiplexing, color='red')
+axes[0].set_ylabel('Number of Allocated RBs')
+axes[0].set_title('Number of Allocated RBs per eMBB User ($\pi_3^1$)')
+axes[0].set_xlabel('eMBB User Index')
+#axes[2].set_title('Allocated RBs per eMBB User')
+axes[0].grid(axis='y', linestyle='--', alpha=0.7)
+
+# Clustered URLLC Users Plot
+axes[1].bar(embb_users_11_users, number_of_clustered_urllc_users_11_embb_users_3_multiplexing, color='red')
+axes[1].set_ylabel('Number of Clustered URLLC Users')
+axes[1].set_xlabel('eMBB User Index')
+axes[1].set_title('Number of Clustered URLLC Users per eMBB User ($\pi_3^1$)')
+#axes[1,1].set_xlabel('eMBB Users')
+axes[1].grid(axis='y', linestyle='--', alpha=0.7)
+
+# Allocated RBs Plot
+axes[2].bar(embb_users_11_users, number_of_allocated_RBs_11_embb_users_2_multiplexing, color='blue')
+axes[2].set_ylabel('Number of Allocated RBs')
+axes[2].set_title('Number of Allocated RBs per eMBB User ($\pi_3^2$)')
+axes[2].set_xlabel('eMBB User Index')
+#axes[2].set_title('Allocated RBs per eMBB User')
+axes[2].grid(axis='y', linestyle='--', alpha=0.7)
+
+# Clustered URLLC Users Plot
+axes[3].bar(embb_users_11_users, number_of_clustered_urllc_users_11_embb_users_2_multiplexing, color='blue')
+axes[3].set_ylabel('Number of Clustered URLLC Users')
+axes[3].set_xlabel('eMBB User Index')
+axes[3].set_title('Number of Clustered URLLC Users per eMBB User ($\pi_3^2$)')
+#axes[1,1].set_xlabel('eMBB Users')
+axes[3].grid(axis='y', linestyle='--', alpha=0.7)
+
+plt.tight_layout()
+plt.show()
+
+
+
+inf_L_values = np.load('inf_L_values.npy')
+inf_cdf_values = np.load('inf_cdf_values.npy')
+
+U = 16
+p = 0.5
+# Plot CDF
+plt.step(inf_L_values, inf_cdf_values, where="post", label=f'Binomial CDF (U={U}, p={p})', linewidth=2)
+plt.xlabel('Total number of packet arrivals')
+plt.ylabel('Cumulative Probability')
+plt.title('CDF of URLLC Users’ Packet Arrivals')
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.legend()
+plt.show()
 

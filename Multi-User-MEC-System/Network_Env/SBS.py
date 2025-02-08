@@ -28,6 +28,8 @@ class SBS():
         self.q_offload_queueing_violation_prob_reward = 10**7
         self.q_offload_ratio_reward = 10**6
         self.average_offloading_ratio = 0
+        self.L_values = 0
+        self.cdf_values = 0
         self.set_properties()
 
     def associate_users(self, eMBB_Users, URLLC_users):
@@ -916,6 +918,8 @@ class SBS():
             #self.outage_probability = stats.norm.cdf(K,loc=average_rate,scale=std_rate)
             L = stats.binom(len(urllc_users),urllc_users[0].prob_packet_arrival)
             self.outage_probability = 1 - L.cdf(urllc_total_rate/urllc_task_size)#stats.binom.cdf(num_arriving_urllc_packets,len(urllc_users),urllc_users[0].prob_packet_arrival)
+            self.L_values = L
+            self.cdf_values = L.cdf(urllc_total_rate/urllc_task_size)
             # print('urllc_total_rate: ', urllc_total_rate)
             #print('self.outage_probability: ', self.outage_probability )
             #print('')
