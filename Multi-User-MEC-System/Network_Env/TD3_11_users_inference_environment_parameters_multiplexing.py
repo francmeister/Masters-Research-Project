@@ -668,7 +668,7 @@ inf_cdf_values = np.load('inf_cdf_values.npy')
 U = 16
 p = 0.5
 # Plot CDF
-plt.step(inf_L_values, inf_cdf_values, where="post", label=f'Binomial CDF (U={U}, p={p})', linewidth=2)
+plt.scatter(inf_L_values, inf_cdf_values, label=f'Binomial CDF (U={U}, p={p})', linewidth=2)
 plt.xlabel('Total number of packet arrivals')
 plt.ylabel('Cumulative Probability')
 plt.title('CDF of URLLC Users’ Packet Arrivals')

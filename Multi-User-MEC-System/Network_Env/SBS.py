@@ -918,8 +918,8 @@ class SBS():
             #self.outage_probability = stats.norm.cdf(K,loc=average_rate,scale=std_rate)
             L = stats.binom(len(urllc_users),urllc_users[0].prob_packet_arrival)
             self.outage_probability = 1 - L.cdf(urllc_total_rate/urllc_task_size)#stats.binom.cdf(num_arriving_urllc_packets,len(urllc_users),urllc_users[0].prob_packet_arrival)
-            self.L_values = self.num_arriving_urllc_packets
-            self.cdf_values = L.cdf(urllc_total_rate/urllc_task_size)
+            self.L_values = (urllc_total_rate/urllc_task_size)
+            self.cdf_values = stats.binom.cdf((urllc_total_rate/urllc_task_size),len(urllc_users),urllc_users[0].prob_packet_arrival)#L.cdf(urllc_total_rate/urllc_task_size)
             # print('urllc_total_rate: ', urllc_total_rate)
             #print('self.outage_probability: ', self.outage_probability )
             #print('')
