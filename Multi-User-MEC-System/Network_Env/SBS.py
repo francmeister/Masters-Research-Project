@@ -5,6 +5,7 @@ import numpy as np
 from numpy import interp
 import scipy.stats as stats
 import statistics
+from scipy.stats import binom
 
 class SBS():
     def __init__(self, SBS_label):
@@ -920,7 +921,7 @@ class SBS():
             self.outage_probability = 1 - L.cdf(urllc_total_rate/urllc_task_size)#stats.binom.cdf(num_arriving_urllc_packets,len(urllc_users),urllc_users[0].prob_packet_arrival)
             self.L_values = (urllc_total_rate/urllc_task_size)
            
-            self.cdf_values = L.cdf(urllc_total_rate/urllc_task_size)
+            self.cdf_values = binom.cdf((urllc_total_rate/urllc_task_size),len(urllc_users),urllc_users[0].prob_packet_arrival)#L.cdf(urllc_total_rate/urllc_task_size)
             # print('urllc_total_rate: ', urllc_total_rate)
             #print('self.outage_probability: ', self.outage_probability )
             #print('')
