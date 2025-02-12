@@ -469,32 +469,94 @@ task_arrival_rates = [0.1,0.2,0.3,0.4,0.5]
 # urllc_code_blocks_allocation_policy_2_multiplexing = [8.597030,8.615842,8.784158,8.431683,8.616832]
 # offloading_ratios_policy_2_multiplexing = [0.1962780915187864,0.19806346672530062,0.19648169967867882,0.1972022774722136,0.19630124660866402]
 
-throughput_policy_3_multiplexing = []
-fairness_index_policy_3_multiplexing = []
-outage_probability_policy_3_multiplexing = []
-failed_urllc_transmissions_policy_3_multiplexing = []
-urllc_throughput_policy_3_multiplexing = []
-urllc_arriving_packets_policy_3_multiplexing = []
-urllc_dropped_packets_resource_allocation_policy_3_multiplexing = []
-urllc_dropped_packets_channel_rate_policy_3_multiplexing = []
-urllc_dropped_packets_channel_rate_normalized_policy_3_multiplexing = []
-urllc_successful_transmissions_policy_3_multiplexing = []
-urllc_code_blocks_allocation_policy_3_multiplexing = []
-offloading_ratios_policy_3_multiplexing = []
+# throughput_policy_3_multiplexing = [26725752.891838,26790690.355098,26590930.079820,26518234.582759,26377871.419373]
+# fairness_index_policy_3_multiplexing = [0.356295,0.351338,0.350647,0.352478,0.347640]
+# outage_probability_policy_3_multiplexing = [0.041410,0.191288,0.370343,0.542379,0.693617]
+# failed_urllc_transmissions_policy_3_multiplexing = [0.807094,0.789307,0.795863,0.798897,0.798490]
+# urllc_throughput_policy_3_multiplexing = [1647890.446745,1594706.348482,1590595.634520,1615746.852710,1633131.945769]
+# urllc_arriving_packets_policy_3_multiplexing = [1.591089,3.129703,4.738614,6.464356,7.866337]
+# urllc_dropped_packets_resource_allocation_policy_3_multiplexing = [0.634723,0.605505,0.619933,0.614030,0.615607]
+# urllc_dropped_packets_channel_rate_policy_3_multiplexing = [0.172371,0.183803,0.175930,0.184868,0.182882]
+# urllc_dropped_packets_channel_rate_normalized_policy_3_multiplexing = [0.028139,0.030568,0.029570,0.030554,0.030147]
+# urllc_successful_transmissions_policy_3_multiplexing = [0.181083,0.200253,0.192645,0.192219,0.192070]
+# urllc_code_blocks_allocation_policy_3_multiplexing = [6.125743,6.012871,5.949505,6.050495,6.066337]
+# offloading_ratios_policy_3_multiplexing = [0.19719305711514662,0.19697381942146988,0.1947635685919775,0.19613747617287966,0.19207713245669789]
+# # ---------------------------------------
+# # Average Individual Number of allocated RBs:  [0. 1. 0. 0. 3. 6. 1. 0. 1. 0. 0.]
+# # ---------------------------------------
+# # ---------------------------------------
+# # Average Individual Number of Punctruring users:  [0 0 0 0 0 2 0 0 1 0 0]
+# # ---------------------------------------
+# # ---------------------------------------
+# # Average Individual Number of Clustered Urllc users:  [0 0 6 2 0 2 0 3 1 1 1]
 
 
-throughput_policy_2_multiplexing = []
-fairness_index_policy_2_multiplexing = []
-outage_probability_policy_2_multiplexing = []
-failed_urllc_transmissions_policy_2_multiplexing = []
-urllc_throughput_policy_2_multiplexing = []
-urllc_arriving_packets_policy_2_multiplexing = []
-urllc_dropped_packets_resource_allocation_policy_2_multiplexing = []
-urllc_dropped_packets_channel_rate_policy_2_multiplexing = []
-urllc_dropped_packets_channel_rate_normalized_policy_2_multiplexing = []
-urllc_successful_transmissions_policy_2_multiplexing = []
-urllc_code_blocks_allocation_policy_2_multiplexing = []
-offloading_ratios_policy_2_multiplexing = []
+# throughput_policy_2_multiplexing = [28920487.464893,28782067.941722,28535289.100306,28486371.577977,28233539.833356]
+# fairness_index_policy_2_multiplexing = [0.499652,0.503242,0.497064,0.497738,0.495541]
+# outage_probability_policy_2_multiplexing = [0.007372,0.039645,0.099043,0.214785,0.365292]
+# failed_urllc_transmissions_policy_2_multiplexing = [0.708435,0.710518,0.689994,0.708091,0.695776]
+# urllc_throughput_policy_2_multiplexing = [2408479.466263,2445415.743503,2525250.323111,2476958.271838,2479741.117376]
+# urllc_arriving_packets_policy_2_multiplexing = [1.619802,3.191089,4.739604,6.301980,7.993069]
+# urllc_dropped_packets_resource_allocation_policy_2_multiplexing = [0.406479,0.392181,0.400877,0.413668,0.406045]
+# urllc_dropped_packets_channel_rate_policy_2_multiplexing = [0.301956,0.318337,0.289116,0.294423,0.289731]
+# urllc_dropped_packets_channel_rate_normalized_policy_2_multiplexing = [0.032455,0.033830,0.030232,0.031037,0.030610]
+# urllc_successful_transmissions_policy_2_multiplexing = [0.283007,0.279243,0.299979,0.281854,0.295058]
+# urllc_code_blocks_allocation_policy_2_multiplexing = [9.303960,9.409901,9.563366,9.486139,9.465347]
+# offloading_ratios_policy_2_multiplexing = [0.19276356143727294,0.19510906104485243,0.19713557618672126,0.19977564373620196,0.19312052109603678]
+# ---------------------------------------
+# Average Individual Number of allocated RBs:  [1. 0. 2. 1. 1. 1. 1. 1. 1. 3. 0.]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Punctruring users:  [0 0 6 2 0 2 0 3 1 1 0]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Clustered Urllc users:  [0 0 6 2 0 2 0 3 1 1 1]
+
+
+
+throughput_policy_3_multiplexing = [21941375.040442,21847321.270962,21674236.497227,21627541.901626,21370788.807311]
+fairness_index_policy_3_multiplexing = [0.308369,0.303736,0.308661,0.312745,0.311955]
+outage_probability_policy_3_multiplexing = [0.024452,0.099756,0.238773,0.390995,0.533596]
+failed_urllc_transmissions_policy_3_multiplexing = [0.756246,0.757113,0.764422,0.760184,0.746760]
+urllc_throughput_policy_3_multiplexing = [1908990.708027,1985442.121225,1955344.995418,1973403.863648,2037813.114767]
+urllc_arriving_packets_policy_3_multiplexing = [1.624752,3.305941,4.925743,6.440594,8.022772]
+urllc_dropped_packets_resource_allocation_policy_3_multiplexing = [0.560024,0.579515,0.593166,0.578017,0.571887]
+urllc_dropped_packets_channel_rate_policy_3_multiplexing = [0.196222,0.177598,0.171256,0.182168,0.174874]
+urllc_dropped_packets_channel_rate_normalized_policy_3_multiplexing = [0.029897,0.026523,0.025705,0.027181,0.025410]
+urllc_successful_transmissions_policy_3_multiplexing = [0.232176,0.233603,0.226332,0.231360,0.244724]
+urllc_code_blocks_allocation_policy_3_multiplexing = [6.563366,6.696040,6.662376,6.701980,6.882178]
+offloading_ratios_policy_3_multiplexing = [0.1977619312388212,0.1959598971906783,0.19543719774182386,0.195986240837136,0.20049876094314464]
+# ---------------------------------------
+# Average Individual Number of allocated RBs:  [2. 0. 0. 0. 4. 4. 1. 0. 0. 0. 1.]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Punctruring users:  [0 0 0 0 0 3 1 0 0 0 2]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Clustered Urllc users:  [0 2 1 2 0 3 1 0 5 0 2]
+# ---------------------------------------
+
+throughput_policy_2_multiplexing = [19713888.547248,19644050.276370,19535506.358380,19328482.741731,19176758.832985]
+fairness_index_policy_2_multiplexing = [0.501938,0.501944,0.500354,0.498758,0.501106]
+outage_probability_policy_2_multiplexing = [0.003372,0.018057,0.052885,0.101842,0.194097]
+failed_urllc_transmissions_policy_2_multiplexing = [0.613179,0.628376,0.614149,0.619650,0.626276]
+urllc_throughput_policy_2_multiplexing = [3057720.583359,3004250.968804,3022033.252944,3070825.635528,3031453.289693]
+urllc_arriving_packets_policy_2_multiplexing = [1.622772,3.189109,4.870297,6.338614,8.048515]
+urllc_dropped_packets_resource_allocation_policy_2_multiplexing = [0.380720,0.401118,0.387071,0.388316,0.395006]
+urllc_dropped_packets_channel_rate_policy_2_multiplexing = [0.232459,0.227259,0.227079,0.231334,0.231271]
+urllc_dropped_packets_channel_rate_normalized_policy_2_multiplexing = [0.023953,0.023692,0.023642,0.023747,0.023974]
+urllc_successful_transmissions_policy_2_multiplexing = [0.373398,0.361689,0.374060,0.371134,0.363267]
+urllc_code_blocks_allocation_policy_2_multiplexing = [9.704950,9.592079,9.604950,9.741584,9.646535]
+offloading_ratios_policy_2_multiplexing = [0.19439493772822347,0.19397932585356695,0.1961126629822247,0.19666448277437942,0.19427947397164191]
+
+# ---------------------------------------
+# Average Individual Number of allocated RBs:  [1. 2. 0. 0. 2. 0. 0. 2. 0. 2. 3.]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Punctruring users:  [0 2 0 0 0 0 0 0 0 0 2]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Clustered Urllc users:  [0 2 1 2 0 3 1 0 5 0 2]
 
 plt.figure(figsize=(15, 8))
 plt.suptitle('Effect of varying Task Arrival Rate on perfomance metrics',fontsize=16, fontweight='bold')
@@ -579,7 +641,7 @@ plt.legend(loc="upper left")
 plt.subplot(3, 4, 9)
 plt.plot(task_arrival_rates, urllc_dropped_packets_resource_allocation_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
 plt.plot(task_arrival_rates, urllc_dropped_packets_resource_allocation_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
-plt.title('URLLC Failed Transmissions (Resource Allocation)')
+plt.title('Failed Transmissions (Resource Allocation)')
 plt.xlabel('URLLC Task Arrival Probability')
 #plt.ylabel('Outage Probability')
 plt.grid(True)
@@ -588,7 +650,7 @@ plt.legend(loc="upper left")
 plt.subplot(3, 4, 10)
 plt.plot(task_arrival_rates, urllc_dropped_packets_channel_rate_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^1$")
 plt.plot(task_arrival_rates, urllc_dropped_packets_channel_rate_policy_2_multiplexing, marker='o', color='blue', label=r"$\pi_3^2$")
-plt.title('URLLC Failed Transmissions (Channel Rate)')
+plt.title('Failed Transmissions (Channel Rate)')
 plt.xlabel('URLLC Task Arrival Probability')
 #plt.ylabel('Sum Offload Delay')
 plt.grid(True)
@@ -625,19 +687,19 @@ plt.show()
 # plt.legend(loc="upper left")
 
 # ---------------------------------------
-# Average Individual Number of allocated RBs:  [1. 0. 0. 0. 3. 2. 2. 0. 1. 1. 2.]
+# Average Individual Number of allocated RBs:  [2. 0. 0. 0. 4. 4. 1. 0. 0. 0. 1.]
 # ---------------------------------------
 # ---------------------------------------
-# Average Individual Number of Punctruring users:  [1 0 0 0 1 6 1 0 1 1 0]
+# Average Individual Number of Punctruring users:  [0 0 0 0 0 3 1 0 0 0 2]
 # ---------------------------------------
 # ---------------------------------------
-# Average Individual Number of Clustered Urllc users:  [1 1 0 0 1 7 1 3 1 1 0]
-number_of_allocated_RBs_11_embb_users_3_multiplexing = [1, 0, 0, 0, 3, 2, 2, 0, 1, 1, 2]
-number_of_clustered_urllc_users_11_embb_users_3_multiplexing = [1, 1, 0, 0, 1, 7, 1, 3, 1, 1, 0]
+# Average Individual Number of Clustered Urllc users:  [0 2 1 2 0 3 1 0 5 0 2]
+number_of_allocated_RBs_11_embb_users_3_multiplexing = [2, 0, 0, 0, 4, 4, 1, 0, 0, 0, 1]
+number_of_clustered_urllc_users_11_embb_users_3_multiplexing = [0, 2, 1, 2, 0, 3, 1, 0, 5, 0, 2]
 
 
 
-# Average Individual Number of allocated RBs:  [1. 0. 2. 1. 0. 1. 1. 0. 0. 5. 1.]
+# Average Individual Number of allocated RBs:  [1. 2. 0. 0. 2. 0. 0. 2. 0. 2. 3.]
 # ---------------------------------------
 # ---------------------------------------
 # Average Individual Number of Punctruring users:  [1 0 0 0 0 3 1 0 0 1 0]
@@ -645,8 +707,8 @@ number_of_clustered_urllc_users_11_embb_users_3_multiplexing = [1, 1, 0, 0, 1, 7
 # ---------------------------------------
 # Average Individual Number of Clustered Urllc users:  [1 1 0 0 1 7 1 3 1 1 0]
 
-number_of_allocated_RBs_11_embb_users_2_multiplexing = [1, 0, 2, 1, 0, 1, 1, 0, 0, 5, 1]
-number_of_clustered_urllc_users_11_embb_users_2_multiplexing = [1, 1, 0, 0, 1, 7, 1, 3, 1, 1, 0]
+number_of_allocated_RBs_11_embb_users_2_multiplexing = [1, 2, 0, 0, 2, 0, 0, 2, 0, 2, 3]
+number_of_clustered_urllc_users_11_embb_users_2_multiplexing = [0, 2, 1, 2, 0, 3, 1, 0, 5, 0, 2]
 
 
 embb_users_11_users = ['1', '2', '3','4', '5', '6','7','8', '9', '10','11']
@@ -712,7 +774,7 @@ plt.xlabel(r'$\frac{\sum_{u \in U^{(m)}} R_u^{(m)} [t]}{l_u^{(m)}}$')
 
 #plt.set_xlabel(r'$\frac{\sum_{u \in U^{(m)}} R_u^{(m)} [t]}{l_u^{(m)}}$')
 plt.ylabel('Cumulative Probability')
-plt.title('CDF of URLLC Users’ Packet Arrivals')
+plt.title(r'CDF of $\frac{\sum_{u \in U^{(m)}} R_u^{(m)} [t]}{l_u^{(m)}}$')
 plt.grid(True, linestyle='--', alpha=0.7)
 plt.legend()
 plt.show()
