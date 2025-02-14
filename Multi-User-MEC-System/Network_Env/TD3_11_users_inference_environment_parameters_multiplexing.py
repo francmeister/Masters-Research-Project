@@ -779,5 +779,226 @@ plt.grid(True, linestyle='--', alpha=0.7)
 plt.legend()
 plt.show()
 
+#************************************************************************************************************
 
+throughput_policy_3_multiplexing = [27856222.479971,27746767.481692,27632472.007592,27561416.945967,27429444.516301]
+fairness_index_policy_3_multiplexing = [0.312256,0.315364,0.311998,0.310243,0.309484]
+outage_probability_policy_3_multiplexing = [0.027712,0.119196,0.288494,0.450350,0.654409]
+failed_urllc_transmissions_policy_3_multiplexing = [0.768467,0.776992,0.790973,0.777384,0.781925]
+urllc_throughput_policy_3_multiplexing = [1809664.598048,1798231.264776,1765050.359062,1822812.182178,1753196.840162]
+urllc_arriving_packets_policy_3_multiplexing = [1.595050,3.218812,4.760396,6.417822,8.063366]
+urllc_dropped_packets_resource_allocation_policy_3_multiplexing = [0.604593,0.598277,0.615017,0.610614,0.611248]
+urllc_dropped_packets_channel_rate_policy_3_multiplexing = [0.163873,0.178714,0.175957,0.166770,0.170678]
+urllc_dropped_packets_channel_rate_normalized_policy_3_multiplexing = [0.026773,0.028862,0.028521,0.026920,0.028237]
+urllc_successful_transmissions_policy_3_multiplexing = [0.219119,0.213473,0.199043,0.214594,0.207269]
+urllc_code_blocks_allocation_policy_3_multiplexing = [6.120792,6.192079,6.169307,6.195050,6.044554]
+offloading_ratios_policy_3_multiplexing = [0.18839509536054236,0.20018409718235486,0.19109121401365983,0.19597850658966942,0.19872193379866995]
+# ---------------------------------------
+# Average Individual Number of allocated RBs:  [1. 0. 0. 2. 4. 3. 1. 1. 0. 0. 0.]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Punctruring users:  [0 0 0 2 2 1 0 0 0 0 0]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Clustered Urllc users:  [0 2 2 2 2 1 0 0 2 4 1]
+
+throughput_policy_5_multiplexing = [24504372.478700,24314379.401867,23956300.790765,23799335.374219,23670853.814983]
+fairness_index_policy_5_multiplexing = [0.503136,0.501268,0.501247,0.498384,0.495940]
+outage_probability_policy_5_multiplexing = [0.001077,0.007582,0.031761,0.075364,0.154725]
+failed_urllc_transmissions_policy_5_multiplexing = [0.610256,0.618707,0.607366,0.624460,0.622613]
+urllc_throughput_policy_5_multiplexing = [3082393.161145,3069286.946454,3073614.437858,3059099.808630,3088295.377507]
+urllc_arriving_packets_policy_5_multiplexing = [1.544554,3.186139,4.758416,6.411881,7.986139]
+urllc_dropped_packets_resource_allocation_policy_5_multiplexing = [0.309615,0.319764,0.304827,0.316553,0.307091]
+urllc_dropped_packets_channel_rate_policy_5_multiplexing = [0.300641,0.298943,0.302538,0.307906,0.315522]
+urllc_dropped_packets_channel_rate_normalized_policy_5_multiplexing = [0.027348,0.027233,0.027623,0.028100,0.028684]
+urllc_successful_transmissions_policy_5_multiplexing = [0.383974,0.366998,0.381398,0.365349,0.368708]
+urllc_code_blocks_allocation_policy_5_multiplexing = [10.993069,10.977228,10.952475,10.957426,11.000000]
+offloading_ratios_policy_5_multiplexing = [0.1893769557607402,0.19010648816798079,0.19986619651201606,0.19135257064535474,0.19865437713512668]
+# ---------------------------------------
+# Average Individual Number of allocated RBs:  [1. 1. 1. 0. 1. 1. 1. 0. 3. 2. 1.]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Punctruring users:  [0 2 2 0 2 1 0 0 2 4 1]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Clustered Urllc users:  [0 2 2 2 2 1 0 0 2 4 1]
+
+
+throughput_policy_6_multiplexing = [23362904.994583,23519443.086671,23099945.002894,22713954.889901,22694540.494411]
+fairness_index_policy_6_multiplexing = [0.446522,0.445939,0.447098,0.446284,0.441382]
+outage_probability_policy_6_multiplexing = [0.001930,0.010277,0.046348,0.109638,0.208447]
+failed_urllc_transmissions_policy_6_multiplexing = [0.634592,0.643700,0.647291,0.645974,0.634336]
+urllc_throughput_policy_6_multiplexing = [2910462.949857,2951499.780368,2910006.517704,2883453.928942,2918095.869784]
+urllc_arriving_packets_policy_6_multiplexing = [1.625743,3.103960,4.769307,6.443564,8.033663]
+urllc_dropped_packets_resource_allocation_policy_6_multiplexing = [0.350792,0.356938,0.357484,0.360172,0.360611]
+urllc_dropped_packets_channel_rate_policy_6_multiplexing = [0.283800,0.286762,0.289807,0.285802,0.273724]
+urllc_dropped_packets_channel_rate_normalized_policy_6_multiplexing = [0.028003,0.027911,0.028501,0.028261,0.026967]
+urllc_successful_transmissions_policy_6_multiplexing = [0.352619,0.345136,0.345028,0.344499,0.356914]
+urllc_code_blocks_allocation_policy_6_multiplexing = [10.134653,10.274257,10.168317,10.112871,10.150495]
+offloading_ratios_policy_6_multiplexing = [0.19225871750829776,0.1941592564378773,0.1921466879711142,0.19622729866855107,0.1992265774124902]
+# ---------------------------------------
+# Average Individual Number of allocated RBs:  [0. 2. 0. 0. 0. 0. 1. 3. 0. 2. 4.]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Punctruring users:  [0 2 0 0 0 0 0 0 0 4 1]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Clustered Urllc users:  [0 2 2 2 2 1 0 0 2 4 1]
+
+
+throughput_policy_6_multiplexing = [25944697.122881,25883454.164982,25448069.068494,25260861.290155,25179444.675325]
+fairness_index_policy_6_multiplexing = [0.425907,0.420409,0.430185,0.432454,0.424385]
+outage_probability_policy_6_multiplexing = [0.001050,0.010914,0.038698,0.120053,0.221547]
+failed_urllc_transmissions_policy_6_multiplexing = [0.675209,0.674463,0.650354,0.659425,0.663465]
+urllc_throughput_policy_6_multiplexing = [2810757.496410,2778021.664347,2829443.638746,2784240.242661,2822109.980453]
+urllc_arriving_packets_policy_6_multiplexing = [1.661386,3.132673,4.896040,6.334653,7.937624]
+urllc_dropped_packets_resource_allocation_policy_6_multiplexing = [0.352801,0.342920,0.335288,0.336668,0.341649]
+urllc_dropped_packets_channel_rate_policy_6_multiplexing = [0.322408,0.331542,0.315066,0.322757,0.321816]
+urllc_dropped_packets_channel_rate_normalized_policy_6_multiplexing = [0.030871,0.031734,0.029846,0.030905,0.030629]
+urllc_successful_transmissions_policy_6_multiplexing = [0.314660,0.316056,0.340344,0.331041,0.326806]
+urllc_code_blocks_allocation_policy_6_multiplexing = [10.443564,10.447525,10.556436,10.443564,10.506931]
+offloading_ratios_policy_6_multiplexing = [0.19630577644336916,0.1897435805871397,0.19423777258302255,0.19060010742860375,0.19828403829641042]
+# ---------------------------------------
+# Average Individual Number of allocated RBs:  [0. 0. 0. 0. 1. 0. 3. 1. 2. 4. 1.]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Punctruring users:  [0 0 0 0 2 0 0 0 2 4 1]
+# ---------------------------------------
+# ---------------------------------------
+# Average Individual Number of Clustered Urllc users:  [0 2 2 2 2 1 0 0 2 4 1]
+
+
+
+plt.figure(figsize=(15, 8))
+plt.suptitle('Effect of varying Task Arrival Rate on perfomance metrics',fontsize=16, fontweight='bold')
+# Subplot 1: Reward
+plt.subplot(3, 4, 1)
+plt.plot(task_arrival_rates, throughput_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^{mul}$")
+plt.plot(task_arrival_rates, throughput_policy_5_multiplexing, marker='o', color='blue', label=r"$\pi_5^{mul}$")
+plt.plot(task_arrival_rates, throughput_policy_6_multiplexing, marker='o', color='green', label=r"$\pi_6^{mul}$")
+plt.title('eMBB Data Rate')
+plt.xlabel('URLLC Task Arrival Probability')
+plt.ylabel('Data Rate (bits/s)')
+plt.grid(True)
+plt.legend(loc="lower left")
+
+# Subplot 5: Delay
+plt.subplot(3, 4, 2)
+plt.plot(task_arrival_rates, offloading_ratios_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^{mul}$")
+plt.plot(task_arrival_rates, offloading_ratios_policy_5_multiplexing, marker='o', color='blue', label=r"$\pi_5^{mul}$")
+plt.plot(task_arrival_rates, offloading_ratios_policy_6_multiplexing, marker='o', color='green', label=r"$\pi_6^{mul}$")
+plt.title('eMBB Offloading Ratios')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Delay (ms)')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+# Subplot 4: Fairness Index
+plt.subplot(3, 4, 3)
+plt.plot(task_arrival_rates, fairness_index_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^{mul}$")
+plt.plot(task_arrival_rates, fairness_index_policy_5_multiplexing, marker='o', color='blue', label=r"$\pi_5^{mul}$")
+plt.plot(task_arrival_rates, fairness_index_policy_6_multiplexing, marker='o', color='green', label=r"$\pi_6^{mul}$")
+
+plt.title('Effect on Fairness Index')
+plt.xlabel('URLLC Task Arrival Probability')
+plt.ylabel('Fairness Index')
+plt.grid(True)
+plt.legend(loc="lower left")
+
+# Subplot 2: Energy
+plt.subplot(3, 4, 4)
+plt.plot(task_arrival_rates, urllc_throughput_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^{mul}$")
+plt.plot(task_arrival_rates, urllc_throughput_policy_5_multiplexing, marker='o', color='blue', label=r"$\pi_5^{mul}$")
+plt.plot(task_arrival_rates, urllc_throughput_policy_6_multiplexing, marker='o', color='green', label=r"$\pi_6^{mul}$")
+plt.title('URLLC Data Rate')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Energy (Joules)')
+plt.grid(True)
+plt.legend(loc="lower right")
+
+# Subplot 3: Throughput
+plt.subplot(3, 4, 5)
+plt.plot(task_arrival_rates, outage_probability_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^{mul}$")
+plt.plot(task_arrival_rates, outage_probability_policy_5_multiplexing, marker='o', color='blue', label=r"$\pi_5^{mul}$")
+plt.plot(task_arrival_rates, outage_probability_policy_6_multiplexing, marker='o', color='green', label=r"$\pi_6^{mul}$")
+plt.title('URLLC Outage Probability')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Throughput')
+plt.grid(True)
+plt.legend(loc="lower right")
+
+
+plt.subplot(3, 4, 6)
+plt.plot(task_arrival_rates, urllc_arriving_packets_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^{mul}$")
+plt.plot(task_arrival_rates, urllc_arriving_packets_policy_5_multiplexing, marker='o', color='blue', label=r"$\pi_5^{mul}$")
+plt.plot(task_arrival_rates, urllc_arriving_packets_policy_6_multiplexing, marker='o', color='green', label=r"$\pi_6^{mul}$")
+plt.title('URLLC Arriving Packets')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Sum Local Delay')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+plt.subplot(3, 4, 7)
+plt.plot(task_arrival_rates, failed_urllc_transmissions_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^{mul}$")
+plt.plot(task_arrival_rates, failed_urllc_transmissions_policy_5_multiplexing, marker='o', color='blue', label=r"$\pi_5^{mul}$")
+plt.plot(task_arrival_rates, failed_urllc_transmissions_policy_6_multiplexing, marker='o', color='green', label=r"$\pi_6^{mul}$")
+plt.title('URLLC Failed Transmissions')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Sum Offload Delay')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+plt.subplot(3, 4, 8)
+plt.plot(task_arrival_rates, urllc_successful_transmissions_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^{mul}$")
+plt.plot(task_arrival_rates, urllc_successful_transmissions_policy_5_multiplexing, marker='o', color='blue', label=r"$\pi_5^{mul}$")
+plt.plot(task_arrival_rates, urllc_successful_transmissions_policy_6_multiplexing, marker='o', color='green', label=r"$\pi_6^{mul}$")
+plt.title('URLLC Successful Transmissions')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Sum Offload Delay')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+plt.subplot(3, 4, 9)
+plt.plot(task_arrival_rates, urllc_dropped_packets_resource_allocation_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^{mul}$")
+plt.plot(task_arrival_rates, urllc_dropped_packets_resource_allocation_policy_5_multiplexing, marker='o', color='blue', label=r"$\pi_5^{mul}$")
+plt.plot(task_arrival_rates, urllc_dropped_packets_resource_allocation_policy_6_multiplexing, marker='o', color='green', label=r"$\pi_6^{mul}$")
+plt.title('Failed Transmissions (Resource Allocation)')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Outage Probability')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+plt.subplot(3, 4, 10)
+plt.plot(task_arrival_rates, urllc_dropped_packets_channel_rate_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^{mul}$")
+plt.plot(task_arrival_rates, urllc_dropped_packets_channel_rate_policy_5_multiplexing, marker='o', color='blue', label=r"$\pi_5^{mul}$")
+plt.plot(task_arrival_rates, urllc_dropped_packets_channel_rate_policy_6_multiplexing, marker='o', color='green', label=r"$\pi_6^{mul}$")
+plt.title('Failed Transmissions (Channel Rate)')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Sum Offload Delay')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+plt.subplot(3, 4, 11)
+plt.plot(task_arrival_rates, urllc_code_blocks_allocation_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^{mul}$")
+plt.plot(task_arrival_rates, urllc_code_blocks_allocation_policy_5_multiplexing, marker='o', color='blue', label=r"$\pi_5^{mul}$")
+plt.plot(task_arrival_rates, urllc_code_blocks_allocation_policy_6_multiplexing, marker='o', color='green', label=r"$\pi_6^{mul}$")
+plt.title('URLLC CBs allocation')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Sum Offload Delay')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+plt.subplot(3, 4, 12)
+plt.plot(task_arrival_rates, urllc_dropped_packets_channel_rate_normalized_policy_3_multiplexing, marker='o', color='red', label=r"$\pi_3^{mul}$")
+plt.plot(task_arrival_rates, urllc_dropped_packets_channel_rate_normalized_policy_5_multiplexing, marker='o', color='blue', label=r"$\pi_5^{mul}$")
+plt.plot(task_arrival_rates, urllc_dropped_packets_channel_rate_normalized_policy_6_multiplexing, marker='o', color='green', label=r"$\pi_6^{mul}$")
+plt.title('URLLC Failed Transmissions (Channel Rate) Normalized')
+plt.xlabel('URLLC Task Arrival Probability')
+#plt.ylabel('Sum Offload Delay')
+plt.grid(True)
+plt.legend(loc="upper left")
+
+
+plt.tight_layout()
+plt.show()
 
