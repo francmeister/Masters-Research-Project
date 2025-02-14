@@ -26,7 +26,7 @@ class NetworkEnv(gym.Env):
     def __init__(self):
         self.timestep_counter = 0
         self.step_counter = 0
-        self.include_urllc_users_ = 1
+        self.include_urllc_users_ = 0
         self.create_objects()
         self.reset()
         #Action Space Bound Paramaters
@@ -993,7 +993,7 @@ class NetworkEnv(gym.Env):
         self.URLLC_Users.clear()
         self.group_users()
         self.include_urllc_users(self.include_urllc_users_)
-        self.include_urllc_users_
+        #self.include_urllc_users_
 
         self.SBS1.associate_users(self.eMBB_Users, self.URLLC_Users)
         self.Communication_Channel_1.set_properties()
