@@ -810,11 +810,12 @@ class SBS():
     def count_num_arriving_urllc_packets(self, urllc_users):
         self.num_arriving_urllc_packets = 0
         self.failed_urllc_transmissions = 0
-        for urllc_user in urllc_users:
-            if urllc_user.has_transmitted_this_time_slot == True:
-                self.num_arriving_urllc_packets += 1
-            if urllc_user.failed_transmission == True:
-                self.failed_urllc_transmissions+=1
+        if len(urllc_users) > 0:
+            for urllc_user in urllc_users:
+                if urllc_user.has_transmitted_this_time_slot == True:
+                    self.num_arriving_urllc_packets += 1
+                if urllc_user.failed_transmission == True:
+                    self.failed_urllc_transmissions+=1
 
         #print('self.failed_urllc_transmissions: ', self.failed_urllc_transmissions)
 
