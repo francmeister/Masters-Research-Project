@@ -365,11 +365,11 @@ axis[2,3].set_xlabel('Timestep')
 #axis[3,0].set_ylabel('Constraint Value')
 axis[2,3].grid()
 
-axis[2,1].plot(timesteps[window_size-1:], urllc_reliability_reward_smooth)
-axis[2,1].set_title('URLLC Reliability Reward')
-axis[2,1].set_xlabel('Timestep')
-#axis[3,0].set_ylabel('Constraint Value')
-axis[2,1].grid()
+# axis[2,1].plot(timesteps[window_size-1:], urllc_reliability_reward_smooth)
+# axis[2,1].set_title('URLLC Reliability Reward')
+# axis[2,1].set_xlabel('Timestep')
+# #axis[3,0].set_ylabel('Constraint Value')
+# axis[2,1].grid()
 
 
 # axis[2,3].plot(timesteps[window_size-1:], outage_probabilities_smooth)
