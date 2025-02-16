@@ -26,7 +26,7 @@ class NetworkEnv(gym.Env):
     def __init__(self):
         self.timestep_counter = 0
         self.step_counter = 0
-        self.include_urllc_users_ = 0
+        self.include_urllc_users_ = 1
         self.create_objects()
         self.reset()
         #Action Space Bound Paramaters
