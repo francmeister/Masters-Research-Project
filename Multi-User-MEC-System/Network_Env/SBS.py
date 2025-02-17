@@ -804,7 +804,6 @@ class SBS():
         #         self.available_resource_time_blocks = np.delete(self.available_resource_time_blocks,random_number,axis=0)
         #         urllc_user.assigned_time_block = urllc_user.assigned_resource_time_block[0]
         #         urllc_user.assigned_resource_block = urllc_user.assigned_resource_time_block[1]
-
         
 
     def count_num_arriving_urllc_packets(self, urllc_users):

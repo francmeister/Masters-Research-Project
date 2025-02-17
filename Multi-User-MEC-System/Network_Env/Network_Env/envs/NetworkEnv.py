@@ -26,7 +26,7 @@ class NetworkEnv(gym.Env):
     def __init__(self):
         self.timestep_counter = 0
         self.step_counter = 0
-        self.include_urllc_users_ = 0
+        self.include_urllc_users_ = 1
         self.create_objects()
         self.reset()
         #Action Space Bound Paramaters
@@ -1138,22 +1138,22 @@ class NetworkEnv(gym.Env):
         self.eMBB_Users.append(self.eMBB_UE_10)
         self.eMBB_Users.append(self.eMBB_UE_11)
 
-        # self.URLLC_Users.append(self.URLLC_UE_1)
-        # self.URLLC_Users.append(self.URLLC_UE_2)
-        # self.URLLC_Users.append(self.URLLC_UE_3)
-        # self.URLLC_Users.append(self.URLLC_UE_4)
-        # self.URLLC_Users.append(self.URLLC_UE_5)
-        # self.URLLC_Users.append(self.URLLC_UE_6)
-        # self.URLLC_Users.append(self.URLLC_UE_7)
-        # self.URLLC_Users.append(self.URLLC_UE_8)
-        # self.URLLC_Users.append(self.URLLC_UE_9)
-        # self.URLLC_Users.append(self.URLLC_UE_10)
-        # self.URLLC_Users.append(self.URLLC_UE_11)
-        # self.URLLC_Users.append(self.URLLC_UE_12)
-        # self.URLLC_Users.append(self.URLLC_UE_13)
-        # self.URLLC_Users.append(self.URLLC_UE_14)
-        # self.URLLC_Users.append(self.URLLC_UE_15)
-        # self.URLLC_Users.append(self.URLLC_UE_16)
+        self.URLLC_Users.append(self.URLLC_UE_1)
+        self.URLLC_Users.append(self.URLLC_UE_2)
+        self.URLLC_Users.append(self.URLLC_UE_3)
+        self.URLLC_Users.append(self.URLLC_UE_4)
+        self.URLLC_Users.append(self.URLLC_UE_5)
+        self.URLLC_Users.append(self.URLLC_UE_6)
+        self.URLLC_Users.append(self.URLLC_UE_7)
+        self.URLLC_Users.append(self.URLLC_UE_8)
+        self.URLLC_Users.append(self.URLLC_UE_9)
+        self.URLLC_Users.append(self.URLLC_UE_10)
+        self.URLLC_Users.append(self.URLLC_UE_11)
+        self.URLLC_Users.append(self.URLLC_UE_12)
+        self.URLLC_Users.append(self.URLLC_UE_13)
+        self.URLLC_Users.append(self.URLLC_UE_14)
+        self.URLLC_Users.append(self.URLLC_UE_15)
+        self.URLLC_Users.append(self.URLLC_UE_16)
 
 
     def check_timestep(self):
