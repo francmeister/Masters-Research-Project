@@ -858,6 +858,10 @@ urllc_dropped_packets_channel_rate_normalized_policy_6_multiplexing = [0.030871,
 urllc_successful_transmissions_policy_6_multiplexing = [0.314660,0.316056,0.340344,0.331041,0.326806]
 urllc_code_blocks_allocation_policy_6_multiplexing = [10.443564,10.447525,10.556436,10.443564,10.506931]
 offloading_ratios_policy_6_multiplexing = [0.19630577644336916,0.1897435805871397,0.19423777258302255,0.19060010742860375,0.19828403829641042]
+
+outage_probability_policy_6_multiplexing = [0.001050,0.010914,0.038698,0.120053,0.221547]
+outage_probability_policy_5_multiplexing = [0.001077,0.007582,0.031761,0.075364,0.154725]
+outage_probability_policy_3_multiplexing = [0.027712,0.119196,0.288494,0.450350,0.654409]
 # ---------------------------------------
 # Average Individual Number of allocated RBs:  [0. 0. 0. 0. 1. 0. 3. 1. 2. 4. 1.]
 # ---------------------------------------
