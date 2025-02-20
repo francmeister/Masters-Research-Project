@@ -220,6 +220,9 @@ local_queue_delay_violation_probability_constraint_policy_4 = [0.167867,0.537804
 offload_queue_delay_violation_probability_constraint_policy_4 = [0.064356,0.392889,0.552655,0.645815]
 local_queue_delay_violation_probability_policy_4 = [0.094127,0.255096,0.403572,0.495224]
 offload_queue_delay_violation_probability_policy_4 = [0.082720,0.209566,0.289655,0.368062]
+
+reward_policy_1 = [22175244.157802,21373318.222852,20595275.691612,19806380.785671]
+reward_policy_2 = [22172788.913002,21336574.663871,20633167.434474,19791751.340914]
 # Plotting
 # Plotting
 #plt.figure(figsize=(15, 8))
